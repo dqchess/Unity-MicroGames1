@@ -13,6 +13,7 @@ abstract public class BaseGameController : MonoBehaviour {
 	// Getters / Setters
 	protected DataManager dataManager { get { return GameManagers.Instance.DataManager; } }
 	protected InputController inputController { get { return InputController.Instance; } }
+	protected ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
 
 
 

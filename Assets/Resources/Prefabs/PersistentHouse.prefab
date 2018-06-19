@@ -255,27 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9143cf1fe8970426684f6a9e2b0a41b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabGO_packCollectionName: {fileID: 1122673017094082, guid: d037da6ae3873e543b917d4e078ba014,
-    type: 2}
-  prefabGO_packTile: {fileID: 1093990154112620, guid: 4b99f8ad765921047ab821d042853d95,
-    type: 2}
-  prefabGO_levelTile: {fileID: 1198772596492740, guid: eb9d84ae3abcc41c39d862dbd537b315,
-    type: 2}
-  prefabGO_wordsSpellingUILetter: {fileID: 1112537021322296, guid: fa60972e14b874874bc4bf3facdf1268,
-    type: 2}
-  prefabGO_boardSpaceView: {fileID: 1358600171351640, guid: 6e4c673febc3f44fe849bd304c12e1d9,
-    type: 2}
-  prefabGO_boardView: {fileID: 1386414835457172, guid: 2b12e4a3e97944a95841ad5a411fc467,
-    type: 2}
-  prefabGO_dragPathView: {fileID: 1850022564095682, guid: ba81d36c165f240f6b1312d35cdc82b5,
-    type: 2}
-  prefabGO_level: {fileID: 1072849601419138, guid: 45d88eba8dc5744b7b49b6b8c48500c3,
-    type: 2}
-  prefabGO_obstacleView: {fileID: 1292491858081856, guid: ef2ae4864c16d48a8bbfc97a52b35572,
-    type: 2}
-  prefabGO_pathTargetView: {fileID: 1705175718451294, guid: feefa0af3305f488caab9b05c598fd06,
-    type: 2}
-  prefabGO_wallView: {fileID: 1230181359957688, guid: 76ae9d646830f4032b419e54440f0a31,
+  alphaTapOrder_tapSpace: {fileID: 1108421674652232, guid: 765d3bb2025a9244fb8204ddc28e0d83,
     type: 2}
 --- !u!223 &223970956200102408
 Canvas:

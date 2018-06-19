@@ -38,11 +38,17 @@ public class MathUtils {
 	static public float GetVector2AngleRadians (Vector2 vector) { return Mathf.Atan2 (-vector.x,vector.y); }
 	static public float GetVector2AngleDegrees (Vector2 vector) { return GetVector2AngleRadians (vector) * Mathf.Rad2Deg; }
 
-	/** TODO: #optimization This function uses way overkill with converting to vectors and back. There has GOT to be a simpler way with just using the angles. */
+	/** TO DO: #optimization This function uses way overkill with converting to vectors and back. There has GOT to be a simpler way with just using the angles. */
 	public static float GetAngleReflection (float angleIn, float surfaceAngle) {
 		return 180+GetVector2AngleDegrees (Vector2.Reflect (GetVectorFromAngleDeg(-angleIn), GetVectorFromAngleDeg(surfaceAngle)));
 	}
 
+	/** E.g. if arrayLength is 4, we may return 2,0,3,1. */
+	public static int[] GetShuffledIntArray(int arrayLength) {
+		int[] array = new int[arrayLength];
+		for (int i=0; i<arrayLength; i++) { array[i] = i; }
+		return GetShuffledIntArray(array);
+	}
 	public static int[] GetShuffledIntArray(int[] originalArray) {
 		int[] shuffledArray = new int[originalArray.Length];
 		for (int i=0; i<shuffledArray.Length; i++) { shuffledArray[i] = originalArray[i]; }

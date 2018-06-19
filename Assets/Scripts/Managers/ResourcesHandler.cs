@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
 	// References!
-	[SerializeField] public GameObject prefabGO_wallView;
+	[SerializeField] public GameObject alphaTapOrder_tapSpace;
 
 	// Instance
 	static private ResourcesHandler instance;
