@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class MathUtils {
 
-	static public float Cos01(float val) { return (1+Mathf.Cos(val)) * 0.5f; }
-	static public float Sin01(float val) { return (1+Mathf.Sin(val)) * 0.5f; }
+	static public float Cos01(float val) { return (1-Mathf.Sin(val)) * 0.5f; } // 0 returns 1.
+	static public float Sin01(float val) { return (1-Mathf.Cos(val)) * 0.5f; } // 0 returns 0.
 
 	static public bool IsSameSign (float a, float b) { return a*b >= 0; }
 	static public bool IsSameSign (double a, double b) { return a*b >= 0; }

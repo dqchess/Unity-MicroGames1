@@ -5,9 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AlphaTap.unity
     guid: ceb34b069b4d54472b5bbe4f08c971d2
-  - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+  - enabled: 0
+    path: 
     guid: f7d8fc33dca2f4139b33caf48f3d73c9
