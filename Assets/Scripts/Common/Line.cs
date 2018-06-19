@@ -17,9 +17,9 @@ public struct Line {
 
 	/** In RADIANS. */
 	public float GetAngleDeg () {
-		return GameMathUtils.GetVector2AngleDegrees (start-end);
+		return MathUtils.GetVector2AngleDegrees (start-end);
 	}
 	public Line Rotate (float radians) {
-		return new Line(GameMathUtils.GetRotatedVector2Rad(start, radians), GameMathUtils.GetRotatedVector2Rad(end, radians));
+		return new Line(MathUtils.GetRotatedVector2Rad(start, radians), MathUtils.GetRotatedVector2Rad(end, radians));
 	}
 }

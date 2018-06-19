@@ -23,6 +23,8 @@ abstract public class BaseGameController : MonoBehaviour {
 		// Set application values
 		Application.targetFrameRate = GameVisualProperties.TARGET_FRAME_RATE;
 
+		UpdateTimeScale();
+
 		// Add event listeners!
 //		GameManagers.Instance.EventManager.UserSaidTargetPuzzleWordEvent += OnUserSaidTargetPuzzleWord;
 	}
@@ -37,8 +39,8 @@ abstract public class BaseGameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Doers - Loading Level
 	// ----------------------------------------------------------------
-	private void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
-	private void OpenScene (string sceneName) {
+	public void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
+	protected void OpenScene (string sceneName) {
 		UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName);
 	}
 
@@ -52,9 +54,12 @@ abstract public class BaseGameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Doers - Gameplay
 	// ----------------------------------------------------------------
-	private void TogglePause () {
-		isPaused = !isPaused;
+	protected void SetIsPaused(bool _isPaused) {
+		isPaused = _isPaused;
 		UpdateTimeScale ();
+	}
+	protected void TogglePause () {
+		SetIsPaused(!isPaused);
 	}
 	private void UpdateTimeScale () {
 		if (isPaused) { Time.timeScale = 0; }

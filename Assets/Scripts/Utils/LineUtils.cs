@@ -60,7 +60,7 @@ public class LineUtils {
 		
 		// Check signs of r3 and r4. If both point 3 and point 4 lie on
 		// same side of line 1, the line segments do not intersect.
-		if ((r3 != 0) && (r4 != 0) && GameMathUtils.IsSameSign(r3, r4)) {
+		if ((r3 != 0) && (r4 != 0) && MathUtils.IsSameSign(r3, r4)) {
 			intPos = Vector2.zero;
 			return false;
 		}
@@ -77,7 +77,7 @@ public class LineUtils {
 		// Check signs of r1 and r2. If both point 1 and point 2 lie
 		// on same side of second line segment, the line segments do
 		// not intersect.
-		if ((r1 != 0) && (r2 != 0) && (GameMathUtils.IsSameSign(r1, r2))) {
+		if ((r1 != 0) && (r2 != 0) && (MathUtils.IsSameSign(r1, r2))) {
 			intPos = Vector2.zero;
 			return false;
 		}

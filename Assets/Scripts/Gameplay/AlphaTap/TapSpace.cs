@@ -7,9 +7,15 @@ public class TapSpace : MonoBehaviour {
 	// Components
 	[SerializeField] private SpriteRenderer bodySprite;
 	// Properties
+	private bool wasRecentCorrectTap; // sets me to green. Set to false when my alpha is about 0.
+	private Color bodyColor;
 	private float alpha;
 	private float oscillValue; // this is what's pumped in to the sin function!
 	private float oscillVel; // this also oscillates for anticipatable randomness
+
+	// Getters
+	public bool CanTapMe { get { return !wasRecentCorrectTap; } }
+	public float Alpha { get { return alpha; } }
 
 
 
@@ -18,22 +24,50 @@ public class TapSpace : MonoBehaviour {
 	// ----------------------------------------------------------------
 	private void Start () {
 		oscillValue = Random.Range(0, 99);
-		oscillVel = Random.Range(0.7f, 1.5f);
+		ResetRecentCorrectTap();
+	}
+
+
+
+	// ----------------------------------------------------------------
+	//  Game Events
+	// ----------------------------------------------------------------
+	public void OnCorrectTap() {
+		wasRecentCorrectTap = true;
+		bodyColor = Color.green;
+	}
+	private void ResetRecentCorrectTap() {
+		wasRecentCorrectTap = false;
+		bodyColor = Color.white;
+//		oscillValue = 0; // reset this too!
+		oscillVel = Random.Range(0.5f, 1.9f);
 	}
 
 
 	// ----------------------------------------------------------------
-	//  Update
+	//  FixedUpdate
 	// ----------------------------------------------------------------
-	private void Update () {
+	private void FixedUpdate () {
 		UpdateAndApplyAlpha();
-
+		UpdateRecentCorrectTap();
 	}
 	private void UpdateAndApplyAlpha() {
-		oscillValue += Time.deltaTime * oscillVel;
+		if (wasRecentCorrectTap) {
+			alpha += (0-alpha) / 8f; // rocket down to 0.
+		}
+		else {
+			oscillValue += Time.deltaTime * oscillVel;
+			alpha = 1-MathUtils.Cos01 (oscillValue);
+		}
 
-		alpha = 0.5f + Mathf.Sin (oscillValue)*0.5f;
-		GameUtils.SetSpriteAlpha (bodySprite, alpha);
+		bodySprite.color = new Color(bodyColor.r,bodyColor.g,bodyColor.b, alpha);
+	}
+	private void UpdateRecentCorrectTap() {
+		if (wasRecentCorrectTap) {
+			if (alpha < 0.05f) {
+				ResetRecentCorrectTap();
+			}
+		}
 	}
 
 }
