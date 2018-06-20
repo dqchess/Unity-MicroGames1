@@ -62,7 +62,7 @@ namespace AlphaTapOrder {
 		public void OnCorrectTap() {
 			wasTapped = true;
 			t_myNumber.enabled = true;
-			t_myNumber.color = Color.white;
+			t_myNumber.color = new Color(1,1,1, 0.5f);
 		}
 		public void OnIncorrectTap() {
 			wasTapped = true;

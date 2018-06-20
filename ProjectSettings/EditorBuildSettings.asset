@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/AlphaTap.unity
-    guid: ceb34b069b4d54472b5bbe4f08c971d2
-  - enabled: 0
-    path: 
-    guid: f7d8fc33dca2f4139b33caf48f3d73c9
+  - enabled: 1
+    path: Assets/Scenes/GameSelect.unity
+    guid: 87f40d0bf310644f6a8749500cda931a
+  - enabled: 1
+    path: Assets/Scenes/AlphaTapMatch.unity
+    guid: 049d05df61ca687478efef14455a31a2
+  - enabled: 1
+    path: Assets/Scenes/AlphaTapMost.unity
+    guid: 72e37c70849ec3a4abf8aba302b2d152
+  - enabled: 1
+    path: Assets/Scenes/AlphaTapOrder.unity
+    guid: c1a701cdea885234485cdf65a1bd27a0

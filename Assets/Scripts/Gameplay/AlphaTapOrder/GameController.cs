@@ -50,7 +50,7 @@ namespace AlphaTapOrder {
 
 			// Position and size!
 			Vector2 availableSize = rt_spaces.rect.size;
-			Vector2 spaceSize = new Vector2(availableSize.x/3f,availableSize.x/3f); // 3 cols.
+			Vector2 spaceSize = new Vector2(availableSize.x/3f-1f,availableSize.x/3f-1f); // 3 cols. -1 for safety.
 			float tempX = 0;
 			float tempY = 0;
 			int[] shuffledIndexes = MathUtils.GetShuffledIntArray(numSpaces);
