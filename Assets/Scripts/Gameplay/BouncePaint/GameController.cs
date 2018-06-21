@@ -1,22 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace WallPaint {
+namespace BouncePaint {
     public enum GameStates { PreLevel, Playing, PostLevel, GameOver }
 
     public class GameController : BaseGameController {
         // Properties
         private GameStates gameState;
         private int currentLevelIndex;
-        //private int numCols,numRows;
         // Components
-        [SerializeField] private GameObject go_board;
-		[SerializeField] private Player player;
-        //[SerializeField] private WallSpace[] wallSpaces;
-        //private BoardSpace[,] boardSpaces;
+        [SerializeField] private Player player;
+        private PaintSpace[] paintSpaces;
         // References
-        [SerializeField] private GameUI ui;
+        [SerializeField] private GameUI ui=null;
+		[SerializeField] private Image i_spacesAvailableRect=null;
+        [SerializeField] private RectTransform rt_paintSpaces=null;
+
+        // Getters
+        public PaintSpace[] PaintSpaces { get { return paintSpaces; } }
 
 
 
@@ -30,45 +33,56 @@ namespace WallPaint {
         }
 
 
-        private void InitializeBoard() {
-            DestroyBoard(); // Just in case
+        private void InitializePaintSpaces(int numSpaces) {
+            DestroyPaintSpaces(); // Just in case
 
-            Rect boardRect = new Rect();
-            boardRect.size = new Vector2(64,78);
-            boardRect.center = new Vector2(0,0);
+            Rect availableRect = new Rect();// i_spacesAvailableRect.rectTransform.rect;
+            availableRect.size = i_spacesAvailableRect.rectTransform.rect.size;
+            availableRect.position = new Vector2(0,200);
+            Vector2 spaceSlotSize = new Vector2(availableRect.width/(float)numSpaces, availableRect.height);
+            Vector2 spaceSize = new Vector2(availableRect.height, availableRect.height);//spaceSlotSize.x-spaceGapX, spaceSlotSize.y);
+            float spaceGapX = spaceSlotSize.x-spaceSize.x;//4; // how many pixels between each space.
 
-            //boardSpaces = new BoardSpace[numCols,numRows];
+            paintSpaces = new PaintSpace[numSpaces];
+            for (int i=0; i<numSpaces; i++) {
+                PaintSpace newSpace = Instantiate(resourcesHandler.bouncePaint_paintSpace).GetComponent<PaintSpace>();
+                Vector2 pos = new Vector2(spaceGapX*0.5f + spaceSlotSize.x*i, 0);
+                pos += availableRect.position;
+                newSpace.Initialize(rt_paintSpaces, pos, spaceSize);
+                paintSpaces[i] = newSpace;
+            }
         }
-        private void DestroyBoard() {
-            //if (wallSpaces!=null) {
-            //    foreach (WallSpace space in wallSpaces) {
-            //        Destroy(space.gameObject);
-            //    }
-            //}
-            //wallSpaces = null;
+        private void DestroyPaintSpaces() {
+            if (paintSpaces!=null) {
+                foreach (PaintSpace space in paintSpaces) {
+                    Destroy(space.gameObject);
+                }
+            }
+            paintSpaces = null;
         }
 
 
         // ----------------------------------------------------------------
         //  Game Flow
         // ----------------------------------------------------------------
+        private void RestartLevel() { SetCurrentLevel(currentLevelIndex); }
         private void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
         private void SetCurrentLevel(int _levelIndex) {
             currentLevelIndex = _levelIndex;
 
+            SetIsPaused(false);
+
             // Set basics!
             gameState = GameStates.Playing;
-            Camera.main.backgroundColor = new Color(0.1f,0.1f,0.1f);
+            Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
 
             // Tell the UI!
             ui.UpdateLevelName(currentLevelIndex);
 
-            // Set properties!
-            //numCols = 9;
-            //numRows = 9;
-
-            // Initialize spaces!
-            InitializeBoard();
+            // Initialize spaces and player!
+            int numSpaces = 1 + currentLevelIndex;
+            InitializePaintSpaces(numSpaces);
+            player.Reset(currentLevelIndex);
         }
         private void SetGameOver() {
             gameState = GameStates.GameOver;
@@ -98,6 +112,16 @@ namespace WallPaint {
 //          yield return null;
         }
 
+        public void OnPlayerPaintLastSpace() {
+            OnCompleteLevel();
+        }
+        public void OnPlayerDie() {
+            if (gameState == GameStates.Playing) {
+                SetGameOver();
+            }
+        }
+
+
 
         // ----------------------------------------------------------------
         //  Update
@@ -121,12 +145,15 @@ namespace WallPaint {
         // ----------------------------------------------------------------
         private void OnMouseDown() {
             if (gameState == GameStates.GameOver) {
-                ReloadScene();
+                RestartLevel();//ReloadScene();
                 return;
             }
             else if (gameState == GameStates.PostLevel) {
                 StartNextLevel();
                 return;
+            }
+            else {
+                player.OnPressJumpButton();
             }
         }
 

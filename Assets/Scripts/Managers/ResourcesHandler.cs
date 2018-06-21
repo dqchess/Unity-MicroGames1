@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
-	// References!
-	[SerializeField] public GameObject alphaTapOrder_tapSpace;
+    // References!
+    [SerializeField] public GameObject alphaTapOrder_tapSpace;
+    [SerializeField] public GameObject bouncePaint_paintSpace;
 
 	// Instance
 	static private ResourcesHandler instance;
