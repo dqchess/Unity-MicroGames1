@@ -63,6 +63,49 @@ public class MathUtils {
 	}
 
 
+
+    public static Vector2Int GetDir (int side) {
+        switch (side) {
+            case Sides.L: return Vector2Int.L;
+            case Sides.R: return Vector2Int.R;
+            case Sides.B: return Vector2Int.B;
+            case Sides.T: return Vector2Int.T;
+            default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0, 1, 2, or 3.");
+        }
+    }
+    public static int GetSide (Vector2Int dir) {
+        if (dir == Vector2Int.L) { return Sides.L; }
+        if (dir == Vector2Int.R) { return Sides.R; }
+        if (dir == Vector2Int.T) { return Sides.T; }
+        if (dir == Vector2Int.B) { return Sides.B; }
+        return -1; // Whoops.
+    }
+    //public static int GetOppositeSide (Vector2Int dir) { return GetOppositeSide(GetSide(dir)); }
+    //public static int GetOppositeSide (int side) {
+    //    switch (side) {
+    //        case 0: return 2;
+    //        case 1: return 3;
+    //        case 2: return 0;
+    //        case 3: return 1;
+    //        default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0, 1, 2, or 3.");
+    //    }
+    //}
+    //public static Vector2Int GetOppositeDir (int side) { return GetDir(GetOppositeSide(side)); }
+    ///** Useful for flipping dirEntering to dirExiting, for example. Just returns the original value * -1. */
+    //public static Vector2Int GetOppositeDir (Vector2Int dir) { return new Vector2Int(-dir.x, -dir.y); }
+    ///** corner: 0 top-left; 1 top-right; 2 bottom-right; 3 bottom-left. */
+    //private static Vector2Int GetCornerDir (int corner) {
+    //    switch (corner) {
+    //        case 0: return new Vector2Int (-1,-1);
+    //        case 1: return new Vector2Int ( 1,-1);
+    //        case 2: return new Vector2Int ( 1, 1);
+    //        case 3: return new Vector2Int (-1, 1);
+    //        default: throw new UnityException ("Whoa, " + corner + " is not a valid corner. Try 0, 1, 2, or 3.");
+    //    }
+    //}
+
+
+
 	/** easing: Higher is SLOWER. */
 	public static void EaseRect (ref Rect rect, Rect rectTarget, float easing) {
 		rect.xMin += (rectTarget.xMin-rect.xMin) / easing;
