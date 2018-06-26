@@ -9,9 +9,10 @@ namespace BouncePaint {
     public class GameController : BaseGameController {
         // Properties
         private GameStates gameState;
+        private float timeWhenLevelEnded;
         private int currentLevelIndex;
         // Components
-        [SerializeField] private Player player;
+        [SerializeField] private Player player=null;
         private PaintSpace[] paintSpaces;
         // References
         [SerializeField] private GameUI ui=null;
@@ -19,6 +20,7 @@ namespace BouncePaint {
         [SerializeField] private RectTransform rt_paintSpaces=null;
 
         // Getters
+        public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
         public PaintSpace[] PaintSpaces { get { return paintSpaces; } }
 
 
@@ -29,7 +31,7 @@ namespace BouncePaint {
         override protected void Start () {
             base.Start();
 
-            SetCurrentLevel(0);
+            SetCurrentLevel(1);
         }
 
 
@@ -48,7 +50,7 @@ namespace BouncePaint {
                 PaintSpace newSpace = Instantiate(resourcesHandler.bouncePaint_paintSpace).GetComponent<PaintSpace>();
                 Vector2 pos = new Vector2(spaceGapX*0.5f + spaceSlotSize.x*i, 0);
                 pos += availableRect.position;
-                newSpace.Initialize(rt_paintSpaces, pos, spaceSize);
+                newSpace.Initialize(this, rt_paintSpaces, pos, spaceSize);
                 paintSpaces[i] = newSpace;
             }
         }
@@ -66,6 +68,7 @@ namespace BouncePaint {
         //  Game Flow
         // ----------------------------------------------------------------
         private void RestartLevel() { SetCurrentLevel(currentLevelIndex); }
+        private void StartPreviousLevel() { SetCurrentLevel(Mathf.Max(1, currentLevelIndex-1)); }
         private void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
         private void SetCurrentLevel(int _levelIndex) {
             currentLevelIndex = _levelIndex;
@@ -73,6 +76,7 @@ namespace BouncePaint {
             SetIsPaused(false);
 
             // Set basics!
+            timeWhenLevelEnded = -1;
             gameState = GameStates.Playing;
             Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
 
@@ -80,18 +84,19 @@ namespace BouncePaint {
             ui.UpdateLevelName(currentLevelIndex);
 
             // Initialize spaces and player!
-            int numSpaces = 1 + currentLevelIndex;
+            int numSpaces = currentLevelIndex;
             InitializePaintSpaces(numSpaces);
             player.Reset(currentLevelIndex);
         }
         private void SetGameOver() {
             gameState = GameStates.GameOver;
-            SetIsPaused(true);
+            timeWhenLevelEnded = Time.time;
             //Camera.main.backgroundColor = new Color(0.6f,0.1f,0.1f);
         }
 
         private void OnCompleteLevel() {
             gameState = GameStates.PostLevel;
+            timeWhenLevelEnded = Time.time;
             //Camera.main.backgroundColor = new Color(0.1f,0.8f,0.1f);
 //          StartCoroutine(Coroutine_CompleteLevel());
 //      }
@@ -145,8 +150,11 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void OnMouseDown() {
             if (gameState == GameStates.GameOver) {
-                RestartLevel();//ReloadScene();
-                return;
+                // Make us wait a short moment so we visually register what's happened.
+                if (Time.time>timeWhenLevelEnded+0.2f) {
+                    RestartLevel();
+                    return;
+                }
             }
             else if (gameState == GameStates.PostLevel) {
                 StartNextLevel();
@@ -155,6 +163,12 @@ namespace BouncePaint {
             else {
                 player.OnPressJumpButton();
             }
+        }
+        override protected void RegisterButtonInput() {
+            base.RegisterButtonInput();
+            if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPreviousLevel(); }
+            if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
+            if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
         }
 
 
@@ -195,6 +209,15 @@ namespace BouncePaint {
         //}
 
 
+        // ----------------------------------------------------------------
+        //  Debug
+        // ----------------------------------------------------------------
+        private void Debug_WinLevel() {
+            foreach (PaintSpace space in paintSpaces) {
+                space.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
+            }
+            OnPlayerPaintLastSpace();
+        }
 
 
 

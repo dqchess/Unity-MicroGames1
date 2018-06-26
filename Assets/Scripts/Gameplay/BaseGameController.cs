@@ -76,7 +76,7 @@ abstract public class BaseGameController : MonoBehaviour {
 		RegisterButtonInput ();
 //		RegisterMouseInput();
 	}
-	private void RegisterButtonInput () {
+	virtual protected void RegisterButtonInput () {
 		bool isKey_alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
 		bool isKey_control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
