@@ -9,4 +9,6 @@ public static class SceneNames {
 	public const string AlphaTapOrder = "AlphaTapOrder";
 
     public const string BouncePaint = "BouncePaint";
+
+    public const string LetterClear = "LetterClear";
 }

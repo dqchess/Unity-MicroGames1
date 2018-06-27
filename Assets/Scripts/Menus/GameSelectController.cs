@@ -18,5 +18,7 @@ public class GameSelectController : MonoBehaviour {
 
     public void OpenScene_BouncePaint() { OpenScene(SceneNames.BouncePaint); }
 
+    public void OpenScene_LetterClear() { OpenScene(SceneNames.LetterClear); }
+
 
 }

@@ -5,11 +5,17 @@ using UnityEngine;
 public class ResourcesHandler : MonoBehaviour {
     // References!
     [SerializeField] public GameObject alphaTapOrder_tapSpace;
+
     [SerializeField] public GameObject bouncePaint_paintSpace;
+
+    [SerializeField] public GameObject letterClear_letterTile;
+    [SerializeField] public GameObject letterClear_wordTile;
+
 
 	// Instance
 	static private ResourcesHandler instance;
 	static public ResourcesHandler Instance { get { return instance; } }
+
 
 	// Awake
 	private void Awake () {
