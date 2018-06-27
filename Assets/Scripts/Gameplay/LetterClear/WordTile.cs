@@ -6,7 +6,7 @@ namespace LetterClear {
     public class WordTile : MonoBehaviour {
         // Components
         [SerializeField] private RectTransform myRectTransform=null;
-        public List<LetterTile> letterTiles;//QQQ private
+        private List<LetterTile> letterTiles;
         // Properties
         private string myWord;
         private Vector2 pos; // NOTE: Not my actual physical pos. Just used for my LetterTiles.
@@ -20,6 +20,7 @@ namespace LetterClear {
         //    get { return myRectTransform.anchoredPosition; }
         //    set { myRectTransform.anchoredPosition = value; }
         //}
+        public int NumLetters { get { return letterTiles.Count; } }
         public Vector2 Pos {
             get { return pos; }
             set {

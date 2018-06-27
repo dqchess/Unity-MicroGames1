@@ -40,7 +40,7 @@ namespace WallPaint {
             // Update values!
             sideFacing = _side;
             vel = MathUtils.GetDir(_side).ToVector2() * speed;
-            //canSteer = false; // I can no longer steer until I hit a wall! ;)QQQ
+            canSteer = false; // I can no longer steer until I hit a wall! ;)
         }
 
 

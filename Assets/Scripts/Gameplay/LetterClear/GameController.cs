@@ -73,6 +73,7 @@ namespace LetterClear {
             float spaceSize = fontSize*0.4f;
             float lineHeight = fontSize;
             foreach (WordTile tile in wordTiles) {
+                if (tile.NumLetters == 0) { continue; } // Skip empty words.
                 // Set the font size!
                 tile.SetFontSize(fontSize);
                 // Determine if this word should spill over to the next line.
@@ -239,16 +240,39 @@ namespace LetterClear {
 
 
         private string[] availableSentences = new string[]{
+            // Vaguely Curated
+            "on ten inhibition",
+            "twitter tweet",
+            "free the kind referee",
+            "beekeepers keep bees going all night long",
+            "The guy we're meeting with can't even grow his own hair?! Come on!",//What, so t
+            "The Man Inside Me seems well reviewed.",
+            /*
+            alfalfa
+            meseems
+senescence
+sleeveless
+tattletale
+abracadabra
+endlessness
+engineering
+inconcoction
+senselessly
+sleeplessness
+unconsciousness
+nationalization
+interconnection
+disinterestedness
+
+            */
+
+            // Tests
             "Hum drum",
             "I rent tents",
             "Eleven elves",
             "Groggy puppy",
-            "No inhibition",
             "Catch the cat",
-            "Twitter tweet",
-            "Free the referee",
             "An assassin sins",
-            "Beekeepers keep bees",
 
             // Bluth Ipsum!
             "Those are balls.",
@@ -260,10 +284,8 @@ namespace LetterClear {
             "If you don't start pulling your weight around here, it's going to be shape up... or ship up.",
             "I could use a leather jacket for when I'm on my hog and have to go into a controlled slide.",
             "Look at us, crying like a bunch of girls on the last day of camp.",
-            "What, so the guy we are meeting with can't even grow his own hair? Come on!",
             "Look what the homosexuals have done to me! You can't just comb that out and reset it?",
             "No borders, no limits... Go ahead, touch the Cornballer... You know best?",
-            "The Man Inside Me seems well reviewed.",
             "I run a pretty tight ship around here. With a pool table.",
             "It's, like, Hey, you want to go down to the whirlpool? Yeah, I don't have a husband.",
             "There are dozens of us! Dozens!",
