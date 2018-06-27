@@ -24,7 +24,7 @@ namespace LetterClear {
             get { return pos; }
             set {
                 pos = value;
-                UpdateLettersPositions();
+                UpdateLettersPosTargets();
             }
         }
         public float GetWidth() {
@@ -34,8 +34,9 @@ namespace LetterClear {
             }
             return total;
         }
-        public LetterTile GetLetterAtPoint(Vector2 point) {
+        public LetterTile GetAvailableLetterAtPoint(Vector2 point) {
             foreach (LetterTile tile in letterTiles) {
+                if (!tile.IsOnEnd) { continue; } // Not on the end?? Skip it!
                 if (tile.MyRect.Contains(point)) {
                     return tile;
                 }
@@ -64,7 +65,7 @@ namespace LetterClear {
                 newObj.Initialize(this, c);
                 letterTiles.Add(newObj);
             }
-
+            UpdateLettersOnEnd();
         }
 
 
@@ -75,15 +76,25 @@ namespace LetterClear {
             foreach (LetterTile tile in letterTiles) {
                 tile.SetFontSize(fontSize);
             }
-            UpdateLettersPositions();
+            UpdateLettersPosTargets();
         }
 
-
-        private void UpdateLettersPositions() {
+        private void UpdateLettersPosTargets() {
             float tempX = Pos.x;
             foreach (LetterTile tile in letterTiles) {
-                tile.Pos = new Vector2(tempX, Pos.y);
+                tile.PosTarget = new Vector2(tempX, Pos.y);
                 tempX += tile.Width;
+            }
+        }
+
+        public void RemoveLetter(LetterTile letter) {
+            letterTiles.Remove(letter);
+            Destroy(letter.gameObject);
+            UpdateLettersOnEnd();
+        }
+        private void UpdateLettersOnEnd() {
+            for (int i=0; i<letterTiles.Count; i++) {
+                letterTiles[i].SetIsOnEnd(i==0 || i==letterTiles.Count-1);
             }
         }
 

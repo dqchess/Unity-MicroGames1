@@ -8,13 +8,31 @@ namespace LetterClear {
         // Properties
         private int currentLevelIndex;
         // Components
+        [SerializeField] private Image i_letterOverHighlight;
+        [SerializeField] private Image i_letterSelectedHighlight;
         private List<WordTile> wordTiles;
         // References
         [SerializeField] private Canvas myCanvas;
         [SerializeField] private RectTransform rt_letterTiles=null;
         private LetterTile letterOver;
+        private LetterTile letterSelected;
 
-        // Getters
+        // Getters (Private)
+        private bool IsMatch(LetterTile letterA, LetterTile letterB) {
+            if (letterA.IsVowel || letterB.IsVowel) { return true; } // TESTing mechanics!
+            return letterA!=letterB && letterA.MyCharLower == letterB.MyCharLower;
+        }
+        private LetterTile GetLetterMouseOver() {
+            Vector2 mousePos = Input.mousePosition;
+            mousePos /= myCanvas.scaleFactor;
+            mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
+            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
+            foreach (WordTile wordTile in wordTiles) {
+                LetterTile tileHere = wordTile.GetAvailableLetterAtPoint(mousePos);
+                if (tileHere != null) { return tileHere; }
+            }
+            return null;
+        }
 
 
 
@@ -44,8 +62,11 @@ namespace LetterClear {
         }
         private void UpdateWordsPositions() {
             // Position 'em!
-            Rect availableRect = new Rect(Vector2.zero, rt_letterTiles.rect.size);
-            //availableRect.
+            Rect availableRect = new Rect();
+            Vector2 padding = new Vector2(40, 40);
+            availableRect.size = rt_letterTiles.rect.size - padding*2;
+            availableRect.position = new Vector2(padding.x, -padding.y);
+                
             float tempX = availableRect.xMin;
             float tempY = availableRect.yMin;
             const int fontSize = 100;
@@ -86,14 +107,15 @@ namespace LetterClear {
             SetIsPaused(false);
 
             // Set basics!
-            //Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
+            i_letterOverHighlight.enabled = false;
+            i_letterSelectedHighlight.enabled = false;
 
             // Tell the UI!
             //ui.UpdateLevelName(currentLevelIndex);
 
             // Initialize everything!
-            //TODO: different sentence per level.
-            InitializeLevel("start with a sentence. match letters against each other to clear them.");
+            string sentence = availableSentences[currentLevelIndex];
+            InitializeLevel(sentence);//"start with a sentence. match letters.");// against each other to clear them.");
         }
         private void SetGameOver() {
             //gameState = GameStates.GameOver;
@@ -119,17 +141,14 @@ namespace LetterClear {
             RegisterMouseInput();
         }
 
-        private void RegisterMouseInput() {
-            if (Input.GetMouseButtonDown(0)) {
-                OnMouseDown();
-            }
-        }
-
-
         private void UpdateLetterOver() {
             LetterTile pletterOver = letterOver;
             letterOver = GetLetterMouseOver();
-            // It's changed!
+
+            // Put the highlight where it belongs, yo-yo.
+            ShowHighlightOverLetter(i_letterOverHighlight, letterOver);
+
+            // It's changed!?
             if (pletterOver != letterOver) {
                 if (pletterOver != null) {
                     pletterOver.OnMouseOut();
@@ -139,16 +158,23 @@ namespace LetterClear {
                 }
             }
         }
-        private LetterTile GetLetterMouseOver() {
-            Vector2 mousePos = Input.mousePosition;
-            mousePos /= myCanvas.scaleFactor;
-            mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
-            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
-            foreach (WordTile wordTile in wordTiles) {
-                LetterTile tileHere = wordTile.GetLetterAtPoint(mousePos);
-                if (tileHere != null) { return tileHere; }
+        private void ShowHighlightOverLetter(Image highlight, LetterTile letter) {
+            highlight.enabled = letter != null;
+            if (letter != null) {
+                highlight.rectTransform.sizeDelta = letter.MyRect.size;
+                highlight.rectTransform.anchoredPosition = letter.MyRect.position;
+                //highlight.rectTransform.anchoredPosition += new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
             }
-            return null;
+        }
+        private void MatchLetters(LetterTile letterA, LetterTile letterB) {
+            letterA.OnMatched();
+            letterB.OnMatched();
+            UpdateWordsPositions();
+            SetLetterSelected(null);
+        }
+        private void SetLetterSelected(LetterTile letter) {
+            letterSelected = letter;
+            ShowHighlightOverLetter(i_letterSelectedHighlight, letterSelected);
         }
 
 
@@ -156,6 +182,11 @@ namespace LetterClear {
         // ----------------------------------------------------------------
         //  Input
         // ----------------------------------------------------------------
+        private void RegisterMouseInput() {
+            if (Input.GetMouseButtonDown(0)) {
+                OnMouseDown();
+            }
+        }
         private void OnMouseDown() {
             //if (gameState == GameStates.GameOver) {
             //    // Make us wait a short moment so we visually register what's happened.
@@ -169,8 +200,23 @@ namespace LetterClear {
             //    return;
             //}
             //else {
-            //    
             //}
+
+            // We're over a letter?!
+            if (letterOver != null) {
+                // We DO have a letter selected AND it's a match!?
+                if (letterSelected != null && IsMatch(letterOver, letterSelected)) {
+                    MatchLetters(letterOver, letterSelected);
+                }
+                // We DON'T have a letter selected...
+                else {
+                    SetLetterSelected(letterOver);
+                }
+            }
+            // We're NOT over a letter...
+            else {
+                SetLetterSelected(null);
+            }
         }
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
@@ -178,6 +224,7 @@ namespace LetterClear {
             if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
             if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
         }
+
 
 
 
@@ -191,6 +238,55 @@ namespace LetterClear {
         }
 
 
+        private string[] availableSentences = new string[]{
+            "Hum drum",
+            "I rent tents",
+            "Eleven elves",
+            "Groggy puppy",
+            "No inhibition",
+            "Catch the cat",
+            "Twitter tweet",
+            "Free the referee",
+            "An assassin sins",
+            "Beekeepers keep bees",
+
+            // Bluth Ipsum!
+            "Those are balls.",
+            "Turn this skiff around!",
+            "You're Killing Me, Buster.",
+            "Heyyyy uncle father Oscar.",
+            "Go ahead, touch the Cornballer.",
+            "I'm sure Egg is a great person.",
+            "If you don't start pulling your weight around here, it's going to be shape up... or ship up.",
+            "I could use a leather jacket for when I'm on my hog and have to go into a controlled slide.",
+            "Look at us, crying like a bunch of girls on the last day of camp.",
+            "What, so the guy we are meeting with can't even grow his own hair? Come on!",
+            "Look what the homosexuals have done to me! You can't just comb that out and reset it?",
+            "No borders, no limits... Go ahead, touch the Cornballer... You know best?",
+            "The Man Inside Me seems well reviewed.",
+            "I run a pretty tight ship around here. With a pool table.",
+            "It's, like, Hey, you want to go down to the whirlpool? Yeah, I don't have a husband.",
+            "There are dozens of us! Dozens!",
+            "You don't want a hungry dove down your pants.",
+            "Can't a guy call his mother pretty without it seeming strange?",
+            "And how about that little piece of tail on her? Cute!",
+            "Stop licking my hand, you horse's ass!",
+            "¡Soy loco por los Cornballs!",
+            "You just made a fool out of yourself in front of T-Bone.",
+            "You burned down the storage unit? Oh, most definitely.",
+            "My brother wasn't optimistic it could be done, but I didn't take 'wasn't optimistic it could be done' for an answer.",
+            "If you're suggesting I play favorites, you're wrong. I love all of my children equally. [earlier] I don't care for Gob.",
+            "So did you see the new Poof? His name's Gary, and we don't need anymore lawsuits.",
+            "Teamocil! One for the ladies. I call it Swing City. Say goodbye to THESE!",
+            "I've been in the film business for a while but I just cant seem to get one in the can.",
+            "I need a fake passport, preferably to France... I like the way they think.",
+            "Oh, yeah, the guy in the the $4,000 suit is holding the elevator for a guy who doesn't make that in three months. Come on!",
+            "Actually, that was a box of Oscar's legally obtained medical marijuana. Primo bud. Real sticky weed.",
+            "You know, your average American male is in a perpetual state of adolescence, you know, arrested development. (Hey. That's the name of the show!)",
+            "Let's make Ann the backup, okay? Very good way to think about her, as a backup.",
+            "Everything they do is so dramatic and flamboyant. It just makes me want to set myself on fire.",
+            "I'm gonna build me an airport, put my name on it. Why, Michael? So you can fly away from your feelings?",
+        };
 
     }
 }
