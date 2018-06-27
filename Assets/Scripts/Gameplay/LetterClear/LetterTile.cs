@@ -12,17 +12,21 @@ namespace LetterClear {
         private bool isVowel;
         private char myChar;
         private Color myColor;
+        private int fontSize;
+        private Rect myRect;
         // References
         private WordTile myWordTile;
 
         // Getters (Public)
         public Vector2 Pos {
             get { return myRectTransform.anchoredPosition; }
-            set { myRectTransform.anchoredPosition = value; }
+            set {
+                myRectTransform.anchoredPosition = value;
+                UpdateMyRect();
+            }
         }
-        public float GetWidth() {
-            return textField.preferredWidth;
-        }
+        public Rect MyRect { get { return myRect; } }
+        public float Width { get { return myRect.width; } }
 
 
         // ----------------------------------------------------------------
@@ -54,7 +58,23 @@ namespace LetterClear {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-        public void SetFontSize(int fontSize) {
+        private void UpdateMyRect() {
+            myRect = new Rect(Pos.x,Pos.y, textField.preferredWidth,textField.preferredHeight);
+        }
+
+        public void SetFontSize(int _fontSize) {
+            fontSize = _fontSize;
+            textField.fontSize = fontSize;
+            UpdateMyRect();
+        }
+
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        public void OnMouseOver() {
+            textField.fontSize = (int)(fontSize*1.2f);
+        }
+        public void OnMouseOut() {
             textField.fontSize = fontSize;
         }
 

@@ -10,7 +10,9 @@ namespace LetterClear {
         // Components
         private List<WordTile> wordTiles;
         // References
+        [SerializeField] private Canvas myCanvas;
         [SerializeField] private RectTransform rt_letterTiles=null;
+        private LetterTile letterOver;
 
         // Getters
 
@@ -42,10 +44,11 @@ namespace LetterClear {
         }
         private void UpdateWordsPositions() {
             // Position 'em!
-            Rect availableRect = rt_letterTiles.rect;
+            Rect availableRect = new Rect(Vector2.zero, rt_letterTiles.rect.size);
+            //availableRect.
             float tempX = availableRect.xMin;
-            float tempY = availableRect.yMax;
-            const int fontSize = 60;
+            float tempY = availableRect.yMin;
+            const int fontSize = 100;
             float spaceSize = fontSize*0.4f;
             float lineHeight = fontSize;
             foreach (WordTile tile in wordTiles) {
@@ -112,6 +115,7 @@ namespace LetterClear {
         override protected void Update () {
             base.Update();
 
+            UpdateLetterOver();
             RegisterMouseInput();
         }
 
@@ -119,6 +123,32 @@ namespace LetterClear {
             if (Input.GetMouseButtonDown(0)) {
                 OnMouseDown();
             }
+        }
+
+
+        private void UpdateLetterOver() {
+            LetterTile pletterOver = letterOver;
+            letterOver = GetLetterMouseOver();
+            // It's changed!
+            if (pletterOver != letterOver) {
+                if (pletterOver != null) {
+                    pletterOver.OnMouseOut();
+                }
+                if (letterOver != null) {
+                    letterOver.OnMouseOver();
+                }
+            }
+        }
+        private LetterTile GetLetterMouseOver() {
+            Vector2 mousePos = Input.mousePosition;
+            mousePos /= myCanvas.scaleFactor;
+            mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
+            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
+            foreach (WordTile wordTile in wordTiles) {
+                LetterTile tileHere = wordTile.GetLetterAtPoint(mousePos);
+                if (tileHere != null) { return tileHere; }
+            }
+            return null;
         }
 
 

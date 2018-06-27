@@ -4,7 +4,7 @@ using System.Collections;
 public class ScreenHandler : MonoBehaviour {
 	// Constants
 	static private Vector2 originalScreenSize { get {
-			return IsLandscape() ? new Vector2(1024,768) : new Vector2(1080,1920); // Instead of asking if we're on mobile, ask if we're landscape/portrait, which is more flexible.
+            return IsLandscape() ? new Vector2(1024,768) : new Vector2(768,1024);//1080,1920); // Instead of asking if we're on mobile, ask if we're landscape/portrait, which is more flexible.
 	} }
 	// Statics!
 	static private float screenScale;
