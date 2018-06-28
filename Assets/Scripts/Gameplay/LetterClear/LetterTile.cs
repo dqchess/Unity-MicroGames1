@@ -40,6 +40,8 @@ namespace LetterClear {
         public char MyCharLower { get { return myCharLower; } }
         public Rect MyRect { get { return myRect; } }
         public float Width { get { return myRect.width; } }
+        public float Height { get { return myRect.height; } }
+        //public WordTile MyWordTile { get { return MyWordTile; } }
 
 
         // ----------------------------------------------------------------
@@ -89,6 +91,12 @@ namespace LetterClear {
             UpdateMyRect();
         }
 
+        public void TransferToWord(WordTile newWord, int insertIndex) {
+            myWordTile.RemoveLetterFromList(this);
+            newWord.InsertLetterInList(insertIndex, this);
+            myWordTile = newWord;
+        }
+
 
         // ----------------------------------------------------------------
         //  Events
@@ -100,7 +108,7 @@ namespace LetterClear {
             textField.fontSize = fontSize;
         }
         public void OnMatched() {
-            myWordTile.RemoveLetter(this);
+            myWordTile.DestroyLetter(this);
         }
 
 

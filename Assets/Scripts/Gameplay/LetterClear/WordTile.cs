@@ -8,6 +8,7 @@ namespace LetterClear {
         [SerializeField] private RectTransform myRectTransform=null;
         private List<LetterTile> letterTiles;
         // Properties
+        private Rect myRect;
         private string myWord;
         private Vector2 pos; // NOTE: Not my actual physical pos. Just used for my LetterTiles.
         // References
@@ -20,20 +21,16 @@ namespace LetterClear {
         //    get { return myRectTransform.anchoredPosition; }
         //    set { myRectTransform.anchoredPosition = value; }
         //}
+        //public List<LetterTile> LetterTiles { get { return letterTiles; } }
         public int NumLetters { get { return letterTiles.Count; } }
+        public float Width { get { return myRect.width; } }
+        public Rect MyRect { get { return myRect; } }
         public Vector2 Pos {
             get { return pos; }
             set {
                 pos = value;
                 UpdateLettersPosTargets();
             }
-        }
-        public float GetWidth() {
-            float total = 0;
-            foreach (LetterTile tile in letterTiles) {
-                total += tile.Width;
-            }
-            return total;
         }
         public LetterTile GetAvailableLetterAtPoint(Vector2 point) {
             foreach (LetterTile tile in letterTiles) {
@@ -78,6 +75,7 @@ namespace LetterClear {
                 tile.SetFontSize(fontSize);
             }
             UpdateLettersPosTargets();
+            UpdateMyRect();
         }
 
         private void UpdateLettersPosTargets() {
@@ -88,15 +86,48 @@ namespace LetterClear {
             }
         }
 
-        public void RemoveLetter(LetterTile letter) {
+        public void InsertLetterInList(int insertIndex, LetterTile letter) {
+            letterTiles.Insert(insertIndex, letter);
+            OnLettersChanged();
+        }
+        public void RemoveLetterFromList(LetterTile letter) {
+            if (letterTiles.Contains(letter)) {
+                letterTiles.Remove(letter);
+            }
+            OnLettersChanged();
+        }
+        public void DestroyLetter(LetterTile letter) {
             letterTiles.Remove(letter);
             Destroy(letter.gameObject);
+            OnLettersChanged();
+        }
+
+        private void OnLettersChanged() {
             UpdateLettersOnEnd();
+            UpdateMyRect();
+        }
+
+        private void UpdateMyRect() {
+            myRect = new Rect();
+            foreach (LetterTile tile in letterTiles) {
+                myRect.size = new Vector2(myRect.size.x+tile.Width, Mathf.Max(myRect.size.y, tile.Height));
+            }
+            myRect.position = Pos;
         }
         private void UpdateLettersOnEnd() {
             for (int i=0; i<letterTiles.Count; i++) {
                 letterTiles[i].SetIsOnEnd(i==0 || i==letterTiles.Count-1);
             }
+        }
+
+        public void InsertLetter(LetterTile newLetter, Vector2 insertPos) {
+            // Decide where to put de lime.
+            int insertIndex = 0;
+            for (int i=0; i<letterTiles.Count; i++) {
+                if (insertPos.x > letterTiles[i].PosTarget.x) { insertIndex = i; }
+            }
+            // Put de lime in de coconut.
+            newLetter.TransferToWord(this, insertIndex);
         }
 
 

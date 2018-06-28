@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 namespace LetterClear {
     public class GameController : BaseGameController {
+        // Components
+        [SerializeField] private Image i_letterOverHighlight=null;
+        [SerializeField] private Image i_letterSelectedHighlight=null;
+        private List<WordTile> wordTiles;
         // Properties
         private int currentLevelIndex;
-        // Components
-        [SerializeField] private Image i_letterOverHighlight;
-        [SerializeField] private Image i_letterSelectedHighlight;
-        private List<WordTile> wordTiles;
+        private Vector2 mousePos;
+        private Vector2 mouseDragOffset;
         // References
-        [SerializeField] private Canvas myCanvas;
+        [SerializeField] private Canvas myCanvas=null;
         [SerializeField] private RectTransform rt_letterTiles=null;
         private LetterTile letterOver;
+        private LetterTile letterDragging;
         private LetterTile letterSelected;
 
         // Getters (Private)
@@ -22,13 +25,15 @@ namespace LetterClear {
             if (letterA.IsVowel || letterB.IsVowel) { return true; } // TESTing mechanics!
             return letterA!=letterB && letterA.MyCharLower == letterB.MyCharLower;
         }
-        private LetterTile GetLetterMouseOver() {
-            Vector2 mousePos = Input.mousePosition;
-            mousePos /= myCanvas.scaleFactor;
-            mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
-            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
+        private WordTile GetWordAtPoint(Vector2 point) {
+            foreach (WordTile tile in wordTiles) {
+                if (tile.MyRect.Contains(point)) { return tile; }
+            }
+            return null;
+        }
+        private LetterTile GetLetterAtPoint(Vector2 point) {
             foreach (WordTile wordTile in wordTiles) {
-                LetterTile tileHere = wordTile.GetAvailableLetterAtPoint(mousePos);
+                LetterTile tileHere = wordTile.GetAvailableLetterAtPoint(point);
                 if (tileHere != null) { return tileHere; }
             }
             return null;
@@ -77,7 +82,7 @@ namespace LetterClear {
                 // Set the font size!
                 tile.SetFontSize(fontSize);
                 // Determine if this word should spill over to the next line.
-                float tileWidth = tile.GetWidth();
+                float tileWidth = tile.Width;
                 if (tempX+tileWidth>availableRect.xMax && tileWidth<availableRect.width) { // If this word spills over AND it's not exceedingly big (in which case, just let it be)?
                     tempX = availableRect.xMin;
                     tempY -= lineHeight;
@@ -138,13 +143,26 @@ namespace LetterClear {
         override protected void Update () {
             base.Update();
 
+            UpdateMousePosRelative();
             UpdateLetterOver();
+            UpdateLetterDragging();
             RegisterMouseInput();
+        }
+        private void UpdateMousePosRelative() {
+            mousePos = Input.mousePosition;
+            mousePos /= myCanvas.scaleFactor;
+            mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
+            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
         }
 
         private void UpdateLetterOver() {
             LetterTile pletterOver = letterOver;
-            letterOver = GetLetterMouseOver();
+            if (letterDragging == null) {
+                letterOver = GetLetterAtPoint(mousePos);
+            }
+            else {
+                letterOver = null;
+            }
 
             // Put the highlight where it belongs, yo-yo.
             ShowHighlightOverLetter(i_letterOverHighlight, letterOver);
@@ -159,6 +177,12 @@ namespace LetterClear {
                 }
             }
         }
+        private void UpdateLetterDragging() {
+            if (letterDragging != null) {
+                letterDragging.PosTarget = mousePos;
+            }
+        }
+
         private void ShowHighlightOverLetter(Image highlight, LetterTile letter) {
             highlight.enabled = letter != null;
             if (letter != null) {
@@ -187,22 +211,11 @@ namespace LetterClear {
             if (Input.GetMouseButtonDown(0)) {
                 OnMouseDown();
             }
+            else if (Input.GetMouseButtonUp(0)) {
+                OnMouseUp();
+            }
         }
         private void OnMouseDown() {
-            //if (gameState == GameStates.GameOver) {
-            //    // Make us wait a short moment so we visually register what's happened.
-            //    if (Time.time>timeWhenLevelEnded+0.2f) {
-            //        RestartLevel();
-            //        return;
-            //    }
-            //}
-            //else if (gameState == GameStates.PostLevel) {
-            //    StartNextLevel();
-            //    return;
-            //}
-            //else {
-            //}
-
             // We're over a letter?!
             if (letterOver != null) {
                 // We DO have a letter selected AND it's a match!?
@@ -211,6 +224,7 @@ namespace LetterClear {
                 }
                 // We DON'T have a letter selected...
                 else {
+                    letterDragging = letterOver;
                     SetLetterSelected(letterOver);
                 }
             }
@@ -219,11 +233,30 @@ namespace LetterClear {
                 SetLetterSelected(null);
             }
         }
+        private void OnMouseUp() {
+            ReleaseLetterDragging();
+        }
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
             if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPreviousLevel(); }
             if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
             if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
+        }
+
+        private void ReleaseLetterDragging() {
+            if (letterDragging != null) {
+                // Insert it where it belongs!
+                WordTile wordTileOver = GetWordAtPoint(mousePos);
+                if (wordTileOver != null) {
+                    wordTileOver.InsertLetter(letterDragging, mousePos);
+                }
+                else {
+                    //letterDragging.PosTarget = 
+                    SetLetterSelected(null); // just in case.
+                }
+                UpdateWordsPositions();// HACKy quick implementation
+                letterDragging = null;
+            }
         }
 
 
@@ -240,29 +273,32 @@ namespace LetterClear {
 
 
         private string[] availableSentences = new string[]{
-            // Vaguely Curated
-            "on ten inhibition",
-            "twitter tweet",
+            // Solvable!! (With E as wilds.)
             "free the kind referee",
             "beekeepers keep bees going all night long",
             "The guy we're meeting with can't even grow his own hair?! Come on!",//What, so t
             "The Man Inside Me seems well reviewed.",
+            // Vaguely Curated
+            "on ten inhibition",
+            "twitter tweet",
+
+
             /*
             alfalfa
             meseems
-senescence
-sleeveless
-tattletale
-abracadabra
-endlessness
-engineering
-inconcoction
-senselessly
-sleeplessness
-unconsciousness
-nationalization
-interconnection
-disinterestedness
+            senescence
+            sleeveless
+            tattletale
+            abracadabra
+            endlessness
+            engineering
+            inconcoction
+            senselessly
+            sleeplessness
+            unconsciousness
+            nationalization
+            interconnection
+            disinterestedness
 
             */
 
