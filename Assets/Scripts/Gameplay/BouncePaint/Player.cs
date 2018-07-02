@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 namespace BouncePaint {
     public class Player : MonoBehaviour {
-        // Constants
-        private const float peakPosYNeutral = 500f; // HARDCODED for now
         // Components
         [SerializeField] private Image i_body=null;
         [SerializeField] private ParticleSystem ps_dieBurst=null;
@@ -15,12 +13,14 @@ namespace BouncePaint {
         private bool isDead;
         private float stretch=0;
         private float stretchVel=0;
+        private float fallHeightNeutral; // the peak y distance between me and the space I'm headed to! I bounce UP to this height and fall from there.
         private Vector2 gravity;
         private Vector2 vel;
         // References
         [SerializeField] private GameController gameController=null;
         [SerializeField] private Sprite s_bodyNormal=null;
         [SerializeField] private Sprite s_bodyDashedOutline=null;
+        private PaintSpace spaceHeadingTo;
 
         // Getters (Public)
         public static Color GetRandomHappyColor() { return new ColorHSB(Random.Range(0f,1f), 0.9f, 1f).ToColor(); }
@@ -65,16 +65,22 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         public void Reset(int levelIndex) {
             isDead = false;
-            PaintSpace startingSpace = GetRandomUnpaintedSpace();
-            pos = new Vector2(startingSpace.HitRect.center.x, peakPosYNeutral);
-            vel = Vector2.zero;
+            fallHeightNeutral = GetFallHeightNeutral(levelIndex);
+            spaceHeadingTo = GetRandomUnpaintedSpace();
             gravity = new Vector2(0, GetGravityY(levelIndex));
+            pos = new Vector2(spaceHeadingTo.HitRect.center.x, spaceHeadingTo.HitRect.center.y + fallHeightNeutral);
+            vel = Vector2.zero;
+
             bodyColor = GetRandomHappyColor();
             i_body.sprite = s_bodyNormal;
             ps_dieBurst.Clear();
         }
         private float GetGravityY(int levelIndex) {
-            return -0.35f - levelIndex*0.05f;
+            return -0.30f - levelIndex*0.01f;
+        }
+        private float GetFallHeightNeutral(int levelIndex) {
+            // return Mathf.Min(360, 200+levelIndex*10f); // TESTing out these values
+            return 260f;
         }
 
 
@@ -98,34 +104,33 @@ namespace BouncePaint {
             if (!IsLevelComplete) {
                 bodyColor = GetRandomHappyColor();
             }
-
             // Paint the space!
             if (space != null) {
                 space.OnPlayerBounceOnMe(bodyColor);
+                gameController.OnPlayerPaintSpace();
             }
 
             // Choose the next space to go to!!
             PaintSpace nextSpace = GetRandomUnpaintedSpace();
-            if (nextSpace == null) { // No next space? No worries! Just flip our vel.
-                vel = new Vector2(0, -vel.y);
+            if (nextSpace != null) { // Is there a space to go to? Let's go to it!
+                spaceHeadingTo = nextSpace;
             }
-            else {
-                // Find how fast we have to move upward to reach this y pos, and set our vel to that!
-                float peakPosY = peakPosYNeutral + Random.Range(-50,50);
-                float yDist = Mathf.Max (0, peakPosY-pos.y);
-                float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
+            
+            // Find how fast we have to move upward to reach this y pos, and set our vel to that!
+            Vector2 spaceToPos = spaceHeadingTo.HitRect.center;
+            float peakPosY = spaceToPos.y+fallHeightNeutral + Random.Range(-50,50);
+            float displacementY = spaceToPos.y - pos.y;
+            float yDist = Mathf.Max (0, peakPosY-pos.y);
+            float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
 
-                float timeOfFlight = 2f*yVel / gravity.y;
-                float xDist = pos.x - nextSpace.HitRect.center.x;
-                float xVel = xDist / timeOfFlight;
+            // float timeOfFlight = 2f*yVel / gravity.y;
+            float g = gravity.y;
+            float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 
-                vel = new Vector2(xVel, yVel);
-            }
+            float xDist = spaceToPos.x - pos.x;
+            float xVel = xDist / timeOfFlight;
 
-            // No next space?? Tell GameController we're so good at this level!
-            if (nextSpace == null) {
-                gameController.OnPlayerPaintLastSpace();
-            }
+            vel = new Vector2(xVel, yVel);
         }
 
         private void Explode() {
@@ -164,9 +169,9 @@ namespace BouncePaint {
             pos += vel;
         }
         private void ApplyBounds() {
-            // If I've dropped off the face of the earth, explode me!
-            float boundsY = IsLevelComplete ? 270f : 255f; // HACK HARDCODED
-            if (pos.y < boundsY) {
+            // If I've passed too far into the space I'm heading towards, explode me!
+            float boundsY = spaceHeadingTo.HitRect.yMin;//IsLevelComplete ? 270f : 255f; // HACK HARDCODED
+            if (vel.y<0 && pos.y<boundsY) {
                 pos = new Vector2(pos.x, boundsY);
                 if (IsLevelComplete) {
                     PaintSpace paintSpaceTouching = GetSpaceTouching();
@@ -200,3 +205,15 @@ namespace BouncePaint {
 
     }
 }
+
+
+
+/*
+Trajectory math! #quadraticformula
+dispY = yVel*t + (g*t^2)*0.5
+0 = g*0.5*t^2 + yVel*t + -dispY
+t = (-B +/- sqrt(B^2-4AC)) / 2A
+t = (-yVel - sqrt(yVel*yVel-4*(g*0.5f)*(-dispY))) / (2*g*0.5f)
+t = (-yVel - sqrt(yVel*yVel + 2*g*dispY)) / g
+*/
+

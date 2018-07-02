@@ -19,9 +19,20 @@ namespace BouncePaint {
 		[SerializeField] private Image i_spacesAvailableRect=null;
         [SerializeField] private RectTransform rt_paintSpaces=null;
 
-        // Getters
+        // Getters (Public)
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
         public PaintSpace[] PaintSpaces { get { return paintSpaces; } }
+        // Getters (Private)
+        private bool IsEverySpacePainted() {
+            return NumSpacesPainted() >= paintSpaces.Length;
+        }
+        private int NumSpacesPainted() {
+            int total=0;
+            foreach (PaintSpace space in paintSpaces) {
+                if (space.IsPainted) { total ++; }
+            }
+            return total;
+        }
 
 
 
@@ -50,6 +61,7 @@ namespace BouncePaint {
                 PaintSpace newSpace = Instantiate(resourcesHandler.bouncePaint_paintSpace).GetComponent<PaintSpace>();
                 Vector2 pos = new Vector2(spaceGapX*0.5f + spaceSlotSize.x*i, 0);
                 pos += availableRect.position;
+                pos += new Vector2(0, Random.Range(0, numSpaces*20f));
                 newSpace.Initialize(this, rt_paintSpaces, pos, spaceSize);
                 paintSpaces[i] = newSpace;
             }
@@ -117,8 +129,11 @@ namespace BouncePaint {
 //          yield return null;
         }
 
-        public void OnPlayerPaintLastSpace() {
-            OnCompleteLevel();
+        public void OnPlayerPaintSpace() {
+            // We're a champion?? Win!
+            if (gameState==GameStates.Playing && IsEverySpacePainted()) {
+                OnCompleteLevel();
+            }
         }
         public void OnPlayerDie() {
             if (gameState == GameStates.Playing) {
@@ -216,7 +231,7 @@ namespace BouncePaint {
             foreach (PaintSpace space in paintSpaces) {
                 space.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
             }
-            OnPlayerPaintLastSpace();
+            OnPlayerPaintSpace();
         }
 
 

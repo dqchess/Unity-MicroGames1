@@ -42,8 +42,12 @@ namespace BouncePaint {
 
             bodyRect = new Rect(_pos, _size);
             hitRect = new Rect(bodyRect);
-            hitRect.size += new Vector2(0, -16);
-            hitRect.position += new Vector2(0, 55);
+            // Offset and shrink the hitRect!
+            hitRect.size += new Vector2(0, -12);
+            hitRect.position += new Vector2(0, 52);
+            // Bloat the hitRect's width a bit (in case of high-speed x-movement).
+            hitRect.size += new Vector2(20, 0);
+            hitRect.position += new Vector2(-10, 0);
 
             bodyColor = new Color(0,0,0, 0.4f);
 
