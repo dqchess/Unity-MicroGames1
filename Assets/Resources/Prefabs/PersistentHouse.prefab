@@ -257,7 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alphaTapOrder_tapSpace: {fileID: 1108421674652232, guid: 765d3bb2025a9244fb8204ddc28e0d83,
     type: 2}
-  bouncePaint_paintSpace: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23,
+  bouncePaint_block: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23,
     type: 2}
   letterClear_letterTile: {fileID: 1806581184494348, guid: 2d654230b575e49488b6f30055e7b1ad,
     type: 2}

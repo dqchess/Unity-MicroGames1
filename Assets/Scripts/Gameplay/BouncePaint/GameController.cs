@@ -13,23 +13,23 @@ namespace BouncePaint {
         private int currentLevelIndex;
         // Components
         [SerializeField] private Player player=null;
-        private PaintSpace[] paintSpaces;
+        private List<Block> blocks;
         // References
         [SerializeField] private GameUI ui=null;
-		[SerializeField] private Image i_spacesAvailableRect=null;
-        [SerializeField] private RectTransform rt_paintSpaces=null;
+		[SerializeField] private Image i_blocksAvailableRect=null;
+        [SerializeField] private RectTransform rt_blocks=null;
 
         // Getters (Public)
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
-        public PaintSpace[] PaintSpaces { get { return paintSpaces; } }
+        public List<Block> Blocks { get { return blocks; } }
         // Getters (Private)
-        private bool IsEverySpacePainted() {
-            return NumSpacesPainted() >= paintSpaces.Length;
+        private bool IsEveryBlockPainted() {
+            return NumBlocksPainted() >= blocks.Count;
         }
-        private int NumSpacesPainted() {
+        private int NumBlocksPainted() {
             int total=0;
-            foreach (PaintSpace space in paintSpaces) {
-                if (space.IsPainted) { total ++; }
+            foreach (Block block in blocks) {
+                if (block.IsPainted) { total ++; }
             }
             return total;
         }
@@ -46,33 +46,33 @@ namespace BouncePaint {
         }
 
 
-        private void InitializePaintSpaces(int numSpaces) {
-            DestroyPaintSpaces(); // Just in case
+        private void AddLevelComponents(int numBlocks) {
+            DestroyAllBlocks(); // Just in case
 
             Rect availableRect = new Rect();// i_spacesAvailableRect.rectTransform.rect;
-            availableRect.size = i_spacesAvailableRect.rectTransform.rect.size;
+            availableRect.size = i_blocksAvailableRect.rectTransform.rect.size;
             availableRect.position = new Vector2(0,200);
-            Vector2 spaceSlotSize = new Vector2(availableRect.width/(float)numSpaces, availableRect.height);
-            Vector2 spaceSize = new Vector2(availableRect.height, availableRect.height);//spaceSlotSize.x-spaceGapX, spaceSlotSize.y);
-            float spaceGapX = spaceSlotSize.x-spaceSize.x;//4; // how many pixels between each space.
+            Vector2 slotSize = new Vector2(availableRect.width/(float)numBlocks, availableRect.height);
+            Vector2 blockSize = new Vector2(availableRect.height, availableRect.height);//spaceSlotSize.x-spaceGapX, spaceSlotSize.y);
+            float gapX = slotSize.x-blockSize.x;//4; // how many pixels between each block.
 
-            paintSpaces = new PaintSpace[numSpaces];
-            for (int i=0; i<numSpaces; i++) {
-                PaintSpace newSpace = Instantiate(resourcesHandler.bouncePaint_paintSpace).GetComponent<PaintSpace>();
-                Vector2 pos = new Vector2(spaceGapX*0.5f + spaceSlotSize.x*i, 0);
+            blocks = new List<Block>();
+            for (int i=0; i<numBlocks; i++) {
+                Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
+                Vector2 pos = new Vector2(gapX*0.5f + slotSize.x*i, 0);
                 pos += availableRect.position;
-                pos += new Vector2(0, Random.Range(0, numSpaces*20f));
-                newSpace.Initialize(this, rt_paintSpaces, pos, spaceSize);
-                paintSpaces[i] = newSpace;
+                pos += new Vector2(0, Random.Range(0, numBlocks*20f));
+                newBlock.Initialize(this, rt_blocks, pos, blockSize);
+                blocks.Add(newBlock);
             }
         }
-        private void DestroyPaintSpaces() {
-            if (paintSpaces!=null) {
-                foreach (PaintSpace space in paintSpaces) {
-                    Destroy(space.gameObject);
+        private void DestroyAllBlocks() {
+            if (blocks!=null) {
+                foreach (Block block in blocks) {
+                    Destroy(block.gameObject);
                 }
             }
-            paintSpaces = null;
+            blocks = null;
         }
 
 
@@ -95,9 +95,9 @@ namespace BouncePaint {
             // Tell the UI!
             ui.UpdateLevelName(currentLevelIndex);
 
-            // Initialize spaces and player!
-            int numSpaces = currentLevelIndex;
-            InitializePaintSpaces(numSpaces);
+            // Initialize level components and player!
+            int numBlocks = currentLevelIndex;
+            AddLevelComponents(numBlocks);
             player.Reset(currentLevelIndex);
         }
         private void SetGameOver() {
@@ -129,9 +129,9 @@ namespace BouncePaint {
 //          yield return null;
         }
 
-        public void OnPlayerPaintSpace() {
+        public void OnPlayerPaintBlock() {
             // We're a champion?? Win!
-            if (gameState==GameStates.Playing && IsEverySpacePainted()) {
+            if (gameState==GameStates.Playing && IsEveryBlockPainted()) {
                 OnCompleteLevel();
             }
         }
@@ -187,51 +187,16 @@ namespace BouncePaint {
         }
 
 
-        // ----------------------------------------------------------------
-        //  Game Events
-        // ----------------------------------------------------------------
-        //public void OnTapSpaceClicked(TapSpace tapSpace) {
-        //    if (!tapSpace.CanTapMe) { return; } // Discard non-tappable spaces.
-
-        //    // HACk. Allow tapping either end first.
-        //    if (nextSpaceNumber==0 && tapSpace.MyNumber==tapSpaces.Length-1) {
-        //        for (int i=0; i<tapSpaces.Length; i++) {
-        //            tapSpaces[i].SetMyNumber(tapSpaces.Length-1-i);
-        //        }
-        //    }
-
-        //    // GOOD tap!
-        //    if (tapSpace.MyNumber == nextSpaceNumber) {
-        //        OnCorrectTap(tapSpace);
-        //    }
-        //    // BAD tap!
-        //    else {
-        //        OnIncorrectTap(tapSpace);
-        //    }
-        //}
-
-        //private void OnCorrectTap(TapSpace tapSpace) {
-        //    tapSpace.OnCorrectTap();
-        //    nextSpaceNumber ++;
-        //    if (nextSpaceNumber >= tapSpaces.Length) {
-        //        OnCompleteLevel();
-        //    }
-        //}
-        //private void OnIncorrectTap(TapSpace tapSpace) {
-        //    tapSpace.OnIncorrectTap();
-        //    // End the game!
-        //    SetGameOver();
-        //}
 
 
         // ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
         private void Debug_WinLevel() {
-            foreach (PaintSpace space in paintSpaces) {
-                space.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
+            foreach (Block block in blocks) {
+                block.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
             }
-            OnPlayerPaintSpace();
+            OnPlayerPaintBlock();
         }
 
 

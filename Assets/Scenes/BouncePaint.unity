@@ -5496,7 +5496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1573205472}
   m_Layer: 5
-  m_Name: rt_PaintSpaces
+  m_Name: rt_Blocks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5636,8 +5636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1927120879}
   ui: {fileID: 1481535682}
-  i_spacesAvailableRect: {fileID: 804733848}
-  rt_paintSpaces: {fileID: 1573205472}
+  i_blocksAvailableRect: {fileID: 804733848}
+  rt_blocks: {fileID: 1573205472}
 --- !u!1001 &1822790442
 Prefab:
   m_ObjectHideFlags: 0
@@ -5734,6 +5734,10 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23, type: 2}
+      propertyPath: m_Name
+      value: Block
       objectReference: {fileID: 0}
     - target: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23, type: 2}
       propertyPath: m_IsActive

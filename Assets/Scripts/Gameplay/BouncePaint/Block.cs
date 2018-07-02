@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BouncePaint {
-    public class PaintSpace : MonoBehaviour {
+    public class Block : MonoBehaviour {
         // Components
         [SerializeField] private Image i_body=null;
         [SerializeField] private Image i_hitBox=null;
