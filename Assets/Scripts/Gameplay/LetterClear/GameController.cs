@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace LetterClear {
     public class GameController : BaseGameController {
+		// Constants
+		private const int fontSize = 100;
         // Components
         [SerializeField] private Image i_letterOverHighlight=null;
         [SerializeField] private Image i_letterSelectedHighlight=null;
@@ -22,15 +24,15 @@ namespace LetterClear {
 
         // Getters (Private)
         private bool IsMatch(LetterTile letterA, LetterTile letterB) {
-            if (letterA.IsVowel || letterB.IsVowel) { return true; } // TESTing mechanics!
+            if (letterA.IsWild || letterB.IsWild) { return true; } // TESTing mechanics!
             return letterA!=letterB && letterA.MyCharLower == letterB.MyCharLower;
         }
-        private WordTile GetWordAtPoint(Vector2 point) {
-            foreach (WordTile tile in wordTiles) {
-                if (tile.MyRect.Contains(point)) { return tile; }
-            }
-            return null;
-        }
+//        private WordTile GetWordAtPoint(Vector2 point) {
+//			foreach (WordTile wordTile in wordTiles) {
+//                if (wordTile.MyRect.Contains(point)) { return wordTile; }
+//            }
+//            return null;
+//        }
         private LetterTile GetLetterAtPoint(Vector2 point) {
             foreach (WordTile wordTile in wordTiles) {
                 LetterTile tileHere = wordTile.GetAvailableLetterAtPoint(point);
@@ -60,10 +62,14 @@ namespace LetterClear {
             foreach (string word in words) {
                 WordTile newObj = Instantiate(resourcesHandler.letterClear_wordTile).GetComponent<WordTile>();
                 newObj.Initialize(this, rt_letterTiles, word);
-                wordTiles.Add(newObj);
+				newObj.SetFontSize(fontSize); // Set the font size just here!
+				wordTiles.Add(newObj);
             }
 
             UpdateWordsPositions();
+//			// hacky... do this extra so stuff's positioned correctly :p
+//			foreach (WordTile wordTile in wordTiles) { wordTile.SetLettersPosToTarget(); }
+//			UpdateWordsPositions();
         }
         private void UpdateWordsPositions() {
             // Position 'em!
@@ -74,21 +80,18 @@ namespace LetterClear {
                 
             float tempX = availableRect.xMin;
             float tempY = availableRect.yMin;
-            const int fontSize = 100;
-            float spaceSize = fontSize*0.4f;
+			float spaceSize = fontSize*0.4f;
             float lineHeight = fontSize;
-            foreach (WordTile tile in wordTiles) {
-                if (tile.NumLetters == 0) { continue; } // Skip empty words.
-                // Set the font size!
-                tile.SetFontSize(fontSize);
-                // Determine if this word should spill over to the next line.
-                float tileWidth = tile.Width;
-                if (tempX+tileWidth>availableRect.xMax && tileWidth<availableRect.width) { // If this word spills over AND it's not exceedingly big (in which case, just let it be)?
-                    tempX = availableRect.xMin;
-                    tempY -= lineHeight;
-                }
-                tile.Pos = new Vector2(tempX, tempY);
-                tempX += tileWidth + spaceSize;
+			foreach (WordTile wt in wordTiles) {
+                if (wt.NumLetters == 0) { continue; } // Skip empty words.
+				// Determine if this word should spill over to the next line.
+				float wtXMax = wt.XMax();
+				if (wtXMax > availableRect.xMax) {//tempX+tileWidth && tileWidth<availableRect.width) { // If this word spills over AND it's not exceedingly big (in which case, just let it be)?
+					tempX = availableRect.xMin;
+					tempY -= lineHeight;
+				}
+				wt.Pos = new Vector2(tempX, tempY);
+				tempX = wtXMax + spaceSize;
             }
         }
         private void DestroyWordTiles() {
@@ -136,6 +139,14 @@ namespace LetterClear {
         }
 
 
+		// ----------------------------------------------------------------
+		//  FixedUpdate
+		// ----------------------------------------------------------------
+		private void FixedUpdate() {
+			// BRUTE FORCE update this every frame for safety. Note: This could definitely be simplified.
+			UpdateWordsPositions();
+		}
+
 
         // ----------------------------------------------------------------
         //  Update
@@ -152,7 +163,6 @@ namespace LetterClear {
             mousePos = Input.mousePosition;
             mousePos /= myCanvas.scaleFactor;
             mousePos -= new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
-            mousePos += new Vector2(0,120); // blatant HACK for centering 'em.
         }
 
         private void UpdateLetterOver() {
@@ -179,16 +189,26 @@ namespace LetterClear {
         }
         private void UpdateLetterDragging() {
             if (letterDragging != null) {
-                letterDragging.PosTarget = mousePos;
+				Vector2 dragPos = mousePos + mouseDragOffset;
+				letterDragging.Pos = letterDragging.PosTarget = dragPos; // snap exactly to it.
             }
-        }
+		}
+
+		private void SetLetterDragging(LetterTile letterTile) {
+			mouseDragOffset = letterTile.Pos - mousePos;
+			letterDragging = letterTile;
+		}
+		private void SetLetterSelected(LetterTile letter) {
+			letterSelected = letter;
+			ShowHighlightOverLetter(i_letterSelectedHighlight, letterSelected);
+		}
 
         private void ShowHighlightOverLetter(Image highlight, LetterTile letter) {
             highlight.enabled = letter != null;
             if (letter != null) {
-                highlight.rectTransform.sizeDelta = letter.MyRect.size;
-                highlight.rectTransform.anchoredPosition = letter.MyRect.position;
-                //highlight.rectTransform.anchoredPosition += new Vector2(0, rt_letterTiles.rect.height); // a little sloppy with this alignment business...
+				Rect rect = letter.MyRect;
+				highlight.rectTransform.sizeDelta = rect.size;
+				highlight.rectTransform.anchoredPosition = rect.position;
             }
         }
         private void MatchLetters(LetterTile letterA, LetterTile letterB) {
@@ -196,11 +216,7 @@ namespace LetterClear {
             letterB.OnMatched();
             UpdateWordsPositions();
             SetLetterSelected(null);
-        }
-        private void SetLetterSelected(LetterTile letter) {
-            letterSelected = letter;
-            ShowHighlightOverLetter(i_letterSelectedHighlight, letterSelected);
-        }
+		}
 
 
 
@@ -224,7 +240,7 @@ namespace LetterClear {
                 }
                 // We DON'T have a letter selected...
                 else {
-                    letterDragging = letterOver;
+					SetLetterDragging(letterOver);
                     SetLetterSelected(letterOver);
                 }
             }
@@ -246,14 +262,13 @@ namespace LetterClear {
         private void ReleaseLetterDragging() {
             if (letterDragging != null) {
                 // Insert it where it belongs!
-                WordTile wordTileOver = GetWordAtPoint(mousePos);
-                if (wordTileOver != null) {
-                    wordTileOver.InsertLetter(letterDragging, mousePos);
-                }
-                else {
-                    //letterDragging.PosTarget = 
+//                WordTile wordTileOver = GetWordAtPoint(mousePos);
+//                if (wordTileOver != null) {
+//                    wordTileOver.InsertLetter(letterDragging, mousePos);
+//                }
+//                else {
                     SetLetterSelected(null); // just in case.
-                }
+//                }
                 UpdateWordsPositions();// HACKy quick implementation
                 letterDragging = null;
             }
@@ -272,8 +287,12 @@ namespace LetterClear {
         }
 
 
-        private string[] availableSentences = new string[]{
-            // Solvable!! (With E as wilds.)
+		private string[] availableSentences = new string[]{
+			// TESTS
+			"beekeepers keep",
+			"free the kind",
+
+            // Solvable with E as wilds!!
             "free the kind referee",
             "beekeepers keep bees going all night long",
             "The guy we're meeting with can't even grow his own hair?! Come on!",//What, so t

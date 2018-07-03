@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public class MathUtils {
 
-	static public float Cos01(float val) { return (1-Mathf.Sin(val)) * 0.5f; } // 0 returns 1.
-	static public float Sin01(float val) { return (1-Mathf.Cos(val)) * 0.5f; } // 0 returns 0.
+	/// Maps Cos from (-1 to 1) to (0 to 1); also offsets so 0 returns 1.
+	static public float Cos01(float val) { return (1-Mathf.Sin(val)) * 0.5f; }
+	/// Maps Sin from (-1 to 1) to (0 to 1); also offsets so 0 returns 0.
+	static public float Sin01(float val) { return (1-Mathf.Cos(val)) * 0.5f; }
 
 	static public bool IsSameSign (float a, float b) { return a*b >= 0; }
 	static public bool IsSameSign (double a, double b) { return a*b >= 0; }
@@ -132,6 +134,36 @@ public class MathUtils {
 			&& Mathf.Abs (rectA.size.x-rectB.size.x)<threshold
 			&& Mathf.Abs (rectA.size.y-rectB.size.y)<threshold;
 	}
+
+	public static void UpdateRectFromPoint(ref Rect rect, Vector2 point) {
+		if (rect.xMin > point.x) { // LEFT
+			rect.xMin = point.x;
+		}
+		if (rect.xMax < point.x) { // RIGHT
+			rect.xMax = point.x;
+		}
+		if (rect.yMin > point.y) { // TOP
+			rect.yMin = point.y;
+		}
+		if (rect.yMax < point.y) { // BOTTOM
+			rect.yMax = point.y;
+		}
+	}
+	public static Rect GetCompoundRectangle (Rect rectA, Rect rectB) {
+		// FIRST, check if either of these rectangles are total 0's. If one IS, we want to NOT include it in the return value, so simply return the OTHER rectangle. So we don't include the origin (0,0) accidentally.
+		if (rectA == Rect.zero) {
+			return rectB;
+		}
+		if (rectB == Rect.zero) {
+			return rectA;
+		}
+		// Otherwise, make a compound rectangle of the two :)
+		Rect returnRect = new Rect (rectA);
+		UpdateRectFromPoint (ref returnRect, rectB.max);
+		UpdateRectFromPoint (ref returnRect, rectB.min);
+		return returnRect;
+	}
+
 
 	public static Vector2 AbsVector2 (Vector2 v) {
 		return new Vector2 (Mathf.Abs (v.x), Mathf.Abs (v.y));

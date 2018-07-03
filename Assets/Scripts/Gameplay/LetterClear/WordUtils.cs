@@ -4,7 +4,7 @@ using UnityEngine;
 
 static public class WordUtils {
 
-    static private readonly char[] vowelChars = new char[]{'e'};//TEMP TEST 'a', 'e', 'i', 'o', 'u', 'y'};
+    static private readonly char[] vowelChars = new char[]{'a', 'e', 'i', 'o', 'u', 'y'};
 
 
     static public bool IsVowel(char c) {

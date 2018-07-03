@@ -2,59 +2,114 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BouncePaint {
     public class Block : MonoBehaviour {
         // Components
         [SerializeField] private Image i_body=null;
-        [SerializeField] private Image i_hitBox=null;
-        [SerializeField] private RectTransform myRectTransform=null;
+		[SerializeField] private Image i_hitBox=null;
+		[SerializeField] private RectTransform myRectTransform=null;
+		[SerializeField] private TextMeshProUGUI t_numHitsReq=null;
         // Properties
-        private bool isPainted=false;
-        private Rect hitRect;
-        private Rect bodyRect;
+		private bool isPainted=false;
+		private Rect hitRect;
+		private Rect bodyRect;
+		private Vector2 centerTarget;
+		// Properties (Specials)
+		private bool doTap; // only FALSE for the black Blocks we DON'T wanna tap on!
+		private bool doTravel;
+		private float travelSpeed; // for TRAVELING Blocks.
+		private float travelOscVal; // for TRAVELING Blocks.
+		private int numHitsReq;
+		private Vector2 centerA,centerB; // for TRAVELING Blocks.
         // References
         private GameController gameController;
 
-        // Getters (Public)
-        public bool IsPainted { get { return isPainted; } }
+		// Getters (Public)
+		public bool DoTap { get { return doTap; } }
+		public bool IsPainted { get { return isPainted; } }
         public Rect HitRect { get { return hitRect; } }
+		public Vector2 GetPredictedPos(float timeFromNow) {
+			if (!doTravel) { return HitRect.center; } // Oh, if I'm NOT a traveler, just return my current position.
+			float predTravelOscVal = travelOscVal + travelSpeed*timeFromNow; // we use FixedUpdate, so this is actually reliable.
+			float predTravelLoc = MathUtils.Sin01(predTravelOscVal);
+//			Debug.Log("predTravelLoc: " + predTravelLoc + "  predTravelOscVal: " + predTravelOscVal);
+			return Vector2.Lerp(centerA,centerB, predTravelLoc);
+		}
         // Getters (Private)
         private Color bodyColor {
             get { return i_body.color; }
             set { i_body.color = value; }
-        }
-        private Vector2 bodyPos {
-            get { return i_body.rectTransform.anchoredPosition; }
-            set { i_body.rectTransform.anchoredPosition = value; }
-        }
+		}
+		private Vector2 center {
+			get { return myRectTransform.anchoredPosition; }
+			set {
+				myRectTransform.anchoredPosition = value;
+				UpdateHitRectCenter();
+			}
+		}
+		private void UpdateHitRectCenter() {
+			hitRect.center = center + new Vector2(0, 52);
+		}
 
 
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-        public void Initialize(GameController _gameController, RectTransform rt_parent, Vector2 _pos, Vector2 _size) {
+		public void Initialize(GameController _gameController, RectTransform rt_parent,
+			Vector2 _size,
+			Vector2 _centerA,Vector2 _centerB,
+			float _travelSpeed,
+			int _numHitsReq,
+			bool _doTap
+		) {
             gameController = _gameController;
             this.transform.SetParent(rt_parent);
             this.transform.localScale = Vector3.one;
             this.transform.localEulerAngles = Vector3.zero;
-            myRectTransform.anchoredPosition = Vector2.zero;
+			myRectTransform.anchoredPosition = Vector2.zero;
+			// Assign properties
+			centerA = _centerA;
+			centerB = _centerB;
+			doTap = _doTap;
+			numHitsReq = _numHitsReq;
+			travelSpeed = _travelSpeed*0.03f; // awkward scaling down the speed here.
+			doTravel = travelSpeed != 0;
+			travelOscVal = 0;
+			ApplyTravelOscVal();
+			center = centerTarget;
 
-            bodyRect = new Rect(_pos, _size);
+			bodyRect = new Rect(center-_size*0.5f, _size);
             hitRect = new Rect(bodyRect);
             // Offset and shrink the hitRect!
             hitRect.size += new Vector2(0, -12);
-            hitRect.position += new Vector2(0, 52);
+			UpdateHitRectCenter();
             // Bloat the hitRect's width a bit (in case of high-speed x-movement).
             hitRect.size += new Vector2(20, 0);
-            hitRect.position += new Vector2(-10, 0);
+			hitRect.center += new Vector2(-10, 0);
 
-            bodyColor = new Color(0,0,0, 0.4f);
-
-            i_body.rectTransform.sizeDelta = bodyRect.size;
-            i_body.rectTransform.anchoredPosition = bodyRect.position;
+			// Now put/size me where I belong!
+			myRectTransform.sizeDelta = bodyRect.size;
+			centerTarget = bodyRect.center; // if we get pushed, we'll always ease back to this pos.
+			center = centerTarget;
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
-            i_hitBox.rectTransform.anchoredPosition = hitRect.position;
+			i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
+
+			// Body color
+			if (doTap) {
+				bodyColor = new Color(0,0,0, 0.4f);
+			}
+			else {
+				bodyColor = new Color(0,0,0, 0.95f); // about black!
+			}
+			// Hits-required text
+			t_numHitsReq.color = new Color(0,0,0, 0.5f);
+			if (numHitsReq <= 1) { // Don't need the text? Destroy it.
+				Destroy(t_numHitsReq.gameObject);
+				t_numHitsReq = null;
+			}
+			UpdateNumHitsReqText();
         }
 
 
@@ -63,17 +118,34 @@ namespace BouncePaint {
         //  Doers
         // ----------------------------------------------------------------
         /// Paints me! :)
-        public void OnPlayerBounceOnMe(Color playerColor) {
-            // Paint me!
-            if (!isPainted) {
-                isPainted = true;
-                bodyColor = playerColor;
+		public void OnPlayerBounceOnMe(Color playerColor) {
+			// If I'm not yet painted...!
+			if (!isPainted) {
+				// Hit me, Paul!
+				numHitsReq --;
+				UpdateNumHitsReqText();
+				// That was the last straw, Cady??
+				if (numHitsReq <= 0) {
+					// Paint me!
+	                isPainted = true;
+	                bodyColor = playerColor;
+				}
             }
             // Push me down!
-            bodyPos += new Vector2(0, -16f);
+            center += new Vector2(0, -16f);
         }
-        //public void OnPlayerBounceOnMe() {
-        //}
+		private void UpdateNumHitsReqText() {
+			if (t_numHitsReq != null) {
+				t_numHitsReq.text = numHitsReq.ToString();
+				if (numHitsReq <= 0) {
+					t_numHitsReq.color = new Color(0,0,0, 0.3f);
+				}
+			}
+		}
+		private void ApplyTravelOscVal() {
+			float travelLoc = MathUtils.Sin01(travelOscVal);
+			centerTarget = Vector2.Lerp(centerA,centerB, travelLoc);
+		}
 
 
 
@@ -81,17 +153,26 @@ namespace BouncePaint {
         //  FixedUpdate
         // ----------------------------------------------------------------
         private void FixedUpdate() {
-            UpdatePos();
+			UpdateTravel();
+            UpdateBodyImageOffset();
         }
-        private void UpdatePos() {
+		private void UpdateTravel() {
+			if (doTravel) {
+				travelOscVal += travelSpeed;
+				ApplyTravelOscVal();
+			}
+		}
+        private void UpdateBodyImageOffset() {
+			// Update.
             float yOffset = 0;
             if (gameController.IsLevelComplete) {
-                yOffset = Mathf.Sin(Time.time*4f+bodyPos.x*0.016f) * 9f;
+				yOffset = Mathf.Sin(Time.time*4f+center.x*0.016f) * 9f;
             }
-
-            bodyPos += new Vector2(
-                (bodyRect.position.x-bodyPos.x) * 0.3f,
-                (bodyRect.position.y+yOffset-bodyPos.y) * 0.3f);
+			if (center != centerTarget) {
+				center += new Vector2(
+						(centerTarget.x-center.x) * 0.3f,
+						(centerTarget.y+yOffset-center.y) * 0.3f);
+			}
         }
 
     }

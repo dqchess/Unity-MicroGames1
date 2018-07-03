@@ -9,7 +9,7 @@ namespace LetterClear {
         [SerializeField] private RectTransform myRectTransform=null;
         [SerializeField] private Text textField=null;
         // Properties
-        private bool isVowel;
+        private bool isWild;
         private bool isOnEnd; // true if I'm the first or last letter of a word.
         private char myChar;
         private char myCharLower; // we use THIS to compare letters, to make playing easier.
@@ -22,16 +22,14 @@ namespace LetterClear {
 
         // Getters (Public)
         public bool IsOnEnd { get { return isOnEnd; } }
-        public bool IsVowel { get { return isVowel; } }
+        public bool IsWild { get { return isWild; } }
         public Vector2 PosTarget {
             get { return posTarget; }
-            set { posTarget = value; }
+			set { posTarget = value; 
+				UpdateMyRect();}
         }
         public Vector2 Pos {
-            get { return myRectTransform.anchoredPosition; }
-        }
-        private Vector2 pos {
-            get { return Pos; }
+			get { return myRectTransform.anchoredPosition; }
             set {
                 myRectTransform.anchoredPosition = value;
                 UpdateMyRect();
@@ -41,7 +39,7 @@ namespace LetterClear {
         public Rect MyRect { get { return myRect; } }
         public float Width { get { return myRect.width; } }
         public float Height { get { return myRect.height; } }
-        //public WordTile MyWordTile { get { return MyWordTile; } }
+		public WordTile MyWordTile { get { return myWordTile; } }
 
 
         // ----------------------------------------------------------------
@@ -53,7 +51,7 @@ namespace LetterClear {
             myCharLower = myChar.ToString().ToLower().ToCharArray()[0];
             // TEMP TEST everything's lowercase
             myChar = myCharLower;
-            isVowel = WordUtils.IsVowel(myCharLower);
+			isWild = false;//myCharLower == 'e';// WordUtils.IsVowel(myCharLower);
             textField.text = myChar.ToString();
 
             this.transform.SetParent(myWordTile.transform);
@@ -62,7 +60,7 @@ namespace LetterClear {
             this.transform.localEulerAngles = Vector3.zero;
 
             // Set my color by my vowel status!
-            if (isVowel) {
+            if (isWild) {
                 myColor = new ColorHSB(0.3f, 1f, 0.7f, 0.95f).ToColor();;
             }
             else {
@@ -82,7 +80,10 @@ namespace LetterClear {
             else { textField.color = new Color(0,0,0, 0.8f); }
         }
         private void UpdateMyRect() {
-            myRect = new Rect(Pos.x,Pos.y, textField.preferredWidth,textField.preferredHeight);
+			float width = textField.preferredWidth;
+			float height = textField.preferredHeight;
+//			myRect = new Rect(Pos.x,Pos.y-height, width,height); // convert top-left alignment to standard bottom-left rect.
+			myRect = new Rect(PosTarget.x,PosTarget.y-height, width,height); // convert top-left alignment to standard bottom-left rect.
         }
 
         public void SetFontSize(int _fontSize) {
@@ -102,10 +103,10 @@ namespace LetterClear {
         //  Events
         // ----------------------------------------------------------------
         public void OnMouseOver() {
-            textField.fontSize = (int)(fontSize*1.2f);
+//            textField.fontSize = (int)(fontSize*1.2f);
         }
         public void OnMouseOut() {
-            textField.fontSize = fontSize;
+//            textField.fontSize = fontSize;
         }
         public void OnMatched() {
             myWordTile.DestroyLetter(this);
@@ -118,8 +119,8 @@ namespace LetterClear {
         // ----------------------------------------------------------------
         private void FixedUpdate() {
             // Ease to target!
-            if (pos != posTarget) {
-                pos += (posTarget-pos) * 0.3f;
+            if (Pos != posTarget) {
+				Pos += (posTarget-Pos) * 0.3f;
             }
         }
 

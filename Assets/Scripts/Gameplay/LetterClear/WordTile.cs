@@ -8,11 +8,11 @@ namespace LetterClear {
         [SerializeField] private RectTransform myRectTransform=null;
         private List<LetterTile> letterTiles;
         // Properties
-        private Rect myRect;
+//        private Rect myRect;
         private string myWord;
         private Vector2 pos; // NOTE: Not my actual physical pos. Just used for my LetterTiles.
         // References
-        private GameController gameController;
+//        private GameController gameController;
 
         // Getters (Private)
         private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
@@ -23,8 +23,8 @@ namespace LetterClear {
         //}
         //public List<LetterTile> LetterTiles { get { return letterTiles; } }
         public int NumLetters { get { return letterTiles.Count; } }
-        public float Width { get { return myRect.width; } }
-        public Rect MyRect { get { return myRect; } }
+//        public float Width { get { return myRect.width; } }
+//        public Rect MyRect { get { return myRect; } }
         public Vector2 Pos {
             get { return pos; }
             set {
@@ -41,13 +41,17 @@ namespace LetterClear {
             }
             return null;
         }
+		public float XMax() {
+			if (letterTiles.Count==0) { return 0; } // No tiles?? Just return 0, I guess.
+			return letterTiles[letterTiles.Count-1].MyRect.xMax;
+		}
 
 
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
         public void Initialize(GameController _gameController, RectTransform _myRT, string _myWord) {
-            gameController = _gameController;
+//            gameController = _gameController;
             this.transform.SetParent(_myRT);
             this.transform.localScale = Vector3.one;
             this.transform.localEulerAngles = Vector3.zero;
@@ -75,7 +79,7 @@ namespace LetterClear {
                 tile.SetFontSize(fontSize);
             }
             UpdateLettersPosTargets();
-            UpdateMyRect();
+//            UpdateMyRect();
         }
 
         private void UpdateLettersPosTargets() {
@@ -85,6 +89,11 @@ namespace LetterClear {
                 tempX += tile.Width;
             }
         }
+		public void SetLettersPosToTarget() {
+			foreach (LetterTile tile in letterTiles) {
+				tile.Pos = tile.PosTarget;
+			}
+		}
 
         public void InsertLetterInList(int insertIndex, LetterTile letter) {
             letterTiles.Insert(insertIndex, letter);
@@ -104,16 +113,18 @@ namespace LetterClear {
 
         private void OnLettersChanged() {
             UpdateLettersOnEnd();
-            UpdateMyRect();
+//            UpdateMyRect();
         }
 
-        private void UpdateMyRect() {
-            myRect = new Rect();
-            foreach (LetterTile tile in letterTiles) {
-                myRect.size = new Vector2(myRect.size.x+tile.Width, Mathf.Max(myRect.size.y, tile.Height));
-            }
-            myRect.position = Pos;
-        }
+//        private void UpdateMyRect() {
+//            myRect = new Rect();
+//            foreach (LetterTile tile in letterTiles) {
+//				myRect = MathUtils.GetCompoundRectangle(myRect, tile.MyRect);
+//            }
+////                myRect.size = new Vector2(myRect.size.x+tile.Width, Mathf.Max(myRect.size.y, tile.Height));
+////            myRect.position = Pos;
+////			myRect.position += new Vector2(0, myRect.height); // Convert top-left to bottom-left.
+//        }
         private void UpdateLettersOnEnd() {
             for (int i=0; i<letterTiles.Count; i++) {
                 letterTiles[i].SetIsOnEnd(i==0 || i==letterTiles.Count-1);

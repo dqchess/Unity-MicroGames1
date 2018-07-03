@@ -57,7 +57,16 @@ namespace BouncePaint {
                 }
             }
             return null;
-        }
+		}
+		/** ONLY works for HORIZONTALLY moving Blocks. Returns the predicted x position of the block by the time we reach its y pos. */
+		private float GetBlockPosX(Block block, float startY, float yVel) {
+			float blockY = block.HitRect.center.y;
+			float displacementY = blockY - startY;
+			float g = gravity.y;
+			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
+//			print("timeOfFlight: " + timeOfFlight + "     " + timeOfFlightA + ", " + timeOfFlightB);
+			return block.GetPredictedPos(timeOfFlight).x;
+		}
 
 
         // ----------------------------------------------------------------
@@ -68,8 +77,10 @@ namespace BouncePaint {
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
             blockHeadingTo = GetRandomUnpaintedBlock();
             gravity = new Vector2(0, GetGravityY(levelIndex));
-            pos = new Vector2(blockHeadingTo.HitRect.center.x, blockHeadingTo.HitRect.center.y + fallHeightNeutral);
-            vel = Vector2.zero;
+			vel = new Vector2(0, 5); // Start with a little toss-up.
+			float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // HARDCODED to taste (note: we could totally calculate this to be perfect, but I don't want to right now)
+			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
+            pos = new Vector2(startX, startY);
 
             bodyColor = GetRandomHappyColor();
             i_body.sprite = s_bodyNormal;
@@ -84,14 +95,24 @@ namespace BouncePaint {
         }
 
 
+
         // ----------------------------------------------------------------
         //  Update
         // ----------------------------------------------------------------
         public void OnPressJumpButton() {
             Block blockTouching = GetUnpaintedBlockTouching();
+			// I AM touching a block!...
             if (blockTouching != null) {
-                BounceOnBlock(blockTouching);
+				// Standard block? Bounce!
+				if (blockTouching.DoTap) {
+                	BounceOnBlock(blockTouching);
+				}
+				// Ooh, a DON'T-tap block. Explode!
+				else {
+					Explode();
+				}
             }
+			// I'm NOT touching any block...
             else {
                 Explode();
             }
@@ -127,7 +148,8 @@ namespace BouncePaint {
             float g = gravity.y;
             float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 
-            float xDist = blockToPos.x - pos.x;
+			float predBlockPosX = GetBlockPosX(blockHeadingTo, blockToPos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
+			float xDist = predBlockPosX - pos.x;
             float xVel = xDist / timeOfFlight;
 
             vel = new Vector2(xVel, yVel);
@@ -164,15 +186,23 @@ namespace BouncePaint {
         }
         private void ApplyBounds() {
             // If I've passed too far into the block I'm heading towards, explode me!
-            float boundsY = blockHeadingTo.HitRect.yMin;//IsLevelComplete ? 270f : 255f; // HACK HARDCODED
+			float boundsY = blockHeadingTo.HitRect.yMin;
             if (vel.y<0 && pos.y<boundsY) {
                 pos = new Vector2(pos.x, boundsY);
+				// Level's complete? Just happily bounce on the block's head. ;)
                 if (IsLevelComplete) {
-                    Block blockTouching = GetBlockTouching();
-                    BounceOnBlock(blockTouching);
+					BounceOnBlock(blockHeadingTo);
                 }
-                else {
-                    Explode();
+				// Level's NOT complete?
+				else {
+					// It's a don't-tap block?? Do that bounce!
+					if (!blockHeadingTo.DoTap) {
+						BounceOnBlock(blockHeadingTo);
+					}
+					// It's a NORMAL block. We've gone too far! Die.
+					else {
+                    	Explode();
+					}
                 }
             }
             //// Safety checks (because why not?)

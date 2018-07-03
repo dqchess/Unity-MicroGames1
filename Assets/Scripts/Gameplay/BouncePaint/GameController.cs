@@ -11,12 +11,13 @@ namespace BouncePaint {
         private GameStates gameState;
         private float timeWhenLevelEnded;
         private int currentLevelIndex;
+		static private int temp_lastPlayedLevelIndex=1; // TEMP! For faster testing.
         // Components
         [SerializeField] private Player player=null;
         private List<Block> blocks;
         // References
+		[SerializeField] private Canvas myCanvas;
         [SerializeField] private GameUI ui=null;
-		[SerializeField] private Image i_blocksAvailableRect=null;
         [SerializeField] private RectTransform rt_blocks=null;
 
         // Getters (Public)
@@ -42,30 +43,9 @@ namespace BouncePaint {
         override protected void Start () {
             base.Start();
 
-            SetCurrentLevel(1);
+			SetCurrentLevel(temp_lastPlayedLevelIndex);
         }
 
-
-        private void AddLevelComponents(int numBlocks) {
-            DestroyAllBlocks(); // Just in case
-
-            Rect availableRect = new Rect();// i_spacesAvailableRect.rectTransform.rect;
-            availableRect.size = i_blocksAvailableRect.rectTransform.rect.size;
-            availableRect.position = new Vector2(0,200);
-            Vector2 slotSize = new Vector2(availableRect.width/(float)numBlocks, availableRect.height);
-            Vector2 blockSize = new Vector2(availableRect.height, availableRect.height);//spaceSlotSize.x-spaceGapX, spaceSlotSize.y);
-            float gapX = slotSize.x-blockSize.x;//4; // how many pixels between each block.
-
-            blocks = new List<Block>();
-            for (int i=0; i<numBlocks; i++) {
-                Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
-                Vector2 pos = new Vector2(gapX*0.5f + slotSize.x*i, 0);
-                pos += availableRect.position;
-                pos += new Vector2(0, Random.Range(0, numBlocks*20f));
-                newBlock.Initialize(this, rt_blocks, pos, blockSize);
-                blocks.Add(newBlock);
-            }
-        }
         private void DestroyAllBlocks() {
             if (blocks!=null) {
                 foreach (Block block in blocks) {
@@ -84,6 +64,7 @@ namespace BouncePaint {
         private void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
         private void SetCurrentLevel(int _levelIndex) {
             currentLevelIndex = _levelIndex;
+			temp_lastPlayedLevelIndex = currentLevelIndex;
 
             SetIsPaused(false);
 
@@ -96,37 +77,17 @@ namespace BouncePaint {
             ui.UpdateLevelName(currentLevelIndex);
 
             // Initialize level components and player!
-            int numBlocks = currentLevelIndex;
-            AddLevelComponents(numBlocks);
+			AddLevelComponents(currentLevelIndex);
             player.Reset(currentLevelIndex);
         }
         private void SetGameOver() {
             gameState = GameStates.GameOver;
             timeWhenLevelEnded = Time.time;
-            //Camera.main.backgroundColor = new Color(0.6f,0.1f,0.1f);
         }
 
         private void OnCompleteLevel() {
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
-            //Camera.main.backgroundColor = new Color(0.1f,0.8f,0.1f);
-//          StartCoroutine(Coroutine_CompleteLevel());
-//      }
-//      private IEnumerator Coroutine_CompleteLevel() {
-//          // Set properties and wait a brief moment!
-//          gameState = GameStates.PostLevel;
-////            i_correctIcon.enabled = true;
-//          yield return new WaitForSecondsRealtime(0.3f);
-//
-//          // Wait for click!
-//          while (true) {
-//              if (Input.GetMouseButtonDown(0)) { break; }
-//              yield return null;
-//          }
-//
-//          // After click, start the next level!
-//          StartNextLevel();
-//          yield return null;
         }
 
         public void OnPlayerPaintBlock() {
@@ -171,9 +132,12 @@ namespace BouncePaint {
                     return;
                 }
             }
-            else if (gameState == GameStates.PostLevel) {
-                StartNextLevel();
-                return;
+			else if (gameState == GameStates.PostLevel) {
+				// Make us wait a short moment so we visually register what's happened.
+				if (Time.time>timeWhenLevelEnded+0.2f) {
+	                StartNextLevel();
+	                return;
+				}
             }
             else {
                 player.OnPressJumpButton();
@@ -201,5 +165,103 @@ namespace BouncePaint {
 
 
 
+		// HARDCODED Level-adding. Hardcoded for now.
+		private void AddLevelComponents(int levelIndex) {
+			DestroyAllBlocks(); // Just in case
+			blocks = new List<Block>();
+
+			Vector2 blockSize = new Vector2(50,50);
+
+			// NOTE: All coordinates are based off of a 600x800 available playing space! :)
+
+			float b = -240; // bottom.
+			int i=1; // TEMP! Until we make levels into XML or Json.
+			if (false) {}
+			else if (levelIndex == i++) {
+//				AddBlock(blockSize, new Vector2(0,b), new Vector2(100,b), 1f);
+//				AddBlock(blockSize, new Vector2(100,b), new Vector2(0,b), 1f);
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 1f);
+				AddBlock(blockSize,  -200,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b, 1, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -30,b, 1, false);
+				AddBlock(blockSize,  30,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b, 2);
+			}
+
+
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -30,b);
+				AddBlock(blockSize,  30,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -60,b);
+				AddBlock(blockSize,   0,b);
+				AddBlock(blockSize,  60,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -90,b);
+				AddBlock(blockSize, -30,b);
+				AddBlock(blockSize,  30,b);
+				AddBlock(blockSize,  90,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,  -60,b);
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,   60,b);
+				AddBlock(blockSize,  120,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -150,b);
+				AddBlock(blockSize,  -90,b);
+				AddBlock(blockSize,  -30,b);
+				AddBlock(blockSize,   30,b);
+				AddBlock(blockSize,   90,b);
+				AddBlock(blockSize,  150,b);
+			}
+			else {
+				Debug.LogError("No level data available for level: " + levelIndex);
+			}
+		}
+		private void AddBlock(Vector2 blockSize, float x,float y, int numHitsReq=1, bool doTap=true) {
+			Vector2 pos = new Vector2(x,y);
+			AddBlock(blockSize, pos,pos, 0, numHitsReq, doTap);
+		}
+		private void AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, int numHitsReq=1, bool doTap=true) {
+			Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
+			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, numHitsReq, doTap);
+			blocks.Add(newBlock);
+		}
+
+
     }
 }
+
+
+/*
+Rect availableRect = new Rect();// i_spacesAvailableRect.rectTransform.rect;
+availableRect.size = i_blocksAvailableRect.rectTransform.rect.size;
+availableRect.position = new Vector2(0,200);
+Vector2 slotSize = new Vector2(availableRect.width/(float)numBlocks, availableRect.height);
+Vector2 blockSize = new Vector2(availableRect.height, availableRect.height);//spaceSlotSize.x-spaceGapX, spaceSlotSize.y);
+float gapX = slotSize.x-blockSize.x;//4; // how many pixels between each block.
+
+blocks = new List<Block>();
+for (int i=0; i<numBlocks; i++) {
+	Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
+	Vector2 pos = new Vector2(gapX*0.5f + slotSize.x*i, 0);
+	pos += availableRect.position;
+	pos += new Vector2(0, Random.Range(0, numBlocks*20f));
+	newBlock.Initialize(this, rt_blocks, pos, blockSize);
+	blocks.Add(newBlock);
+}
+*/
