@@ -64,7 +64,7 @@ namespace BouncePaint {
 			float displacementY = blockY - startY;
 			float g = gravity.y;
 			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
-//			print("timeOfFlight: " + timeOfFlight + "     " + timeOfFlightA + ", " + timeOfFlightB);
+			print("displacementY: " + displacementY + "  timeOfFlight: " + timeOfFlight);
 			return block.GetPredictedPos(timeOfFlight).x;
 		}
 
@@ -78,7 +78,7 @@ namespace BouncePaint {
             blockHeadingTo = GetRandomUnpaintedBlock();
             gravity = new Vector2(0, GetGravityY(levelIndex));
 			vel = new Vector2(0, 5); // Start with a little toss-up.
-			float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // HARDCODED to taste (note: we could totally calculate this to be perfect, but I don't want to right now)
+			float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
 			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
             pos = new Vector2(startX, startY);
 
@@ -143,12 +143,13 @@ namespace BouncePaint {
             float displacementY = blockToPos.y - pos.y;
             float yDist = Mathf.Max (0, peakPosY-pos.y);
             float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
+			Debug.Log("displacementY: " + displacementY);
 
             // float timeOfFlight = 2f*yVel / gravity.y;
             float g = gravity.y;
             float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 
-			float predBlockPosX = GetBlockPosX(blockHeadingTo, blockToPos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
+			float predBlockPosX = GetBlockPosX(blockHeadingTo, pos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
 			float xDist = predBlockPosX - pos.x;
             float xVel = xDist / timeOfFlight;
 

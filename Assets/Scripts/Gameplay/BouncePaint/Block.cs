@@ -15,7 +15,12 @@ namespace BouncePaint {
 		private bool isPainted=false;
 		private Rect hitRect;
 		private Rect bodyRect;
-		private Vector2 centerTarget;
+
+		private Vector2 posOnTrack;
+		private Vector2 posDipOffset;
+
+//		private Vector2 centerTarget;
+//		private Vector2 dipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our TODO finish this comment
 		// Properties (Specials)
 		private bool doTap; // only FALSE for the black Blocks we DON'T wanna tap on!
 		private bool doTravel;
@@ -77,8 +82,9 @@ namespace BouncePaint {
 			travelSpeed = _travelSpeed*0.03f; // awkward scaling down the speed here.
 			doTravel = travelSpeed != 0;
 			travelOscVal = 0;
+			posDipOffset = Vector2.zero;
 			ApplyTravelOscVal();
-			center = centerTarget;
+//			center = centerTarget;
 
 			bodyRect = new Rect(center-_size*0.5f, _size);
             hitRect = new Rect(bodyRect);
@@ -91,8 +97,8 @@ namespace BouncePaint {
 
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = bodyRect.size;
-			centerTarget = bodyRect.center; // if we get pushed, we'll always ease back to this pos.
-			center = centerTarget;
+//			centerTarget = bodyRect.center; // if we get pushed, we'll always ease back to this pos. TODO: Delete these two lines (unless we wanna resurrect them)
+//			center = centerTarget;
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
 			i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
 
@@ -132,7 +138,7 @@ namespace BouncePaint {
 				}
             }
             // Push me down!
-            center += new Vector2(0, -16f);
+			posDipOffset += new Vector2(0, -16f);
         }
 		private void UpdateNumHitsReqText() {
 			if (t_numHitsReq != null) {
@@ -144,7 +150,7 @@ namespace BouncePaint {
 		}
 		private void ApplyTravelOscVal() {
 			float travelLoc = MathUtils.Sin01(travelOscVal);
-			centerTarget = Vector2.Lerp(centerA,centerB, travelLoc);
+			center = Vector2.Lerp(centerA,centerB, travelLoc) + posDipOffset;
 		}
 
 
@@ -154,7 +160,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void FixedUpdate() {
 			UpdateTravel();
-            UpdateBodyImageOffset();
+            UpdatePosDipOffset();
         }
 		private void UpdateTravel() {
 			if (doTravel) {
@@ -162,16 +168,16 @@ namespace BouncePaint {
 				ApplyTravelOscVal();
 			}
 		}
-        private void UpdateBodyImageOffset() {
+        private void UpdatePosDipOffset() {
 			// Update.
-            float yOffset = 0;
+			Vector2 posDipTarget = Vector2.zero;
             if (gameController.IsLevelComplete) {
-				yOffset = Mathf.Sin(Time.time*4f+center.x*0.016f) * 9f;
+				posDipOffset = new Vector2(0, Mathf.Sin(Time.time*4f+center.x*0.016f) * 9f);
             }
-			if (center != centerTarget) {
-				center += new Vector2(
-						(centerTarget.x-center.x) * 0.3f,
-						(centerTarget.y+yOffset-center.y) * 0.3f);
+			if (posDipOffset != posDipTarget) {
+				posDipOffset += new Vector2(
+					(posDipTarget.x-posDipOffset.x) * 0.3f,
+					(posDipTarget.y-posDipOffset.y) * 0.3f);
 			}
         }
 

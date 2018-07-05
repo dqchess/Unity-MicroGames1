@@ -325,15 +325,13 @@ namespace BouncePaint {
 			}
 
 
-			// TEST
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 6f);
-			}
 
 
 
 
 
+
+			// Even grids for level-making reference
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -120,b);
 				AddBlock(blockSize,  -60,b);
@@ -376,6 +374,7 @@ namespace BouncePaint {
 			AddBlock(blockSize, pos,pos, 0, numHitsReq, doTap);
 		}
 		private void AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, int numHitsReq=1, bool doTap=true) {
+			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 			Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
 			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, numHitsReq, doTap);
 			blocks.Add(newBlock);
