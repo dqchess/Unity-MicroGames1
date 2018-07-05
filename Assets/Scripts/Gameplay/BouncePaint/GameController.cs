@@ -11,7 +11,6 @@ namespace BouncePaint {
         private GameStates gameState;
         private float timeWhenLevelEnded;
         private int currentLevelIndex;
-		static private int temp_lastPlayedLevelIndex=1; // TEMP! For faster testing.
         // Components
         [SerializeField] private Player player=null;
         private List<Block> blocks;
@@ -43,7 +42,7 @@ namespace BouncePaint {
         override protected void Start () {
             base.Start();
 
-			SetCurrentLevel(temp_lastPlayedLevelIndex);
+			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.BouncePaint_LastLevelPlayed, 1));
         }
 
         private void DestroyAllBlocks() {
@@ -64,7 +63,7 @@ namespace BouncePaint {
         private void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
         private void SetCurrentLevel(int _levelIndex) {
             currentLevelIndex = _levelIndex;
-			temp_lastPlayedLevelIndex = currentLevelIndex;
+			SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, currentLevelIndex);
 
             SetIsPaused(false);
 
@@ -125,6 +124,9 @@ namespace BouncePaint {
         //  Input
         // ----------------------------------------------------------------
         private void OnMouseDown() {
+			OnTapScreen();
+		}
+		private void OnTapScreen() {
             if (gameState == GameStates.GameOver) {
                 // Make us wait a short moment so we visually register what's happened.
                 if (Time.time>timeWhenLevelEnded+0.2f) {
@@ -145,6 +147,10 @@ namespace BouncePaint {
         }
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
+
+			if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
+
+			// DEBUG
             if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPreviousLevel(); }
             if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
             if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
@@ -177,24 +183,9 @@ namespace BouncePaint {
 			float b = -240; // bottom.
 			int i=1; // TEMP! Until we make levels into XML or Json.
 			if (false) {}
-			else if (levelIndex == i++) {
-//				AddBlock(blockSize, new Vector2(0,b), new Vector2(100,b), 1f);
-//				AddBlock(blockSize, new Vector2(100,b), new Vector2(0,b), 1f);
-				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 1f);
-				AddBlock(blockSize,  -200,b);
-			}
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, 0,b, 1, false);
-			}
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, -30,b, 1, false);
-				AddBlock(blockSize,  30,b);
-			}
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, 0,b, 2);
-			}
 
 
+			// Simple, together.
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, 0,b);
 			}
@@ -213,6 +204,136 @@ namespace BouncePaint {
 				AddBlock(blockSize,  30,b);
 				AddBlock(blockSize,  90,b);
 			}
+
+			// Larger X gaps.
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -100,b);
+				AddBlock(blockSize,  100,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -200,b);
+				AddBlock(blockSize,  100,b);
+				AddBlock(blockSize,  200,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -200,b);
+				AddBlock(blockSize, -140,b);
+				AddBlock(blockSize,  -80,b);
+				AddBlock(blockSize,  200,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -200,b);
+				AddBlock(blockSize, -140,b);
+				AddBlock(blockSize,    0,b+50);
+				AddBlock(blockSize,  200,b);
+				AddBlock(blockSize,  140,b);
+			}
+
+			// Offset Y positions
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -80,b);
+//				AddBlock(blockSize,   0,b+100);
+//				AddBlock(blockSize,  80,b);
+//			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -80,b);
+//				AddBlock(blockSize,  80,b+200);
+//				AddBlock(blockSize,  80,b);
+//			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -180,b+160);
+				AddBlock(blockSize, -100,b);
+				AddBlock(blockSize,  100,b);
+				AddBlock(blockSize,  180,b+160);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -180,b);
+				AddBlock(blockSize,  -60,b+100);
+				AddBlock(blockSize,    0,b+300);
+				AddBlock(blockSize,   60,b+100);
+				AddBlock(blockSize,  180,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -220,b+100);
+				AddBlock(blockSize,  -90,b);
+				AddBlock(blockSize,  -30,b+160);
+				AddBlock(blockSize,   30,b+20);
+				AddBlock(blockSize,  130,b);
+				AddBlock(blockSize,  180,b+80);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -240,b+300);
+				AddBlock(blockSize, -120,b+200);
+				AddBlock(blockSize,  -60,b);
+				AddBlock(blockSize,    0,b+150);
+				AddBlock(blockSize,   60,b+200);
+				AddBlock(blockSize,  180,b);
+				AddBlock(blockSize,  240,b+100);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -210,b);
+				AddBlock(blockSize, -150,b+40);
+				AddBlock(blockSize,  -90,b+80);
+				AddBlock(blockSize,  -30,b+120);
+				AddBlock(blockSize,   30,b+160);
+				AddBlock(blockSize,   90,b+200);
+				AddBlock(blockSize,  150,b+240);
+				AddBlock(blockSize,  210,b+280);
+			}
+
+			// Traveling Blocks
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 1f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-60,b), new Vector2(-160,b), 1f);
+				AddBlock(blockSize, new Vector2(60,b), new Vector2(160,b), 1f);
+				AddBlock(blockSize, 0,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(-160,b), 1f);
+				AddBlock(blockSize, new Vector2(140,b), new Vector2(200,b), 1f);
+				AddBlock(blockSize, new Vector2(-100,b+100), new Vector2(100,b+100), 1f);
+				AddBlock(blockSize, -200,b+140);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-120,b), new Vector2(-240,b), 1f);
+				AddBlock(blockSize, new Vector2(-60,b), new Vector2(-120,b), 1f);
+				AddBlock(blockSize, 0,b);
+				AddBlock(blockSize, new Vector2( 120,b), new Vector2(240,b), 1f);
+				AddBlock(blockSize, new Vector2( 60,b), new Vector2(120,b), 1f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-120,b), new Vector2(-240,b), 1f);
+				AddBlock(blockSize, new Vector2(-60,b), new Vector2(-120,b), 1f);
+				AddBlock(blockSize, 0,b);
+				AddBlock(blockSize, new Vector2(-200,b+250), new Vector2(200,b+250), 1f);
+				AddBlock(blockSize, new Vector2( 240,b), new Vector2(120,b), 1f);
+				AddBlock(blockSize, new Vector2( 120,b), new Vector2(60,b), 1f);
+			}
+
+			// Faster Traveling Blocks
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-150,b), new Vector2(-240,b), 1f);
+				AddBlock(blockSize, new Vector2(-100,b+50), new Vector2(100,b+50), 2f);
+				AddBlock(blockSize, new Vector2( 150,b), new Vector2(240,b), 1f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-150,b+100), new Vector2(-240,b+100), 2f);
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 3f);
+				AddBlock(blockSize, new Vector2( 150,b+100), new Vector2(240,b+100), 2f);
+			}
+
+
+			// TEST
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 6f);
+			}
+
+
+
+
+
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -120,b);
 				AddBlock(blockSize,  -60,b);
@@ -227,6 +348,24 @@ namespace BouncePaint {
 				AddBlock(blockSize,   30,b);
 				AddBlock(blockSize,   90,b);
 				AddBlock(blockSize,  150,b);
+			}
+
+			// TEST LEVELS
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(0,b), new Vector2(100,b), 1f);
+				AddBlock(blockSize, new Vector2(100,b), new Vector2(0,b), 1f);
+				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 1f);
+				AddBlock(blockSize,  -200,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b, 1, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -30,b, 1, false);
+				AddBlock(blockSize,  30,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b, 2);
 			}
 			else {
 				Debug.LogError("No level data available for level: " + levelIndex);

@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class SaveKeys {
 	
-//	public const string DidCompleteTutorial = "DidCompleteTutorial";
+	public const string BouncePaint_LastLevelPlayed = "BouncePaint_LastLevelPlayed";
 
 }

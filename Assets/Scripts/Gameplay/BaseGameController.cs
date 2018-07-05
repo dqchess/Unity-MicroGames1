@@ -6,6 +6,7 @@ using System.Collections.Generic;
 abstract public class BaseGameController : MonoBehaviour {
 	// Properties
 	private bool isPaused = false;
+	private bool debug_isSlowMo = false;
 	// References
 //	[SerializeField] private GameplayUI ui=null;
 //	[SerializeField] private Transform tf_world=null;
@@ -62,8 +63,13 @@ abstract public class BaseGameController : MonoBehaviour {
 	protected void TogglePause () {
 		SetIsPaused(!isPaused);
 	}
+	private void ToggleSlowMo() {
+		debug_isSlowMo = !debug_isSlowMo;
+		UpdateTimeScale();
+	}
 	private void UpdateTimeScale () {
 		if (isPaused) { Time.timeScale = 0; }
+		else if (debug_isSlowMo) { Time.timeScale = 0.1f; }
 		else { Time.timeScale = 1; }
 	}
 
@@ -82,6 +88,9 @@ abstract public class BaseGameController : MonoBehaviour {
 
 
 		// P = Toggle pause
+		if (Input.GetKeyDown (KeyCode.T)) {
+			ToggleSlowMo();
+		}
 		if (Input.GetKeyDown (KeyCode.P)) {
 			TogglePause ();
 		}
