@@ -15,12 +15,7 @@ namespace BouncePaint {
 		private bool isPainted=false;
 		private Rect hitRect;
 		private Rect bodyRect;
-
-		private Vector2 posOnTrack;
-		private Vector2 posDipOffset;
-
-//		private Vector2 centerTarget;
-//		private Vector2 dipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our TODO finish this comment
+		private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
 		// Properties (Specials)
 		private bool doTap; // only FALSE for the black Blocks we DON'T wanna tap on!
 		private bool doTravel;
@@ -66,6 +61,7 @@ namespace BouncePaint {
 			Vector2 _size,
 			Vector2 _centerA,Vector2 _centerB,
 			float _travelSpeed,
+			float _startLocOffset,
 			int _numHitsReq,
 			bool _doTap
 		) {
@@ -81,10 +77,9 @@ namespace BouncePaint {
 			numHitsReq = _numHitsReq;
 			travelSpeed = _travelSpeed*0.03f; // awkward scaling down the speed here.
 			doTravel = travelSpeed != 0;
-			travelOscVal = 0;
+			travelOscVal = _startLocOffset;
 			posDipOffset = Vector2.zero;
-			ApplyTravelOscVal();
-//			center = centerTarget;
+			ApplyPos();
 
 			bodyRect = new Rect(center-_size*0.5f, _size);
             hitRect = new Rect(bodyRect);
@@ -97,8 +92,6 @@ namespace BouncePaint {
 
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = bodyRect.size;
-//			centerTarget = bodyRect.center; // if we get pushed, we'll always ease back to this pos. TODO: Delete these two lines (unless we wanna resurrect them)
-//			center = centerTarget;
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
 			i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
 
@@ -148,9 +141,16 @@ namespace BouncePaint {
 				}
 			}
 		}
-		private void ApplyTravelOscVal() {
-			float travelLoc = MathUtils.Sin01(travelOscVal);
-			center = Vector2.Lerp(centerA,centerB, travelLoc) + posDipOffset;
+		private void ApplyPos() {
+			// Do travel?? Lerp me between my two center poses.
+			if (doTravel) {
+				float travelLoc = MathUtils.Sin01(travelOscVal);
+				center = Vector2.Lerp(centerA,centerB, travelLoc) + posDipOffset;
+			}
+			// DON'T travel? Just put me at my one known center pos.
+			else {
+				center = centerA + posDipOffset;
+			}
 		}
 
 
@@ -160,12 +160,12 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void FixedUpdate() {
 			UpdateTravel();
-            UpdatePosDipOffset();
+			UpdatePosDipOffset();
+			ApplyPos();
         }
 		private void UpdateTravel() {
 			if (doTravel) {
 				travelOscVal += travelSpeed;
-				ApplyTravelOscVal();
 			}
 		}
         private void UpdatePosDipOffset() {

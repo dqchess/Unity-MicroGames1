@@ -64,7 +64,7 @@ namespace BouncePaint {
 			float displacementY = blockY - startY;
 			float g = gravity.y;
 			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
-			print("displacementY: " + displacementY + "  timeOfFlight: " + timeOfFlight);
+//			print("displacementY: " + displacementY + "  timeOfFlight: " + timeOfFlight);
 			return block.GetPredictedPos(timeOfFlight).x;
 		}
 
@@ -87,7 +87,7 @@ namespace BouncePaint {
             ps_dieBurst.Clear();
         }
         private float GetGravityY(int levelIndex) {
-            return -0.30f - levelIndex*0.01f;
+            return -0.30f - levelIndex*0.008f;
         }
         private float GetFallHeightNeutral(int levelIndex) {
             // return Mathf.Min(360, 200+levelIndex*10f); // TESTing out these values
@@ -143,7 +143,7 @@ namespace BouncePaint {
             float displacementY = blockToPos.y - pos.y;
             float yDist = Mathf.Max (0, peakPosY-pos.y);
             float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
-			Debug.Log("displacementY: " + displacementY);
+//			Debug.Log("displacementY: " + displacementY);
 
             // float timeOfFlight = 2f*yVel / gravity.y;
             float g = gravity.y;

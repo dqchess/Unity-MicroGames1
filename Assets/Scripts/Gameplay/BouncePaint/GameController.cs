@@ -281,6 +281,8 @@ namespace BouncePaint {
 				AddBlock(blockSize,  210,b+280);
 			}
 
+
+
 			// Traveling Blocks
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 1f);
@@ -326,6 +328,318 @@ namespace BouncePaint {
 
 
 
+			// Weird-Shapes Interlude
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, 0,b);
+				AddBlock(blockSize, 0,b+80);
+				AddBlock(blockSize, 0,b+160);
+				AddBlock(blockSize, 0,b+240);
+				AddBlock(blockSize, 0,b+320);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,  120,b);
+				AddBlock(blockSize, -120,b+180);
+				AddBlock(blockSize,    0,b+180);
+				AddBlock(blockSize,  120,b+180);
+			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -80,b);
+//				AddBlock(blockSize,   0,b);
+//				AddBlock(blockSize,   0,b+80);
+//				AddBlock(blockSize,   0,b+160);
+//				AddBlock(blockSize,   0,b+240);
+//				AddBlock(blockSize,  80,b);
+//			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,    0,b+80);
+				AddBlock(blockSize,    0,b+240);
+				AddBlock(blockSize,    0,b+320);
+				AddBlock(blockSize, -160,b+160);
+				AddBlock(blockSize,  -80,b+160);
+				AddBlock(blockSize,   80,b+160);
+				AddBlock(blockSize,  160,b+160);
+			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -120,b);
+//				AddBlock(blockSize,    0,b);
+//				AddBlock(blockSize,  120,b);
+//				AddBlock(blockSize, -120,b+120);
+//				AddBlock(blockSize,    0,b+120);
+//				AddBlock(blockSize,  120,b+120);
+//				AddBlock(blockSize, -120,b+240);
+//				AddBlock(blockSize,    0,b+240);
+//				AddBlock(blockSize,  120,b+240);
+//			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -60,b);
+				AddBlock(blockSize,   0,b);
+				AddBlock(blockSize,  60,b);
+				AddBlock(blockSize, -60,b+60);
+				AddBlock(blockSize,   0,b+60);
+				AddBlock(blockSize,  60,b+60);
+				AddBlock(blockSize, -60,b+120);
+				AddBlock(blockSize,   0,b+120);
+				AddBlock(blockSize,  60,b+120);
+			}
+
+
+
+			// Weird-Shapes Traveling Blocks
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -220,b);
+				AddBlock(blockSize, new Vector2( -220,b+60), new Vector2(-140,b+60), 0.7f);
+				AddBlock(blockSize, new Vector2( -220,b+120), new Vector2(-60,b+120), 0.7f);
+				AddBlock(blockSize, new Vector2( -220,b+180), new Vector2( 20,b+180), 0.7f);
+				AddBlock(blockSize, new Vector2( -220,b+240), new Vector2( 100,b+240), 0.7f);
+				AddBlock(blockSize, new Vector2( -220,b+300), new Vector2( 180,b+300), 0.7f);
+				AddBlock(blockSize, new Vector2( -220,b+360), new Vector2( 260,b+360), 0.7f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2( -100,b    ), new Vector2(100,b), 1f, 0f);
+				AddBlock(blockSize, new Vector2( -100,b+60 ), new Vector2(100,b+60), 1f, 0.5f);
+				AddBlock(blockSize, new Vector2( -100,b+120), new Vector2(100,b+120), 1f, 1f);
+				AddBlock(blockSize, new Vector2( -100,b+180), new Vector2(100,b+180), 1f, 1.5f);
+				AddBlock(blockSize, new Vector2( -100,b+240), new Vector2(100,b+240), 1f, 2f);
+				AddBlock(blockSize, new Vector2( -100,b+300), new Vector2(100,b+300), 1f, 2.5f);
+				AddBlock(blockSize, new Vector2( -100,b+360), new Vector2(100,b+360), 1f, 3f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2( -160,b    ), new Vector2( 160,b), 1f, 0f);
+				AddBlock(blockSize, new Vector2( -160,b+60 ), new Vector2( 160,b+60), 1f, -0.8f);
+				AddBlock(blockSize, new Vector2( -160,b+120), new Vector2( 160,b+120), 1f, -1.6f);
+				AddBlock(blockSize, new Vector2( -160,b+180), new Vector2( 160,b+180), 1f, -2.4f);
+				AddBlock(blockSize, new Vector2( -160,b+240), new Vector2( 160,b+240), 1f, -3.2f);
+				AddBlock(blockSize, new Vector2( -160,b+300), new Vector2( 160,b+300), 1f, -4f);
+				AddBlock(blockSize, new Vector2( -160,b+360), new Vector2( 160,b+360), 1f, -4.8f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize,  220,b);
+				AddBlock(blockSize, new Vector2(220,b+50), new Vector2( 140,b+50), 1f, -0.4f);
+				AddBlock(blockSize, new Vector2(220,b+100), new Vector2( 60,b+100), 1f, -0.8f);
+				AddBlock(blockSize, new Vector2(220,b+150), new Vector2(-20,b+150), 1f, -1.2f);
+				AddBlock(blockSize, new Vector2(220,b+200), new Vector2(-100,b+200), 1f, -1.6f);
+				AddBlock(blockSize, new Vector2(220,b+250), new Vector2(-180,b+250), 1f, -2f);
+				AddBlock(blockSize, new Vector2(220,b+300), new Vector2(-260,b+300), 1f, -2.4f);
+				AddBlock(blockSize, new Vector2(220,b+350), new Vector2(-260,b+350), 1f, -2.8f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -160,b);
+				AddBlock(blockSize, new Vector2(-160,b+60), new Vector2(160,b+60), 0.4f, Mathf.PI);
+				AddBlock(blockSize, new Vector2(-160,b+120), new Vector2(160,b+120), 0.8f);
+				AddBlock(blockSize, new Vector2(-160,b+180), new Vector2(160,b+180), 1.2f, Mathf.PI);
+				AddBlock(blockSize, new Vector2(-160,b+240), new Vector2(160,b+240), 1.6f);
+				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2(160,b+300), 2f, Mathf.PI);
+				AddBlock(blockSize, new Vector2(-160,b+360), new Vector2(160,b+360), 2.4f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f);
+				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f);
+				AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 1f, 0.4f);
+				AddBlock(blockSize, new Vector2( 160,b+150), new Vector2(-160,b+150), 1f, 0.6f);
+				AddBlock(blockSize, new Vector2(-160,b+200), new Vector2( 160,b+200), 1f, 0.8f);
+				AddBlock(blockSize, new Vector2( 160,b+250), new Vector2(-160,b+250), 1f, 1f);
+				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f);
+				AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f);
+			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f);
+//				AddBlock(blockSize, new Vector2( 160,b+55 ), new Vector2(-160,b+55), 1f, 0.2f);
+//				AddBlock(blockSize, new Vector2(-160,b+110), new Vector2( 160,b+110), 1f, 0.4f);
+//				AddBlock(blockSize, new Vector2( 160,b+165), new Vector2(-160,b+165), 1f, 0.6f);
+//				AddBlock(blockSize, new Vector2(-160,b+220), new Vector2( 160,b+220), 1f, 0.8f);
+//				AddBlock(blockSize, new Vector2( 160,b+275), new Vector2(-160,b+275), 1f, 1f);
+//				AddBlock(blockSize, new Vector2(-160,b+330), new Vector2( 160,b+330), 1f, 1.2f);
+//			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -220,b);
+//				AddBlock(blockSize, new Vector2( -220,b+60), new Vector2(-140,b+60), 0.4f);
+//				AddBlock(blockSize, new Vector2( -220,b+120), new Vector2(-60,b+120), 0.8f);
+//				AddBlock(blockSize, new Vector2( -220,b+180), new Vector2( 20,b+180), 1.2f);
+//				AddBlock(blockSize, new Vector2( -220,b+240), new Vector2( 100,b+240), 1.6f);
+//				AddBlock(blockSize, new Vector2( -220,b+300), new Vector2( 180,b+300), 2f);
+//				AddBlock(blockSize, new Vector2( -220,b+360), new Vector2( 260,b+360), 2.4f);
+//			}
+
+
+
+			// Don't-Tap Blocks
+			else if (levelIndex == i++) {
+				AddBlock(blockSize,    0,b, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,  120,b, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,  -60,b, false);
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,   60,b);
+				AddBlock(blockSize,  120,b, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -150,b, false);
+				AddBlock(blockSize,  -90,b, false);
+				AddBlock(blockSize,  -30,b);
+				AddBlock(blockSize,   30,b);
+				AddBlock(blockSize,   90,b, false);
+				AddBlock(blockSize,  150,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -220,b);
+				AddBlock(blockSize,  -90,b);
+				AddBlock(blockSize,  -30,b);
+				AddBlock(blockSize,   30,b, false);
+				AddBlock(blockSize,  160,b);
+				AddBlock(blockSize,  220,b, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -210,b+10, false);
+				AddBlock(blockSize, -150,b+80);
+				AddBlock(blockSize,  -90,b+15, false);
+				AddBlock(blockSize,  -30,b+40);
+				AddBlock(blockSize,   30,b+20);
+				AddBlock(blockSize,   90,b, false);
+				AddBlock(blockSize,  150,b+50);
+				AddBlock(blockSize,  210,b+45);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -210,b+180);
+				AddBlock(blockSize, -150,b+120);
+				AddBlock(blockSize,  -90,b+100, false);
+				AddBlock(blockSize,  -30,b);
+				AddBlock(blockSize,   30,b+300);
+				AddBlock(blockSize,   90,b+40, false);
+				AddBlock(blockSize,  150,b+160);
+				AddBlock(blockSize,  210,b+80);
+			}
+			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -240,b+160);
+				AddBlock(blockSize, -180,b+140);
+				AddBlock(blockSize, -120,b+80);
+				AddBlock(blockSize,  -60,b+40);
+				AddBlock(blockSize,    0,b+360, false);
+				AddBlock(blockSize,   60,b+40);
+				AddBlock(blockSize,  120,b+80);
+				AddBlock(blockSize,  180,b+140);
+//				AddBlock(blockSize,  240,b+160);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -200,b+120, false);
+				AddBlock(blockSize, -200,b+180, false);
+				AddBlock(blockSize, -140,b+120, false);
+				AddBlock(blockSize, -140,b+180, false);
+				AddBlock(blockSize,   0,b);
+				AddBlock(blockSize,  60,b+60);
+				AddBlock(blockSize,  120,b+120);
+				AddBlock(blockSize,  180,b+180);
+				AddBlock(blockSize,  240,b+240);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,  120,b);
+				AddBlock(blockSize, -120,b+280, false);
+				AddBlock(blockSize,  120,b+280, false);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -120,b, false);
+				AddBlock(blockSize,  -60,b);
+				AddBlock(blockSize,   60,b, false);
+				AddBlock(blockSize,  120,b);
+				AddBlock(blockSize, -120,b+250);
+				AddBlock(blockSize,  -60,b+250, false);
+				AddBlock(blockSize,   60,b+250);
+				AddBlock(blockSize,  120,b+250, false);
+			}
+//			else if (levelIndex == i++) {
+//				AddBlock(blockSize, -100,b, false);
+//				AddBlock(blockSize, -100,b+60, false);
+//				AddBlock(blockSize, -100,b+120, false);
+//				AddBlock(blockSize, -100,b+180, false);
+//				AddBlock(blockSize,  100,b);
+//				AddBlock(blockSize,  100,b+60);
+//				AddBlock(blockSize,  100,b+120);
+//				AddBlock(blockSize,  100,b+180);
+//			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize,  160,b+60, false);
+				AddBlock(blockSize,  160,b+120, false);
+				AddBlock(blockSize,  160,b+180, false);
+				AddBlock(blockSize,  160,b+240, false);
+				AddBlock(blockSize,  160,b+300, false);
+				AddBlock(blockSize,  100,b);
+				AddBlock(blockSize,   40,b);
+				AddBlock(blockSize,  -20,b);
+				AddBlock(blockSize,  -80,b);
+				AddBlock(blockSize, -140,b);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -180,b);
+				AddBlock(blockSize, -120,b);
+				AddBlock(blockSize,  -60,b);
+				AddBlock(blockSize,    0,b);
+				AddBlock(blockSize,   60,b);
+				AddBlock(blockSize,  120,b);
+				AddBlock(blockSize,  180,b);
+				AddBlock(blockSize, -180,b+200, false);
+				AddBlock(blockSize, -120,b+200, false);
+				AddBlock(blockSize,  -60,b+200, false);
+				AddBlock(blockSize,    0,b+200, false);
+				AddBlock(blockSize,   60,b+200, false);
+				AddBlock(blockSize,  120,b+200, false);
+				AddBlock(blockSize,  180,b+200, false);
+			}
+
+
+
+
+
+			// Traveling, No-Tap Blocks
+			//TODO: These, son
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f, 1, false);
+				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f, 1, false);
+				AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 1f, 0.4f);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f, 1, false);
+				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f, 1, false);
+				AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 1f, 0.4f);
+				AddBlock(blockSize, new Vector2( 160,b+150), new Vector2(-160,b+150), 1f, 0.6f);
+				AddBlock(blockSize, new Vector2(-160,b+200), new Vector2( 160,b+200), 1f, 0.8f);
+				AddBlock(blockSize, new Vector2( 160,b+250), new Vector2(-160,b+250), 1f, 1f);
+				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f);
+				AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f);
+			}
+
+
+
+
+
+			// Multi-Hit Blocks
+			else if (levelIndex == i++) {
+				AddBlock(blockSize,    0,b, 4);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -80,b+120, 3);
+				AddBlock(blockSize,  80,b, 3);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -140,b, 2);
+				AddBlock(blockSize,    0,b+100, 2);
+				AddBlock(blockSize,  140,b+200, 2);
+			}
+			else if (levelIndex == i++) {
+				AddBlock(blockSize, -140,b, 2);
+				AddBlock(blockSize,    0,b+100, 2);
+				AddBlock(blockSize,  140,b+200, 2);
+			}
+
+
 
 
 
@@ -369,14 +683,18 @@ namespace BouncePaint {
 				Debug.LogError("No level data available for level: " + levelIndex);
 			}
 		}
+		private void AddBlock(Vector2 blockSize, float x,float y, bool doTap) {
+			Vector2 pos = new Vector2(x,y);
+			AddBlock(blockSize, pos,pos, 0,0, 1, doTap);
+		}
 		private void AddBlock(Vector2 blockSize, float x,float y, int numHitsReq=1, bool doTap=true) {
 			Vector2 pos = new Vector2(x,y);
-			AddBlock(blockSize, pos,pos, 0, numHitsReq, doTap);
+			AddBlock(blockSize, pos,pos, 0,0, numHitsReq, doTap);
 		}
-		private void AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, int numHitsReq=1, bool doTap=true) {
+		private void AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, float startLocOffset=0, int numHitsReq=1, bool doTap=true) {
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 			Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
-			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, numHitsReq, doTap);
+			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, startLocOffset, numHitsReq, doTap);
 			blocks.Add(newBlock);
 		}
 
