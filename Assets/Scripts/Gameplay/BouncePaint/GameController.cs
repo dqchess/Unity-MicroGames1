@@ -93,6 +93,9 @@ namespace BouncePaint {
             if (gameState==GameStates.Playing && IsEveryBlockPainted()) {
                 OnCompleteLevel();
             }
+            //foreach (Block block in blocks) {
+            //    block.OnPlayerPaintedABlock();
+            //}
         }
         public void OnPlayerDie() {
             if (gameState == GameStates.Playing) {
@@ -134,7 +137,7 @@ namespace BouncePaint {
 		}
 		private void OnTapScreen() {
 			// Paused? Ignore input.
-			if (Time.timeScale == 0) { return; }
+			if (Time.timeScale == 0f) { return; }
 
             if (gameState == GameStates.GameOver) {
                 // Make us wait a short moment so we visually register what's happened.
@@ -564,63 +567,63 @@ namespace BouncePaint {
                 AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.6f, o*3);
                 AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.6f, o*4);
 
-                //AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.6f, o*0.7f, 1, false);
-                //AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 175,b+ 75), 0.6f, o*0, 1, false);
-                //AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.6f, o*0, 1, false);
-                //AddBlock(blockSize, new Vector2(  25,b+225), new Vector2( 175,b+225), 0.6f, o*0, 1, false);
+                //AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.6f, o*0.7f).SetDontTap();
+                //AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 175,b+ 75), 0.6f, o*0).SetDontTap();
+                //AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.6f, o*0).SetDontTap();
+                //AddBlock(blockSize, new Vector2(  25,b+225), new Vector2( 175,b+225), 0.6f, o*0).SetDontTap();
             }
 
 
 
 			// Don't-Tap Blocks
 			else if (levelIndex == i++) {
-				AddBlock(blockSize,    0,b, false);
+				AddBlock(blockSize,    0,b).SetDontTap();
 			}
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -120,b);
 				AddBlock(blockSize,    0,b);
-				AddBlock(blockSize,  120,b, false);
+				AddBlock(blockSize,  120,b).SetDontTap();
 			}
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -120,b);
-				AddBlock(blockSize,  -60,b, false);
+				AddBlock(blockSize,  -60,b).SetDontTap();
 				AddBlock(blockSize,    0,b);
 				AddBlock(blockSize,   60,b);
-				AddBlock(blockSize,  120,b, false);
+				AddBlock(blockSize,  120,b).SetDontTap();
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -150,b, false);
-				AddBlock(blockSize,  -90,b, false);
+				AddBlock(blockSize, -150,b).SetDontTap();
+				AddBlock(blockSize,  -90,b).SetDontTap();
 				AddBlock(blockSize,  -30,b);
 				AddBlock(blockSize,   30,b);
-				AddBlock(blockSize,   90,b, false);
+				AddBlock(blockSize,   90,b).SetDontTap();
 				AddBlock(blockSize,  150,b);
 			}
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -220,b);
 				AddBlock(blockSize,  -90,b);
 				AddBlock(blockSize,  -30,b);
-				AddBlock(blockSize,   30,b, false);
+				AddBlock(blockSize,   30,b).SetDontTap();
 				AddBlock(blockSize,  160,b);
-				AddBlock(blockSize,  220,b, false);
+				AddBlock(blockSize,  220,b).SetDontTap();
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -210,b+10, false);
+				AddBlock(blockSize, -210,b+10).SetDontTap();
 				AddBlock(blockSize, -150,b+80);
-				AddBlock(blockSize,  -90,b+15, false);
+				AddBlock(blockSize,  -90,b+15).SetDontTap();
 				AddBlock(blockSize,  -30,b+40);
 				AddBlock(blockSize,   30,b+20);
-				AddBlock(blockSize,   90,b, false);
+				AddBlock(blockSize,   90,b).SetDontTap();
 				AddBlock(blockSize,  150,b+50);
 				AddBlock(blockSize,  210,b+45);
 			}
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -210,b+180);
 				AddBlock(blockSize, -150,b+120);
-				AddBlock(blockSize,  -90,b+100, false);
+				AddBlock(blockSize,  -90,b+100).SetDontTap();
 				AddBlock(blockSize,  -30,b);
 				AddBlock(blockSize,   30,b+300);
-				AddBlock(blockSize,   90,b+40, false);
+				AddBlock(blockSize,   90,b+40).SetDontTap();
 				AddBlock(blockSize,  150,b+160);
 				AddBlock(blockSize,  210,b+80);
 			}
@@ -629,17 +632,17 @@ namespace BouncePaint {
 				AddBlock(blockSize, -180,b+140);
 				AddBlock(blockSize, -120,b+80);
 				AddBlock(blockSize,  -60,b+40);
-				AddBlock(blockSize,    0,b+360, false);
+				AddBlock(blockSize,    0,b+360).SetDontTap();
 				AddBlock(blockSize,   60,b+40);
 				AddBlock(blockSize,  120,b+80);
 				AddBlock(blockSize,  180,b+140);
 //				AddBlock(blockSize,  240,b+160);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -200,b+120, false);
-				AddBlock(blockSize, -200,b+180, false);
-				AddBlock(blockSize, -140,b+120, false);
-				AddBlock(blockSize, -140,b+180, false);
+				AddBlock(blockSize, -200,b+120).SetDontTap();
+				AddBlock(blockSize, -200,b+180).SetDontTap();
+				AddBlock(blockSize, -140,b+120).SetDontTap();
+				AddBlock(blockSize, -140,b+180).SetDontTap();
 				AddBlock(blockSize,   0,b);
 				AddBlock(blockSize,  60,b+60);
 				AddBlock(blockSize,  120,b+120);
@@ -649,35 +652,35 @@ namespace BouncePaint {
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -120,b);
 				AddBlock(blockSize,  120,b);
-				AddBlock(blockSize, -120,b+280, false);
-				AddBlock(blockSize,  120,b+280, false);
+				AddBlock(blockSize, -120,b+280).SetDontTap();
+				AddBlock(blockSize,  120,b+280).SetDontTap();
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -120,b, false);
+				AddBlock(blockSize, -120,b).SetDontTap();
 				AddBlock(blockSize,  -60,b);
-				AddBlock(blockSize,   60,b, false);
+				AddBlock(blockSize,   60,b).SetDontTap();
 				AddBlock(blockSize,  120,b);
 				AddBlock(blockSize, -120,b+250);
-				AddBlock(blockSize,  -60,b+250, false);
+				AddBlock(blockSize,  -60,b+250).SetDontTap();
 				AddBlock(blockSize,   60,b+250);
-				AddBlock(blockSize,  120,b+250, false);
+				AddBlock(blockSize,  120,b+250).SetDontTap();
 			}
 //			else if (levelIndex == i++) {
-//				AddBlock(blockSize, -100,b, false);
-//				AddBlock(blockSize, -100,b+60, false);
-//				AddBlock(blockSize, -100,b+120, false);
-//				AddBlock(blockSize, -100,b+180, false);
+//				AddBlock(blockSize, -100,b).SetDontTap();
+//				AddBlock(blockSize, -100,b+60).SetDontTap();
+//				AddBlock(blockSize, -100,b+120).SetDontTap();
+//				AddBlock(blockSize, -100,b+180).SetDontTap();
 //				AddBlock(blockSize,  100,b);
 //				AddBlock(blockSize,  100,b+60);
 //				AddBlock(blockSize,  100,b+120);
 //				AddBlock(blockSize,  100,b+180);
 //			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize,  160,b+60, false);
-				AddBlock(blockSize,  160,b+120, false);
-				AddBlock(blockSize,  160,b+180, false);
-				AddBlock(blockSize,  160,b+240, false);
-				AddBlock(blockSize,  160,b+300, false);
+				AddBlock(blockSize,  160,b+60).SetDontTap();
+				AddBlock(blockSize,  160,b+120).SetDontTap();
+				AddBlock(blockSize,  160,b+180).SetDontTap();
+				AddBlock(blockSize,  160,b+240).SetDontTap();
+				AddBlock(blockSize,  160,b+300).SetDontTap();
 				AddBlock(blockSize,  100,b);
 				AddBlock(blockSize,   40,b);
 				AddBlock(blockSize,  -20,b);
@@ -692,13 +695,13 @@ namespace BouncePaint {
 				AddBlock(blockSize,   60,b);
 				AddBlock(blockSize,  120,b);
 				AddBlock(blockSize,  180,b);
-				AddBlock(blockSize, -180,b+200, false);
-				AddBlock(blockSize, -120,b+200, false);
-				AddBlock(blockSize,  -60,b+200, false);
-				AddBlock(blockSize,    0,b+200, false);
-				AddBlock(blockSize,   60,b+200, false);
-				AddBlock(blockSize,  120,b+200, false);
-				AddBlock(blockSize,  180,b+200, false);
+				AddBlock(blockSize, -180,b+200).SetDontTap();
+				AddBlock(blockSize, -120,b+200).SetDontTap();
+				AddBlock(blockSize,  -60,b+200).SetDontTap();
+				AddBlock(blockSize,    0,b+200).SetDontTap();
+				AddBlock(blockSize,   60,b+200).SetDontTap();
+				AddBlock(blockSize,  120,b+200).SetDontTap();
+				AddBlock(blockSize,  180,b+200).SetDontTap();
             }
             else if (levelIndex == i++) { // Large 3x3 with freckles
                 float g = 200;
@@ -712,10 +715,10 @@ namespace BouncePaint {
                 AddBlock(blockSize,  0,b+g*2);
                 AddBlock(blockSize,  g,b+g*2);
 
-                AddBlock(blockSize, -g*0.5f,b+g*0.5f, false);
-                AddBlock(blockSize,  g*0.5f,b+g*0.5f, false);
-                AddBlock(blockSize, -g*0.5f,b+g*1.5f, false);
-                AddBlock(blockSize,  g*0.5f,b+g*1.5f, false);
+                AddBlock(blockSize, -g*0.5f,b+g*0.5f).SetDontTap();
+                AddBlock(blockSize,  g*0.5f,b+g*0.5f).SetDontTap();
+                AddBlock(blockSize, -g*0.5f,b+g*1.5f).SetDontTap();
+                AddBlock(blockSize,  g*0.5f,b+g*1.5f).SetDontTap();
             }
 
 
@@ -723,27 +726,26 @@ namespace BouncePaint {
 
 
 			// Traveling, No-Tap Blocks
-			//TODO: These, son
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f, 1, false);
-				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f, 1, false);
+				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f).SetDontTap();
+				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f).SetDontTap();
 				AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 1f, 0.4f);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f, 1, false);
-				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f, 1, false);
+				AddBlock(blockSize, new Vector2(-160,b    ), new Vector2( 160,b   ), 1f, 0f).SetDontTap();
+				AddBlock(blockSize, new Vector2( 160,b+50 ), new Vector2(-160,b+50), 1f, 0.2f).SetDontTap();
 				AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 1f, 0.4f);
 				AddBlock(blockSize, new Vector2( 160,b+150), new Vector2(-160,b+150), 1f, 0.6f);
 				AddBlock(blockSize, new Vector2(-160,b+200), new Vector2( 160,b+200), 1f, 0.8f);
 				AddBlock(blockSize, new Vector2( 160,b+250), new Vector2(-160,b+250), 1f, 1f);
-				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f, 1, false);
-                AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f, 1, false);
+				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f).SetDontTap();
+                AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f).SetDontTap();
             }
             //else if (levelIndex == i++) {
-            //    AddBlock(blockSize, new Vector2(-240,b    ), new Vector2(-180,b    ), 8f, 0f, 1, false);
-            //    AddBlock(blockSize, new Vector2( 240,b    ), new Vector2( 180,b    ), 8f, 3.142f, 1, false);
-            //    AddBlock(blockSize, new Vector2( 240,b+300), new Vector2( 180,b+300), 8f, 3.142f, 1, false);
-            //    AddBlock(blockSize, new Vector2(-240,b+300), new Vector2(-180,b+300), 8f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2(-240,b    ), new Vector2(-180,b    ), 8f, 0f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2( 240,b    ), new Vector2( 180,b    ), 8f, 3.142f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2( 240,b+300), new Vector2( 180,b+300), 8f, 3.142f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2(-240,b+300), new Vector2(-180,b+300), 8f, 0f).SetDontTap();
             //    AddBlock(blockSize, -40,b+100);
             //    AddBlock(blockSize,  40,b+100);
             //    AddBlock(blockSize, -40,b+180);
@@ -752,20 +754,20 @@ namespace BouncePaint {
             //    //AddBlock(blockSize, new Vector2( 250,b+100), new Vector2( 160,b+100), 1f);
             //}
             //else if (levelIndex == i++) {
-            //    AddBlock(blockSize, new Vector2(-250,b    ), new Vector2(-100,b    ), 6f, 0f, 1, false);
-            //    AddBlock(blockSize, new Vector2( 250,b    ), new Vector2( 100,b    ), 6f, 0f, 1, false);
-            //    AddBlock(blockSize, new Vector2( 250,b+300), new Vector2( 100,b+300), 6f, 0f, 1, false);
-            //    AddBlock(blockSize, new Vector2(-250,b+300), new Vector2(-100,b+300), 6f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2(-250,b    ), new Vector2(-100,b    ), 6f, 0f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2( 250,b    ), new Vector2( 100,b    ), 6f, 0f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2( 250,b+300), new Vector2( 100,b+300), 6f, 0f).SetDontTap();
+            //    AddBlock(blockSize, new Vector2(-250,b+300), new Vector2(-100,b+300), 6f, 0f).SetDontTap();
             //    AddBlock(blockSize, -50,b+100);
             //    AddBlock(blockSize,  50,b+100);
             //    AddBlock(blockSize, -50,b+200);
             //    AddBlock(blockSize,  50,b+200);
             //}
             else if (levelIndex == i++) {
-                AddBlock(blockSize, new Vector2(-240,b    ), new Vector2( 240,b    ), 1f, 0f, 1, false);
-                AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(-240,b    ), 1f, 0f, 1, false);
-                AddBlock(blockSize, new Vector2( 240,b+300), new Vector2(-240,b+300), 1f, 0f, 1, false);
-                AddBlock(blockSize, new Vector2(-240,b+300), new Vector2( 240,b+300), 1f, 0f, 1, false);
+                AddBlock(blockSize, new Vector2(-240,b    ), new Vector2( 240,b    ), 1f, 0f).SetDontTap();
+                AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(-240,b    ), 1f, 0f).SetDontTap();
+                AddBlock(blockSize, new Vector2( 240,b+300), new Vector2(-240,b+300), 1f, 0f).SetDontTap();
+                AddBlock(blockSize, new Vector2(-240,b+300), new Vector2( 240,b+300), 1f, 0f).SetDontTap();
                 AddBlock(blockSize, -40,b+100);
                 AddBlock(blockSize,  40,b+100);
                 AddBlock(blockSize, -40,b+180);
@@ -776,34 +778,34 @@ namespace BouncePaint {
                 AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(-240,b    ), 1f);
                 AddBlock(blockSize, new Vector2( 240,b+300), new Vector2(-240,b+300), 1f);
                 AddBlock(blockSize, new Vector2(-240,b+300), new Vector2( 240,b+300), 1f);
-                AddBlock(blockSize, -40,b+100, false);
-                AddBlock(blockSize,  40,b+100, false);
-                AddBlock(blockSize, -40,b+180, false);
-                AddBlock(blockSize,  40,b+180, false);
+                AddBlock(blockSize, -40,b+100).SetDontTap();
+                AddBlock(blockSize,  40,b+100).SetDontTap();
+                AddBlock(blockSize, -40,b+180).SetDontTap();
+                AddBlock(blockSize,  40,b+180).SetDontTap();
             }
             else if (levelIndex == i++) {
                 AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 1f, 0.0f);
-                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 1f, 0.2f, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 1f, 0.2f).SetDontTap();
                 AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 1f, 0.4f);
-                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 1f, 0.6f, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 1f, 0.6f).SetDontTap();
                 AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 1f, 0.8f);
-                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 1f, 1.0f, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 1f, 1.0f).SetDontTap();
                 AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 1f, 1.2f);
-                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 1f, 1.4f, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 1f, 1.4f).SetDontTap();
                 AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 1f, 1.6f);
             }
 
             else if (levelIndex == i++) { // Large 3x3 drifter with freckles
                 float o = 0.8f;
-                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.8f, o*0, 1, false);
-                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.8f, o*1, 1, false);
-                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.8f, o*2, 1, false);
-                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.8f, o*1, 1, false);
-                AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.8f, o*2, 1, false);
-                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.8f, o*3, 1, false);
-                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.8f, o*2, 1, false);
-                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.8f, o*3, 1, false);
-                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.8f, o*4, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.8f, o*0).SetDontTap();
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.8f, o*1).SetDontTap();
+                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.8f, o*2).SetDontTap();
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.8f, o*1).SetDontTap();
+                AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.8f, o*2).SetDontTap();
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.8f, o*3).SetDontTap();
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.8f, o*2).SetDontTap();
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.8f, o*3).SetDontTap();
+                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.8f, o*4).SetDontTap();
                 AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.8f, o*0.5f);
                 AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 125,b+ 75), 0.8f, o*1.5f);
                 AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.8f, o*1.5f);
@@ -812,13 +814,13 @@ namespace BouncePaint {
             else if (levelIndex == i++) { // Large 3x3 drifter chaotic, inverted freckles, no center
                 float o = -1.8f;
                 AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.6f, o*0);
-                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.6f, o*1, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.6f, o*1).SetDontTap();
                 AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.6f, o*2);
-                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.6f, o*1, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.6f, o*1).SetDontTap();
                 //AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.6f, o*2);
-                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.6f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.6f, o*3).SetDontTap();
                 AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.6f, o*2);
-                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.6f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.6f, o*3).SetDontTap();
                 AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.6f, o*4);
 
                 AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.6f, o*0.5f);
@@ -874,21 +876,21 @@ namespace BouncePaint {
 
 			// Multi-Hit Blocks
 			else if (levelIndex == i++) {
-				AddBlock(blockSize,    0,b, 3);
+                AddBlock(blockSize,    0,b).SetHitsReq(3);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -80,b+120, 3);
-				AddBlock(blockSize,  80,b, 3);
+                AddBlock(blockSize, -80,b+120).SetHitsReq(3);
+                AddBlock(blockSize,  80,b).SetHitsReq(3);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -140,b, 2);
-				AddBlock(blockSize,    0,b+100, 2);
-				AddBlock(blockSize,  140,b+200, 2);
+				AddBlock(blockSize, -140,b    ).SetHitsReq(2);
+				AddBlock(blockSize,    0,b+100).SetHitsReq(2);
+				AddBlock(blockSize,  140,b+200).SetHitsReq(2);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -140,b, 1);
-				AddBlock(blockSize,    0,b, 2);
-				AddBlock(blockSize,  140,b, 3);
+				AddBlock(blockSize, -140,b).SetHitsReq(1);
+				AddBlock(blockSize,    0,b).SetHitsReq(2);
+				AddBlock(blockSize,  140,b).SetHitsReq(3);
 			}
             // TODO:
             // Multi-Hit +
@@ -897,6 +899,13 @@ namespace BouncePaint {
             //      sizes
             //      traveling
 
+
+
+
+            // Gravity-Flip Blocks
+            //else if (levelIndex == i++) {
+            //    AddBlock(blockSize,    0,b).SetGravityFlip(1);
+            //}
 
 
 
@@ -927,33 +936,34 @@ namespace BouncePaint {
 				AddBlock(blockSize,  -200,b);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, 0,b, 1, false);
+                AddBlock(blockSize, 0,b).SetDontTap();
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -30,b, 1, false);
+                AddBlock(blockSize, -30,b).SetDontTap();
 				AddBlock(blockSize,  30,b);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, 0,b, 2);
+                AddBlock(blockSize, 0,b).SetHitsReq(2);
 			}
 			else {
 				AddBlock(new Vector2(200,200), 0,b);
 				Debug.LogError("No level data available for level: " + levelIndex);
 			}
 		}
-		private void AddBlock(Vector2 blockSize, float x,float y, bool doTap) {
+  //      private Block AddBlock(Vector2 blockSize, float x,float y, bool doTap) {
+		//	Vector2 pos = new Vector2(x,y);
+  //          return AddBlock(blockSize, pos,pos, 0,0, 1, doTap);
+		//}
+		private Block AddBlock(Vector2 blockSize, float x,float y) {
 			Vector2 pos = new Vector2(x,y);
-			AddBlock(blockSize, pos,pos, 0,0, 1, doTap);
+            return AddBlock(blockSize, pos,pos, 0,0);
 		}
-		private void AddBlock(Vector2 blockSize, float x,float y, int numHitsReq=1, bool doTap=true) {
-			Vector2 pos = new Vector2(x,y);
-			AddBlock(blockSize, pos,pos, 0,0, numHitsReq, doTap);
-		}
-		private void AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, float startLocOffset=0, int numHitsReq=1, bool doTap=true) {
-			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
+        private Block AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB, float travelSpeed, float startLocOffset=0) {
+			if (resourcesHandler == null) { return null; } // Safety check for runtime compile.
 			Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
-			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, startLocOffset, numHitsReq, doTap);
+			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB, travelSpeed, startLocOffset);
 			blocks.Add(newBlock);
+            return newBlock;
 		}
 
 

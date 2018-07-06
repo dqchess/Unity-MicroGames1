@@ -18,7 +18,7 @@ namespace BouncePaint {
         private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
         private Vector2 size;
 		// Properties (Specials)
-		private bool doTap; // only FALSE for the black Blocks we DON'T wanna tap on!
+		private bool doTap=true; // only FALSE for the black Blocks we DON'T wanna tap on!
 		private bool doTravel;
 		private float travelSpeed; // for TRAVELING Blocks.
 		private float travelOscVal; // for TRAVELING Blocks.
@@ -66,9 +66,7 @@ namespace BouncePaint {
 			Vector2 _size,
 			Vector2 _centerA,Vector2 _centerB,
 			float _travelSpeed,
-			float _startLocOffset,
-			int _numHitsReq,
-			bool _doTap
+			float _startLocOffset
 		) {
             gameController = _gameController;
             this.transform.SetParent(rt_parent);
@@ -78,8 +76,6 @@ namespace BouncePaint {
 			// Assign properties
 			centerA = _centerA;
 			centerB = _centerB;
-			doTap = _doTap;
-			numHitsReq = _numHitsReq;
 			travelSpeed = _travelSpeed*0.03f; // awkward scaling down the speed here.
 			doTravel = travelSpeed != 0;
 			travelOscVal = _startLocOffset;
@@ -99,20 +95,28 @@ namespace BouncePaint {
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = size;
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
-			i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
+            i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
 
-			// Body sprite
-			// if (!doTap) {
-			// 	i_body.sprite = s_bodyDontTap;
-			// }
-			SetIntentionVisuals(false);
-			// Hits-required text
-			t_numHitsReq.color = new Color(0,0,0, 0.5f);
-			if (numHitsReq <= 1) { // Don't need the text? Destroy it.
-				Destroy(t_numHitsReq.gameObject);
-				t_numHitsReq = null;
-			}
-			UpdateNumHitsReqText();
+            // TEMP! TODO: Only add and fit this text in SetHitsReq.
+            t_numHitsReq.enabled = false;
+        }
+        public void SetHitsReq(int _numHitsReq) {
+            numHitsReq = _numHitsReq;
+            // Hits-required text
+            t_numHitsReq.enabled = numHitsReq>1;
+            t_numHitsReq.color = new Color(0,0,0, 0.5f);
+            if (numHitsReq <= 1) { // Don't need the text? Destroy it.
+                Destroy(t_numHitsReq.gameObject);
+                t_numHitsReq = null;
+            }
+            UpdateNumHitsReqText();
+        }
+        public void SetDontTap() {
+            doTap = false;
+            // if (!doTap) {
+            //  i_body.sprite = s_bodyDontTap;
+            // }
+            SetIntentionVisuals(false);
         }
 
 
@@ -185,6 +189,11 @@ namespace BouncePaint {
 		public void OnPlayerPressJumpOnMeInappropriately() {
 			bodyColor = new Color(0.6f,0f,0.06f, 1f);
 		}
+        //public void OnPlayerPaintedABlock() {
+        //    // TEST!
+        //    doTap = !DoTap;
+        //    SetIntentionVisuals(false);
+        //}
 
 
 
