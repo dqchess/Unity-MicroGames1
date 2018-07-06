@@ -87,7 +87,7 @@ namespace BouncePaint {
             ps_dieBurst.Clear();
         }
         private float GetGravityY(int levelIndex) {
-            return -0.30f - levelIndex*0.008f;
+            return -0.30f - levelIndex*0.005f;
         }
         private float GetFallHeightNeutral(int levelIndex) {
             // return Mathf.Min(360, 200+levelIndex*10f); // TESTing out these values

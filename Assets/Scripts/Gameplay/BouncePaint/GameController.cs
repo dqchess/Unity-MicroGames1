@@ -551,7 +551,24 @@ namespace BouncePaint {
 //				AddBlock(blockSize, new Vector2( -220,b+240), new Vector2( 100,b+240), 1.6f);
 //				AddBlock(blockSize, new Vector2( -220,b+300), new Vector2( 180,b+300), 2f);
 //				AddBlock(blockSize, new Vector2( -220,b+360), new Vector2( 260,b+360), 2.4f);
-//			}
+            //			}
+            else if (levelIndex == i++) { // Large 3x3 drifters
+                float o = 0.6f;
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.6f, o*0);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.6f, o*1);
+                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.6f, o*1);
+                AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.6f, o*3);
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.6f, o*3);
+                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.6f, o*4);
+
+                //AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.6f, o*0.7f, 1, false);
+                //AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 175,b+ 75), 0.6f, o*0, 1, false);
+                //AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.6f, o*0, 1, false);
+                //AddBlock(blockSize, new Vector2(  25,b+225), new Vector2( 175,b+225), 0.6f, o*0, 1, false);
+            }
 
 
 
@@ -682,7 +699,24 @@ namespace BouncePaint {
 				AddBlock(blockSize,   60,b+200, false);
 				AddBlock(blockSize,  120,b+200, false);
 				AddBlock(blockSize,  180,b+200, false);
-			}
+            }
+            else if (levelIndex == i++) { // Large 3x3 with freckles
+                float g = 200;
+                AddBlock(blockSize, -g,b    );
+                AddBlock(blockSize,  0,b    );
+                AddBlock(blockSize,  g,b    );
+                AddBlock(blockSize, -g,b+g*1);
+                AddBlock(blockSize,  0,b+g*1);
+                AddBlock(blockSize,  g,b+g*1);
+                AddBlock(blockSize, -g,b+g*2);
+                AddBlock(blockSize,  0,b+g*2);
+                AddBlock(blockSize,  g,b+g*2);
+
+                AddBlock(blockSize, -g*0.5f,b+g*0.5f, false);
+                AddBlock(blockSize,  g*0.5f,b+g*0.5f, false);
+                AddBlock(blockSize, -g*0.5f,b+g*1.5f, false);
+                AddBlock(blockSize,  g*0.5f,b+g*1.5f, false);
+            }
 
 
 
@@ -702,9 +736,137 @@ namespace BouncePaint {
 				AddBlock(blockSize, new Vector2( 160,b+150), new Vector2(-160,b+150), 1f, 0.6f);
 				AddBlock(blockSize, new Vector2(-160,b+200), new Vector2( 160,b+200), 1f, 0.8f);
 				AddBlock(blockSize, new Vector2( 160,b+250), new Vector2(-160,b+250), 1f, 1f);
-				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f);
-				AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f);
-			}
+				AddBlock(blockSize, new Vector2(-160,b+300), new Vector2( 160,b+300), 1f, 1.2f, 1, false);
+                AddBlock(blockSize, new Vector2( 160,b+350), new Vector2(-160,b+350), 1f, 1.4f, 1, false);
+            }
+            //else if (levelIndex == i++) {
+            //    AddBlock(blockSize, new Vector2(-240,b    ), new Vector2(-180,b    ), 8f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2( 240,b    ), new Vector2( 180,b    ), 8f, 3.142f, 1, false);
+            //    AddBlock(blockSize, new Vector2( 240,b+300), new Vector2( 180,b+300), 8f, 3.142f, 1, false);
+            //    AddBlock(blockSize, new Vector2(-240,b+300), new Vector2(-180,b+300), 8f, 0f, 1, false);
+            //    AddBlock(blockSize, -40,b+100);
+            //    AddBlock(blockSize,  40,b+100);
+            //    AddBlock(blockSize, -40,b+180);
+            //    AddBlock(blockSize,  40,b+180);
+            //    //AddBlock(blockSize, new Vector2(-250,b+100), new Vector2(-160,b+100), 1f);
+            //    //AddBlock(blockSize, new Vector2( 250,b+100), new Vector2( 160,b+100), 1f);
+            //}
+            //else if (levelIndex == i++) {
+            //    AddBlock(blockSize, new Vector2(-250,b    ), new Vector2(-100,b    ), 6f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2( 250,b    ), new Vector2( 100,b    ), 6f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2( 250,b+300), new Vector2( 100,b+300), 6f, 0f, 1, false);
+            //    AddBlock(blockSize, new Vector2(-250,b+300), new Vector2(-100,b+300), 6f, 0f, 1, false);
+            //    AddBlock(blockSize, -50,b+100);
+            //    AddBlock(blockSize,  50,b+100);
+            //    AddBlock(blockSize, -50,b+200);
+            //    AddBlock(blockSize,  50,b+200);
+            //}
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2(-240,b    ), new Vector2( 240,b    ), 1f, 0f, 1, false);
+                AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(-240,b    ), 1f, 0f, 1, false);
+                AddBlock(blockSize, new Vector2( 240,b+300), new Vector2(-240,b+300), 1f, 0f, 1, false);
+                AddBlock(blockSize, new Vector2(-240,b+300), new Vector2( 240,b+300), 1f, 0f, 1, false);
+                AddBlock(blockSize, -40,b+100);
+                AddBlock(blockSize,  40,b+100);
+                AddBlock(blockSize, -40,b+180);
+                AddBlock(blockSize,  40,b+180);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2(-240,b    ), new Vector2( 240,b    ), 1f);
+                AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(-240,b    ), 1f);
+                AddBlock(blockSize, new Vector2( 240,b+300), new Vector2(-240,b+300), 1f);
+                AddBlock(blockSize, new Vector2(-240,b+300), new Vector2( 240,b+300), 1f);
+                AddBlock(blockSize, -40,b+100, false);
+                AddBlock(blockSize,  40,b+100, false);
+                AddBlock(blockSize, -40,b+180, false);
+                AddBlock(blockSize,  40,b+180, false);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 1f, 0.0f);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 1f, 0.2f, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 1f, 0.4f);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 1f, 0.6f, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 1f, 0.8f);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 1f, 1.0f, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 1f, 1.2f);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 1f, 1.4f, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 1f, 1.6f);
+            }
+
+            else if (levelIndex == i++) { // Large 3x3 drifter with freckles
+                float o = 0.8f;
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.8f, o*0, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.8f, o*1, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.8f, o*2, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.8f, o*1, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.8f, o*2, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.8f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.8f, o*2, 1, false);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.8f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.8f, o*4, 1, false);
+                AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.8f, o*0.5f);
+                AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 125,b+ 75), 0.8f, o*1.5f);
+                AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.8f, o*1.5f);
+                AddBlock(blockSize, new Vector2(  25,b+225), new Vector2( 125,b+225), 0.8f, o*3.5f);
+            }
+            else if (levelIndex == i++) { // Large 3x3 drifter chaotic, inverted freckles, no center
+                float o = -1.8f;
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2(-100,b    ), 0.6f, o*0);
+                AddBlock(blockSize, new Vector2( -50,b    ), new Vector2(  50,b    ), 0.6f, o*1, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b    ), new Vector2( 200,b    ), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2(-200,b+150), new Vector2(-100,b+150), 0.6f, o*1, 1, false);
+                //AddBlock(blockSize, new Vector2( -50,b+150), new Vector2(  50,b+150), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2( 100,b+150), new Vector2( 200,b+150), 0.6f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2(-100,b+300), 0.6f, o*2);
+                AddBlock(blockSize, new Vector2( -50,b+300), new Vector2(  50,b+300), 0.6f, o*3, 1, false);
+                AddBlock(blockSize, new Vector2( 100,b+300), new Vector2( 200,b+300), 0.6f, o*4);
+
+                AddBlock(blockSize, new Vector2(-125,b+ 75), new Vector2( -25,b+ 75), 0.6f, o*0.5f);
+                AddBlock(blockSize, new Vector2(  25,b+ 75), new Vector2( 125,b+ 75), 0.6f, o*1.5f);
+                AddBlock(blockSize, new Vector2(-125,b+225), new Vector2( -25,b+225), 0.6f, o*1.5f);
+                AddBlock(blockSize, new Vector2(  25,b+225), new Vector2( 125,b+225), 0.6f, o*3.5f);
+            }
+
+
+
+            // Differently Sized Blocks
+            else if (levelIndex == i++) {
+                AddBlock(blockSize*3,    0,b);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize*2, -200,b);
+                AddBlock(blockSize*2,  -80,b);
+                AddBlock(blockSize*2,   80,b);
+                AddBlock(blockSize*2,  200,b);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize*0.5f, -150,b);
+                AddBlock(blockSize*0.5f,  -90,b);
+                AddBlock(blockSize*0.5f,  -30,b);
+                AddBlock(blockSize*0.5f,   30,b);
+                AddBlock(blockSize*0.5f,   90,b);
+                AddBlock(blockSize*0.5f,  150,b);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize*0.4f, -260,b);
+                AddBlock(blockSize*0.8f, -200,b);
+                AddBlock(blockSize*1.3f, -130,b);
+                AddBlock(blockSize*3   ,    0,b);
+                AddBlock(blockSize*1.3f,  130,b);
+                AddBlock(blockSize*0.8f,  200,b);
+                AddBlock(blockSize*0.4f,  260,b);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize*5f  ,    0,b-100);
+                AddBlock(blockSize*0.4f, -100,b+120);
+                AddBlock(blockSize*0.5f,  -55,b+200);
+                AddBlock(blockSize*0.4f, -225,b+250);
+                AddBlock(blockSize*0.5f,  110,b+220);
+                AddBlock(blockSize*0.6f,  170,b+210);
+                AddBlock(blockSize*0.45f,  220,b+320);
+                AddBlock(blockSize*0.6f, -200,b+400);
+            }
+
 
 
 
@@ -712,7 +874,7 @@ namespace BouncePaint {
 
 			// Multi-Hit Blocks
 			else if (levelIndex == i++) {
-				AddBlock(blockSize,    0,b, 4);
+				AddBlock(blockSize,    0,b, 3);
 			}
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, -80,b+120, 3);
@@ -724,11 +886,16 @@ namespace BouncePaint {
 				AddBlock(blockSize,  140,b+200, 2);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, -140,b, 2);
-				AddBlock(blockSize,    0,b+100, 2);
-				AddBlock(blockSize,  140,b+200, 2);
+				AddBlock(blockSize, -140,b, 1);
+				AddBlock(blockSize,    0,b, 2);
+				AddBlock(blockSize,  140,b, 3);
 			}
-
+            // TODO:
+            // Multi-Hit +
+            //      varying y pos
+            //      irregular layouts
+            //      sizes
+            //      traveling
 
 
 
