@@ -15,7 +15,6 @@ namespace BouncePaint {
         [SerializeField] private Player player=null;
         private List<Block> blocks;
         // References
-		[SerializeField] private Canvas myCanvas;
         [SerializeField] private GameUI ui=null;
         [SerializeField] private RectTransform rt_blocks=null;
 
@@ -59,8 +58,8 @@ namespace BouncePaint {
         //  Game Flow
         // ----------------------------------------------------------------
         private void RestartLevel() { SetCurrentLevel(currentLevelIndex); }
-        private void StartPreviousLevel() { SetCurrentLevel(Mathf.Max(1, currentLevelIndex-1)); }
-        private void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
+        public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, currentLevelIndex-1)); }
+        public void StartNextLevel() { SetCurrentLevel(currentLevelIndex+1); }
         private void SetCurrentLevel(int _levelIndex) {
             currentLevelIndex = _levelIndex;
 			SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, currentLevelIndex);
@@ -101,6 +100,13 @@ namespace BouncePaint {
             }
         }
 
+		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
+			// When the Player knows who it's going to, tell all Blocks to update their visuals!
+			foreach (Block b in blocks) {
+				b.SetIntentionVisuals(b == blockHeadingTo);
+			}
+		}
+
 
 
         // ----------------------------------------------------------------
@@ -127,6 +133,9 @@ namespace BouncePaint {
 			OnTapScreen();
 		}
 		private void OnTapScreen() {
+			// Paused? Ignore input.
+			if (Time.timeScale == 0) { return; }
+
             if (gameState == GameStates.GameOver) {
                 // Make us wait a short moment so we visually register what's happened.
                 if (Time.time>timeWhenLevelEnded+0.2f) {
@@ -151,7 +160,7 @@ namespace BouncePaint {
 			if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
 
 			// DEBUG
-            if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPreviousLevel(); }
+            if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPrevLevel(); }
             if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
             if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
         }
@@ -168,6 +177,10 @@ namespace BouncePaint {
             }
             OnPlayerPaintBlock();
         }
+		/// Jumps *10* levels back.
+        public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, currentLevelIndex-10)); }
+		/// Jumps *10* levels forward.
+        public void StartNextLevel10() { SetCurrentLevel(currentLevelIndex+10); }
 
 
 
@@ -279,7 +292,48 @@ namespace BouncePaint {
 				AddBlock(blockSize,   90,b+200);
 				AddBlock(blockSize,  150,b+240);
 				AddBlock(blockSize,  210,b+280);
-			}
+            }
+
+            // Vertical Stacks
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, 0,b);
+                AddBlock(blockSize, 0,b+60);
+                AddBlock(blockSize, 0,b+120);
+                AddBlock(blockSize, 0,b+180);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, 0,b);
+                AddBlock(blockSize, 0,b+80);
+                AddBlock(blockSize, 0,b+160);
+                AddBlock(blockSize, 0,b+240);
+                AddBlock(blockSize, 0,b+320);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, -120,b);
+                AddBlock(blockSize,    0,b);
+                AddBlock(blockSize,  120,b);
+                AddBlock(blockSize, -120,b+180);
+                AddBlock(blockSize,    0,b+180);
+                AddBlock(blockSize,  120,b+180);
+            }
+//          else if (levelIndex == i++) {
+//              AddBlock(blockSize, -80,b);
+//              AddBlock(blockSize,   0,b);
+//              AddBlock(blockSize,   0,b+80);
+//              AddBlock(blockSize,   0,b+160);
+//              AddBlock(blockSize,   0,b+240);
+//              AddBlock(blockSize,  80,b);
+//          }
+            else if (levelIndex == i++) { // 8 plus
+                AddBlock(blockSize,    0,b);
+                AddBlock(blockSize,    0,b+80);
+                AddBlock(blockSize,    0,b+240);
+                AddBlock(blockSize,    0,b+320);
+                AddBlock(blockSize, -160,b+160);
+                AddBlock(blockSize,  -80,b+160);
+                AddBlock(blockSize,   80,b+160);
+                AddBlock(blockSize,  160,b+160);
+            }
 
 
 
@@ -312,57 +366,93 @@ namespace BouncePaint {
 				AddBlock(blockSize, new Vector2(-200,b+250), new Vector2(200,b+250), 1f);
 				AddBlock(blockSize, new Vector2( 240,b), new Vector2(120,b), 1f);
 				AddBlock(blockSize, new Vector2( 120,b), new Vector2(60,b), 1f);
-			}
+            }
+            // Faster Traveling Blocks
+            else if (levelIndex == i++) {
+                float w = 120;
+                AddBlock(blockSize, new Vector2(-240,b), new Vector2(-240+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2(-180,b), new Vector2(-180+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2(-120,b), new Vector2(-120+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2( -60,b), new Vector2( -60+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2(   0,b), new Vector2(   0+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2(  60,b), new Vector2(  60+w,b), 1.4f);
+                AddBlock(blockSize, new Vector2( 120,b), new Vector2( 120+w,b), 1.4f);
+            }
+            else if (levelIndex == i++) {
+                float w = 160;
+                AddBlock(blockSize, -260,b+240);
+                AddBlock(blockSize, new Vector2(-200,b+160), new Vector2(-200+w,b+160), 2f);
+                AddBlock(blockSize, new Vector2(-140,b+ 80), new Vector2(-140+w,b+ 80), 2f);
+                AddBlock(blockSize, new Vector2( -80,b    ), new Vector2( -80+w,b    ), 2f);
+                AddBlock(blockSize, new Vector2( -20,b+ 80), new Vector2( -20+w,b+ 80), 2f);
+                AddBlock(blockSize, new Vector2(  40,b+160), new Vector2(  40+w,b+160), 2f);
+                AddBlock(blockSize,  260,b+240);
+            }
+            else if (levelIndex == i++) {
+                float w = 120;
+                AddBlock(blockSize, new Vector2(-240,b), new Vector2(-240+w,b), 2f, 0f);
+                AddBlock(blockSize, new Vector2(-180,b), new Vector2(-180+w,b), 2f, 0.2f);
+                AddBlock(blockSize, new Vector2(-120,b), new Vector2(-120+w,b), 2f, 0.4f);
+                AddBlock(blockSize, new Vector2( -60,b), new Vector2( -60+w,b), 2f, 0.6f);
+                AddBlock(blockSize, new Vector2(   0,b), new Vector2(   0+w,b), 2f, 0.8f);
+                AddBlock(blockSize, new Vector2(  60,b), new Vector2(  60+w,b), 2f, 1.0f);
+                AddBlock(blockSize, new Vector2( 120,b), new Vector2( 120+w,b), 2f, 1.2f);
+            }
+            //else if (levelIndex == i++) {
+            //    float w = 120;
+            //    AddBlock(blockSize, new Vector2(-240,b), new Vector2(-240+w,b), 2f, 0f);
+            //    AddBlock(blockSize, new Vector2(-180,b), new Vector2(-180+w,b), 2f, 0.3f);
+            //    AddBlock(blockSize, new Vector2(-120,b), new Vector2(-120+w,b), 2f, 0.6f);
+            //    AddBlock(blockSize, new Vector2( -60,b), new Vector2( -60+w,b), 2f, 0.9f);
+            //    AddBlock(blockSize, new Vector2(   0,b), new Vector2(   0+w,b), 2f, 1.2f);
+            //    AddBlock(blockSize, new Vector2(  60,b), new Vector2(  60+w,b), 2f, 1.5f);
+            //    AddBlock(blockSize, new Vector2( 120,b), new Vector2( 120+w,b), 2f, 1.8f);
+            //}
 
-			// Faster Traveling Blocks
+			// Varying-Speed Traveling Blocks
 			else if (levelIndex == i++) {
 				AddBlock(blockSize, new Vector2(-150,b), new Vector2(-240,b), 1f);
 				AddBlock(blockSize, new Vector2(-100,b+50), new Vector2(100,b+50), 2f);
 				AddBlock(blockSize, new Vector2( 150,b), new Vector2(240,b), 1f);
 			}
 			else if (levelIndex == i++) {
-				AddBlock(blockSize, new Vector2(-150,b+100), new Vector2(-240,b+100), 2f);
-				AddBlock(blockSize, new Vector2(-100,b), new Vector2(100,b), 3f);
-				AddBlock(blockSize, new Vector2( 150,b+100), new Vector2(240,b+100), 2f);
-			}
+                AddBlock(blockSize, new Vector2(-240,b+100), new Vector2(-150,b+100), 2.5f);
+                AddBlock(blockSize, new Vector2(-120,b), new Vector2(40,b), 2.5f);
+                AddBlock(blockSize, new Vector2( -40,b+200), new Vector2(120,b+200), 2.5f);
+				AddBlock(blockSize, new Vector2( 150,b+100), new Vector2(240,b+100), 2.5f);
+            }
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2( 160,b+200), new Vector2(-160,b+200), 3f);
+                AddBlock(blockSize, new Vector2(-150,b), new Vector2(-240,b), 4f);
+                AddBlock(blockSize, new Vector2(-160,b+100), new Vector2( 160,b+100), 3f);
+                AddBlock(blockSize, new Vector2( 150,b), new Vector2(240,b), 4f);
+            }
+            //else if (levelIndex == i++) {
+            //    AddBlock(blockSize, new Vector2(-150,b+100), new Vector2(-240,b+100), 2f);
+            //    AddBlock(blockSize, new Vector2(-160,b), new Vector2(160,b), 2f);
+            //    AddBlock(blockSize, new Vector2(-160,b+200), new Vector2(160,b+200), 2f, 0.5f);
+            //    AddBlock(blockSize, new Vector2( 240,b+100), new Vector2(150,b+100), 2f);
+            //}
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2(-240,b    ), new Vector2( -80,b    ), 5f);
+                AddBlock(blockSize, new Vector2( 240,b    ), new Vector2(  80,b    ), 5f);
+                AddBlock(blockSize, new Vector2( -80,b+160), new Vector2(-240,b+160), 5f);
+                AddBlock(blockSize, new Vector2(  80,b+160), new Vector2( 240,b+160), 5f);
+                AddBlock(blockSize, new Vector2(-240,b+320), new Vector2( -80,b+320), 5f);
+                AddBlock(blockSize, new Vector2( 240,b+320), new Vector2(  80,b+320), 5f);
+            }
+
+            else if (levelIndex == i++) {
+                AddBlock(blockSize, new Vector2(-200,b    ), new Vector2( 200,b    ), 3f);
+                AddBlock(blockSize, new Vector2(-200,b+100), new Vector2( 200,b+100), 3f, 3.142f);
+                AddBlock(blockSize, new Vector2(-200,b+200), new Vector2( 200,b+200), 3f);
+                AddBlock(blockSize, new Vector2(-200,b+300), new Vector2( 200,b+300), 3f, 3.142f);
+            }
 
 
 
-			// Weird-Shapes Interlude
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, 0,b);
-				AddBlock(blockSize, 0,b+80);
-				AddBlock(blockSize, 0,b+160);
-				AddBlock(blockSize, 0,b+240);
-				AddBlock(blockSize, 0,b+320);
-			}
-			else if (levelIndex == i++) {
-				AddBlock(blockSize, -120,b);
-				AddBlock(blockSize,    0,b);
-				AddBlock(blockSize,  120,b);
-				AddBlock(blockSize, -120,b+180);
-				AddBlock(blockSize,    0,b+180);
-				AddBlock(blockSize,  120,b+180);
-			}
-//			else if (levelIndex == i++) {
-//				AddBlock(blockSize, -80,b);
-//				AddBlock(blockSize,   0,b);
-//				AddBlock(blockSize,   0,b+80);
-//				AddBlock(blockSize,   0,b+160);
-//				AddBlock(blockSize,   0,b+240);
-//				AddBlock(blockSize,  80,b);
-//			}
-			else if (levelIndex == i++) {
-				AddBlock(blockSize,    0,b);
-				AddBlock(blockSize,    0,b+80);
-				AddBlock(blockSize,    0,b+240);
-				AddBlock(blockSize,    0,b+320);
-				AddBlock(blockSize, -160,b+160);
-				AddBlock(blockSize,  -80,b+160);
-				AddBlock(blockSize,   80,b+160);
-				AddBlock(blockSize,  160,b+160);
-			}
-//			else if (levelIndex == i++) {
+            // Weird-Shapes Interlude
+//			else if (levelIndex == i++) { // 3x3 larger grid
 //				AddBlock(blockSize, -120,b);
 //				AddBlock(blockSize,    0,b);
 //				AddBlock(blockSize,  120,b);
@@ -373,7 +463,7 @@ namespace BouncePaint {
 //				AddBlock(blockSize,    0,b+240);
 //				AddBlock(blockSize,  120,b+240);
 //			}
-			else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // 3x3 tight grid
 				AddBlock(blockSize, -60,b);
 				AddBlock(blockSize,   0,b);
 				AddBlock(blockSize,  60,b);
@@ -680,6 +770,7 @@ namespace BouncePaint {
 				AddBlock(blockSize, 0,b, 2);
 			}
 			else {
+				AddBlock(new Vector2(200,200), 0,b);
 				Debug.LogError("No level data available for level: " + levelIndex);
 			}
 		}

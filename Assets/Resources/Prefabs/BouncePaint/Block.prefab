@@ -120,6 +120,7 @@ MonoBehaviour:
   i_hitBox: {fileID: 114130848183891524}
   myRectTransform: {fileID: 224938914865082336}
   t_numHitsReq: {fileID: 114776235002000564}
+  s_bodyDontTap: {fileID: 21300000, guid: ccf2bff917e544d60bc800d13e8d1500, type: 3}
 --- !u!114 &114659552338849622
 MonoBehaviour:
   m_ObjectHideFlags: 1

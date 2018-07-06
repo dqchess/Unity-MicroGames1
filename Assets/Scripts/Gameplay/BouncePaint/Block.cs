@@ -14,8 +14,9 @@ namespace BouncePaint {
         // Properties
 		private bool isPainted=false;
 		private Rect hitRect;
-		private Rect bodyRect;
-		private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+		//private Rect bodyRect;
+        private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+        private Vector2 size;
 		// Properties (Specials)
 		private bool doTap; // only FALSE for the black Blocks we DON'T wanna tap on!
 		private bool doTravel;
@@ -24,6 +25,7 @@ namespace BouncePaint {
 		private int numHitsReq;
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
         // References
+		[SerializeField] private Sprite s_bodyDontTap;
         private GameController gameController;
 
 		// Getters (Public)
@@ -50,7 +52,10 @@ namespace BouncePaint {
 			}
 		}
 		private void UpdateHitRectCenter() {
-			hitRect.center = center + new Vector2(0, 52);
+			// hitRect.center = center + new Vector2(0, 52);
+			hitRect.center = new Vector2(
+                center.x,
+                center.y+size.y*0.5f+hitRect.height*0.5f + 4);
 		}
 
 
@@ -81,27 +86,26 @@ namespace BouncePaint {
 			posDipOffset = Vector2.zero;
 			ApplyPos();
 
-			bodyRect = new Rect(center-_size*0.5f, _size);
-            hitRect = new Rect(bodyRect);
-            // Offset and shrink the hitRect!
-            hitRect.size += new Vector2(0, -12);
+            size = _size;
+			//bodyRect = new Rect(center-_size*0.5f, _size);
+            // Make hitRect!
+            hitRect = new Rect();
+            hitRect.size = new Vector2(size.x, 38);
 			UpdateHitRectCenter();
-            // Bloat the hitRect's width a bit (in case of high-speed x-movement).
-            hitRect.size += new Vector2(20, 0);
-			hitRect.center += new Vector2(-10, 0);
+            // Fudgily bloat the hitRect's width a bit (in case the block or ball are moving fast horizontally).
+            hitRect.size += new Vector2(40, 0);
+			hitRect.center += new Vector2(-20, 0);
 
 			// Now put/size me where I belong!
-			myRectTransform.sizeDelta = bodyRect.size;
+			myRectTransform.sizeDelta = size;
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
 			i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
 
-			// Body color
-			if (doTap) {
-				bodyColor = new Color(0,0,0, 0.4f);
-			}
-			else {
-				bodyColor = new Color(0,0,0, 0.95f); // about black!
-			}
+			// Body sprite
+			// if (!doTap) {
+			// 	i_body.sprite = s_bodyDontTap;
+			// }
+			SetIntentionVisuals(false);
 			// Hits-required text
 			t_numHitsReq.color = new Color(0,0,0, 0.5f);
 			if (numHitsReq <= 1) { // Don't need the text? Destroy it.
@@ -116,23 +120,26 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-        /// Paints me! :)
-		public void OnPlayerBounceOnMe(Color playerColor) {
-			// If I'm not yet painted...!
-			if (!isPainted) {
-				// Hit me, Paul!
-				numHitsReq --;
-				UpdateNumHitsReqText();
-				// That was the last straw, Cady??
-				if (numHitsReq <= 0) {
-					// Paint me!
-	                isPainted = true;
-	                bodyColor = playerColor;
+		public void SetIntentionVisuals(bool isPlayerComingToMe) {
+			if (isPainted) { return; } // Already painted? We don't have to do anything.
+
+			// if (isPlayerComingToMe) {
+			// 	if (doTap) {
+			// 		bodyColor = new Color(0.7f,0.7f,0.7f, 0.6f);
+			// 	}
+			// 	// else {
+			// 	// 	bodyColor = new Color(0,0,0, 0.8f);
+			// 	// }
+			// }
+			// else {
+				if (doTap) {
+					bodyColor = new Color(0,0,0, 0.4f); // light gray
 				}
-            }
-            // Push me down!
-			posDipOffset += new Vector2(0, -16f);
-        }
+				else {
+					bodyColor = new Color(0,0,0, 0.95f); // almost black
+				}
+			// }
+		}
 		private void UpdateNumHitsReqText() {
 			if (t_numHitsReq != null) {
 				t_numHitsReq.text = numHitsReq.ToString();
@@ -151,6 +158,32 @@ namespace BouncePaint {
 			else {
 				center = centerA + posDipOffset;
 			}
+		}
+
+
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        /// Paints me! :)
+		public void OnPlayerBounceOnMe(Color playerColor) {
+			// If I'm not yet painted...!
+			if (!isPainted) {
+				// Hit me, Paul!
+				numHitsReq --;
+				UpdateNumHitsReqText();
+				// That was the last straw, Cady??
+				if (numHitsReq <= 0) {
+					// Paint me!
+	                isPainted = true;
+	                bodyColor = playerColor;
+				}
+            }
+            // Push me down!
+			posDipOffset += new Vector2(0, -16f);
+        }
+		/// Called when Player taps to jump while in me, BUT I'm a don't-tap Block!
+		public void OnPlayerPressJumpOnMeInappropriately() {
+			bodyColor = new Color(0.6f,0f,0.06f, 1f);
 		}
 
 

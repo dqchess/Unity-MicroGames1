@@ -75,7 +75,7 @@ namespace BouncePaint {
         public void Reset(int levelIndex) {
             isDead = false;
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
-            blockHeadingTo = GetRandomUnpaintedBlock();
+            SetBlockHeadingTo(GetRandomUnpaintedBlock());
             gravity = new Vector2(0, GetGravityY(levelIndex));
 			vel = new Vector2(0, 5); // Start with a little toss-up.
 			float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
@@ -91,14 +91,19 @@ namespace BouncePaint {
         }
         private float GetFallHeightNeutral(int levelIndex) {
             // return Mathf.Min(360, 200+levelIndex*10f); // TESTing out these values
-            return 260f;
+            return 250f;
         }
 
 
 
         // ----------------------------------------------------------------
-        //  Update
+        //  Events / Doers
         // ----------------------------------------------------------------
+        private void SetBlockHeadingTo(Block _block) {
+            blockHeadingTo = _block;
+            gameController.OnPlayerSetBlockHeadingTo(blockHeadingTo);
+        }
+
         public void OnPressJumpButton() {
             Block blockTouching = GetUnpaintedBlockTouching();
 			// I AM touching a block!...
@@ -109,6 +114,7 @@ namespace BouncePaint {
 				}
 				// Ooh, a DON'T-tap block. Explode!
 				else {
+                    blockTouching.OnPlayerPressJumpOnMeInappropriately();
 					Explode();
 				}
             }
@@ -119,7 +125,7 @@ namespace BouncePaint {
         }
 
         private void BounceOnBlock(Block block) {
-            stretch = -0.2f;//-0.45f;
+            stretch = -0.25f;//-0.45f;
 
             // Randomize my color!
             if (!IsLevelComplete) {
@@ -134,12 +140,12 @@ namespace BouncePaint {
             // Choose the next block to go to!!
             Block nextBlock = GetRandomUnpaintedBlock();
             if (nextBlock != null) { // Is there a block to go to? Let's go to it!
-                blockHeadingTo = nextBlock;
+                SetBlockHeadingTo(nextBlock);
             }
             
             // Find how fast we have to move upward to reach this y pos, and set our vel to that!
             Vector2 blockToPos = blockHeadingTo.HitRect.center;
-            float peakPosY = blockToPos.y+fallHeightNeutral + Random.Range(-50,50);
+            float peakPosY = blockToPos.y+fallHeightNeutral + Random.Range(-30,30);
             float displacementY = blockToPos.y - pos.y;
             float yDist = Mathf.Max (0, peakPosY-pos.y);
             float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
@@ -188,6 +194,7 @@ namespace BouncePaint {
         private void ApplyBounds() {
             // If I've passed too far into the block I'm heading towards, explode me!
 			float boundsY = blockHeadingTo.HitRect.yMin;
+            if (IsLevelComplete) { boundsY += 14f; } // When the level's over, make my bounds HIGHer, so I look more like I'm bouncing on the Blocks.
             if (vel.y<0 && pos.y<boundsY) {
                 pos = new Vector2(pos.x, boundsY);
 				// Level's complete? Just happily bounce on the block's head. ;)
@@ -213,8 +220,8 @@ namespace BouncePaint {
             // Stretch me!
             stretch += stretchVel;
             float stretchTarget = 0;// Mathf.Max(0, -vel.y)*0.01f;
-            stretchVel += (stretchTarget-stretch) / 4f;
-            stretchVel *= 0.8f;
+            stretchVel += (stretchTarget-stretch) / 5f;
+            stretchVel *= 0.82f;
             ApplyStretch();
 
             float rotation = Mathf.Atan2(-vel.x, vel.y) * Mathf.Rad2Deg;

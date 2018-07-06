@@ -86,12 +86,12 @@ abstract public class BaseGameController : MonoBehaviour {
 		bool isKey_alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
 		bool isKey_control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-
-		// P = Toggle pause
+		// T = Toggle slow-mo
 		if (Input.GetKeyDown (KeyCode.T)) {
 			ToggleSlowMo();
 		}
-		if (Input.GetKeyDown (KeyCode.P)) {
+		// ESCAPE or P = Toggle pause
+		if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.P)) {
 			TogglePause ();
 		}
 
