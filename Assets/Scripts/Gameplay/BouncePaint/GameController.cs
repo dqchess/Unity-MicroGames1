@@ -909,7 +909,7 @@ namespace BouncePaint {
 
 
 
-
+            /*
 			// Even grids for level-making reference
 			else if (levelIndex == i++) {
 				AddBlock(bs, -120,b);
@@ -944,6 +944,7 @@ namespace BouncePaint {
 			else if (levelIndex == i++) {
                 AddBlock(bs, 0,b).SetHitsReq(2);
 			}
+            */
 			else {
 				AddBlock(new Vector2(200,200), 0,b);
 				Debug.LogError("No level data available for level: " + levelIndex);

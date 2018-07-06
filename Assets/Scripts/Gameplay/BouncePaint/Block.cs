@@ -92,6 +92,8 @@ namespace BouncePaint {
 
             // TEMP! TODO: Only add and fit this text in SetHitsReq.
             t_numHitsReq.enabled = false;
+            // TEMP! Default value sloppy in here.
+            SetSpeed(1, 0);
         }
         public Block SetHitsReq(int _numHitsReq) {
             numHitsReq = _numHitsReq;
