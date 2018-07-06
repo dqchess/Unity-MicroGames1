@@ -14,13 +14,12 @@ namespace BouncePaint {
         // Properties
 		private bool isPainted=false;
 		private Rect hitRect;
-		//private Rect bodyRect;
         private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
         private Vector2 size;
 		// Properties (Specials)
 		private bool doTap=true; // only FALSE for the black Blocks we DON'T wanna tap on!
 		private bool doTravel;
-		private float travelSpeed; // for TRAVELING Blocks.
+		private float travelSpeed=1f; // for TRAVELING Blocks.
 		private float travelOscVal; // for TRAVELING Blocks.
 		private int numHitsReq;
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
@@ -64,9 +63,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
 		public void Initialize(GameController _gameController, RectTransform rt_parent,
 			Vector2 _size,
-			Vector2 _centerA,Vector2 _centerB,
-			float _travelSpeed,
-			float _startLocOffset
+			Vector2 _centerA,Vector2 _centerB
 		) {
             gameController = _gameController;
             this.transform.SetParent(rt_parent);
@@ -76,14 +73,10 @@ namespace BouncePaint {
 			// Assign properties
 			centerA = _centerA;
 			centerB = _centerB;
-			travelSpeed = _travelSpeed*0.03f; // awkward scaling down the speed here.
-			doTravel = travelSpeed != 0;
-			travelOscVal = _startLocOffset;
 			posDipOffset = Vector2.zero;
 			ApplyPos();
 
             size = _size;
-			//bodyRect = new Rect(center-_size*0.5f, _size);
             // Make hitRect!
             hitRect = new Rect();
             hitRect.size = new Vector2(size.x, 38);
@@ -100,7 +93,7 @@ namespace BouncePaint {
             // TEMP! TODO: Only add and fit this text in SetHitsReq.
             t_numHitsReq.enabled = false;
         }
-        public void SetHitsReq(int _numHitsReq) {
+        public Block SetHitsReq(int _numHitsReq) {
             numHitsReq = _numHitsReq;
             // Hits-required text
             t_numHitsReq.enabled = numHitsReq>1;
@@ -110,15 +103,23 @@ namespace BouncePaint {
                 t_numHitsReq = null;
             }
             UpdateNumHitsReqText();
+            return this;
         }
-        public void SetDontTap() {
+        public Block SetDontTap() {
             doTap = false;
             // if (!doTap) {
             //  i_body.sprite = s_bodyDontTap;
             // }
             SetIntentionVisuals(false);
+            return this;
         }
-
+        public Block SetSpeed(float _speed, float _startLocOffset=0) {
+            travelSpeed = _speed*0.03f; // awkward scaling down the speed here.
+            doTravel = travelSpeed != 0;
+            travelOscVal = _startLocOffset;
+            ApplyPos();
+            return this;
+        }
 
 
         // ----------------------------------------------------------------
