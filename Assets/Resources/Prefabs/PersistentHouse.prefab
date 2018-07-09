@@ -259,6 +259,10 @@ MonoBehaviour:
     type: 2}
   bouncePaint_block: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23,
     type: 2}
+  bouncePaint_blockNumHitsReqText: {fileID: 1210016858378852, guid: fef1f404e85084f8387c4904f0ab19b3,
+    type: 2}
+  bouncePaint_player: {fileID: 1857669726947748, guid: ae5ab297af6ef4c05b765191fc4a1a12,
+    type: 2}
   letterClear_letterTile: {fileID: 1806581184494348, guid: 2d654230b575e49488b6f30055e7b1ad,
     type: 2}
   letterClear_wordTile: {fileID: 1588581518580352, guid: cf18deb6e071c47d79e2d7324ae15533,

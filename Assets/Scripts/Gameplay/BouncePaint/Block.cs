@@ -10,9 +10,10 @@ namespace BouncePaint {
         [SerializeField] private Image i_body=null;
 		[SerializeField] private Image i_hitBox=null;
 		[SerializeField] private RectTransform myRectTransform=null;
-		[SerializeField] private TextMeshProUGUI t_numHitsReq=null;
+		private TextMeshProUGUI t_numHitsReq=null; // This is added from a prefab if needed!
         // Properties
 		private bool isPainted=false;
+        private Player ballTargetingMe=null;
 		private Rect hitRect;
         private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
         private Vector2 size;
@@ -30,7 +31,12 @@ namespace BouncePaint {
 		// Getters (Public)
 		public bool DoTap { get { return doTap; } }
 		public bool IsPainted { get { return isPainted; } }
+        public bool IsAvailable { get { return !isPainted && ballTargetingMe==null; } } // I'm available if A) I'm unpainted, and B) Nobody's planning to hit me!
         public Rect HitRect { get { return hitRect; } }
+        public Player BallTargetingMe {
+            get { return ballTargetingMe; }
+            set { ballTargetingMe = value; }
+        }
 		public Vector2 GetPredictedPos(float timeFromNow) {
 			if (!doTravel) { return HitRect.center; } // Oh, if I'm NOT a traveler, just return my current position.
 			float predTravelOscVal = travelOscVal + travelSpeed*timeFromNow; // we use FixedUpdate, so this is actually reliable.
@@ -38,6 +44,7 @@ namespace BouncePaint {
 //			Debug.Log("predTravelLoc: " + predTravelLoc + "  predTravelOscVal: " + predTravelOscVal);
 			return Vector2.Lerp(centerA,centerB, predTravelLoc);
 		}
+
         // Getters (Private)
         private Color bodyColor {
             get { return i_body.color; }
@@ -90,19 +97,19 @@ namespace BouncePaint {
             i_hitBox.rectTransform.sizeDelta = hitRect.size;
             i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
 
-            // TEMP! TODO: Only add and fit this text in SetHitsReq.
-            t_numHitsReq.enabled = false;
             // TEMP! Default value sloppy in here.
             SetSpeed(1, 0);
         }
         public Block SetHitsReq(int _numHitsReq) {
             numHitsReq = _numHitsReq;
             // Hits-required text
-            t_numHitsReq.enabled = numHitsReq>1;
-            t_numHitsReq.color = new Color(0,0,0, 0.5f);
-            if (numHitsReq <= 1) { // Don't need the text? Destroy it.
-                Destroy(t_numHitsReq.gameObject);
-                t_numHitsReq = null;
+            if (numHitsReq > 1) {
+                t_numHitsReq = Instantiate(ResourcesHandler.Instance.bouncePaint_blockNumHitsReqText).GetComponent<TextMeshProUGUI>();
+                t_numHitsReq.rectTransform.SetParent(this.myRectTransform);
+                t_numHitsReq.rectTransform.localScale = Vector2.one;
+                t_numHitsReq.rectTransform.localEulerAngles = Vector2.zero;
+                t_numHitsReq.rectTransform.offsetMin = t_numHitsReq.rectTransform.offsetMax = Vector2.zero;
+                t_numHitsReq.color = new Color(0,0,0, 0.5f);
             }
             UpdateNumHitsReqText();
             return this;

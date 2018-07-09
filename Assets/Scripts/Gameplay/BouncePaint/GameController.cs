@@ -12,14 +12,16 @@ namespace BouncePaint {
         private float timeWhenLevelEnded;
         private int currentLevelIndex;
         // Components
-        [SerializeField] private Player player=null;
+        private List<Player> players; // oh, balls.
         private List<Block> blocks;
         // References
         [SerializeField] private GameUI ui=null;
         [SerializeField] private RectTransform rt_blocks=null;
+        [SerializeField] private RectTransform rt_gameWorld=null;
 
         // Getters (Public)
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
+        public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
         public List<Block> Blocks { get { return blocks; } }
         // Getters (Private)
         private bool IsEveryBlockPainted() {
@@ -44,13 +46,20 @@ namespace BouncePaint {
 			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.BouncePaint_LastLevelPlayed, 1));
         }
 
-        private void DestroyAllBlocks() {
+        private void DestroyLevelComponents() {
             if (blocks!=null) {
-                foreach (Block block in blocks) {
-                    Destroy(block.gameObject);
+                foreach (Block obj in blocks) {
+                    Destroy(obj.gameObject);
                 }
             }
             blocks = null;
+
+            if (players!=null) {
+                foreach (Player obj in players) {
+                    Destroy(obj.gameObject);
+                }
+            }
+            players = null;
         }
 
 
@@ -74,9 +83,12 @@ namespace BouncePaint {
             // Tell the UI!
             ui.UpdateLevelName(currentLevelIndex);
 
-            // Initialize level components and player!
-			AddLevelComponents(currentLevelIndex);
-            player.Reset(currentLevelIndex);
+            // Initialize level components, and reset Players!
+            AddLevelComponents(currentLevelIndex);
+            PlayerGravityScale = players.Count == 1 ? 1f : 0.6f; // HACK! HACK.
+            foreach (Player p in players) {
+                p.Reset(currentLevelIndex);
+            }
         }
         private void SetGameOver() {
             gameState = GameStates.GameOver;
@@ -154,7 +166,7 @@ namespace BouncePaint {
 				}
             }
             else {
-                player.OnPressJumpButton();
+                OnPressJumpButton();
             }
         }
         override protected void RegisterButtonInput() {
@@ -168,6 +180,48 @@ namespace BouncePaint {
             if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
         }
 
+
+        private void OnPressJumpButton() {
+            bool didAnyPlayerBounce = false; // I'll say otherwise next.
+            foreach (Player player in players) {
+                Block blockTouching = player.GetUnpaintedBlockTouching();
+                // This Player IS touching a standard, do-tap Block...!
+                if (blockTouching != null && blockTouching.DoTap) {
+                    player.BounceOnBlock(blockTouching);
+                    didAnyPlayerBounce = true;
+                }
+            }
+
+            // Did NOBODY bounce? Oh, jeez. Explode some balls.
+            if (!didAnyPlayerBounce) {
+                foreach (Player player in players) {
+                    // Visually inform any don't-tap Blocks for user's mistake feedback.
+                    Block blockTouching = player.GetUnpaintedBlockTouching();
+                    if (blockTouching != null && !blockTouching.DoTap) {
+                        blockTouching.OnPlayerPressJumpOnMeInappropriately();
+                    }
+                    // Explode the ball!
+                    player.Explode();
+                }
+            }
+            //    // This Player IS touching a block!...
+            //    if (blockTouching != null) {
+            //        // Standard block? Bounce!
+            //        if (blockTouching.DoTap) {
+            //            BounceOnBlock(blockTouching);
+            //        }
+            //        // Ooh, a DON'T-tap block. Explode!
+            //        else {
+            //            blockTouching.OnPlayerPressJumpOnMeInappropriately();
+            //            Explode();
+            //        }
+            //    }
+            //    // I'm NOT touching any block...
+            //    else {
+            //        Explode();
+            //    }
+            //}
+        }
 
 
 
@@ -187,12 +241,18 @@ namespace BouncePaint {
 
 
 
-		// HARDCODED Level-adding. Hardcoded for now.
+		// HARDCODED Level-adding.
 		private void AddLevelComponents(int levelIndex) {
-			DestroyAllBlocks(); // Just in case
-			blocks = new List<Block>();
+            DestroyLevelComponents(); // Just in case
+            blocks = new List<Block>();
+            players = new List<Player>();
+            if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
-            Vector2 bs = new Vector2(50,50);
+            // Add at least one Player.
+            AddPlayer();
+
+            // Default values
+            Vector2 bs = new Vector2(50,50); // block size
 
 			// NOTE: All coordinates are based off of a 600x800 available playing space! :)
 
@@ -831,16 +891,16 @@ namespace BouncePaint {
 
 
             // Differently Sized Blocks
-            else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // Big ice cube
                 AddBlock(bs*3,    0,b);
             }
-            else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // Four bigger blocks
                 AddBlock(bs*2, -200,b);
                 AddBlock(bs*2,  -80,b);
                 AddBlock(bs*2,   80,b);
                 AddBlock(bs*2,  200,b);
             }
-            else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // Tiny row
                 AddBlock(bs*0.5f, -150,b);
                 AddBlock(bs*0.5f,  -90,b);
                 AddBlock(bs*0.5f,  -30,b);
@@ -848,7 +908,7 @@ namespace BouncePaint {
                 AddBlock(bs*0.5f,   90,b);
                 AddBlock(bs*0.5f,  150,b);
             }
-            else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // Foreshortened posse
                 AddBlock(bs*0.4f, -260,b);
                 AddBlock(bs*0.8f, -200,b);
                 AddBlock(bs*1.3f, -130,b);
@@ -857,7 +917,7 @@ namespace BouncePaint {
                 AddBlock(bs*0.8f,  200,b);
                 AddBlock(bs*0.4f,  260,b);
             }
-            else if (levelIndex == i++) {
+            else if (levelIndex == i++) { // Big base, sprinkles above
                 AddBlock(bs*5f  ,    0,b-100);
                 AddBlock(bs*0.4f, -100,b+120);
                 AddBlock(bs*0.5f,  -55,b+200);
@@ -867,6 +927,46 @@ namespace BouncePaint {
                 AddBlock(bs*0.45f,  220,b+320);
                 AddBlock(bs*0.6f, -200,b+400);
             }
+            // Rectangles
+            else if (levelIndex == i++) { // Sound waves
+                float w = 40f;
+                AddBlock(new Vector2(w, 320), -240, b+100);
+                AddBlock(new Vector2(w, 240), -180, b+100);
+                AddBlock(new Vector2(w, 160), -120, b+100);
+                AddBlock(new Vector2(w,  80),  -60, b+100);
+                AddBlock(new Vector2(w,  40),    0, b+100);
+                AddBlock(new Vector2(w,  80),   60, b+100);
+                AddBlock(new Vector2(w, 160),  120, b+100);
+                AddBlock(new Vector2(w, 240),  180, b+100);
+                AddBlock(new Vector2(w, 320),  240, b+100);
+            }
+            else if (levelIndex == i++) { // Skinny pillars
+                float w = 12f;
+                AddBlock(new Vector2(w, 300), -240, b+100);
+                AddBlock(new Vector2(w, 300), -180, b+100);
+                AddBlock(new Vector2(w, 300), -120, b+100);
+                AddBlock(new Vector2(w, 300),  -60, b+100);
+                AddBlock(new Vector2(w, 300),    0, b+100);
+                AddBlock(new Vector2(w, 300),   60, b+100);
+                AddBlock(new Vector2(w, 300),  120, b+100);
+                AddBlock(new Vector2(w, 300),  180, b+100);
+                AddBlock(new Vector2(w, 300),  240, b+100);
+            }
+            else if (levelIndex == i++) { // Flat shelves
+                AddBlock(new Vector2(160,20), -160, b+300);
+                AddBlock(new Vector2(160,20), -160, b+200);
+                AddBlock(new Vector2(160,20), -160, b+100);
+                AddBlock(new Vector2(160,20), -160, b);
+                AddBlock(new Vector2( 90,20),    0, b+150);
+                AddBlock(new Vector2(160,20),  160, b+300);
+                AddBlock(new Vector2(160,20),  160, b+200);
+                AddBlock(new Vector2(160,20),  160, b+100);
+                AddBlock(new Vector2(160,20),  160, b);
+            }
+            //else if (levelIndex == i++) { // Pluses TODO: These lvls
+            //}
+            //else if (levelIndex == i++) { // Zig-zags
+            //}
 
 
 
@@ -891,12 +991,43 @@ namespace BouncePaint {
 				AddBlock(bs,    0,b).SetHitsReq(2);
 				AddBlock(bs,  140,b).SetHitsReq(3);
 			}
-            // TODO:
+            // TODO: These levels
             // Multi-Hit +
             //      varying y pos
             //      irregular layouts
             //      sizes
             //      traveling
+
+
+
+
+            // Multi-Ball Levels!
+            else if (levelIndex == i++) {
+                PlayerGravityScale = 0.6f;
+                AddPlayer();
+                AddBlock(bs, -180,b);
+                AddBlock(bs,  -60,b);
+                AddBlock(bs,   60,b);
+                AddBlock(bs,  180,b);
+            }
+            else if (levelIndex == i++) {
+                AddPlayer();
+                AddBlock(bs, -160,b);
+                AddBlock(bs,  -80,b);
+                AddBlock(bs,    0,b);
+                AddBlock(bs,   80,b);
+                AddBlock(bs,  160,b);
+            }
+            else if (levelIndex == i++) {
+                AddPlayer();
+                AddBlock(bs, -150,b);
+                AddBlock(bs,  -90,b);
+                AddBlock(bs,  -30,b);
+                AddBlock(bs,   30,b);
+                AddBlock(bs,   90,b);
+                AddBlock(bs,  150,b);
+            }
+
 
 
 
@@ -947,7 +1078,7 @@ namespace BouncePaint {
             */
 			else {
 				AddBlock(new Vector2(200,200), 0,b);
-				Debug.LogError("No level data available for level: " + levelIndex);
+                Debug.LogWarning("No level data available for level: " + levelIndex);
 			}
 		}
   //      private Block AddBlock(Vector2 blockSize, float x,float y, bool doTap) {
@@ -959,12 +1090,18 @@ namespace BouncePaint {
             return AddBlock(blockSize, pos,pos);
 		}
         private Block AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB) {
-			if (resourcesHandler == null) { return null; } // Safety check for runtime compile.
 			Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
 			newBlock.Initialize(this,rt_blocks, blockSize, posA,posB);
 			blocks.Add(newBlock);
             return newBlock;
 		}
+
+        private Player AddPlayer() {
+            Player newPlayer = Instantiate(resourcesHandler.bouncePaint_player).GetComponent<Player>();
+            newPlayer.Initialize(this, rt_gameWorld, players.Count);
+            players.Add(newPlayer);
+            return newPlayer;
+        }
 
 
     }

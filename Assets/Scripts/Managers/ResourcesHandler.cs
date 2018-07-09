@@ -7,6 +7,8 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject alphaTapOrder_tapSpace;
 
     [SerializeField] public GameObject bouncePaint_block;
+    [SerializeField] public GameObject bouncePaint_blockNumHitsReqText;
+    [SerializeField] public GameObject bouncePaint_player;
 
     [SerializeField] public GameObject letterClear_letterTile;
     [SerializeField] public GameObject letterClear_wordTile;

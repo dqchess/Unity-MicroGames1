@@ -73,7 +73,7 @@ namespace WallPaint {
 
         private void ApplyBounds() {
             if (pos.x < boundsRect.xMin) {
-                // TODO: More of dis stuffs
+                // TO DO: More of dis stuffs
             }
         }
 
