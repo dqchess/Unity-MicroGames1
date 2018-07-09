@@ -90,13 +90,21 @@ namespace BouncePaint {
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
             SetBlockHeadingTo(GetRandomAvailableBlock());
             gravity = new Vector2(0, GetGravityY(levelIndex));
-            vel = new Vector2(0, 5 + 8*playerIndex); // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-			float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
+            // Start with a little toss-up, and an EXTRA toss-up for additional balls!
+            //vel = new Vector2(0, 5 + 7*Mathf.Sqrt(playerIndex)) / gravity.y; // Start with a little toss-up, and an EXTRA toss-up for additional balls!
+            //float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
+            //float startLoc = Mathf.Max(0.1f, 0.8f - playerIndex*0.5f);
+            float startFallHeight = fallHeightNeutral + (playerIndex*50);
+            float startLoc = 0.8f - playerIndex*0.5f;
+            float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
+            float yVel = Mathf.Sqrt(2*-gravity.y*distToApex); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
+            vel = new Vector2(0, yVel);
+            float startY = blockHeadingTo.HitRect.center.y + startFallHeight*startLoc;
 			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
             pos = new Vector2(startX, startY);
         }
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.30f - levelIndex*0.005f;
+            float baseGravity = -0.30f - levelIndex*0.003f;
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
