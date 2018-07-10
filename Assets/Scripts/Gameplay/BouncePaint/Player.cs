@@ -104,7 +104,7 @@ namespace BouncePaint {
             pos = new Vector2(startX, startY);
         }
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.30f - levelIndex*0.003f;
+            float baseGravity = -0.35f - levelIndex*0.003f;
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {

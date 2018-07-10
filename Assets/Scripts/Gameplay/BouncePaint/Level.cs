@@ -201,12 +201,12 @@ namespace BouncePaint {
                 AddBlock(bs, 0,b+320);
             }
             else if (li == i++) {
-                AddBlock(bs, -120,b);
+                AddBlock(bs, -150,b);
                 AddBlock(bs,    0,b);
-                AddBlock(bs,  120,b);
-                AddBlock(bs, -120,b+180);
+                AddBlock(bs,  150,b);
+                AddBlock(bs, -150,b+180);
                 AddBlock(bs,    0,b+180);
-                AddBlock(bs,  120,b+180);
+                AddBlock(bs,  150,b+180);
             }
             //          else if (levelIndex == i++) {
             //              AddBlock(blockSize, -80,b);
@@ -216,11 +216,11 @@ namespace BouncePaint {
             //              AddBlock(blockSize,   0,b+240);
             //              AddBlock(blockSize,  80,b);
             //          }
-            else if (li == i++) { // 8 plus
+            else if (li == i++) { // 8 plus, no center
                 AddBlock(bs,    0,b);
                 AddBlock(bs,    0,b+80);
                 AddBlock(bs,    0,b+240);
-                AddBlock(bs,    0,b+320);
+                AddBlock(bs,    0,b+380);
                 AddBlock(bs, -160,b+160);
                 AddBlock(bs,  -80,b+160);
                 AddBlock(bs,   80,b+160);
@@ -326,6 +326,12 @@ namespace BouncePaint {
             //    AddBlock(blockSize, new Vector2( 240,b+100), new Vector2(150,b+100)).SetTravSpeed(2f);
             //}
             else if (li == i++) {
+                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(3f);
+                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(3f, 3.142f);
+                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(3f);
+                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(3f, 3.142f);
+            }
+            else if (li == i++) {
                 AddBlock(bs, new Vector2(-240,b    ), new Vector2( -80,b    )).SetSpeed(5f);
                 AddBlock(bs, new Vector2( 240,b    ), new Vector2(  80,b    )).SetSpeed(5f);
                 AddBlock(bs, new Vector2( -80,b+160), new Vector2(-240,b+160)).SetSpeed(5f);
@@ -334,12 +340,6 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2( 240,b+320), new Vector2(  80,b+320)).SetSpeed(5f);
             }
 
-            else if (li == i++) {
-                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(3f, 3.142f);
-                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(3f, 3.142f);
-            }
 
 
 
@@ -466,7 +466,8 @@ namespace BouncePaint {
 
             // Don't-Tap Blocks
             else if (li == i++) {
-                AddBlock(bs,    0,b).SetDontTap();
+                AddBlock(bs,   -50,b).SetDontTap();
+                AddBlock(bs,    50,b).SetDontTap();
             }
             else if (li == i++) {
                 AddBlock(bs, -120,b);
