@@ -76,6 +76,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!1 &1712509804058572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4358835788028612}
+  - component: {fileID: 114489998669463288}
+  m_Layer: 0
+  m_Name: FBAnalyticsController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1742042021377422
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,6 +137,19 @@ Transform:
   m_Father: {fileID: 4706810250580120}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4358835788028612
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1712509804058572}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4706810250580120}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4381706343412294
 Transform:
   m_ObjectHideFlags: 1
@@ -146,7 +175,7 @@ Transform:
   m_Children:
   - {fileID: 224270525179394280}
   m_Father: {fileID: 4706810250580120}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4706810250580120
 Transform:
@@ -161,6 +190,7 @@ Transform:
   - {fileID: 4909648869593764}
   - {fileID: 4124069432944142}
   - {fileID: 4381706343412294}
+  - {fileID: 4358835788028612}
   - {fileID: 4657482278280912}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -210,6 +240,17 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114489998669463288
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1712509804058572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e1e257c74de49cdb44581ea410fd38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114545041681347344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -260,6 +301,8 @@ MonoBehaviour:
   bouncePaint_block: {fileID: 1407824554540456, guid: cb052bb3c312e41738d20d0533b97e23,
     type: 2}
   bouncePaint_blockNumHitsReqText: {fileID: 1210016858378852, guid: fef1f404e85084f8387c4904f0ab19b3,
+    type: 2}
+  bouncePaint_level: {fileID: 1628968581726178, guid: aa6c886bbb2354425bde7bb8fd8c93e5,
     type: 2}
   bouncePaint_player: {fileID: 1857669726947748, guid: ae5ab297af6ef4c05b765191fc4a1a12,
     type: 2}

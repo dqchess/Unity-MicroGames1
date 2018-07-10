@@ -11,8 +11,9 @@ namespace BouncePaint {
         private GameStates gameState;
         private float timeWhenLevelEnded;
         // Components
-        [SerializeField] private Level level;
+        private Level level;
         // References
+        [SerializeField] private Canvas canvas=null;
         [SerializeField] private GameUI ui=null;
 
         // Getters (Public)
@@ -51,37 +52,41 @@ namespace BouncePaint {
         private void RestartLevel() { SetCurrentLevel(LevelIndex); }
         public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, LevelIndex-1)); }
         public void StartNextLevel() { SetCurrentLevel(LevelIndex+1); }
-        private void SetCurrentLevel(int _levelIndex) {
-            level.LevelIndex = _levelIndex;
-            SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, LevelIndex);
+        //private void SetCurrentLevel(int _levelIndex) {
+        //    level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();
+        //    level.Initialize(this,canvas.transform, _levelIndex);
 
-            // Set basics!
-            SetIsPaused(false);
-            timeWhenLevelEnded = -1;
-            gameState = GameStates.Playing;
-            Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
+        //    SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, LevelIndex);
 
-            // Tell the UI!
-            ui.UpdateLevelName(LevelIndex);
+        //    // Set basics!
+        //    SetIsPaused(false);
+        //    timeWhenLevelEnded = -1;
+        //    gameState = GameStates.Playing;
+        //    Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
 
-            // Initialize level components, and reset Players!
-            level.AddLevelComponents();
-            // HACK! For now until I know how this is gonna work.
-            if (PlayerGravityScale == 1f) { // if we didn't specify the gravity scale...
-                PlayerGravityScale = Players.Count == 1 ? 1f : 0.6f;
-            }
-            foreach (Player p in Players) {
-                p.Reset(LevelIndex);
-            }
-        }
+        //    // Tell the UI!
+        //    ui.OnStartLevel(LevelIndex);
+
+        //    // Initialize level components, and reset Players!
+        //    level.AddLevelComponents();
+        //    // HACK! For now until I know how this is gonna work.
+        //    if (PlayerGravityScale == 1f) { // if we didn't specify the gravity scale...
+        //        PlayerGravityScale = Players.Count == 1 ? 1f : 0.6f;
+        //    }
+        //    foreach (Player p in Players) {
+        //        p.Reset(LevelIndex);
+        //    }
+        //}
         private void SetGameOver() {
             gameState = GameStates.GameOver;
             timeWhenLevelEnded = Time.time;
+            ui.OnGameOver();
         }
 
         private void OnCompleteLevel() {
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
+            StartCoroutine(Coroutine_StartNextLevel());
         }
 
         public void OnPlayerPaintBlock() {
@@ -104,7 +109,69 @@ namespace BouncePaint {
 			foreach (Block b in Blocks) {
 				b.SetIntentionVisuals(b == blockHeadingTo);
 			}
-		}
+        }
+
+        private IEnumerator Coroutine_StartNextLevel() {
+            yield return new WaitForSecondsRealtime(1.4f);
+            SetCurrentLevel(LevelIndex+1, true);
+        }
+
+        private void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
+            StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
+        }
+        private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
+            // Make the new level!
+            Level prevLevel = level;
+            level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();
+            level.Initialize(this,canvas.transform, _levelIndex);
+
+            SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, LevelIndex);
+
+            // Set basics!
+            SetIsPaused(false);
+            timeWhenLevelEnded = -1;
+            gameState = GameStates.Playing;
+            Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
+
+            // Tell the UI!
+            ui.OnStartLevel(LevelIndex);
+
+            // Initialize level components, and reset Players!
+            level.AddLevelComponents();
+            // HACK! For now until I know how this is gonna work.
+            if (PlayerGravityScale == 1f) { // if we didn't specify the gravity scale...
+                PlayerGravityScale = Players.Count == 1 ? 1f : 0.6f;
+            }
+            foreach (Player p in Players) {
+                p.Reset(LevelIndex);
+            }
+
+            // DO animate!
+            if (doAnimate) {
+                float duration = 1f;
+
+                level.IsAnimatingIn = true;
+                float height = 1200;
+                Vector3 levelDefaultPos = level.transform.localPosition;
+                level.transform.localPosition += new Vector3(0, height, 0);
+                LeanTween.moveLocal(level.gameObject, levelDefaultPos, duration).setEaseInOutQuart();
+                LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
+                yield return new WaitForSeconds(duration);
+
+                level.IsAnimatingIn = false;
+                if (prevLevel!=null) {
+                    Destroy(prevLevel.gameObject);
+                }
+            }
+            // DON'T animate? Ok, just destroy the old level.
+            else {
+                if (prevLevel!=null) {
+                    Destroy(prevLevel.gameObject);
+                }
+            }
+
+            yield return null;
+        }
 
 
 
@@ -131,23 +198,26 @@ namespace BouncePaint {
         private void OnMouseDown() {
 			OnTapScreen();
 		}
+        public void OnRetryButtonClick() {
+            RestartLevel();
+        }
 		private void OnTapScreen() {
 			// Paused? Ignore input.
 			if (Time.timeScale == 0f) { return; }
 
             if (gameState == GameStates.GameOver) {
-                // Make us wait a short moment so we visually register what's happened.
-                if (Time.time>timeWhenLevelEnded+0.2f) {
-                    RestartLevel();
-                    return;
-                }
+                //// Make us wait a short moment so we visually register what's happened.
+                //if (Time.time>timeWhenLevelEnded+0.2f) {
+                //    RestartLevel();
+                //    return;
+                //}
             }
 			else if (gameState == GameStates.PostLevel) {
-				// Make us wait a short moment so we visually register what's happened.
-				if (Time.time>timeWhenLevelEnded+0.2f) {
-	                StartNextLevel();
-	                return;
-				}
+				//// Make us wait a short moment so we visually register what's happened.
+				//if (Time.time>timeWhenLevelEnded+0.2f) {
+	   //             StartNextLevel();
+	   //             return;
+				//}
             }
             else {
                 OnPressJumpButton();
@@ -166,6 +236,10 @@ namespace BouncePaint {
 
 
         private void OnPressJumpButton() {
+            // Ignore jumps if...
+            if (gameState != GameStates.Playing) { return; }
+            if (level!=null && level.IsAnimatingIn) { return; }
+
             bool didAnyPlayerBounce = false; // I'll say otherwise next.
             foreach (Player player in Players) {
                 Block blockTouching = player.GetUnpaintedBlockTouching();

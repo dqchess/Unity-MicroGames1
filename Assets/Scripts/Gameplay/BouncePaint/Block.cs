@@ -27,6 +27,7 @@ namespace BouncePaint {
         // References
 		[SerializeField] private Sprite s_bodyDontTap;
         private GameController gameController;
+        private Level myLevel;
 
 		// Getters (Public)
 		public bool DoTap { get { return doTap; } }
@@ -68,12 +69,13 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-		public void Initialize(GameController _gameController, RectTransform rt_parent,
+		public void Initialize(GameController _gameController, Level _myLevel,
 			Vector2 _size,
 			Vector2 _centerA,Vector2 _centerB
 		) {
             gameController = _gameController;
-            this.transform.SetParent(rt_parent);
+            myLevel = _myLevel;
+            this.transform.SetParent(myLevel.transform);
             this.transform.localScale = Vector3.one;
             this.transform.localEulerAngles = Vector3.zero;
 			myRectTransform.anchoredPosition = Vector2.zero;
@@ -211,6 +213,7 @@ namespace BouncePaint {
         //  FixedUpdate
         // ----------------------------------------------------------------
         private void FixedUpdate() {
+            if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 			UpdateTravel();
 			UpdatePosDipOffset();
 			ApplyPos();

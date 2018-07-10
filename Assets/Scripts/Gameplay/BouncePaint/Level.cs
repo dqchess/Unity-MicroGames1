@@ -1,24 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BouncePaint {
     public class Level : MonoBehaviour {
         // Components
+        [SerializeField] private Text t_levelName=null;
         private List<Player> players; // oh, balls.
         private List<Block> blocks;
+        // Properties
+        public bool IsAnimatingIn;
+        private int levelIndex;
         // References
-        [SerializeField] private GameController gameController;
-        [SerializeField] private RectTransform rt_blocks=null;
-        [SerializeField] private RectTransform rt_gameWorld=null;
+        //[SerializeField] private RectTransform rt_blocks=null;
+        [SerializeField] private RectTransform myRectTransform=null;
+        private GameController gameController;
 
 
         // Getters / Setters
         private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
         public List<Block> Blocks { get { return blocks; } }
         public List<Player> Players { get { return players; } }
-        public int LevelIndex { get; set; }
+        public int LevelIndex { get { return levelIndex; } }
 
+
+        public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
+            gameController = _gameController;
+            levelIndex = _levelIndex;
+
+            t_levelName.text = levelIndex.ToString();
+
+            gameObject.name = "Level " + levelIndex;
+            myRectTransform.SetParent(tf_parent);
+            myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
+            myRectTransform.anchoredPosition = Vector2.zero;
+            myRectTransform.localScale = Vector2.one;
+            myRectTransform.localEulerAngles = Vector3.zero;
+        }
 
         // ----------------------------------------------------------------
         //  Destroying Elements
@@ -52,14 +71,14 @@ namespace BouncePaint {
         }
         private Block AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB) {
             Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
-            newBlock.Initialize(gameController,rt_blocks, blockSize, posA,posB);
+            newBlock.Initialize(gameController,this, blockSize, posA,posB);
             blocks.Add(newBlock);
             return newBlock;
         }
 
         private Player AddPlayer() {
             Player newPlayer = Instantiate(resourcesHandler.bouncePaint_player).GetComponent<Player>();
-            newPlayer.Initialize(gameController,rt_gameWorld, players.Count);
+            newPlayer.Initialize(gameController,this, players.Count);
             players.Add(newPlayer);
             return newPlayer;
         }

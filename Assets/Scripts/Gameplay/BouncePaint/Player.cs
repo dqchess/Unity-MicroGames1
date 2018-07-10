@@ -22,6 +22,7 @@ namespace BouncePaint {
         [SerializeField] private Sprite s_bodyDashedOutline=null;
         private Block blockHeadingTo;
         private GameController gameController=null;
+        private Level myLevel;
 
         // Getters (Public)
         public static Color GetRandomHappyColor() { return new ColorHSB(Random.Range(0f,1f), 0.9f, 1f).ToColor(); }
@@ -72,16 +73,19 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Start
         // ----------------------------------------------------------------
-        public void Initialize(GameController _gameController, RectTransform rt_parent, int _playerIndex) {
+        public void Initialize(GameController _gameController, Level _myLevel, int _playerIndex) {
             gameController = _gameController;
+            myLevel = _myLevel;
             playerIndex = _playerIndex;
 
-            myRectTransform.SetParent(rt_parent);
+            myRectTransform.SetParent(myLevel.transform);
             myRectTransform.localPosition = Vector2.zero;
             myRectTransform.localScale = Vector2.one;
             myRectTransform.localEulerAngles = Vector2.zero;
         }
         public void Reset(int levelIndex) {
+            this.transform.SetAsLastSibling(); // Put me in front of all other props!
+
             isDead = false;
             bodyColor = GetRandomHappyColor();
             i_body.sprite = s_bodyNormal;
@@ -198,6 +202,7 @@ namespace BouncePaint {
         //  FixedUpdate
         // ----------------------------------------------------------------
         private void FixedUpdate () {
+            if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
             if (isDead) { return; }
 
             ApplyGravity();
