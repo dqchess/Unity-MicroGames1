@@ -12,10 +12,12 @@ namespace BouncePaint {
 		[SerializeField] private RectTransform myRectTransform=null;
 		private TextMeshProUGUI t_numHitsReq=null; // This is added from a prefab if needed!
         // Properties
-		private bool isPainted=false;
+        private bool isPainted=false;
+        private bool isPaintable=true; // set to FALSE for Blocks that can be bounced on but NOT painted (and they're always satisfied, of course).
         private Player ballTargetingMe=null;
-		private Rect hitRect;
-        private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+		private Rect hitBox;
+        public Vector2 posDipOffset; //HACK temp! private. when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+        private Vector2 posDanceOffset=Vector2.zero; // for post-level celebration.
         private Vector2 size;
 		// Properties (Specials)
 		private bool doTap=true; // only FALSE for the black Blocks we DON'T wanna tap on!
@@ -30,19 +32,21 @@ namespace BouncePaint {
         private Level myLevel;
 
 		// Getters (Public)
-		public bool DoTap { get { return doTap; } }
-		public bool IsPainted { get { return isPainted; } }
+        public bool DoTap { get { return doTap; } }
+        public bool IsPainted { get { return isPainted; } }
+        public bool IsSatisfied { get { return isPainted || !isPaintable; } }
         public bool IsAvailable { get { return !isPainted && ballTargetingMe==null; } } // I'm available if A) I'm unpainted, and B) Nobody's planning to hit me!
-        public Rect HitRect { get { return hitRect; } }
+        public float BlockTop { get { return center.y + size.y*0.5f; } } // The VISUAL top of the block.
+        public int NumHitsReq { get { return numHitsReq; } }
+        public Rect HitBox { get { return hitBox; } }
         public Player BallTargetingMe {
             get { return ballTargetingMe; }
             set { ballTargetingMe = value; }
         }
 		public Vector2 GetPredictedPos(float timeFromNow) {
-			if (!doTravel) { return HitRect.center; } // Oh, if I'm NOT a traveler, just return my current position.
+			if (!doTravel) { return HitBox.center; } // Oh, if I'm NOT a traveler, just return my current position.
 			float predTravelOscVal = travelOscVal + travelSpeed*timeFromNow; // we use FixedUpdate, so this is actually reliable.
 			float predTravelLoc = MathUtils.Sin01(predTravelOscVal);
-//			Debug.Log("predTravelLoc: " + predTravelLoc + "  predTravelOscVal: " + predTravelOscVal);
 			return Vector2.Lerp(centerA,centerB, predTravelLoc);
 		}
 
@@ -55,14 +59,13 @@ namespace BouncePaint {
 			get { return myRectTransform.anchoredPosition; }
 			set {
 				myRectTransform.anchoredPosition = value;
-				UpdateHitRectCenter();
+				UpdateHitBoxCenter();
 			}
 		}
-		private void UpdateHitRectCenter() {
-			// hitRect.center = center + new Vector2(0, 52);
-			hitRect.center = new Vector2(
+        private void UpdateHitBoxCenter() {
+			hitBox.center = new Vector2(
                 center.x,
-                center.y+size.y*0.5f+hitRect.height*0.5f + 4);
+                center.y + (size.y+hitBox.height)*0.5f - 15);
 		}
 
 
@@ -86,18 +89,18 @@ namespace BouncePaint {
 			ApplyPos();
 
             size = _size;
-            // Make hitRect!
-            hitRect = new Rect();
-            hitRect.size = new Vector2(size.x, 38);
-			UpdateHitRectCenter();
-            // Fudgily bloat the hitRect's width a bit (in case the block or ball are moving fast horizontally).
-            hitRect.size += new Vector2(40, 0);
-			hitRect.center += new Vector2(-20, 0);
+            // Make hitBox!
+            hitBox = new Rect();
+            hitBox.size = new Vector2(size.x, 38);
+			UpdateHitBoxCenter();
+            // Fudgily bloat the hitBox's width a bit (in case the block or ball are moving fast horizontally).
+            hitBox.size += new Vector2(40, 0);
+			hitBox.center += new Vector2(-20, 0);
 
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = size;
-            i_hitBox.rectTransform.sizeDelta = hitRect.size;
-            i_hitBox.rectTransform.anchoredPosition = hitRect.center - myRectTransform.anchoredPosition;
+            i_hitBox.rectTransform.sizeDelta = hitBox.size;
+            i_hitBox.rectTransform.anchoredPosition = hitBox.center - myRectTransform.anchoredPosition;
 
             // TEMP! Default value sloppy in here.
             SetSpeed(1, 0);
@@ -122,6 +125,10 @@ namespace BouncePaint {
             //  i_body.sprite = s_bodyDontTap;
             // }
             SetIntentionVisuals(false);
+            return this;
+        }
+        public Block SetUnpaintable() {
+            isPaintable = false;
             return this;
         }
         public Block SetSpeed(float _speed, float _startLocOffset=0) {
@@ -152,27 +159,28 @@ namespace BouncePaint {
 					bodyColor = new Color(0,0,0, 0.4f); // light gray
 				}
 				else {
-					bodyColor = new Color(0,0,0, 0.95f); // almost black
+					bodyColor = new Color(0,0,0, 0.99f); // Black.
 				}
 			// }
 		}
 		private void UpdateNumHitsReqText() {
 			if (t_numHitsReq != null) {
-				t_numHitsReq.text = numHitsReq.ToString();
-				if (numHitsReq <= 0) {
-					t_numHitsReq.color = new Color(0,0,0, 0.3f);
-				}
+                t_numHitsReq.text = numHitsReq.ToString();
+                t_numHitsReq.enabled = numHitsReq > 0;
+				//if (numHitsReq <= 0) {
+				//	t_numHitsReq.color = new Color(0,0,0, 0.3f);
+				//}
 			}
 		}
 		private void ApplyPos() {
 			// Do travel?? Lerp me between my two center poses.
 			if (doTravel) {
 				float travelLoc = MathUtils.Sin01(travelOscVal);
-				center = Vector2.Lerp(centerA,centerB, travelLoc) + posDipOffset;
+                center = Vector2.Lerp(centerA,centerB, travelLoc) + posDipOffset + posDanceOffset;
 			}
 			// DON'T travel? Just put me at my one known center pos.
 			else {
-				center = centerA + posDipOffset;
+                center = centerA + posDipOffset + posDanceOffset;
 			}
 		}
 
@@ -182,8 +190,8 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         /// Paints me! :)
 		public void OnPlayerBounceOnMe(Color playerColor) {
-			// If I'm not yet painted...!
-			if (!isPainted) {
+			// If I'm paintable AND not yet painted...!
+            if (isPaintable && !isPainted) {
 				// Hit me, Paul!
 				numHitsReq --;
 				UpdateNumHitsReqText();
@@ -215,7 +223,7 @@ namespace BouncePaint {
         private void FixedUpdate() {
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 			UpdateTravel();
-			UpdatePosDipOffset();
+            UpdatePosOffsets();
 			ApplyPos();
         }
 		private void UpdateTravel() {
@@ -223,17 +231,18 @@ namespace BouncePaint {
 				travelOscVal += travelSpeed;
 			}
 		}
-        private void UpdatePosDipOffset() {
-			// Update.
+        private void UpdatePosOffsets() {
+            // Dip
 			Vector2 posDipTarget = Vector2.zero;
-            if (gameController.IsLevelComplete) {
-				posDipOffset = new Vector2(0, Mathf.Sin(Time.time*4f+center.x*0.016f) * 9f);
-            }
 			if (posDipOffset != posDipTarget) {
 				posDipOffset += new Vector2(
-					(posDipTarget.x-posDipOffset.x) * 0.3f,
-					(posDipTarget.y-posDipOffset.y) * 0.3f);
+					(posDipTarget.x-posDipOffset.x) * 0.24f,
+					(posDipTarget.y-posDipOffset.y) * 0.24f);
 			}
+            // Dance
+            if (gameController.IsLevelComplete) {
+                posDanceOffset = new Vector2(0, Mathf.Sin(Time.time*4f+center.x*0.016f) * 26f);
+            }
         }
 
     }

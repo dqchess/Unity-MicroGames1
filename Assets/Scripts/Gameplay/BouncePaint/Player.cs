@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 namespace BouncePaint {
     public class Player : MonoBehaviour {
+        // Constants
+        private const float minBounceHeight = 80f; // this prevents us rocketing down directly after a bounce (if we're going from a high to a very low block).
         // Components
         [SerializeField] private Image i_body=null;
-        [SerializeField] private ParticleSystem ps_dieBurst=null;
         [SerializeField] private RectTransform myRectTransform=null;
         // Properties
+        static private Color startingPlayerColor=Color.clear; // used for keeping colors consistent between levels.
         private bool isDead;
+        private float radius;
+        private float fallHeightNeutral; // the peak y distance between me and the block I'm headed to! I bounce UP to this height and fall from there.
         private float stretch=0;
         private float stretchVel=0;
-        private float fallHeightNeutral; // the peak y distance between me and the block I'm headed to! I bounce UP to this height and fall from there.
-        private int playerIndex; // my identity.
+        private int playerIndex; // which ball I am (relevant for multi-ball lvls)
         private Vector2 gravity;
         private Vector2 vel;
         // References
@@ -35,40 +38,55 @@ namespace BouncePaint {
             get { return myRectTransform.anchoredPosition; }
             set { myRectTransform.anchoredPosition = value; }
         }
+        private Vector2 bottomPos {
+            get { return pos + new Vector2(0, -radius); }
+            set { pos = value + new Vector2(0, radius); }
+        }
         private List<Block> blocks { get { return gameController.Blocks; } }
         private Block GetBlockTouching() {
             foreach (Block obj in blocks) {
-                if (obj.HitRect.Contains(pos)) { return obj; }
+                if (obj.HitBox.Contains(bottomPos)) { return obj; }
             }
             return null;
         }
         public Block GetUnpaintedBlockTouching() {
             foreach (Block obj in blocks) {
                 if (obj.IsPainted) { continue; }
-                if (obj.HitRect.Contains(pos)) { return obj; }
+                if (obj.HitBox.Contains(bottomPos)) { return obj; }
             }
             return null;
         }
-        private Block GetRandomAvailableBlock() {
+        private Block GetRandomAvailableBlock(Block blockFrom) {
             int[] randOrder = MathUtils.GetShuffledIntArray(blocks.Count);
-            for (int i=0; i<blocks.Count; i++) {
-                int index = randOrder[i];
-                if (blocks[index].IsAvailable) {
-                    return blocks[index];
+
+            // If we're coming from a DON'T-TAP Block, force us to go to a DO-tap Block next (if possible)!
+            bool preferDoTapBlock = blockFrom!=null && !blockFrom.DoTap;
+            if (preferDoTapBlock) {
+                for (int i=0; i<blocks.Count; i++) {
+                    Block block = blocks[randOrder[i]];
+                    if (block.IsAvailable && block.DoTap) {
+                        return block;
+                    }
                 }
             }
+            // Just return ANY available Block.
+            for (int i=0; i<blocks.Count; i++) {
+                Block block = blocks[randOrder[i]];
+                if (block.IsAvailable) {
+                    return block;
+                }
+            }
+            // Everyone's painted/taken. Return null.
             return null;
 		}
 		/** ONLY works for HORIZONTALLY moving Blocks. Returns the predicted x position of the block by the time we reach its y pos. */
 		private float GetBlockPosX(Block block, float startY, float yVel) {
-			float blockY = block.HitRect.center.y;
+			float blockY = block.HitBox.center.y;
 			float displacementY = blockY - startY;
 			float g = gravity.y;
 			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
-//			print("displacementY: " + displacementY + "  timeOfFlight: " + timeOfFlight);
 			return block.GetPredictedPos(timeOfFlight).x;
 		}
-
 
         // ----------------------------------------------------------------
         //  Start
@@ -87,23 +105,32 @@ namespace BouncePaint {
             this.transform.SetAsLastSibling(); // Put me in front of all other props!
 
             isDead = false;
-            bodyColor = GetRandomHappyColor();
             i_body.sprite = s_bodyNormal;
-            ps_dieBurst.Clear();
+            radius = gameController.PlayerDiameter*0.5f;
+            myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
+            // If we have a color we know we wanna be, be that!
+            if (startingPlayerColor != Color.clear) {
+                bodyColor = startingPlayerColor;
+                startingPlayerColor = Color.clear;
+            }
+            // Otherwise, just be a random happy color. :)
+            else {
+                bodyColor = GetRandomHappyColor();
+            }
 
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
-            SetBlockHeadingTo(GetRandomAvailableBlock());
+            SetBlockHeadingTo(GetRandomAvailableBlock(null));
             gravity = new Vector2(0, GetGravityY(levelIndex));
             // Start with a little toss-up, and an EXTRA toss-up for additional balls!
             //vel = new Vector2(0, 5 + 7*Mathf.Sqrt(playerIndex)) / gravity.y; // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-            //float startY = blockHeadingTo.HitRect.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
+            //float startY = blockHeadingTo.HitBox.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
             //float startLoc = Mathf.Max(0.1f, 0.8f - playerIndex*0.5f);
             float startFallHeight = fallHeightNeutral + (playerIndex*50);
             float startLoc = 0.8f - playerIndex*0.5f;
             float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
             float yVel = Mathf.Sqrt(2*-gravity.y*distToApex); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
             vel = new Vector2(0, yVel);
-            float startY = blockHeadingTo.HitRect.center.y + startFallHeight*startLoc;
+            float startY = blockHeadingTo.HitBox.center.y + startFallHeight*startLoc;
 			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
             pos = new Vector2(startX, startY);
         }
@@ -112,8 +139,7 @@ namespace BouncePaint {
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
-            // return Mathf.Min(360, 200+levelIndex*10f); // TESTing out these values
-            return 250f;
+            return 250f; //Mathf.Min(360, 200+levelIndex*10f);
         }
 
 
@@ -127,75 +153,80 @@ namespace BouncePaint {
             gameController.OnPlayerSetBlockHeadingTo(blockHeadingTo);
         }
 
-   //     public void OnPressJumpButton() {
-   //         Block blockTouching = GetUnpaintedBlockTouching();
-			//// I AM touching a block!...
-   //         if (blockTouching != null) {
-			//	// Standard block? Bounce!
-			//	if (blockTouching.DoTap) {
-   //             	BounceOnBlock(blockTouching);
-			//	}
-			//	// Ooh, a DON'T-tap block. Explode!
-			//	else {
-   //                 blockTouching.OnPlayerPressJumpOnMeInappropriately();
-			//		Explode();
-			//	}
-   //         }
-			//// I'm NOT touching any block...
-        //    else {
-        //        Explode();
-        //    }
-        //}
-
         public void BounceOnBlock(Block block) {
             // FIRST, tell the Block I've targeted that I'm not interested in anymore (it could be a different Block, for the record)!
             blockHeadingTo.BallTargetingMe = null;
 
-            // Visualize me.
-            stretch = -0.25f; // Deform a lil'!
-            if (!blockHeadingTo.IsPainted) { // Smashing an unpainted Block? Rando my colo!
-                bodyColor = GetRandomHappyColor();
-            }
-            // Paint the block!
-            if (block != null) {
-                block.OnPlayerBounceOnMe(bodyColor);
+            // Wait a frame or two, THEN squish me! (Squashing right away makes the collision look a little off.)
+            Invoke("SquishFromBounce", 0.05f);
+
+            // Bounce and paint!
+            bool wasBlockPainted = block.IsPainted;
+            //bodyColor = GetRandomHappyColor(); // Rando my colo!
+            block.OnPlayerBounceOnMe(bodyColor);
+            bool didPaintBlock = !wasBlockPainted && block.IsPainted;
+            if (didPaintBlock) {
+                didPaintBlock = true;
                 gameController.OnPlayerPaintBlock();
             }
 
             // Choose the next block to go to!!
-            Block nextBlock = GetRandomAvailableBlock();
+            Block nextBlock = GetRandomAvailableBlock(block);
             if (nextBlock != null) { // Is there a block to go to? Let's go to it!
                 SetBlockHeadingTo(nextBlock);
             }
-            
-            // Find how fast we have to move upward to reach this y pos, and set our vel to that!
-            Vector2 blockToPos = blockHeadingTo.HitRect.center;
-            float peakPosY = blockToPos.y+fallHeightNeutral + Random.Range(-30,30);
-            float displacementY = blockToPos.y - pos.y;
-            float yDist = Mathf.Max (0, peakPosY-pos.y);
-            float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
-//			Debug.Log("displacementY: " + displacementY);
 
-            // float timeOfFlight = 2f*yVel / gravity.y;
+            // Make sure I start my bounce on the top of the block.
+            bottomPos = new Vector2(bottomPos.x, block.BlockTop + 0f); // HARDCODED additional offset.
+            // Find how fast we have to move upward to reach this y pos, and set our vel to that!
+            float fallHeight = fallHeightNeutral + Random.Range(-30,30); // slightly randomize how high we go.
+            float blockToTop = blockHeadingTo.BlockTop;//HitBox.center;
+            float peakBPosY = blockToTop + fallHeight;
+            peakBPosY = Mathf.Max(peakBPosY, bottomPos.y+minBounceHeight); // enforce minimum bounce height.
+            float displacementY = blockToTop - bottomPos.y;
+            float yDist = Mathf.Max (0, peakBPosY-pos.y);
+            float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
+
+            // float timeOfFlight = 2f*yVel / g;
             float g = gravity.y;
             float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 
-			float predBlockPosX = GetBlockPosX(blockHeadingTo, pos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
-			float xDist = predBlockPosX - pos.x;
+            float predBlockPosX = GetBlockPosX(blockHeadingTo, bottomPos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
+            float xDist = predBlockPosX - bottomPos.x;
             float xVel = xDist / timeOfFlight;
 
             vel = new Vector2(xVel, yVel);
+
+            // Is the level over, AND we haven't defined the startingPlayerColor (aka no one's bounced up yet)? Bounce all the way up off-screen instead!
+            bool doBounceUpOffscreen = gameController.IsLevelComplete && startingPlayerColor==Color.clear;
+            if (doBounceUpOffscreen) {
+                vel = new Vector2(0, 34f); // rocketman!
+                gravity = new Vector2(0, -0.35f); // much less gravity!
+                block.posDipOffset += new Vector2(0, -42f); // smack dat square.
+                startingPlayerColor = bodyColor; // set this now! I'M the color to emulate!
+                Invoke("DisableMyGameObject", 0.8f); // HARDCODED delay. Hide me once I'm off-screen so I don't show up again when this level animates down.
+            }
+            // NOT bouncing offscreen?
+            else {
+                if (didPaintBlock) { // I just painted this guy! Now, rando my colo.
+                    bodyColor = GetRandomHappyColor();
+                }
+            }
         }
 
+        private void SquishFromBounce() {
+            stretch = -0.25f; // Deform a lil'!
+        }
         public void Explode() {
             isDead = true;
             i_body.sprite = s_bodyDashedOutline;
             bodyColor = new Color(1f, 0.1f, 0f);
             stretch = stretchVel = 0;
             ApplyStretch();
-            //ps_dieBurst.Emit(50);
             gameController.OnPlayerDie();
         }
+
+        private void DisableMyGameObject() { this.gameObject.SetActive(false); } // Used when we bounce up off-screen.
 
 
         // ----------------------------------------------------------------
@@ -219,14 +250,18 @@ namespace BouncePaint {
         }
         private void ApplyBounds() {
             if (blockHeadingTo == null) { return; } // Safety check.
+
+            float boundsY = blockHeadingTo.HitBox.yMin;
+            bool autoBounce = blockHeadingTo.IsSatisfied; // I automatically bounce on satisfied blocks. Matters for A) When the level's over, and B) Unpaintable Blocks.
+            if (autoBounce) { // If I'm auto-bouncing, set my bounds to the VISUAL top of the block! So it looks like a solid, proper bounce.
+                boundsY = blockHeadingTo.BlockTop;
+            }
+
             // If I've passed too far into the block I'm heading towards, explode OR bounce me!
-			float boundsY = blockHeadingTo.HitRect.yMin;
-            bool doAutoBounce = blockHeadingTo.IsPainted; // I automatically bounce on painted blocks. ONLY matters for when the level's over!
-            if (doAutoBounce) { boundsY += 14f; } // If I'm auto-bouncing, make my bounds HIGHer, so I look more like I'm bouncing on the Blocks.
-            if (vel.y<0 && pos.y<boundsY) {
-                pos = new Vector2(pos.x, boundsY);
+            if (vel.y<0 && bottomPos.y<boundsY) {
+                bottomPos = new Vector2(bottomPos.x, boundsY);
 				// Auto-bounce? Just happily bounce on the block's head. ;)
-                if (doAutoBounce) {
+                if (autoBounce) {
 					BounceOnBlock(blockHeadingTo);
                 }
 				// Do NOT auto-bounce?
@@ -264,6 +299,26 @@ namespace BouncePaint {
     }
 }
 
+
+//     public void OnPressJumpButton() {
+//         Block blockTouching = GetUnpaintedBlockTouching();
+//// I AM touching a block!...
+//         if (blockTouching != null) {
+//  // Standard block? Bounce!
+//  if (blockTouching.DoTap) {
+//              BounceOnBlock(blockTouching);
+//  }
+//  // Ooh, a DON'T-tap block. Explode!
+//  else {
+//                 blockTouching.OnPlayerPressJumpOnMeInappropriately();
+//      Explode();
+//  }
+//         }
+//// I'm NOT touching any block...
+//    else {
+//        Explode();
+//    }
+//}
 
 // test
 //pos = Input.mousePosition;

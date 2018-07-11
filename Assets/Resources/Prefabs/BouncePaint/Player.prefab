@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1628940495298784
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,9 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   i_body: {fileID: 114725905346625198}
-  ps_dieBurst: {fileID: 198724362680718106}
   myRectTransform: {fileID: 224777517031435618}
-  gameController: {fileID: 0}
   s_bodyNormal: {fileID: 21300000, guid: 835218f2686e6480684ac652b1624c46, type: 3}
   s_bodyDashedOutline: {fileID: 21300000, guid: 88d9bc0a8df364d2aac0a828ebdfefa6,
     type: 3}

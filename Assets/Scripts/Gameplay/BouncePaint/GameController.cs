@@ -18,18 +18,19 @@ namespace BouncePaint {
 
         // Getters (Public)
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
+        public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
         public List<Block> Blocks { get { return level.Blocks; } }
         // Getters (Private)
         private int LevelIndex { get { return level.LevelIndex; } }
         private List<Player> Players { get { return level.Players; } }
-        private bool IsEveryBlockPainted() {
-            return NumBlocksPainted() >= Blocks.Count;
+        private bool IsEveryBlockSatisfied() {
+            return NumBlocksSatisfied() >= Blocks.Count;
         }
-        private int NumBlocksPainted() {
+        private int NumBlocksSatisfied() {
             int total=0;
             foreach (Block block in Blocks) {
-                if (block.IsPainted) { total ++; }
+                if (block.IsSatisfied) { total ++; }
             }
             return total;
         }
@@ -91,7 +92,7 @@ namespace BouncePaint {
 
         public void OnPlayerPaintBlock() {
             // We're a champion?? Win!
-            if (gameState==GameStates.Playing && IsEveryBlockPainted()) {
+            if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
                 OnCompleteLevel();
             }
             //foreach (Block block in blocks) {
@@ -112,7 +113,7 @@ namespace BouncePaint {
         }
 
         private IEnumerator Coroutine_StartNextLevel() {
-            yield return new WaitForSecondsRealtime(1.4f);
+            yield return new WaitForSecondsRealtime(1.1f);
             SetCurrentLevel(LevelIndex+1, true);
         }
 
@@ -271,7 +272,10 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void Debug_WinLevel() {
             foreach (Block block in Blocks) {
-                block.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
+                for (int i=Mathf.Max(1,block.NumHitsReq); i>0; --i) {
+                    if (i==1 && !block.IsAvailable) { continue; } // Test. Comment this out if you want to win right away.
+                    block.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
+                }
             }
             OnPlayerPaintBlock();
         }
