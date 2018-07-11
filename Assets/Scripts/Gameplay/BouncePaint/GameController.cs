@@ -15,15 +15,16 @@ namespace BouncePaint {
         // References
         [SerializeField] private Canvas canvas=null;
         [SerializeField] private GameUI ui=null;
+        [SerializeField] private FUEController fueController;
 
         // Getters (Public)
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
         public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
         public List<Block> Blocks { get { return level.Blocks; } }
+        public List<Player> Players { get { return level.Players; } }
         // Getters (Private)
         private int LevelIndex { get { return level.LevelIndex; } }
-        private List<Player> Players { get { return level.Players; } }
         private bool IsEveryBlockSatisfied() {
             return NumBlocksSatisfied() >= Blocks.Count;
         }
@@ -134,9 +135,6 @@ namespace BouncePaint {
             gameState = GameStates.Playing;
             Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
 
-            // Tell the UI!
-            ui.OnStartLevel(LevelIndex);
-
             // Initialize level components, and reset Players!
             level.AddLevelComponents();
             // HACK! For now until I know how this is gonna work.
@@ -170,6 +168,10 @@ namespace BouncePaint {
                     Destroy(prevLevel.gameObject);
                 }
             }
+
+            // Tell things!
+            ui.OnStartLevel(LevelIndex);
+            fueController.OnStartLevel(LevelIndex);
 
             yield return null;
         }
