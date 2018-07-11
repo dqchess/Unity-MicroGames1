@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BouncePaint {
-    public enum GameStates { PreLevel, Playing, PostLevel, GameOver }
+    public enum GameStates { Playing, GameOver, PostLevel }
+    public enum LoseReasons { TapEarly, MissedTap, TappedDontTap }
 
     public class GameController : BaseGameController {
         // Properties
@@ -18,6 +19,7 @@ namespace BouncePaint {
         [SerializeField] private FUEController fueController;
 
         // Getters (Public)
+        public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
         public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
         public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
@@ -79,10 +81,11 @@ namespace BouncePaint {
         //        p.Reset(LevelIndex);
         //    }
         //}
-        private void SetGameOver() {
+        private void SetGameOver(LoseReasons reason) {
             gameState = GameStates.GameOver;
             timeWhenLevelEnded = Time.time;
             ui.OnGameOver();
+            fueController.OnSetGameOver(reason);
         }
 
         private void OnCompleteLevel() {
@@ -96,13 +99,15 @@ namespace BouncePaint {
             if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
                 OnCompleteLevel();
             }
+            // Tell people!
+            fueController.OnPlayerPaintBlock();
             //foreach (Block block in blocks) {
             //    block.OnPlayerPaintedABlock();
             //}
         }
-        public void OnPlayerDie() {
+        public void OnPlayerDie(LoseReasons reason) {
             if (gameState == GameStates.Playing) {
-                SetGameOver();
+                SetGameOver(reason);
             }
         }
 
@@ -171,7 +176,7 @@ namespace BouncePaint {
 
             // Tell things!
             ui.OnStartLevel(LevelIndex);
-            fueController.OnStartLevel(LevelIndex);
+            fueController.OnStartLevel(level);
 
             yield return null;
         }
@@ -225,6 +230,9 @@ namespace BouncePaint {
             else {
                 OnPressJumpButton();
             }
+
+            // Tell people!
+            fueController.OnTapScreen();
         }
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
@@ -254,15 +262,17 @@ namespace BouncePaint {
             }
 
             // Did NOBODY bounce? Oh, jeez. Explode some balls.
-            if (!didAnyPlayerBounce) {
+            if (!didAnyPlayerBounce && !IsFUEPlayerFrozen) { // also, don't explode if we're frozen in the FUE.
                 foreach (Player player in Players) {
                     // Visually inform any don't-tap Blocks for user's mistake feedback.
+                    LoseReasons reason = LoseReasons.TapEarly; // I'll say otherwise next.
                     Block blockTouching = player.GetUnpaintedBlockTouching();
                     if (blockTouching != null && !blockTouching.DoTap) {
                         blockTouching.OnPlayerPressJumpOnMeInappropriately();
+                        reason = LoseReasons.TappedDontTap;
                     }
                     // Explode the ball!
-                    player.Explode();
+                    player.Explode(reason);
                 }
             }
         }

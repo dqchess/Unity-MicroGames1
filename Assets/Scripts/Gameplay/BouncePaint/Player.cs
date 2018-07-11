@@ -29,6 +29,7 @@ namespace BouncePaint {
 
         // Getters (Public)
         public static Color GetRandomHappyColor() { return new ColorHSB(Random.Range(0f,1f), 0.9f, 1f).ToColor(); }
+        public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
         private Color bodyColor {
             get { return i_body.color; }
@@ -38,18 +39,20 @@ namespace BouncePaint {
             get { return myRectTransform.anchoredPosition; }
             set { myRectTransform.anchoredPosition = value; }
         }
-        private Vector2 bottomPos {
-            get { return pos + new Vector2(0, -radius); }
-            set { pos = value + new Vector2(0, radius); }
+        private float bottomY {
+            get { return pos.y-radius; }
+            set { pos = new Vector2(pos.x, value+radius); }
         }
         private List<Block> blocks { get { return gameController.Blocks; } }
         private Block GetBlockTouching() {
+            Vector2 bottomPos = new Vector2(pos.x, bottomY);
             foreach (Block obj in blocks) {
                 if (obj.HitBox.Contains(bottomPos)) { return obj; }
             }
             return null;
         }
         public Block GetUnpaintedBlockTouching() {
+            Vector2 bottomPos = new Vector2(pos.x, bottomY);
             foreach (Block obj in blocks) {
                 if (obj.IsPainted) { continue; }
                 if (obj.HitBox.Contains(bottomPos)) { return obj; }
@@ -177,13 +180,13 @@ namespace BouncePaint {
             }
 
             // Make sure I start my bounce on the top of the block.
-            bottomPos = new Vector2(bottomPos.x, block.BlockTop + 0f); // HARDCODED additional offset.
+            bottomY = block.BlockTop + 0f; // HARDCODED additional offset.
             // Find how fast we have to move upward to reach this y pos, and set our vel to that!
             float fallHeight = fallHeightNeutral + Random.Range(-30,30); // slightly randomize how high we go.
             float blockToTop = blockHeadingTo.BlockTop;//HitBox.center;
             float peakBPosY = blockToTop + fallHeight;
-            peakBPosY = Mathf.Max(peakBPosY, bottomPos.y+minBounceHeight); // enforce minimum bounce height.
-            float displacementY = blockToTop - bottomPos.y;
+            peakBPosY = Mathf.Max(peakBPosY, bottomY+minBounceHeight); // enforce minimum bounce height.
+            float displacementY = blockToTop - bottomY;
             float yDist = Mathf.Max (0, peakBPosY-pos.y);
             float yVel = Mathf.Sqrt(2*-gravity.y*yDist); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
 
@@ -191,8 +194,8 @@ namespace BouncePaint {
             float g = gravity.y;
             float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 
-            float predBlockPosX = GetBlockPosX(blockHeadingTo, bottomPos.y, yVel); // calculate where the Block is gonna be when I reach its y pos.
-            float xDist = predBlockPosX - bottomPos.x;
+            float predBlockPosX = GetBlockPosX(blockHeadingTo, bottomY, yVel); // calculate where the Block is gonna be when I reach its y pos.
+            float xDist = predBlockPosX - pos.x;
             float xVel = xDist / timeOfFlight;
 
             vel = new Vector2(xVel, yVel);
@@ -217,13 +220,13 @@ namespace BouncePaint {
         private void SquishFromBounce() {
             stretch = -0.25f; // Deform a lil'!
         }
-        public void Explode() {
+        public void Explode(LoseReasons reason) {
             isDead = true;
             i_body.sprite = s_bodyDashedOutline;
             bodyColor = new Color(1f, 0.1f, 0f);
             stretch = stretchVel = 0;
             ApplyStretch();
-            gameController.OnPlayerDie();
+            gameController.OnPlayerDie(reason);
         }
 
         private void DisableMyGameObject() { this.gameObject.SetActive(false); } // Used when we bounce up off-screen.
@@ -234,6 +237,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void FixedUpdate () {
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
+            if (gameController.IsFUEPlayerFrozen) { return; } // I'm all frozen? Do nothin'.
             if (isDead) { return; }
 
             ApplyGravity();
@@ -258,8 +262,8 @@ namespace BouncePaint {
             }
 
             // If I've passed too far into the block I'm heading towards, explode OR bounce me!
-            if (vel.y<0 && bottomPos.y<boundsY) {
-                bottomPos = new Vector2(bottomPos.x, boundsY);
+            if (vel.y<0 && bottomY<boundsY) {
+                bottomY = boundsY;
 				// Auto-bounce? Just happily bounce on the block's head. ;)
                 if (autoBounce) {
 					BounceOnBlock(blockHeadingTo);
@@ -272,7 +276,7 @@ namespace BouncePaint {
 					}
 					// It's a NORMAL block. We've gone too far! Die.
 					else {
-                    	Explode();
+                        Explode(LoseReasons.MissedTap);
 					}
                 }
             }

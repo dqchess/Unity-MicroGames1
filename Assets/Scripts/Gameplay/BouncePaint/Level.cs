@@ -112,22 +112,22 @@ namespace BouncePaint {
 
             // Simple, together.
             else if (li == i++) {
-                AddBlock(bs, 0,b);
+                AddBlock(bs, 0,b+200);
             }
             else if (li == i++) {
-                AddBlock(bs, -40,b);
-                AddBlock(bs,  40,b);
+                AddBlock(bs, -40,b+200);
+                AddBlock(bs,  40,b+200);
             }
             else if (li == i++) {
-                AddBlock(bs, -70,b);
-                AddBlock(bs,   0,b);
-                AddBlock(bs,  70,b);
+                AddBlock(bs, -70,b+100);
+                AddBlock(bs,   0,b+100);
+                AddBlock(bs,  70,b+100);
             }
             else if (li == i++) {
-                AddBlock(bs,-100,b);
-                AddBlock(bs, -35,b);
-                AddBlock(bs,  35,b);
-                AddBlock(bs, 100,b);
+                AddBlock(bs,-100,b+50);
+                AddBlock(bs, -35,b+50);
+                AddBlock(bs,  35,b+50);
+                AddBlock(bs, 100,b+50);
             }
 
             // Larger X gaps.
