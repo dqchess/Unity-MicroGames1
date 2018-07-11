@@ -86,9 +86,14 @@ namespace BouncePaint {
             timeWhenLevelEnded = Time.time;
             ui.OnGameOver();
             fueController.OnSetGameOver(reason);
+            // Increment losses on this level.
+            string saveKey = SaveKeys.BouncePaint_NumLosses(LevelIndex);
+            int numLosses = SaveStorage.GetInt(saveKey,0);
+            SaveStorage.SetInt(saveKey, numLosses + 1);
         }
 
         private void OnCompleteLevel() {
+            FBAnalyticsController.Instance.BouncePaint_OnWinLevel(LevelIndex); // Analytics call!
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
             StartCoroutine(Coroutine_StartNextLevel());
@@ -119,7 +124,7 @@ namespace BouncePaint {
         }
 
         private IEnumerator Coroutine_StartNextLevel() {
-            yield return new WaitForSecondsRealtime(1.1f);
+            yield return new WaitForSecondsRealtime(1f);
             SetCurrentLevel(LevelIndex+1, true);
         }
 
@@ -127,6 +132,7 @@ namespace BouncePaint {
             StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
         }
         private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
+            //if (
             // Make the new level!
             Level prevLevel = level;
             level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();

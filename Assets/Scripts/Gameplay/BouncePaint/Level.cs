@@ -871,84 +871,6 @@ namespace BouncePaint {
                 AddBlock(bs,  210,b+40);
                 AddBlock(bs,  210,b+240).SetDontTap();
             }
-            else if (li == i++) { // Stiff flipped T
-                AddPlayer();
-                AddBlock(bs, -220,b);
-                AddBlock(bs, -160,b);
-                AddBlock(bs, -100,b);
-                //AddBlock(bs,    0,b+  0).SetDontTap();
-                AddBlock(bs,    0,b+ 60).SetDontTap();
-                AddBlock(bs,    0,b+120).SetDontTap();
-                AddBlock(bs,    0,b+180).SetDontTap();
-                //AddBlock(bs,    0,b+240).SetDontTap();
-                //AddBlock(bs,    0,b+300).SetDontTap();
-                AddBlock(bs,  100,b);
-                AddBlock(bs,  160,b);
-                AddBlock(bs,  220,b);
-            }
-            else if (li == i++) { // Two rows; don't-tap bottom
-                AddPlayer();
-                AddBlock(bs, -220,b).SetDontTap();
-                //AddBlock(bs, -120,b).SetDontTap();
-                //AddBlock(bs,  -60,b).SetDontTap();
-                AddBlock(bs,    0,b).SetDontTap();
-                //AddBlock(bs,   60,b).SetDontTap();
-                //AddBlock(bs,  120,b).SetDontTap();
-                AddBlock(bs,  220,b).SetDontTap();
-                AddBlock(bs, -220,b+200);
-                AddBlock(bs, -120,b+200);
-                AddBlock(bs,  -60,b+200);
-                AddBlock(bs,    0,b+200);
-                AddBlock(bs,   60,b+200);
-                AddBlock(bs,  120,b+200);
-                AddBlock(bs,  220,b+200);
-            }
-            else if (li == i++) { // Truncated clapperboard
-                AddPlayer();
-                AddBlock(bs,  160,b+60).SetDontTap();
-                AddBlock(bs,  160,b+120).SetDontTap();
-                AddBlock(bs,  160,b+180).SetDontTap();
-                AddBlock(bs,  160,b+240).SetDontTap();
-                //AddBlock(bs,  160,b+300).SetDontTap();
-                AddBlock(bs, -200,b);
-                AddBlock(bs, -140,b);
-                AddBlock(bs,  -80,b);
-                AddBlock(bs,  -20,b);
-                AddBlock(bs,   40,b);
-                AddBlock(bs,  100,b);
-            }
-            else if (li == i++) { // Headless 3x3 with freckles
-                AddPlayer();
-                float g = 200;
-                AddBlock(bs, -g,b    );
-                AddBlock(bs,  0,b    );
-                AddBlock(bs,  g,b    );
-                AddBlock(bs, -g,b+g*1);
-                AddBlock(bs,  0,b+g*1);
-                AddBlock(bs,  g,b+g*1);
-
-                AddBlock(bs, -g*0.5f,b+g*0.5f).SetDontTap();
-                AddBlock(bs,  g*0.5f,b+g*0.5f).SetDontTap();
-                AddBlock(bs, -g*0.5f,b+g*1.5f).SetDontTap();
-                AddBlock(bs,  g*0.5f,b+g*1.5f).SetDontTap();
-            }
-            else if (li == i++) { // Two rows, scattered don't-taps
-                AddPlayer();
-                AddBlock(bs, -220,b).SetDontTap();
-                AddBlock(bs, -120,b);
-                AddBlock(bs,  -60,b).SetDontTap();
-                //AddBlock(bs,    0,b);
-                AddBlock(bs,   60,b).SetDontTap();
-                AddBlock(bs,  120,b);
-                AddBlock(bs,  220,b).SetDontTap();
-                AddBlock(bs, -220,b+200);
-                AddBlock(bs, -120,b+200).SetDontTap();
-                AddBlock(bs,  -60,b+200);
-                //AddBlock(bs,    0,b+200).SetDontTap();
-                AddBlock(bs,   60,b+200);
-                AddBlock(bs,  120,b+200).SetDontTap();
-                AddBlock(bs,  220,b+200);
-            }
 
             //else if (levelIndex == i++) { // Two short pillars
             //    AddPlayer();
@@ -1228,6 +1150,89 @@ namespace BouncePaint {
 
 
 
+            // Two-Ball Don't-Taps
+            else if (li == i++) { // Stiff flipped T
+                AddPlayer();
+                AddBlock(bs, -220,b);
+                AddBlock(bs, -160,b);
+                AddBlock(bs, -100,b);
+                //AddBlock(bs,    0,b+  0).SetDontTap();
+                AddBlock(bs,    0,b+ 60).SetDontTap();
+                AddBlock(bs,    0,b+120).SetDontTap();
+                AddBlock(bs,    0,b+180).SetDontTap();
+                //AddBlock(bs,    0,b+240).SetDontTap();
+                //AddBlock(bs,    0,b+300).SetDontTap();
+                AddBlock(bs,  100,b);
+                AddBlock(bs,  160,b);
+                AddBlock(bs,  220,b);
+            }
+            else if (li == i++) { // Two rows; don't-tap bottom
+                AddPlayer();
+                AddBlock(bs, -220,b).SetDontTap();
+                //AddBlock(bs, -120,b).SetDontTap();
+                //AddBlock(bs,  -60,b).SetDontTap();
+                AddBlock(bs,    0,b).SetDontTap();
+                //AddBlock(bs,   60,b).SetDontTap();
+                //AddBlock(bs,  120,b).SetDontTap();
+                AddBlock(bs,  220,b).SetDontTap();
+                AddBlock(bs, -220,b+200);
+                AddBlock(bs, -120,b+200);
+                AddBlock(bs,  -60,b+200);
+                AddBlock(bs,    0,b+200);
+                AddBlock(bs,   60,b+200);
+                AddBlock(bs,  120,b+200);
+                AddBlock(bs,  220,b+200);
+            }
+            else if (li == i++) { // Truncated clapperboard
+                AddPlayer();
+                AddBlock(bs,  160,b+60).SetDontTap();
+                AddBlock(bs,  160,b+120).SetDontTap();
+                AddBlock(bs,  160,b+180).SetDontTap();
+                AddBlock(bs,  160,b+240).SetDontTap();
+                //AddBlock(bs,  160,b+300).SetDontTap();
+                AddBlock(bs, -200,b);
+                AddBlock(bs, -140,b);
+                AddBlock(bs,  -80,b);
+                AddBlock(bs,  -20,b);
+                AddBlock(bs,   40,b);
+                AddBlock(bs,  100,b);
+            }
+            else if (li == i++) { // Headless 3x3 with freckles
+                AddPlayer();
+                float g = 200;
+                AddBlock(bs, -g,b    );
+                AddBlock(bs,  0,b    );
+                AddBlock(bs,  g,b    );
+                AddBlock(bs, -g,b+g*1);
+                AddBlock(bs,  0,b+g*1);
+                AddBlock(bs,  g,b+g*1);
+
+                AddBlock(bs, -g*0.5f,b+g*0.5f).SetDontTap();
+                AddBlock(bs,  g*0.5f,b+g*0.5f).SetDontTap();
+                AddBlock(bs, -g*0.5f,b+g*1.5f).SetDontTap();
+                AddBlock(bs,  g*0.5f,b+g*1.5f).SetDontTap();
+            }
+            else if (li == i++) { // Two rows, scattered don't-taps
+                AddPlayer();
+                AddBlock(bs, -220,b).SetDontTap();
+                AddBlock(bs, -120,b);
+                AddBlock(bs,  -60,b).SetDontTap();
+                //AddBlock(bs,    0,b);
+                AddBlock(bs,   60,b).SetDontTap();
+                AddBlock(bs,  120,b);
+                AddBlock(bs,  220,b).SetDontTap();
+                AddBlock(bs, -220,b+200);
+                AddBlock(bs, -120,b+200).SetDontTap();
+                AddBlock(bs,  -60,b+200);
+                //AddBlock(bs,    0,b+200).SetDontTap();
+                AddBlock(bs,   60,b+200);
+                AddBlock(bs,  120,b+200).SetDontTap();
+                AddBlock(bs,  220,b+200);
+            }
+
+
+
+
             // Gravity-Flip Blocks
             //else if (levelIndex == i++) {
             //    AddBlock(blockSize,    0,b).SetGravityFlip(1);
@@ -1274,6 +1279,22 @@ namespace BouncePaint {
             */
 
 
+            // "TOO MUCH TOO SOON" levels! Find a place for these somewhere late in the game.
+            else if (li == i++) { // 2 and 2 in and out
+                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(3f);
+                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(3f, 3.142f);
+                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(3f);
+                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(3f, 3.142f);
+            }
+            else if (li == i++) { // 3 and 3 intimidation boogie
+                AddBlock(bs, new Vector2(-240,b    ), new Vector2( -80,b    )).SetSpeed(5f);
+                AddBlock(bs, new Vector2( 240,b    ), new Vector2(  80,b    )).SetSpeed(5f);
+                AddBlock(bs, new Vector2( -80,b+160), new Vector2(-240,b+160)).SetSpeed(5f);
+                AddBlock(bs, new Vector2(  80,b+160), new Vector2( 240,b+160)).SetSpeed(5f);
+                AddBlock(bs, new Vector2(-240,b+320), new Vector2( -80,b+320)).SetSpeed(5f);
+                AddBlock(bs, new Vector2( 240,b+320), new Vector2(  80,b+320)).SetSpeed(5f);
+            }
+
             // Random Interlude
                 else if (li == i++) { // Flat shelves
                     AddBlock(new Vector2(160,20), -160, b+300);
@@ -1292,26 +1313,7 @@ namespace BouncePaint {
             //}
 
 
-
-            // "TOO MUCH TOO SOON" levels! Find a place for these somewhere late in the game.
-
-            else if (li == i++) { // 2 and 2 in and out
-                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(3f, 3.142f);
-                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(3f, 3.142f);
-            }
-            else if (li == i++) { // 3 and 3 intimidation boogie
-                AddBlock(bs, new Vector2(-240,b    ), new Vector2( -80,b    )).SetSpeed(5f);
-                AddBlock(bs, new Vector2( 240,b    ), new Vector2(  80,b    )).SetSpeed(5f);
-                AddBlock(bs, new Vector2( -80,b+160), new Vector2(-240,b+160)).SetSpeed(5f);
-                AddBlock(bs, new Vector2(  80,b+160), new Vector2( 240,b+160)).SetSpeed(5f);
-                AddBlock(bs, new Vector2(-240,b+320), new Vector2( -80,b+320)).SetSpeed(5f);
-                AddBlock(bs, new Vector2( 240,b+320), new Vector2(  80,b+320)).SetSpeed(5f);
-            }
-
-
-
+            /*
             else if (li == i++) { // Two rows; top don't-tap
                 AddBlock(bs, -180,b);
                 AddBlock(bs, -120,b);
@@ -1405,6 +1407,7 @@ namespace BouncePaint {
                 AddBlock(bs,  180,b+120).SetDontTap().SetUnpaintable();
                 AddBlock(bs,  240,b+120).SetDontTap().SetUnpaintable();
             }
+            */
 
 
             else {
