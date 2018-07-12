@@ -243,7 +243,7 @@ PlayerSettings:
   templateDefaultScene: 
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 2800000, guid: b7ab497171b664162ad35f21ac31f62e, type: 3}
+  androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: Assets/bouncebounce.keystore
   AndroidKeyaliasName: simplemachine
   AndroidTVCompatibility: 1

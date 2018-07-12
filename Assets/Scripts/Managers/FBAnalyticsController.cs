@@ -11,7 +11,7 @@ public class FBAnalyticsController : MonoBehaviour {
     static public FBAnalyticsController Instance {
         get {
             // Safety check for runtime compile.
-            if (instance == null) { instance = GameObject.FindObjectOfType<FBAnalyticsController>(); }
+            if (instance == null) { instance = FindObjectOfType<FBAnalyticsController>(); }
             return instance;
         }
     }

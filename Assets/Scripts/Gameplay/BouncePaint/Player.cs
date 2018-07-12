@@ -28,7 +28,9 @@ namespace BouncePaint {
         private Level myLevel;
 
         // Getters (Public)
-        public static Color GetRandomHappyColor() { return new ColorHSB(Random.Range(0f,1f), 0.9f, 1f).ToColor(); }
+        public static Color GetRandomHappyColor() {
+            float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
+            return new ColorHSB(h, 0.9f, 1f).ToColor(); }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
         private Color bodyColor {
@@ -138,7 +140,8 @@ namespace BouncePaint {
             pos = new Vector2(startX, startY);
         }
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.35f - levelIndex*0.003f;
+            //float baseGravity = -0.35f - levelIndex*0.003f;
+            float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
@@ -177,7 +180,7 @@ namespace BouncePaint {
             }
 
             // Make sure I start my bounce on the top of the block.
-            bottomY = block.BlockTop + 0f; // HARDCODED additional offset.
+            bottomY = block.BlockTop;
             // Find how fast we have to move upward to reach this y pos, and set our vel to that!
             float fallHeight = fallHeightNeutral + Random.Range(-30,30); // slightly randomize how high we go.
             float blockToTop = blockHeadingTo.BlockTop;//HitBox.center;
