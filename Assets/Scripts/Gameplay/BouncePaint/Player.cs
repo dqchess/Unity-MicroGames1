@@ -168,10 +168,7 @@ namespace BouncePaint {
             //bodyColor = GetRandomHappyColor(); // Rando my colo!
             block.OnPlayerBounceOnMe(bodyColor);
             bool didPaintBlock = !wasBlockPainted && block.IsPainted;
-            if (didPaintBlock) {
-                didPaintBlock = true;
-                gameController.OnPlayerPaintBlock();
-            }
+            gameController.OnPlayerBounceOnBlock(didPaintBlock);
 
             // Choose the next block to go to!!
             Block nextBlock = GetRandomAvailableBlock(block);

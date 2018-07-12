@@ -10,7 +10,8 @@ public class FBAnalyticsController : MonoBehaviour {
     // Getters
     static public FBAnalyticsController Instance {
         get {
-//          if (instance==null) { return this; } // Note: This is only here to prevent errors when recompiling code during runtime.
+            // Safety check for runtime compile.
+            if (instance == null) { instance = GameObject.FindObjectOfType<FBAnalyticsController>(); }
             return instance;
         }
     }
