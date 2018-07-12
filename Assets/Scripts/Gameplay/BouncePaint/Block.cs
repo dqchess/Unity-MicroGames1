@@ -65,7 +65,7 @@ namespace BouncePaint {
         private void UpdateHitBoxCenter() {
 			hitBox.center = new Vector2(
                 center.x,
-                center.y + (size.y+hitBox.height)*0.5f - 15);
+                center.y + (size.y+hitBox.height)*0.5f - 25);//TEMP 15
 		}
 
 

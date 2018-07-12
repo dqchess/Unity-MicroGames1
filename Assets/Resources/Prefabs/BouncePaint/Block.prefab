@@ -73,7 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.59607846, a: 0.4392157}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.45490196}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -102,6 +102,7 @@ MonoBehaviour:
   i_body: {fileID: 114659552338849622}
   i_hitBox: {fileID: 114130848183891524}
   myRectTransform: {fileID: 224938914865082336}
+  posDipOffset: {x: 0, y: 0}
   s_bodyDontTap: {fileID: 21300000, guid: ccf2bff917e544d60bc800d13e8d1500, type: 3}
 --- !u!114 &114659552338849622
 MonoBehaviour:
@@ -157,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 114.46}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224802575708706532
