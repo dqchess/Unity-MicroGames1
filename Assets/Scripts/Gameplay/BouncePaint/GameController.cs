@@ -132,7 +132,6 @@ namespace BouncePaint {
             StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
         }
         private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
-            //if (
             // Make the new level!
             Level prevLevel = level;
             level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();
@@ -144,7 +143,7 @@ namespace BouncePaint {
             SetIsPaused(false);
             timeWhenLevelEnded = -1;
             gameState = GameStates.Playing;
-            Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
+            Camera.main.backgroundColor = new Color(0.99f,0.99f,0.99f);
 
             // Initialize level components, and reset Players!
             level.AddLevelComponents();

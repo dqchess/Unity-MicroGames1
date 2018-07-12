@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace BouncePaint {
     public class Level : MonoBehaviour {
         // Components
         [SerializeField] private Text t_levelName=null;
+        [SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
         // Properties
@@ -48,14 +50,14 @@ namespace BouncePaint {
                     Destroy(obj.gameObject);
                 }
             }
-            blocks = null;
+            blocks = new List<Block>();
 
             if (players!=null) {
                 foreach (Player obj in players) {
                     Destroy(obj.gameObject);
                 }
             }
-            players = null;
+            players = new List<Player>();
         }
 
         // ----------------------------------------------------------------
@@ -1411,7 +1413,9 @@ namespace BouncePaint {
 
 
             else {
-                AddBlock(new Vector2(200,200), 0,b);
+                    DestroyLevelComponents();
+                    t_moreLevelsComingSoon.gameObject.SetActive(true);
+                //AddBlock(new Vector2(200,200), 0,b);
                 Debug.LogWarning("No level data available for level: " + li);
             }
         }

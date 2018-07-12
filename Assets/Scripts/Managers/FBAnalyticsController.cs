@@ -39,6 +39,22 @@ public class FBAnalyticsController : MonoBehaviour {
             });
         }
 	}
+    // Unity will call OnApplicationPause(false) when an app is resumed from the background
+    void OnApplicationPause (bool pauseStatus) {
+        // Check the pauseStatus to see if we are in the foreground or background
+        if (!pauseStatus) {
+            // app resume
+            if (FB.IsInitialized) {
+                FB.ActivateApp();
+            }
+            else {
+                // Handle FB.Init
+                FB.Init( () => {
+                    FB.ActivateApp();
+                });
+            }
+        }
+    }
 	
 
     // ----------------------------------------------------------------
@@ -46,9 +62,16 @@ public class FBAnalyticsController : MonoBehaviour {
     // ----------------------------------------------------------------
     public void BouncePaint_OnWinLevel(int levelIndex) {
         int numLosses = SaveStorage.GetInt(SaveKeys.BouncePaint_NumLosses(levelIndex),0);
-        // TODO: Dispatch call specifying: BouncePaint, levelIndex, and numLosses!
-        //FB.LogAppEvent(
 
+        var parameters = new Dictionary<string, object>();
+        parameters["Game"] = "BouncePaint";
+        parameters["numLosses"] = numLosses;
+        parameters[AppEventParameterName.Level] = levelIndex;
+        FB.LogAppEvent(
+            AppEventName.AchievedLevel,
+            null,
+            parameters
+        );
     }
 
 
