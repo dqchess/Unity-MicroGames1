@@ -39,7 +39,7 @@ namespace AlphaTapMost {
 		override protected void Start () {
 			base.Start();
 
-			tapSpaces = GameObject.FindObjectsOfType<TapSpace>();
+			tapSpaces = FindObjectsOfType<TapSpace>();
 
 			timeLeft = 11f;
 			numCorrectTaps = 0;

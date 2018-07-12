@@ -19,9 +19,10 @@ public class PersistentHouse : MonoBehaviour {
 		DontDestroyOnLoad (this.gameObject);
 	}
 
-
+    #if UNITY_EDITOR
     [UnityEditor.Callbacks.DidReloadScripts]
     private static void OnScriptsReloaded() {
         GameManagers.Reinitialize(); 
     }
+    #endif
 }

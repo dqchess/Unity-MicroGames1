@@ -20,7 +20,7 @@ public class ResourcesHandler : MonoBehaviour {
 	static public ResourcesHandler Instance {
         get {
             // Safety check for runtime compile.
-            if (instance == null) { instance = GameObject.FindObjectOfType<ResourcesHandler>(); }
+            if (instance == null) { instance = FindObjectOfType<ResourcesHandler>(); }
             return instance;
         }
     }
@@ -41,7 +41,7 @@ public class ResourcesHandler : MonoBehaviour {
             instance = this;
         }
         else {
-            GameObject.Destroy (this);
+            Destroy (this);
         }
     }
 
