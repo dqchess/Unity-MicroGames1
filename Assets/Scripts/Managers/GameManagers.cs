@@ -3,22 +3,31 @@ using System.Collections;
 
 public class GameManagers {
 	// Managers
-	private DataManager dataManager;
-	private EventManager eventManager;
+    private DataManager dataManager;
+    private EventManager eventManager;
+    private SoundManager soundManager;
 	// Getters
-	public DataManager DataManager { get { return dataManager; } }
-	public EventManager EventManager { get { return eventManager; } }
+    public DataManager DataManager { get { return dataManager; } }
+    public EventManager EventManager { get { return eventManager; } }
+    public SoundManager SoundManager { get { return soundManager; } }
 	// Properties
 	private static bool isInitializing = false;
 
 	public static bool IsInitializing { get { return isInitializing; } }
 
 
+    /// Only for recompiling during runtime! I'm bonked after scripts recompile. Call this to hard-reset me.
+    public static void Reinitialize() {
+        isInitializing = false;
+        instance = null;
+    }
+
 
 	// Constructor / Initialize
 	private GameManagers () {
-		dataManager = new DataManager ();
-		eventManager = new EventManager ();
+        dataManager = new DataManager ();
+        eventManager = new EventManager ();
+        soundManager = new SoundManager ();
 	}
 
 

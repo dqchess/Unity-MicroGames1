@@ -460,7 +460,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &349704902
 GameObject:
@@ -675,7 +675,7 @@ RectTransform:
   - {fileID: 1481535681}
   - {fileID: 1492337239}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1632,6 +1632,49 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1090033201}
+--- !u!1 &1165457391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1165457393}
+  - component: {fileID: 1165457392}
+  m_Layer: 0
+  m_Name: SfxController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1165457392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1165457391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c940ff9b748e4573947526a701ef24e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ac_bounce: {fileID: 8300000, guid: 1d4193b3a13404ab0acd3d92f889b677, type: 3}
+  ac_playerDie: {fileID: 8300000, guid: 5984136a24ddd4507bae12c11ba6b98f, type: 3}
+  ac_completeLevel: {fileID: 8300000, guid: 4421ca78b5c124988bf1ca2789307d5e, type: 3}
+--- !u!4 &1165457393
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1165457391}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1298333758
 GameObject:
   m_ObjectHideFlags: 0
@@ -2723,6 +2766,7 @@ MonoBehaviour:
   canvas: {fileID: 447625659}
   ui: {fileID: 1481535682}
   fueController: {fileID: 2060331972}
+  sfxController: {fileID: 1165457392}
 --- !u!1 &1821930603
 GameObject:
   m_ObjectHideFlags: 0
@@ -2882,7 +2926,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4706810250580120, guid: 15974068689bc4b4fb21fd01996f3d0d, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 15974068689bc4b4fb21fd01996f3d0d, type: 2}

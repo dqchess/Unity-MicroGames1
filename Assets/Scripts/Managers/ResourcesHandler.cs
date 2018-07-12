@@ -17,17 +17,33 @@ public class ResourcesHandler : MonoBehaviour {
 
 	// Instance
 	static private ResourcesHandler instance;
-	static public ResourcesHandler Instance { get { return instance; } }
+	static public ResourcesHandler Instance {
+        get {
+            // Safety check for runtime compile.
+            if (instance == null) { instance = FindObjectOfType<ResourcesHandler>(); }
+            return instance;
+        }
+    }
 
 
-	// Awake
+    // Setting Instance (both in Awake AND after scripts recompile!)
 	private void Awake () {
-		// There can only be one (instance)!
-		if (instance == null) {
-			instance = this;
-		}
-		else {
-			GameObject.Destroy (this);
-		}
-	}
+        SetInstance();
+    }
+    //[UnityEditor.Callbacks.DidReloadScripts]
+    //private static void OnScriptsReloaded() {
+    //    SetInstance();
+    //}
+
+    private void SetInstance() {
+        // There can only be one (instance)!
+        if (instance == null) {
+            instance = this;
+        }
+        else {
+            Destroy (this);
+        }
+    }
+
+
 }

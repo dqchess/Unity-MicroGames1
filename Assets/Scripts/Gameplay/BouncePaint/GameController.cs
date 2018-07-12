@@ -17,6 +17,7 @@ namespace BouncePaint {
         [SerializeField] private Canvas canvas=null;
         [SerializeField] private GameUI ui=null;
         [SerializeField] private FUEController fueController;
+        [SerializeField] private BouncePaintSfxController sfxController;
 
         // Getters (Public)
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
@@ -84,8 +85,10 @@ namespace BouncePaint {
         private void SetGameOver(LoseReasons reason) {
             gameState = GameStates.GameOver;
             timeWhenLevelEnded = Time.time;
+            // Tell people!
             ui.OnGameOver();
             fueController.OnSetGameOver(reason);
+            sfxController.OnSetGameOver();
             // Increment losses on this level.
             string saveKey = SaveKeys.BouncePaint_NumLosses(LevelIndex);
             int numLosses = SaveStorage.GetInt(saveKey,0);
@@ -97,15 +100,22 @@ namespace BouncePaint {
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
             StartCoroutine(Coroutine_StartNextLevel());
+            // Tell people!
+            sfxController.OnCompleteLevel();
         }
 
-        public void OnPlayerPaintBlock() {
-            // We're a champion?? Win!
-            if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
-                OnCompleteLevel();
-            }
+        public void OnPlayerBounceOnBlock(bool didPaintBlock) {
             // Tell people!
-            fueController.OnPlayerPaintBlock();
+            sfxController.OnPlayerBounceOnBlock();
+            // We DID paint it!
+            if (didPaintBlock) {
+                // We're a champion?? Win!
+                if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
+                    OnCompleteLevel();
+                }
+                // Tell people!
+                fueController.OnPlayerPaintBlock();
+            }
             //foreach (Block block in blocks) {
             //    block.OnPlayerPaintedABlock();
             //}
@@ -294,7 +304,7 @@ namespace BouncePaint {
                     block.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
                 }
             }
-            OnPlayerPaintBlock();
+            OnPlayerBounceOnBlock(true);
         }
 		/// Jumps *10* levels back.
         public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, LevelIndex-10)); }
