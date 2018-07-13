@@ -47,7 +47,7 @@ namespace AlphaTapMost {
 		// ----------------------------------------------------------------
 		//  FixedUpdate
 		// ----------------------------------------------------------------
-		private void FixedUpdate () {
+		private void Update () {
 			UpdateAndApplyAlpha();
 			UpdateRecentCorrectTap();
 		}

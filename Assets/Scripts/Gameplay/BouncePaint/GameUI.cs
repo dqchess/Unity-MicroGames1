@@ -45,6 +45,8 @@ namespace BouncePaint {
             LeanTween.moveLocal(b_retry.gameObject, retryButtonPosDefault, duration).setEaseOutBack();
 
             // Manually animating :P
+
+            //sm changes
             float a = 0;
             while (a < 0.95f) {
                 b_retry.image.color = new Color(1,1,1, a);

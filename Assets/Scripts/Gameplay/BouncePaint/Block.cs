@@ -26,8 +26,16 @@ namespace BouncePaint {
 		private float travelOscVal; // for TRAVELING Blocks.
 		private int numHitsReq;
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
+
+      
+
         // References
 		[SerializeField] private Sprite s_bodyDontTap;
+
+
+        [Header("SM Changes")]
+        public float hitboxYOffset;
+        
         private GameController gameController;
         private Level myLevel;
 
@@ -91,16 +99,26 @@ namespace BouncePaint {
             size = _size;
             // Make hitBox!
             hitBox = new Rect();
+            
             hitBox.size = new Vector2(size.x, 38);
 			UpdateHitBoxCenter();
             // Fudgily bloat the hitBox's width a bit (in case the block or ball are moving fast horizontally).
             hitBox.size += new Vector2(40, 0);
-			hitBox.center += new Vector2(-20, 0);
+
+
+            //sm changes
+            hitBox.center += new Vector2(-20, 0 + hitboxYOffset);
+           
+            //
+            
 
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = size;
             i_hitBox.rectTransform.sizeDelta = hitBox.size;
             i_hitBox.rectTransform.anchoredPosition = hitBox.center - myRectTransform.anchoredPosition;
+            
+            //SM changes
+          
 
             // TEMP! Default value sloppy in here.
             SetSpeed(1, 0);
@@ -156,10 +174,12 @@ namespace BouncePaint {
 			// }
 			// else {
 				if (doTap) {
-					bodyColor = new Color(0,0,0, 0.4f); // light gray
+					//bodyColor = new Color(0,0,0, 0.4f); // light gray
+                bodyColor = new Color(1, 1, 1, 0.4f);
 				}
 				else {
-					bodyColor = new Color(0,0,0, 0.99f); // Black.
+                //bodyColor = new Color(0,0,0, 0.99f); // Black.
+                bodyColor = Color.white;
 				}
 			// }
 		}
@@ -220,7 +240,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  FixedUpdate
         // ----------------------------------------------------------------
-        private void FixedUpdate() {
+        private void Update() {
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 			UpdateTravel();
             UpdatePosOffsets();
