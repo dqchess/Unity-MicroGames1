@@ -244,8 +244,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: Assets/bouncebounce.keystore
-  AndroidKeyaliasName: simplemachine
+  AndroidKeystoreName: colorbouncing.keystore
+  AndroidKeyaliasName: colorbouncing
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
