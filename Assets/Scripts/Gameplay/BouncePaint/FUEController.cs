@@ -72,7 +72,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  FixedUpdate
         // ----------------------------------------------------------------
-        private void FixedUpdate() {
+        private void Update() {
             if (!isActive) { return; } // Not in this level? Do nothin'.
             if (player == null) { return; } // Safety check.
 

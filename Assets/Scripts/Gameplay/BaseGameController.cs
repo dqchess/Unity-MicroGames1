@@ -23,7 +23,7 @@ abstract public class BaseGameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	virtual protected void Start () {
 		// Set application values
-		Application.targetFrameRate = GameVisualProperties.TARGET_FRAME_RATE;
+	//	Application.targetFrameRate = GameVisualProperties.TARGET_FRAME_RATE;
 
 		UpdateTimeScale();
 
@@ -70,7 +70,7 @@ abstract public class BaseGameController : MonoBehaviour {
 	private void UpdateTimeScale () {
 		if (isPaused) { Time.timeScale = 0; }
 		else if (debug_isSlowMo) { Time.timeScale = 0.1f; }
-		else { Time.timeScale = 1; }
+		else { Time.timeScale = 1.3f; }
 	}
 
 
