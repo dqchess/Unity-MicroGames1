@@ -120,7 +120,7 @@ namespace CircleGrow {
             float startingRadius = 5f;
             Vector2 randPos = GetBestPosForNewCircle();
             // Can't find a suitable position to put this circle? We're outta room!
-            if (randPos == Vector2.negativeInfinity) {
+            if (randPos.x == Mathf.NegativeInfinity) {
                 SetGameOver();
             }
             // We DID find a suitable pos for this new circle! Add it!
@@ -155,6 +155,8 @@ namespace CircleGrow {
         private void OnCircleIllegalOverlap(Circle circle) {
             circle.OnIllegalOverlap();
             SetGameOver();
+            //SolidifyCircle(circle);
+            //AddNewCircle();
         }
 
 
