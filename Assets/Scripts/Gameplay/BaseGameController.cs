@@ -69,8 +69,8 @@ abstract public class BaseGameController : MonoBehaviour {
 	}
 	private void UpdateTimeScale () {
 		if (isPaused) { Time.timeScale = 0; }
-		else if (debug_isSlowMo) { Time.timeScale = 0.1f; }
-		else { Time.timeScale = 1.3f; }
+		//else if (debug_isSlowMo) { Time.timeScale = 0.1f; }
+		else { Time.timeScale = 3.0f; }
 	}
 
 
