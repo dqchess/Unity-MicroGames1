@@ -16,8 +16,8 @@ namespace BouncePaint {
         // References
         [SerializeField] private Canvas canvas=null;
         [SerializeField] private GameUI ui=null;
-        [SerializeField] private FUEController fueController;
-        [SerializeField] private BouncePaintSfxController sfxController;
+        [SerializeField] private FUEController fueController=null;
+        [SerializeField] private BouncePaintSfxController sfxController=null;
 
         // Getters (Public)
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
@@ -60,31 +60,6 @@ namespace BouncePaint {
         private void RestartLevel() { SetCurrentLevel(LevelIndex); }
         public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, LevelIndex-1)); }
         public void StartNextLevel() { SetCurrentLevel(LevelIndex+1); }
-        //private void SetCurrentLevel(int _levelIndex) {
-        //    level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();
-        //    level.Initialize(this,canvas.transform, _levelIndex);
-
-        //    SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, LevelIndex);
-
-        //    // Set basics!
-        //    SetIsPaused(false);
-        //    timeWhenLevelEnded = -1;
-        //    gameState = GameStates.Playing;
-        //    Camera.main.backgroundColor = new Color(0.97f,0.97f,0.97f);
-
-        //    // Tell the UI!
-        //    ui.OnStartLevel(LevelIndex);
-
-        //    // Initialize level components, and reset Players!
-        //    level.AddLevelComponents();
-        //    // HACK! For now until I know how this is gonna work.
-        //    if (PlayerGravityScale == 1f) { // if we didn't specify the gravity scale...
-        //        PlayerGravityScale = Players.Count == 1 ? 1f : 0.6f;
-        //    }
-        //    foreach (Player p in Players) {
-        //        p.Reset(LevelIndex);
-        //    }
-        //}
         private void SetGameOver(LoseReasons reason) {
             gameState = GameStates.GameOver;
             timeWhenLevelEnded = Time.time;
@@ -156,7 +131,6 @@ namespace BouncePaint {
             SetIsPaused(false);
             timeWhenLevelEnded = -1;
             gameState = GameStates.Playing;
-           // Camera.main.backgroundColor = new Color(0.99f,0.99f,0.99f);
 
             // Initialize level components, and reset Players!
             level.AddLevelComponents();
@@ -231,21 +205,7 @@ namespace BouncePaint {
 			// Paused? Ignore input.
 			if (Time.timeScale == 0f) { return; }
 
-            if (gameState == GameStates.GameOver) {
-                //// Make us wait a short moment so we visually register what's happened.
-                //if (Time.time>timeWhenLevelEnded+0.2f) {
-                //    RestartLevel();
-                //    return;
-                //}
-            }
-			else if (gameState == GameStates.PostLevel) {
-				//// Make us wait a short moment so we visually register what's happened.
-				//if (Time.time>timeWhenLevelEnded+0.2f) {
-	   //             StartNextLevel();
-	   //             return;
-				//}
-            }
-            else {
+            if (gameState == GameStates.Playing) {
                 OnPressJumpButton();
             }
 
@@ -322,6 +282,26 @@ namespace BouncePaint {
 
 
 /*
+
+    if (gameState == GameStates.Playing) {
+        //// Make us wait a short moment so we visually register what's happened.
+        //if (Time.time>timeWhenLevelEnded+0.2f) {
+        //    RestartLevel();
+        //    return;
+        //}
+    }
+    else if (gameState == GameStates.PostLevel) {
+        //// Make us wait a short moment so we visually register what's happened.
+        //if (Time.time>timeWhenLevelEnded+0.2f) {
+//             StartNextLevel();
+//             return;
+        //}
+    }
+    else {
+        OnPressJumpButton();
+    }
+
+
 Rect availableRect = new Rect();// i_spacesAvailableRect.rectTransform.rect;
 availableRect.size = i_blocksAvailableRect.rectTransform.rect.size;
 availableRect.position = new Vector2(0,200);

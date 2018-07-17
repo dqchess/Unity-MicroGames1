@@ -29,8 +29,10 @@ namespace BouncePaint {
 
         // Getters (Public)
         public static Color GetRandomHappyColor() {
-            float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
-            return new ColorHSB(h, 0.9f, 1f).ToColor(); }
+            //float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
+            float h = Random.Range(0f, 1f); // taste the whole rainbow!!
+            return new ColorHSB(h, 0.9f, 1f).ToColor();
+        }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
         private Color bodyColor {
@@ -127,9 +129,6 @@ namespace BouncePaint {
             SetBlockHeadingTo(GetRandomAvailableBlock(null));
             gravity = new Vector2(0, GetGravityY(levelIndex));
             // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-            //vel = new Vector2(0, 5 + 7*Mathf.Sqrt(playerIndex)) / gravity.y; // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-            //float startY = blockHeadingTo.HitBox.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
-            //float startLoc = Mathf.Max(0.1f, 0.8f - playerIndex*0.5f);
             float startFallHeight = fallHeightNeutral + (playerIndex*50);
             float startLoc = 0.8f - playerIndex*0.5f;
             float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
