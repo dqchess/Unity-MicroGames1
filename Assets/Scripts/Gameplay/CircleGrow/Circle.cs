@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace CircleGrow {
     public class Circle : MonoBehaviour {
+        // Constants
+        private readonly Color color_oscillating = new Color(250/255f, 200/255f, 110/255f);
+        private readonly Color color_solid = new Color(37/255f, 166/255f, 170/255f);
+        private readonly Color color_illegal = new Color(255/255f, 132/255f, 118/255f);
         // Components
         [SerializeField] private Image i_body=null;
         [SerializeField] private RectTransform myRectTransform=null;
@@ -56,12 +60,12 @@ namespace CircleGrow {
         }
         public void SetIsOscillating(bool _isOscillating) {
             isOscillating = _isOscillating;
-            bodyColor = isOscillating ? Color.blue : Color.black;
+            bodyColor = isOscillating ? color_oscillating : color_solid;
         }
 
         public void OnIllegalOverlap() {
             SetIsOscillating(false);
-            bodyColor = Color.red;
+            bodyColor = color_illegal;
         }
 
 

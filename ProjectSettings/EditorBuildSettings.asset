@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BouncePaint.unity
     guid: 452d95e1dbd2f4892898aec23375ef1e
+  - enabled: 1
+    path: Assets/Scenes/GameSelect.unity
+    guid: 87f40d0bf310644f6a8749500cda931a
+  - enabled: 1
+    path: Assets/Scenes/CircleGrow.unity
+    guid: a43ed2c4338ab4156a29f7d9ed72a6e1
   m_configObjects: {}

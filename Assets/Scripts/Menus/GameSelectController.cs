@@ -18,6 +18,8 @@ public class GameSelectController : MonoBehaviour {
 
     public void OpenScene_BouncePaint() { OpenScene(SceneNames.BouncePaint_MainMenu); }
 
+    public void OpenScene_CircleGrow() { OpenScene(SceneNames.CircleGrow); }
+
     public void OpenScene_LetterClear() { OpenScene(SceneNames.LetterClear); }
 
 

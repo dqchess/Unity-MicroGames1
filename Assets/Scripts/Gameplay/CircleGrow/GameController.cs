@@ -172,7 +172,7 @@ namespace CircleGrow {
             SetIsPaused(false);
             timeWhenLevelEnded = -1;
             gameState = GameStates.Playing;
-            Camera.main.backgroundColor = new Color(0.99f,0.99f,0.99f);
+            //Camera.main.backgroundColor = new Color(0.99f,0.99f,0.99f);
 
             DestroyCircles();
 
@@ -244,7 +244,7 @@ namespace CircleGrow {
 
             if (gameState == GameStates.GameOver) {
                 // Make us wait a short moment so we visually register what's happened.
-                if (Time.time>timeWhenLevelEnded+0.2f) {
+                if (Time.time>timeWhenLevelEnded+2f) { // NOTE: Idk why 2 doesn't feel like actual 2 seconds. :P
                     RestartLevel();
                     return;
                 }
