@@ -63,7 +63,8 @@ namespace BouncePaint {
             if (block_numbersMethod != block_colliderMethod) {
                 Debug.Log("YO! Block-touching NUMBERS and COLLIDER methods are returning TWO different blocks!!");
             }
-            return block_colliderMethod;
+            //return block_colliderMethod;
+            return block_numbersMethod;
         }
         public Block GetUnpaintedBlockTouching_NumbersMethod() {
             // NUMBERS method: Check my bottom pos against all other blocks' hitBoxes.
@@ -170,8 +171,8 @@ namespace BouncePaint {
             pos = new Vector2(startX, startY);
         }
         private float GetGravityY(int levelIndex) {
-            //float baseGravity = -0.35f - levelIndex*0.003f;
-            float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
+            float baseGravity = -0.35f - levelIndex*0.003f;
+            //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
@@ -210,9 +211,9 @@ namespace BouncePaint {
             }
 
             // Make sure I start my bounce on the top of the block.
-            bottomY = block.BlockTop;
+            //bottomY = block.BlockTop; // NOTE: Disabled!
             // Find how fast we have to move upward to reach this y pos, and set our vel to that!
-            float fallHeight = fallHeightNeutral + Random.Range(-30,30); // slightly randomize how high we go.
+            float fallHeight = fallHeightNeutral;//note: Disabled random fall-height! + Random.Range(-30,30); // slightly randomize how high we go.
             float blockToTop = blockHeadingTo.BlockTop;//HitBox.center;
             float peakBPosY = blockToTop + fallHeight;
             peakBPosY = Mathf.Max(peakBPosY, bottomY+minBounceHeight); // enforce minimum bounce height.

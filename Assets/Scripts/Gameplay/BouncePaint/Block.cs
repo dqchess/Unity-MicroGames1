@@ -218,6 +218,7 @@ namespace BouncePaint {
             }
             // Push me down!
 			posDipOffset += new Vector2(0, -16f);
+            ApplyPos(); // apply pos immediately, so Player knows where we actually are.
         }
         public void OnPlayerBounceUpOffscreenFromMe() {
             // Push me down extra!
