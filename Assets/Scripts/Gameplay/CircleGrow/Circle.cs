@@ -18,7 +18,7 @@ namespace CircleGrow {
         private float radius;
         //private Rect levelBounds;
         // References
-        private GameController gameController;
+        //private GameController gameController;
 
         // Getters (Public)
         public bool IsOscillating { get { return isOscillating; } }
@@ -38,7 +38,7 @@ namespace CircleGrow {
         //  Initialize
         // ----------------------------------------------------------------
         public void Initialize(GameController _gameController, Transform tf_parent, Vector2 _pos, float _radius) {
-            gameController = _gameController;
+            //gameController = _gameController;
             this.transform.SetParent(tf_parent);
             this.transform.localScale = Vector3.one;
             this.transform.localPosition = Vector3.zero;
