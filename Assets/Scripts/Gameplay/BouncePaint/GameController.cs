@@ -75,11 +75,18 @@ namespace BouncePaint {
 
         private void OnCompleteLevel() {
             FBAnalyticsController.Instance.BouncePaint_OnWinLevel(LevelIndex); // Analytics call!
+            UpdateHighestLevelUnlocked(LevelIndex);
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
             StartCoroutine(Coroutine_StartNextLevel());
             // Tell people!
             sfxController.OnCompleteLevel();
+        }
+        private void UpdateHighestLevelUnlocked(int _levelIndex) {
+            int highestRecord = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);
+            if (_levelIndex > highestRecord) {
+                SaveStorage.SetInt(SaveKeys.BouncePaint_HighestLevelUnlocked, _levelIndex);
+            }
         }
 
         public void OnPlayerBounceOnBlock(bool didPaintBlock) {
@@ -171,6 +178,10 @@ namespace BouncePaint {
             fueController.OnStartLevel(level);
 
             yield return null;
+        }
+
+        public void OpenScene_LevelSelect() {
+            OpenScene(SceneNames.BouncePaint_LevelSelect);
         }
 
 

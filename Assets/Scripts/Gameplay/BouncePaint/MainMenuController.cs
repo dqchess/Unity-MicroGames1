@@ -45,8 +45,11 @@ namespace BouncePaint {
         protected void OpenScene (string sceneName) {
             UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName);
         }
-        public void OpenGameplayScene() {
-            OpenScene(SceneNames.BouncePaint_Gameplay);
+        //public void OpenGameplayScene() {
+        //    OpenScene(SceneNames.BouncePaint_Gameplay);
+        //}
+        public void OpenScene_LevelSelect() {
+            OpenScene(SceneNames.BouncePaint_LevelSelect);
         }
 
 

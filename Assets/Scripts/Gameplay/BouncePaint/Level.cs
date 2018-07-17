@@ -6,6 +6,9 @@ using TMPro;
 
 namespace BouncePaint {
     public class Level : MonoBehaviour {
+        // Constants
+        public static int FirstLevelIndex = 1;
+        public static int LastLevelIndex = 101;
         // Components
         [SerializeField] private Text t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
@@ -108,7 +111,7 @@ namespace BouncePaint {
 
             float b = -240; // bottom.
             int li = LevelIndex;
-            int i=1; // TEMP! Until we make levels into XML or Json.
+            int i=FirstLevelIndex; // Temp until we make levels into XML or Json.
             if (false) {}
 
 
@@ -1283,18 +1286,18 @@ namespace BouncePaint {
 
             // "TOO MUCH TOO SOON" levels! Find a place for these somewhere late in the game.
             else if (li == i++) { // 2 and 2 in and out
-                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(3f, 3.142f);
-                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(3f);
-                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(3f, 3.142f);
+                AddBlock(bs, new Vector2(-200,b    ), new Vector2( 200,b    )).SetSpeed(2.6f);
+                AddBlock(bs, new Vector2(-200,b+100), new Vector2( 200,b+100)).SetSpeed(2.6f, 3.142f);
+                AddBlock(bs, new Vector2(-200,b+200), new Vector2( 200,b+200)).SetSpeed(2.6f);
+                AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(2.6f, 3.142f);
             }
             else if (li == i++) { // 3 and 3 intimidation boogie
-                AddBlock(bs, new Vector2(-240,b    ), new Vector2( -80,b    )).SetSpeed(5f);
-                AddBlock(bs, new Vector2( 240,b    ), new Vector2(  80,b    )).SetSpeed(5f);
-                AddBlock(bs, new Vector2( -80,b+160), new Vector2(-240,b+160)).SetSpeed(5f);
-                AddBlock(bs, new Vector2(  80,b+160), new Vector2( 240,b+160)).SetSpeed(5f);
-                AddBlock(bs, new Vector2(-240,b+320), new Vector2( -80,b+320)).SetSpeed(5f);
-                AddBlock(bs, new Vector2( 240,b+320), new Vector2(  80,b+320)).SetSpeed(5f);
+                AddBlock(bs, new Vector2(-240,b    ), new Vector2( -80,b    )).SetSpeed(3.4f);
+                AddBlock(bs, new Vector2( 240,b    ), new Vector2(  80,b    )).SetSpeed(3.4f);
+                AddBlock(bs, new Vector2( -80,b+160), new Vector2(-240,b+160)).SetSpeed(3.4f);
+                AddBlock(bs, new Vector2(  80,b+160), new Vector2( 240,b+160)).SetSpeed(3.4f);
+                AddBlock(bs, new Vector2(-240,b+320), new Vector2( -80,b+320)).SetSpeed(3.4f);
+                AddBlock(bs, new Vector2( 240,b+320), new Vector2(  80,b+320)).SetSpeed(3.4f);
             }
 
             // Random Interlude

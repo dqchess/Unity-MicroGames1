@@ -10,6 +10,7 @@ public static class SaveKeys {
 
 
     // BouncePaint
+    public const string BouncePaint_HighestLevelUnlocked = "BouncePaint_HighestLevelUnlocked";
 	public const string BouncePaint_LastLevelPlayed = "BouncePaint_LastLevelPlayed";
     public static string BouncePaint_NumLosses(int levelIndex) {
         return "BouncePaint_NumLosses_Level" + levelIndex;

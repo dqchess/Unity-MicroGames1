@@ -41,7 +41,9 @@ namespace BouncePaint {
         public bool IsPainted { get { return isPainted; } }
         public bool IsSatisfied { get { return isPainted || !isPaintable; } }
         public bool IsAvailable { get { return !isPainted && ballTargetingMe==null; } } // I'm available if A) I'm unpainted, and B) Nobody's planning to hit me!
-        public float BlockTop { get { return center.y + size.y*0.5f; } } // The VISUAL top of the block.
+        public float BlockTop { get { return center.y + size.y*0.5f; } } // My VISUAL top.
+        public float BlockCenterY { get { return center.y; } } // My VISUAL center.
+        public float BlockHeight { get { return center.y; } } // My VISUAL height.
         public int NumHitsReq { get { return numHitsReq; } }
         public Rect HitBox { get { return hitBox; } }
         public Player BallTargetingMe {
@@ -115,7 +117,7 @@ namespace BouncePaint {
 			myRectTransform.sizeDelta = size;
 
             // Default my speed values for safety.
-            SetSpeed(0, 0);
+            SetSpeed(1, 0);
         }
         public Block SetHitsReq(int _numHitsReq) {
             numHitsReq = _numHitsReq;
@@ -169,11 +171,12 @@ namespace BouncePaint {
 			// else {
 				if (doTap) {
 					//bodyColor = new Color(0,0,0, 0.4f); // light gray
-                bodyColor = new Color(1, 1, 1, 0.4f);
+                bodyColor = new Color(1, 1, 1, 0.6f);
 				}
 				else {
                 //bodyColor = new Color(0,0,0, 0.99f); // Black.
-                bodyColor = Color.white;
+                //bodyColor = Color.white;
+                bodyColor = new Color(1,1,1, 0.2f);
 				}
 			// }
 		}
@@ -217,7 +220,7 @@ namespace BouncePaint {
 				}
             }
             // Push me down!
-			posDipOffset += new Vector2(0, -16f);
+			posDipOffset += new Vector2(0, -24f);//-16
             ApplyPos(); // apply pos immediately, so Player knows where we actually are.
         }
         public void OnPlayerBounceUpOffscreenFromMe() {
@@ -228,6 +231,10 @@ namespace BouncePaint {
 		public void OnPlayerPressJumpOnMeInappropriately() {
 			bodyColor = new Color(0.6f,0f,0.06f, 1f);
 		}
+
+        public void Test_OffsetPosX(float _offsetX) {
+            posDipOffset += new Vector2(_offsetX, 0);
+        }
 
 
 
@@ -253,7 +260,7 @@ namespace BouncePaint {
 			if (posDipOffset != posDipTarget) {
 				posDipOffset += new Vector2(
 					(posDipTarget.x-posDipOffset.x) * 0.24f,
-					(posDipTarget.y-posDipOffset.y) * 0.24f);
+                    (posDipTarget.y-posDipOffset.y) * 0.24f);
 			}
             // Dance
             if (gameController.IsLevelComplete) {

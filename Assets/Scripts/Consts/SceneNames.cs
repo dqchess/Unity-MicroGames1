@@ -8,6 +8,7 @@ public static class SceneNames {
 	public const string AlphaTapMost = "AlphaTapMost";
 	public const string AlphaTapOrder = "AlphaTapOrder";
 
+    public const string BouncePaint_LevelSelect = "BouncePaint_LevelSelect";
     public const string BouncePaint_MainMenu = "BouncePaint_MainMenu";
     public const string BouncePaint_Gameplay = "BouncePaint";
 

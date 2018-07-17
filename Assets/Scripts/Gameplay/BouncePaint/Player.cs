@@ -120,6 +120,16 @@ namespace BouncePaint {
             return col.GetComponent<Block>();
         }
 
+        private float GetGravityY(int levelIndex) {
+            float baseGravity = -0.35f - levelIndex*0.002f;
+            //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
+            return baseGravity * gameController.PlayerGravityScale;
+        }
+        private float GetFallHeightNeutral(int levelIndex) {
+            return 200f;//250f; //Mathf.Min(360, 200+levelIndex*10f);
+        }
+
+
 
         // ----------------------------------------------------------------
         //  Start
@@ -170,14 +180,6 @@ namespace BouncePaint {
 			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
             pos = new Vector2(startX, startY);
         }
-        private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.35f - levelIndex*0.003f;
-            //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
-            return baseGravity * gameController.PlayerGravityScale;
-        }
-        private float GetFallHeightNeutral(int levelIndex) {
-            return 250f; //Mathf.Min(360, 200+levelIndex*10f);
-        }
 
 
 
@@ -210,8 +212,13 @@ namespace BouncePaint {
                 SetBlockHeadingTo(nextBlock);
             }
 
+            // TEST
+            block.Test_OffsetPosX(vel.x*1.2f);
+
             // Make sure I start my bounce on the top of the block.
             //bottomY = block.BlockTop; // NOTE: Disabled!
+            //bottomY = block.BlockTop - block.BlockHeight*0.3f; // TEST!
+            bottomY -= 12f; // TEST!
             // Find how fast we have to move upward to reach this y pos, and set our vel to that!
             float fallHeight = fallHeightNeutral;//note: Disabled random fall-height! + Random.Range(-30,30); // slightly randomize how high we go.
             float blockToTop = blockHeadingTo.BlockTop;//HitBox.center;

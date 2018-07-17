@@ -276,7 +276,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 89.25
+  m_fontSize: 89.3
   m_fontSizeBase: 140.3
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -618,7 +618,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1724769481}
-        m_MethodName: OpenGameplayScene
+        m_MethodName: OpenScene_LevelSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -745,7 +745,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 135.25
+  m_fontSize: 135.3
   m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 1
