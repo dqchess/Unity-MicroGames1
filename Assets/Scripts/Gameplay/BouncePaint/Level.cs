@@ -126,10 +126,10 @@ namespace BouncePaint {
                 AddBlock(bs,  70,b+100);
             }
             else if (li == i++) {
-                AddBlock(bs,-100,b+50);
-                AddBlock(bs, -35,b+50);
-                AddBlock(bs,  35,b+50);
-                AddBlock(bs, 100,b+50);
+                AddBlock(bs, -90,b+50);
+                AddBlock(bs, -30,b+50);
+                AddBlock(bs,  30,b+50);
+                AddBlock(bs,  90,b+50);
             }
 
             // Larger X gaps.
@@ -211,9 +211,9 @@ namespace BouncePaint {
             // Vertical Stacks
             else if (li == i++) {
                 AddBlock(bs, 0,b);
-                AddBlock(bs, 0,b+60);
-                AddBlock(bs, 0,b+120);
+                AddBlock(bs, 0,b+90);
                 AddBlock(bs, 0,b+180);
+                AddBlock(bs, 0,b+270);
             }
             else if (li == i++) {
                 AddBlock(bs, -150,b);

@@ -8,6 +8,7 @@ namespace BouncePaint {
         // Constants
         private const float minBounceHeight = 80f; // this prevents us rocketing down directly after a bounce (if we're going from a high to a very low block).
         // Components
+        [SerializeField] private CircleCollider2D myCollider=null;
         [SerializeField] private Image i_body=null;
         [SerializeField] private RectTransform myRectTransform=null;
         // Properties
@@ -23,14 +24,17 @@ namespace BouncePaint {
         // References
         [SerializeField] private Sprite s_bodyNormal=null;
         [SerializeField] private Sprite s_bodyDashedOutline=null;
+        private List<Block> blocksTouching; // added/removed from by OnCollisionEnter/Exit!
         private Block blockHeadingTo;
         private GameController gameController=null;
         private Level myLevel;
 
         // Getters (Public)
         public static Color GetRandomHappyColor() {
-            float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
-            return new ColorHSB(h, 0.9f, 1f).ToColor(); }
+            //float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
+            float h = Random.Range(0f, 1f); // taste the whole rainbow!!
+            return new ColorHSB(h, 0.9f, 1f).ToColor();
+        }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
         private Color bodyColor {
@@ -46,18 +50,34 @@ namespace BouncePaint {
             set { pos = new Vector2(pos.x, value+radius); }
         }
         private List<Block> blocks { get { return gameController.Blocks; } }
-        private Block GetBlockTouching() {
-            Vector2 bottomPos = new Vector2(pos.x, bottomY);
-            foreach (Block obj in blocks) {
-                if (obj.HitBox.Contains(bottomPos)) { return obj; }
-            }
-            return null;
-        }
+        //private Block GetBlockTouching() {
+        //    Vector2 bottomPos = new Vector2(pos.x, bottomY);
+        //    foreach (Block obj in blocks) {
+        //        if (obj.HitBox.Contains(bottomPos)) { return obj; }
+        //    }
+        //    return null;
+        //}
         public Block GetUnpaintedBlockTouching() {
+            Block block_numbersMethod = GetUnpaintedBlockTouching_NumbersMethod();
+            Block block_colliderMethod = GetUnpaintedBlockTouching_ColliderMethod();
+            if (block_numbersMethod != block_colliderMethod) {
+                Debug.Log("YO! Block-touching NUMBERS and COLLIDER methods are returning TWO different blocks!!");
+            }
+            return block_colliderMethod;
+        }
+        public Block GetUnpaintedBlockTouching_NumbersMethod() {
+            // NUMBERS method: Check my bottom pos against all other blocks' hitBoxes.
             Vector2 bottomPos = new Vector2(pos.x, bottomY);
             foreach (Block obj in blocks) {
                 if (obj.IsPainted) { continue; }
                 if (obj.HitBox.Contains(bottomPos)) { return obj; }
+            }
+            return null;
+        }
+        public Block GetUnpaintedBlockTouching_ColliderMethod() {
+            // COLLIDER method: Simply return the first unpainted one I'm touching.
+            foreach (Block b in blocksTouching) {
+                if (!b.IsPainted) { return b; }
             }
             return null;
         }
@@ -91,7 +111,14 @@ namespace BouncePaint {
 			float g = gravity.y;
 			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
 			return block.GetPredictedPos(timeOfFlight).x;
-		}
+        }
+        //private Block GetBlockFromCollision(Collision2D collision) {
+        //    return collision.otherCollider.GetComponent<Block>();
+        //}
+        private Block GetBlockFromCollider(Collider2D col) {
+            return col.GetComponent<Block>();
+        }
+
 
         // ----------------------------------------------------------------
         //  Start
@@ -109,7 +136,9 @@ namespace BouncePaint {
         public void Reset(int levelIndex) {
             this.transform.SetAsLastSibling(); // Put me in front of all other props!
 
+            // Reset basic values.
             isDead = false;
+            blocksTouching = new List<Block>();
             i_body.sprite = s_bodyNormal;
             radius = gameController.PlayerDiameter*0.5f;
             myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
@@ -123,13 +152,14 @@ namespace BouncePaint {
                 bodyColor = GetRandomHappyColor();
             }
 
+            // Set myCollider offset/size!
+            myCollider.radius = 2f; // teeny tiny little bead...
+            myCollider.offset = new Vector2(0, radius-myCollider.radius); // ...at the bottom of my circle!
+
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
             SetBlockHeadingTo(GetRandomAvailableBlock(null));
             gravity = new Vector2(0, GetGravityY(levelIndex));
             // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-            //vel = new Vector2(0, 5 + 7*Mathf.Sqrt(playerIndex)) / gravity.y; // Start with a little toss-up, and an EXTRA toss-up for additional balls!
-            //float startY = blockHeadingTo.HitBox.center.y + fallHeightNeutral*0.85f; // 0.85f HARDCODED to taste, based on where we want to start the toss-up (note: we could totally calculate this to be perfect, but I don't want to right now)
-            //float startLoc = Mathf.Max(0.1f, 0.8f - playerIndex*0.5f);
             float startFallHeight = fallHeightNeutral + (playerIndex*50);
             float startLoc = 0.8f - playerIndex*0.5f;
             float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
@@ -205,7 +235,7 @@ namespace BouncePaint {
             if (doBounceUpOffscreen) {
                 vel = new Vector2(0, 34f); // rocketman!
                 gravity = new Vector2(0, -0.35f); // much less gravity!
-                block.posDipOffset += new Vector2(0, -42f); // smack dat square.
+                block.OnPlayerBounceUpOffscreenFromMe(); // smack dat square.
                 startingPlayerColor = bodyColor; // set this now! I'M the color to emulate!
                 Invoke("DisableMyGameObject", 0.8f); // HARDCODED delay. Hide me once I'm off-screen so I don't show up again when this level animates down.
             }
@@ -232,10 +262,12 @@ namespace BouncePaint {
         private void DisableMyGameObject() { this.gameObject.SetActive(false); } // Used when we bounce up off-screen.
 
 
+
         // ----------------------------------------------------------------
-        //  FixedUpdate
+        //  Update
         // ----------------------------------------------------------------
         private void Update () {
+            if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
             if (gameController.IsFUEPlayerFrozen) { return; } // I'm all frozen? Do nothin'.
             if (isDead) { return; }
@@ -299,6 +331,33 @@ namespace BouncePaint {
             //1);
             this.transform.localScale = new Vector3(1-stretch, 1+stretch, 1);
         }
+
+
+
+        // ----------------------------------------------------------------
+        //  Physics Events
+        // ----------------------------------------------------------------
+        private void OnTriggerEnter2D(Collider2D col) {
+            // Block?!
+            Block block = GetBlockFromCollider(col);
+            if (block != null) {
+                if (!blocksTouching.Contains(block)) { // Safety check.
+                    blocksTouching.Add(block);
+                }
+                else { Debug.LogWarning("Player's trying to ADD a Block to blocksTouching that's ALREADY in its list!"); }
+            }
+        }
+        private void OnTriggerExit2D(Collider2D col) {
+            // Block?!
+            Block block = GetBlockFromCollider(col);
+            if (block != null) {
+                if (blocksTouching.Contains(block)) { // Safety check.
+                    blocksTouching.Remove(block);
+                }
+                else { Debug.LogWarning("Player's trying to REMOVE a Block from blocksTouching that's NOT in its list!"); }
+            }
+        }
+
 
     }
 }

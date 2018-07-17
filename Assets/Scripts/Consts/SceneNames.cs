@@ -11,5 +11,7 @@ public static class SceneNames {
     public const string BouncePaint_MainMenu = "BouncePaint_MainMenu";
     public const string BouncePaint_Gameplay = "BouncePaint";
 
+    public const string CircleGrow = "CircleGrow";
+
     public const string LetterClear = "LetterClear";
 }

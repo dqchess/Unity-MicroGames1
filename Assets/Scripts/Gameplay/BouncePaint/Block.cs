@@ -7,16 +7,17 @@ using TMPro;
 namespace BouncePaint {
     public class Block : MonoBehaviour {
         // Components
+        [SerializeField] private BoxCollider2D myCollider=null;
         [SerializeField] private Image i_body=null;
-		[SerializeField] private Image i_hitBox=null;
-		[SerializeField] private RectTransform myRectTransform=null;
+        [SerializeField] private Image i_hitBox=null;
+        [SerializeField] private RectTransform myRectTransform=null;
 		private TextMeshProUGUI t_numHitsReq=null; // This is added from a prefab if needed!
         // Properties
         private bool isPainted=false;
         private bool isPaintable=true; // set to FALSE for Blocks that can be bounced on but NOT painted (and they're always satisfied, of course).
         private Player ballTargetingMe=null;
 		private Rect hitBox;
-        public Vector2 posDipOffset; //HACK temp! private. when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+        private Vector2 posDipOffset; //HACK temp! private. when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
         private Vector2 posDanceOffset=Vector2.zero; // for post-level celebration.
         private Vector2 size;
 		// Properties (Specials)
@@ -26,18 +27,14 @@ namespace BouncePaint {
 		private float travelOscVal; // for TRAVELING Blocks.
 		private int numHitsReq;
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
-
-      
-
         // References
-		[SerializeField] private Sprite s_bodyDontTap;
-
-
-        [Header("SM Changes")]
-        public float hitboxYOffset;
-        
+        [SerializeField] private Sprite s_bodyDontTap;
         private GameController gameController;
         private Level myLevel;
+        // Editor-Settable Properties
+        [Header("SM Changes")]
+        public float hitboxYOffset;
+
 
 		// Getters (Public)
         public bool DoTap { get { return doTap; } }
@@ -67,13 +64,20 @@ namespace BouncePaint {
 			get { return myRectTransform.anchoredPosition; }
 			set {
 				myRectTransform.anchoredPosition = value;
-				UpdateHitBoxCenter();
+				UpdateHitBoxPos();
 			}
 		}
-        private void UpdateHitBoxCenter() {
+        private void UpdateHitBoxPos() {
+            // Update center.
 			hitBox.center = new Vector2(
                 center.x,
-                center.y + (size.y+hitBox.height)*0.5f - 25);//QQQ
+                center.y + (size.y+hitBox.height)*0.5f + hitboxYOffset);
+            // Apply to my debug image.
+            i_hitBox.rectTransform.sizeDelta = hitBox.size;
+            i_hitBox.rectTransform.anchoredPosition = hitBox.center - myRectTransform.anchoredPosition; // note: awkward my-whole-position offset.
+            // Apply to my collider.
+            myCollider.size = hitBox.size;
+            myCollider.offset = hitBox.center - myRectTransform.anchoredPosition; // note: awkward my-whole-position offset.
 		}
 
 
@@ -91,37 +95,27 @@ namespace BouncePaint {
             this.transform.localEulerAngles = Vector3.zero;
 			myRectTransform.anchoredPosition = Vector2.zero;
 			// Assign properties
-			centerA = _centerA;
-			centerB = _centerB;
-			posDipOffset = Vector2.zero;
-			ApplyPos();
-
             size = _size;
+            centerA = _centerA;
+            centerB = _centerB;
+            posDipOffset = Vector2.zero;
+            ApplyPos();
+
             // Make hitBox!
             hitBox = new Rect();
-            
             hitBox.size = new Vector2(size.x, 38);
-			UpdateHitBoxCenter();
             // Fudgily bloat the hitBox's width a bit (in case the block or ball are moving fast horizontally).
             hitBox.size += new Vector2(40, 0);
-
+            UpdateHitBoxPos();
 
             //sm changes
-            hitBox.center += new Vector2(-20, 0 + hitboxYOffset);
-           
-            //
-            
+            //hitBox.center += new Vector2(-20, 0 + hitboxYOffset);
 
 			// Now put/size me where I belong!
 			myRectTransform.sizeDelta = size;
-            i_hitBox.rectTransform.sizeDelta = hitBox.size;
-            i_hitBox.rectTransform.anchoredPosition = hitBox.center - myRectTransform.anchoredPosition;
-            
-            //SM changes
-          
 
-            // TEMP! Default value sloppy in here.
-            SetSpeed(1, 0);
+            // Default my speed values for safety.
+            SetSpeed(0, 0);
         }
         public Block SetHitsReq(int _numHitsReq) {
             numHitsReq = _numHitsReq;
@@ -225,15 +219,14 @@ namespace BouncePaint {
             // Push me down!
 			posDipOffset += new Vector2(0, -16f);
         }
+        public void OnPlayerBounceUpOffscreenFromMe() {
+            // Push me down extra!
+            posDipOffset += new Vector2(0, -42f);
+        }
 		/// Called when Player taps to jump while in me, BUT I'm a don't-tap Block!
 		public void OnPlayerPressJumpOnMeInappropriately() {
 			bodyColor = new Color(0.6f,0f,0.06f, 1f);
 		}
-        //public void OnPlayerPaintedABlock() {
-        //    // TEST!
-        //    doTap = !DoTap;
-        //    SetIntentionVisuals(false);
-        //}
 
 
 
@@ -241,7 +234,9 @@ namespace BouncePaint {
         //  FixedUpdate
         // ----------------------------------------------------------------
         private void Update() {
+            if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
+
 			UpdateTravel();
             UpdatePosOffsets();
 			ApplyPos();

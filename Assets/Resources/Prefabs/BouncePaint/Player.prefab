@@ -55,6 +55,8 @@ GameObject:
   - component: {fileID: 224777517031435618}
   - component: {fileID: 114070109647617092}
   - component: {fileID: 222882366157411832}
+  - component: {fileID: 58883374733010190}
+  - component: {fileID: 50540012632517484}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -79,6 +81,41 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!50 &50540012632517484
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857669726947748}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!58 &58883374733010190
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1857669726947748}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 25
 --- !u!114 &114070109647617092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -90,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 683de5fa55efc4468bc9352f3483ccbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myCollider: {fileID: 58883374733010190}
   i_body: {fileID: 114725905346625198}
   myRectTransform: {fileID: 224777517031435618}
   s_bodyNormal: {fileID: 21300000, guid: 835218f2686e6480684ac652b1624c46, type: 3}
@@ -4788,7 +4826,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -4, y: -4}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224522015733987944
 RectTransform:
@@ -4826,6 +4864,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 120}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
