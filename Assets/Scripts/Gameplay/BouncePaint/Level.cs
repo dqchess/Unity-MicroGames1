@@ -10,12 +10,15 @@ namespace BouncePaint {
         public static int FirstLevelIndex = 1;
         public static int LastLevelIndex = 101;
         // Components
+        [SerializeField] private ParticleSystem ps_finalBounceA=null; // small circles.
+        [SerializeField] private ParticleSystem ps_finalBounceB=null; // big circles!
         [SerializeField] private Text t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
         // Properties
         public bool IsAnimatingIn;
+        private float screenShakeVolume;
         private int levelIndex;
         // References
         //[SerializeField] private RectTransform rt_blocks=null;
@@ -88,6 +91,65 @@ namespace BouncePaint {
             return newPlayer;
         }
 
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        public void OnWinLevel(Player winningPlayer) {
+            // Emit winning burst!!
+            ps_finalBounceA.transform.localPosition = winningPlayer.transform.localPosition;
+            ps_finalBounceB.transform.localPosition = winningPlayer.transform.localPosition;
+            ps_finalBounceA.Emit(40);
+            ps_finalBounceB.Emit(8);
+            // Shaken, not stirred!
+            screenShakeVolume = 2f;
+        }
+
+        // ----------------------------------------------------------------
+        //  Update
+        // ----------------------------------------------------------------
+        ParticleSystem.Particle[] finalBounceParticles;
+        private Color cacheColor;
+        private void Update() {
+            UpdateScreenShake();
+            UpdateFinalBounceParticles();
+        }
+        private void UpdateScreenShake() {
+            if (screenShakeVolume != 0) {
+                // Apply!
+                //float rotation = Mathf.Sin(screenShakeVolume*5f) * screenShakeVolume*4f;
+                //this.transform.localEulerAngles = new Vector3(0,0,rotation);
+                float yOffset = Mathf.Sin(screenShakeVolume*20f) * screenShakeVolume*7f;
+                myRectTransform.anchoredPosition = new Vector3(0, yOffset, 0); // TEST
+                // Update!
+                screenShakeVolume += (0-screenShakeVolume) / 24f * TimeController.FrameTimeScale;
+                if (Mathf.Abs(screenShakeVolume) < 0.5f) { screenShakeVolume = 0; }
+            }
+        }
+        private void UpdateFinalBounceParticles() {
+            if (ps_finalBounceA.particleCount > 0) {
+                if (finalBounceParticles == null || finalBounceParticles.Length < ps_finalBounceA.main.maxParticles) {
+                    finalBounceParticles = new ParticleSystem.Particle[ps_finalBounceA.main.maxParticles];
+                }
+
+                // GetParticles is allocation free because we reuse the m_Particles buffer between updates
+                int numParticlesAlive = ps_finalBounceA.GetParticles(finalBounceParticles);
+
+                // Change only the particles that are alive
+                for (int i=0; i<numParticlesAlive; i++) {
+                    //m_Particles[i].velocity += Vector3.up * m_Drift;
+                    cacheColor = finalBounceParticles[i].GetCurrentColor(ps_finalBounceA);
+                    //float alpha = -0.2f + MathUtils.Sin01(i+Time.unscaledTime*(28f+i*0.5f))*6f; // glittery flicker!
+                    float alpha = -0.2f + MathUtils.Sin01(i+Time.unscaledTime*(30f))*5f; // glittery flicker!
+                    //alpha = Random.Range(Time.timeScale,1f);
+                    alpha = Mathf.Lerp(alpha, 1, Time.timeScale*0.6f); // Scale the effect based on the current time scale.
+                    finalBounceParticles[i].startColor = new Color(cacheColor.r,cacheColor.g,cacheColor.b, alpha);
+                }
+
+                // Apply the particle changes to the particle system
+                ps_finalBounceA.SetParticles(finalBounceParticles, numParticlesAlive);
+            }
+        }
+
 
         // ----------------------------------------------------------------
         //  Making Level!
@@ -117,16 +179,16 @@ namespace BouncePaint {
 
             // Simple, together.
             else if (li == i++) {
-                AddBlock(bs, 0,b+200);
+                AddBlock(bs, 0,b+50);
             }
             else if (li == i++) {
-                AddBlock(bs, -40,b+200);
-                AddBlock(bs,  40,b+200);
+                AddBlock(bs, -40,b+50);
+                AddBlock(bs,  40,b+50);
             }
             else if (li == i++) {
-                AddBlock(bs, -70,b+100);
-                AddBlock(bs,   0,b+100);
-                AddBlock(bs,  70,b+100);
+                AddBlock(bs, -70,b+50);
+                AddBlock(bs,   0,b+50);
+                AddBlock(bs,  70,b+50);
             }
             else if (li == i++) {
                 AddBlock(bs, -90,b+50);
@@ -306,13 +368,13 @@ namespace BouncePaint {
             }
             else if (li == i++) { // Solid, flat wave
                 float w = 120;
-                AddBlock(bs, new Vector2(-240,b), new Vector2(-240+w,b)).SetSpeed(2f, 0f);
-                AddBlock(bs, new Vector2(-180,b), new Vector2(-180+w,b)).SetSpeed(2f, 0.2f);
-                AddBlock(bs, new Vector2(-120,b), new Vector2(-120+w,b)).SetSpeed(2f, 0.4f);
-                AddBlock(bs, new Vector2( -60,b), new Vector2( -60+w,b)).SetSpeed(2f, 0.6f);
-                AddBlock(bs, new Vector2(   0,b), new Vector2(   0+w,b)).SetSpeed(2f, 0.8f);
-                AddBlock(bs, new Vector2(  60,b), new Vector2(  60+w,b)).SetSpeed(2f, 1.0f);
-                AddBlock(bs, new Vector2( 120,b), new Vector2( 120+w,b)).SetSpeed(2f, 1.2f);
+                AddBlock(bs, new Vector2(-240,b), new Vector2(-240+w,b)).SetSpeed(1.4f, 0f);
+                AddBlock(bs, new Vector2(-180,b), new Vector2(-180+w,b)).SetSpeed(1.4f, 0.2f);
+                AddBlock(bs, new Vector2(-120,b), new Vector2(-120+w,b)).SetSpeed(1.4f, 0.4f);
+                AddBlock(bs, new Vector2( -60,b), new Vector2( -60+w,b)).SetSpeed(1.4f, 0.6f);
+                AddBlock(bs, new Vector2(   0,b), new Vector2(   0+w,b)).SetSpeed(1.4f, 0.8f);
+                AddBlock(bs, new Vector2(  60,b), new Vector2(  60+w,b)).SetSpeed(1.4f, 1.0f);
+                AddBlock(bs, new Vector2( 120,b), new Vector2( 120+w,b)).SetSpeed(1.4f, 1.2f);
             }
             //else if (levelIndex == i++) {
             //    float w = 120;

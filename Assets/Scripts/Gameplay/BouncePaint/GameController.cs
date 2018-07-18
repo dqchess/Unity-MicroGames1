@@ -18,6 +18,7 @@ namespace BouncePaint {
         [SerializeField] private GameUI ui=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private BouncePaintSfxController sfxController=null;
+        public Player WinningPlayer; // the Player whose bounce won the level!
 
         // Getters (Public)
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
@@ -73,13 +74,16 @@ namespace BouncePaint {
             SaveStorage.SetInt(saveKey, numLosses + 1);
         }
 
-        private void OnCompleteLevel() {
+        private void OnWinLevel(Player _winningPlayer) {
+            WinningPlayer = _winningPlayer;
             FBAnalyticsController.Instance.BouncePaint_OnWinLevel(LevelIndex); // Analytics call!
             UpdateHighestLevelUnlocked(LevelIndex);
             gameState = GameStates.PostLevel;
             timeWhenLevelEnded = Time.time;
+            StartCoroutine(Coroutine_SetTimeScaleFromWinLevel());
             StartCoroutine(Coroutine_StartNextLevel());
             // Tell people!
+            level.OnWinLevel(WinningPlayer);
             sfxController.OnCompleteLevel();
         }
         private void UpdateHighestLevelUnlocked(int _levelIndex) {
@@ -89,14 +93,14 @@ namespace BouncePaint {
             }
         }
 
-        public void OnPlayerBounceOnBlock(bool didPaintBlock) {
+        public void OnPlayerBounceOnBlock(Player player, bool didPaintBlock) {
             // Tell people!
             sfxController.OnPlayerBounceOnBlock();
             // We DID paint it!
             if (didPaintBlock) {
                 // We're a champion?? Win!
                 if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
-                    OnCompleteLevel();
+                    OnWinLevel(player);
                 }
                 // Tell people!
                 fueController.OnPlayerPaintBlock();
@@ -119,7 +123,7 @@ namespace BouncePaint {
         }
 
         private IEnumerator Coroutine_StartNextLevel() {
-            yield return new WaitForSecondsRealtime(1f);
+            yield return new WaitForSecondsRealtime(2.6f);
             SetCurrentLevel(LevelIndex+1, true);
         }
 
@@ -138,6 +142,7 @@ namespace BouncePaint {
             SetIsPaused(false);
             timeWhenLevelEnded = -1;
             gameState = GameStates.Playing;
+            WinningPlayer = null;
 
             // Initialize level components, and reset Players!
             level.AddLevelComponents();
@@ -182,6 +187,26 @@ namespace BouncePaint {
 
         public void OpenScene_LevelSelect() {
             OpenScene(SceneNames.BouncePaint_LevelSelect);
+        }
+
+        private IEnumerator Coroutine_SetTimeScaleFromWinLevel() {
+            // Wait a tiny moment in fast motion.
+            //Time.timeScale = 2f;
+            yield return new WaitForSecondsRealtime(0.12f);
+            // Slow down quick!
+            float nextTimeStep = Time.unscaledTime + 1f;
+            float targetTimeScale = 0.1f;
+            while (Time.unscaledTime < nextTimeStep) {
+                Time.timeScale += (targetTimeScale-Time.timeScale) / 7f;
+                yield return null;
+            }
+            // Speed back up slowly.
+            targetTimeScale = 1f;
+            while (Time.timeScale < targetTimeScale) {
+                Time.timeScale += 0.05f;
+                yield return null;
+            }
+            Time.timeScale = 1f;
         }
 
 
@@ -275,10 +300,10 @@ namespace BouncePaint {
             foreach (Block block in Blocks) {
                 for (int i=Mathf.Max(1,block.NumHitsReq); i>0; --i) {
                     if (i==1 && !block.IsAvailable) { continue; } // Test. Comment this out if you want to win right away.
-                    block.OnPlayerBounceOnMe(Player.GetRandomHappyColor());
+                    block.OnPlayerBounceOnMe(Player.GetRandomHappyColor(), Vector2.zero);
                 }
             }
-            OnPlayerBounceOnBlock(true);
+            OnPlayerBounceOnBlock(Players[0], true);
         }
 		/// Jumps *10* levels back.
         public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, LevelIndex-10)); }

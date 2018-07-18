@@ -37,6 +37,7 @@ namespace BouncePaint {
         }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
+        private float fts { get { return TimeController.FrameTimeScale; } }
         private Color bodyColor {
             get { return i_body.color; }
             set { i_body.color = value; }
@@ -121,8 +122,8 @@ namespace BouncePaint {
         }
 
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.35f - levelIndex*0.002f;
-            //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.5f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
+            //float baseGravity = -0.35f - levelIndex*0.002f;
+            float baseGravity = (-0.35f - levelIndex*0.003f) * 0.8f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
@@ -199,12 +200,24 @@ namespace BouncePaint {
             // Wait a frame or two, THEN squish me! (Squashing right away makes the collision look a little off.)
             Invoke("SquishFromBounce", 0.05f);
 
+            // If the level's over, AND we haven't defined the startingPlayerColor (aka no one's bounced up yet)? Bounce all the way up off-screen instead!
+            //bool doBounceUpOffscreen = gameController.IsLevelComplete && startingPlayerColor==Color.clear;
+            // Decide NOW if we're gonna bounce up offscreen! Do it if we're the winning player.
+            bool doBounceUpOffscreen = gameController.WinningPlayer == this;
+
             // Bounce and paint!
             bool wasBlockPainted = block.IsPainted;
             //bodyColor = GetRandomHappyColor(); // Rando my colo!
-            block.OnPlayerBounceOnMe(bodyColor);
+            block.OnPlayerBounceOnMe(bodyColor, vel);
             bool didPaintBlock = !wasBlockPainted && block.IsPainted;
-            gameController.OnPlayerBounceOnBlock(didPaintBlock);
+            gameController.OnPlayerBounceOnBlock(this, didPaintBlock);
+
+            // TEST
+            if (!wasBlockPainted && gameController.IsLevelComplete) {
+                block.OnPlayerBounceOnMe(bodyColor, vel);
+                block.OnPlayerBounceOnMe(bodyColor, vel);
+                stretch -= 0.75f;
+            }
 
             // Choose the next block to go to!!
             Block nextBlock = GetRandomAvailableBlock(block);
@@ -212,8 +225,6 @@ namespace BouncePaint {
                 SetBlockHeadingTo(nextBlock);
             }
 
-            // TEST
-            block.Test_OffsetPosX(vel.x*1.2f);
 
             // Make sure I start my bounce on the top of the block.
             //bottomY = block.BlockTop; // NOTE: Disabled!
@@ -238,10 +249,8 @@ namespace BouncePaint {
 
             vel = new Vector2(xVel, yVel);
 
-            // Is the level over, AND we haven't defined the startingPlayerColor (aka no one's bounced up yet)? Bounce all the way up off-screen instead!
-            bool doBounceUpOffscreen = gameController.IsLevelComplete && startingPlayerColor==Color.clear;
             if (doBounceUpOffscreen) {
-                vel = new Vector2(0, 34f); // rocketman!
+                vel = new Vector2(0, 40f); // rocketmaaan!
                 gravity = new Vector2(0, -0.35f); // much less gravity!
                 block.OnPlayerBounceUpOffscreenFromMe(); // smack dat square.
                 startingPlayerColor = bodyColor; // set this now! I'M the color to emulate!
@@ -256,7 +265,7 @@ namespace BouncePaint {
         }
 
         private void SquishFromBounce() {
-            stretch = -0.25f; // Deform a lil'!
+            stretch -= 0.25f; // Deform a lil'!
         }
         public void Explode(LoseReasons reason) {
             isDead = true;
@@ -274,7 +283,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Update
         // ----------------------------------------------------------------
-        private void Update () {
+        private void FixedUpdate () {
             if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
             if (gameController.IsFUEPlayerFrozen) { return; } // I'm all frozen? Do nothin'.
@@ -287,10 +296,10 @@ namespace BouncePaint {
             UpdateScaleRotation();
         }
         private void ApplyGravity() {
-            vel += gravity;
+            vel += gravity;// * fts;
         }
         private void ApplyVel() {
-            pos += vel;
+            pos += vel;// * fts;
         }
         private void ApplyBounds() {
             if (blockHeadingTo == null) { return; } // Safety check.
@@ -324,7 +333,10 @@ namespace BouncePaint {
         private void UpdateScaleRotation() {
             // Stretch me!
             stretch += stretchVel;
-            float stretchTarget = 0;// Mathf.Max(0, -vel.y)*0.01f;
+            float stretchTarget = 0;
+            if (gameController.WinningPlayer==this) { // If I'm the winning player, freely deform me based on my y vel! :)
+                stretchTarget = Mathf.Abs(vel.y)*0.015f;//.Max(0, -vel.y)*0.01f;
+            }
             stretchVel += (stretchTarget-stretch) / 5f;
             stretchVel *= 0.82f;
             ApplyStretch();

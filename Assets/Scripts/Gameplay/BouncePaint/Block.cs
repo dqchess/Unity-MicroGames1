@@ -10,6 +10,7 @@ namespace BouncePaint {
         [SerializeField] private BoxCollider2D myCollider=null;
         [SerializeField] private Image i_body=null;
         [SerializeField] private Image i_hitBox=null;
+        [SerializeField] private ParticleSystem ps_painted=null;
         [SerializeField] private RectTransform myRectTransform=null;
 		private TextMeshProUGUI t_numHitsReq=null; // This is added from a prefab if needed!
         // Properties
@@ -17,7 +18,8 @@ namespace BouncePaint {
         private bool isPaintable=true; // set to FALSE for Blocks that can be bounced on but NOT painted (and they're always satisfied, of course).
         private Player ballTargetingMe=null;
 		private Rect hitBox;
-        private Vector2 posDipOffset; //HACK temp! private. when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+        private Vector2 posDipOffset; // when we get bounced on, this is set to like (0,-16). Eases back to (0,0). Added to our center pos.
+        private Vector2 posDipOffsetVel;
         private Vector2 posDanceOffset=Vector2.zero; // for post-level celebration.
         private Vector2 size;
 		// Properties (Specials)
@@ -100,7 +102,7 @@ namespace BouncePaint {
             size = _size;
             centerA = _centerA;
             centerB = _centerB;
-            posDipOffset = Vector2.zero;
+            posDipOffset = posDipOffsetVel = Vector2.zero;
             ApplyPos();
 
             // Make hitBox!
@@ -110,11 +112,10 @@ namespace BouncePaint {
             hitBox.size += new Vector2(40, 0);
             UpdateHitBoxPos();
 
-            //sm changes
-            //hitBox.center += new Vector2(-20, 0 + hitboxYOffset);
-
 			// Now put/size me where I belong!
-			myRectTransform.sizeDelta = size;
+            myRectTransform.sizeDelta = size;
+            ps_painted.transform.localPosition = new Vector3(0, -size.y*0.5f, 0);
+            GameUtils.SetParticleSystemShapeRadius(ps_painted, size.x/20f); // Make sure to size the shape to match my width. HACK with /20f. Idk why.
 
             // Default my speed values for safety.
             SetSpeed(1, 0);
@@ -135,9 +136,9 @@ namespace BouncePaint {
         }
         public Block SetDontTap() {
             doTap = false;
-            // if (!doTap) {
-            //  i_body.sprite = s_bodyDontTap;
-            // }
+             if (!doTap) {
+              i_body.sprite = s_bodyDontTap;
+             }
             SetIntentionVisuals(false);
             return this;
         }
@@ -206,42 +207,47 @@ namespace BouncePaint {
         //  Events
         // ----------------------------------------------------------------
         /// Paints me! :)
-		public void OnPlayerBounceOnMe(Color playerColor) {
+        public void OnPlayerBounceOnMe(Color playerColor, Vector2 playerVel) {
 			// If I'm paintable AND not yet painted...!
             if (isPaintable && !isPainted) {
 				// Hit me, Paul!
 				numHitsReq --;
 				UpdateNumHitsReqText();
-				// That was the last straw, Cady??
+				// That was the last straw, Cady?? Paint me!
 				if (numHitsReq <= 0) {
-					// Paint me!
-	                isPainted = true;
-	                bodyColor = playerColor;
+                    PaintMe(playerColor);
 				}
             }
-            // Push me down!
-			posDipOffset += new Vector2(0, -24f);//-16
+            // Push me down AND horizontally (based on Player's x vel)!
+            //posDipOffset += new Vector2(playerVel.x*1.2f, -24f);//-16
+            posDipOffsetVel += new Vector2(playerVel.x*0.6f, -10f);
             ApplyPos(); // apply pos immediately, so Player knows where we actually are.
+        }
+        private void PaintMe(Color playerColor) {
+            isPainted = true;
+            // If I'm a DO-tap, then color me and do da burst!
+            if (DoTap) {
+                bodyColor = playerColor;
+                GameUtils.SetParticleSystemColor(ps_painted, bodyColor);
+                ps_painted.Emit(12);
+            }
         }
         public void OnPlayerBounceUpOffscreenFromMe() {
             // Push me down extra!
-            posDipOffset += new Vector2(0, -42f);
+            //posDipOffset += new Vector2(0, -42f);
+            posDipOffsetVel += new Vector2(0, -30f);
         }
 		/// Called when Player taps to jump while in me, BUT I'm a don't-tap Block!
 		public void OnPlayerPressJumpOnMeInappropriately() {
 			bodyColor = new Color(0.6f,0f,0.06f, 1f);
 		}
 
-        public void Test_OffsetPosX(float _offsetX) {
-            posDipOffset += new Vector2(_offsetX, 0);
-        }
-
 
 
         // ----------------------------------------------------------------
         //  FixedUpdate
         // ----------------------------------------------------------------
-        private void Update() {
+        private void FixedUpdate() {
             if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 
@@ -255,6 +261,12 @@ namespace BouncePaint {
 			}
 		}
         private void UpdatePosOffsets() {
+            if (posDipOffsetVel != Vector2.zero) { // Mild optimization.
+                // Apply vel
+                posDipOffset += posDipOffsetVel;
+                // Update vel
+                posDipOffsetVel *= 0.8f;
+            }
             // Dip
 			Vector2 posDipTarget = Vector2.zero;
 			if (posDipOffset != posDipTarget) {

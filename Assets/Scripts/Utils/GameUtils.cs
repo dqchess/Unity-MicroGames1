@@ -142,15 +142,20 @@ public class GameUtils {
 		return tex;
 	}
 
-	public static void SetParticleSystemEmissionEnabled (ParticleSystem particleSystem, bool isEnabled) {
-		ParticleSystem.EmissionModule em;
-		em = particleSystem.emission;
-		em.enabled = isEnabled;
-	}
+    public static void SetParticleSystemEmissionEnabled (ParticleSystem particleSystem, bool isEnabled) {
+        ParticleSystem.EmissionModule m;
+        m = particleSystem.emission;
+        m.enabled = isEnabled;
+    }
 	public static void SetParticleSystemColor (ParticleSystem ps, Color _color) {
-		ParticleSystem.MainModule main = ps.main;
-		main.startColor = _color;
-	}
+        ParticleSystem.MainModule m = ps.main;
+        m.startColor = _color;
+    }
+    public static void SetParticleSystemShapeRadius (ParticleSystem particleSystem, float radius) {
+        ParticleSystem.ShapeModule m;
+        m = particleSystem.shape;
+        m.radius = radius;
+    }
 
 
 
