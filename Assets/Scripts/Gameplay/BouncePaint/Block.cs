@@ -10,7 +10,7 @@ namespace BouncePaint {
         [SerializeField] private BoxCollider2D myCollider=null;
         [SerializeField] private Image i_body=null;
         [SerializeField] private Image i_hitBox=null;
-        [SerializeField] private ParticleSystem ps_painted=null;
+        [SerializeField] private ParticleSystem ps_hit=null;
         [SerializeField] private RectTransform myRectTransform=null;
 		private TextMeshProUGUI t_numHitsReq=null; // This is added from a prefab if needed!
         // Properties
@@ -114,8 +114,8 @@ namespace BouncePaint {
 
 			// Now put/size me where I belong!
             myRectTransform.sizeDelta = size;
-            ps_painted.transform.localPosition = new Vector3(0, -size.y*0.5f, 0);
-            GameUtils.SetParticleSystemShapeRadius(ps_painted, size.x/20f); // Make sure to size the shape to match my width. HACK with /20f. Idk why.
+            ps_hit.transform.localPosition = new Vector3(0, size.y*0.5f, 0);
+            GameUtils.SetParticleSystemShapeRadius(ps_hit, size.x/20f); // Make sure to size the shape to match my width. HACK with /20f. Idk why.
 
             // Default my speed values for safety.
             SetSpeed(1, 0);
@@ -208,28 +208,34 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         /// Paints me! :)
         public void OnPlayerBounceOnMe(Color playerColor, Vector2 playerVel) {
-			// If I'm paintable AND not yet painted...!
+            // If I'm paintable AND not yet painted...!
             if (isPaintable && !isPainted) {
-				// Hit me, Paul!
-				numHitsReq --;
-				UpdateNumHitsReqText();
-				// That was the last straw, Cady?? Paint me!
-				if (numHitsReq <= 0) {
+                // Hit me, Paul!
+                numHitsReq --;
+                UpdateNumHitsReqText();
+                // That was the last straw, Cady?? Paint me!
+                if (numHitsReq <= 0) {
                     PaintMe(playerColor);
-				}
+                }
+                // Particle burst!
+                GameUtils.SetParticleSystemColor(ps_hit, bodyColor);
+                ps_hit.Emit(12);
             }
             // Push me down AND horizontally (based on Player's x vel)!
             //posDipOffset += new Vector2(playerVel.x*1.2f, -24f);//-16
             posDipOffsetVel += new Vector2(playerVel.x*0.6f, -10f);
             ApplyPos(); // apply pos immediately, so Player knows where we actually are.
         }
+        /// Player tells us we're the winning bounce, and to dip down extra.
+        public void DipExtraFromWinningBounce(Vector2 playerVel) {
+            posDipOffsetVel += new Vector2(playerVel.x*1.2f, -20f);
+            ApplyPos();
+        }
         private void PaintMe(Color playerColor) {
             isPainted = true;
             // If I'm a DO-tap, then color me and do da burst!
             if (DoTap) {
                 bodyColor = playerColor;
-                GameUtils.SetParticleSystemColor(ps_painted, bodyColor);
-                ps_painted.Emit(12);
             }
         }
         public void OnPlayerBounceUpOffscreenFromMe() {

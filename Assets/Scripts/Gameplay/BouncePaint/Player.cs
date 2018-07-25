@@ -207,22 +207,26 @@ namespace BouncePaint {
 
             // Bounce and paint!
             bool wasBlockPainted = block.IsPainted;
-            //bodyColor = GetRandomHappyColor(); // Rando my colo!
+            if (!wasBlockPainted) {
+                bodyColor = GetRandomHappyColor(); // Rando my colo!
+            }
             block.OnPlayerBounceOnMe(bodyColor, vel);
             bool didPaintBlock = !wasBlockPainted && block.IsPainted;
             gameController.OnPlayerBounceOnBlock(this, didPaintBlock);
 
-            // TEST
-            if (!wasBlockPainted && gameController.IsLevelComplete) {
-                block.OnPlayerBounceOnMe(bodyColor, vel);
-                block.OnPlayerBounceOnMe(bodyColor, vel);
+            bool isWinningPaintHit = !wasBlockPainted && gameController.IsLevelComplete;
+            // Winning hit??
+            if (isWinningPaintHit) {
+                block.DipExtraFromWinningBounce(vel);
                 stretch -= 0.75f;
             }
-
-            // Choose the next block to go to!!
-            Block nextBlock = GetRandomAvailableBlock(block);
-            if (nextBlock != null) { // Is there a block to go to? Let's go to it!
-                SetBlockHeadingTo(nextBlock);
+            // Regular, non-winning hit??
+            else {
+                // Choose a new block to go to!!
+                Block nextBlock = GetRandomAvailableBlock(block);
+                if (nextBlock != null) { // Is there a block to go to? Let's go to it!
+                    SetBlockHeadingTo(nextBlock);
+                }
             }
 
 
@@ -256,12 +260,12 @@ namespace BouncePaint {
                 startingPlayerColor = bodyColor; // set this now! I'M the color to emulate!
                 Invoke("DisableMyGameObject", 0.8f); // HARDCODED delay. Hide me once I'm off-screen so I don't show up again when this level animates down.
             }
-            // NOT bouncing offscreen?
-            else {
-                if (didPaintBlock) { // I just painted this guy! Now, rando my colo.
-                    bodyColor = GetRandomHappyColor();
-                }
-            }
+            //// NOT bouncing offscreen?
+            //else {
+            //    if (didPaintBlock) { // I just painted this guy! Now, rando my colo.
+            //        bodyColor = GetRandomHappyColor();
+            //    }
+            //}
         }
 
         private void SquishFromBounce() {
@@ -306,9 +310,11 @@ namespace BouncePaint {
 
             float boundsY = blockHeadingTo.HitBox.yMin;
             bool autoBounce = blockHeadingTo.IsSatisfied; // I automatically bounce on satisfied blocks. Matters for A) When the level's over, and B) Unpaintable Blocks.
+            //autoBounce = true; // Q for trailer recording
             if (autoBounce) { // If I'm auto-bouncing, set my bounds to the VISUAL top of the block! So it looks like a solid, proper bounce.
                 boundsY = blockHeadingTo.BlockTop;
             }
+
 
             // If I've passed too far into the block I'm heading towards, explode OR bounce me!
             if (vel.y<0 && bottomY<boundsY) {
