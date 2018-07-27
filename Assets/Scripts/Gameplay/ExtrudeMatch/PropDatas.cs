@@ -25,8 +25,10 @@ public class BoardSpaceData : BoardObjectData {
 
 public class TileData : BoardOccupantData {
 	public int colorID;
-	public TileData (BoardPos _boardPos, int _colorID) {
+    public int value;
+    public TileData (BoardPos _boardPos, int _colorID, int _value) {
 		boardPos = _boardPos;
 		colorID = _colorID;
+        value = _value;
 	}
 }

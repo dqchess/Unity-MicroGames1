@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ExtrudeMatch {
 	public class TileView : BoardOccupantView {
+        // Components
+        [SerializeField] private Text t_value;
 
 		// Getters
 		public static Color GetBodyColor(int _colorID) {
@@ -29,6 +32,9 @@ namespace ExtrudeMatch {
 
 			// Color me impressed!
 			i_body.color = GetBodyColor(_myObj.ColorID);
+
+            // Update value tekts
+            t_value.text = _myObj.Value.ToString();
 		}
 
 

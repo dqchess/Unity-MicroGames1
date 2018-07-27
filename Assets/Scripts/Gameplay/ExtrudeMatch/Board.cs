@@ -109,8 +109,8 @@ namespace ExtrudeMatch {
 		// ----------------------------------------------------------------
 		//  Adding / Removing
 		// ----------------------------------------------------------------
-		private Tile AddTile(BoardPos pos, int colorID) {
-			return AddTile(new TileData(pos, colorID));
+		private Tile AddTile(BoardPos pos, int colorID, int value) {
+            return AddTile(new TileData(pos, colorID, value));
 		}
 		private Tile AddTile (TileData data) {
 			Tile prop = new Tile (this, data);
@@ -137,7 +137,7 @@ namespace ExtrudeMatch {
 				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
 				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
 				int colorID = RandomTileColorID();
-				AddTile(randPos, colorID);
+				AddTile(randPos, colorID, 1);
 			}
 		}
 		public void ExtrudeTile(Tile tile) {
@@ -154,7 +154,7 @@ namespace ExtrudeMatch {
 		private void AddTileInDirAttempt(Tile tile, Vector2Int dir) {
 			if (CanExtrudeTileInDir(tile, dir)) {
 				BoardPos newTilePos = new BoardPos(tile.Col+dir.x,tile.Row+dir.y);
-				AddTile(newTilePos, tile.ColorID);
+                AddTile(newTilePos, tile.ColorID, tile.Value+1);
 			}
         }
         public int ClearCongruentTiles() {
