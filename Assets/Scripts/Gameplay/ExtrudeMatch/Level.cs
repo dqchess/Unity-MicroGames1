@@ -47,7 +47,7 @@ namespace ExtrudeMatch {
 			// Add initial tiles!
 			int numStartingTiles = Mathf.CeilToInt(board.NumCols*board.NumRows * 0.2f);
 			board.AddRandomTiles(numStartingTiles);
-			board.MergeCongruentTiles();
+			board.MatchCongruentTiles();
 //			board.CalculateScore();
 
 			// Update BoardView visuals!!
@@ -99,9 +99,9 @@ namespace ExtrudeMatch {
 			board.AddRandomTiles(1);
 			boardView.AnimateInNewTiles();
 
-			// Wait another moment, then merge all congruent tiles!
+			// Wait another moment, then match all congruent tiles!
 			yield return new WaitForSeconds(0.2f);
-			board.MergeCongruentTiles();
+			board.MatchCongruentTiles();
 			boardView.AnimateOutRemovedTiles();
 
 			// TODO: Update score

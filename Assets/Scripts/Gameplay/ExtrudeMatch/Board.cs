@@ -133,9 +133,19 @@ namespace ExtrudeMatch {
 				AddTile(newTilePos, tile.ColorID);
 			}
 		}
-		public void MergeCongruentTiles() {
+		public void MatchCongruentTiles() {
 			// TODO: This!
-		}
+        }
+        //void clearCongruentTiles() {
+        //    calculateTileGroups();
+
+        //    // Clear tiles in big groups!
+        //    for (int i=0; i<tileGroups.length; i++) {
+        //        if (tileGroups[i].length >= MIN_GROUP_SIZE) {
+        //            clearTilesInGroup(tileGroups[i]);
+        //        }
+        //    }
+        //}//*/
 
 
 
