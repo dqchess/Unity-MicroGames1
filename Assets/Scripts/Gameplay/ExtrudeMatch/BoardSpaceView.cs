@@ -37,8 +37,9 @@ namespace ExtrudeMatch {
 				GameUtils.SizeUIGraphic (i_border, _boardView.UnitSize+4,_boardView.UnitSize+4);
 				GameUtils.SizeUIGraphic (i_backing, diameter,diameter);
 
-				float fillS = Random.Range(0.2f, 0.25f);
-				float fillB = Random.Range(0.9f, 0.98f);
+                float fillS = Random.Range(0.2f, 0.25f);
+                //float fillB = Random.Range(0.9f, 0.98f);
+                float fillB = Random.Range(0.01f, 0.06f);
 				fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
 				i_backing.color = fillColor;
 				i_border.color = new ColorHSB(30/360f, 0.2f, 0.75f).ToColor();

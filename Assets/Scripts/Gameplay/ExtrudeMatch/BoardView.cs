@@ -12,7 +12,8 @@ namespace ExtrudeMatch {
 		[SerializeField] private Transform tf_boardSpaces;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
-		private List<BoardObjectView> allObjectViews; // includes EVERY single BoardObjectView!
+        //private List<BoardObjectView> allObjectViews; // includes EVERY single BoardObjectView!
+        private List<TileView> tileViews;
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
 		private Level levelRef;
@@ -23,7 +24,7 @@ namespace ExtrudeMatch {
 //		public Rect ViewRect { get { return viewRect; } }
 //		public Vector2 Pos { get { return viewRect.position; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
-		public List<BoardObjectView> AllObjectViews { get { return allObjectViews; } }
+		//public List<BoardObjectView> AllObjectViews { get { return tileViews; } }
 		public float UnitSize { get { return unitSize; } }
 
 		private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
@@ -38,27 +39,27 @@ namespace ExtrudeMatch {
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
 
-		/** Very inefficient. Just temporary. */
-		public BoardOccupantView TEMP_GetOccupantView (BoardOccupant _occupant) {
-			foreach (BoardObjectView objectView in allObjectViews) {
-				if (objectView is BoardOccupantView) {
-					if (objectView.MyBoardObject == _occupant) {
-						return objectView as BoardOccupantView;
-					}
-//				BoardOccupantView occupantView = objectView as BoardOccupantView;
-				}
-			}
-			return null; // oops.
-		}
-		/** Very inefficient. Just temporary. */
-		public BoardObjectView TEMP_GetObjectView (BoardObject bo) {
-			foreach (BoardObjectView objectView in allObjectViews) {
-				if (objectView.MyBoardObject == bo) {
-					return objectView;
-				}
-			}
-			return null; // oops.
-		}
+//		/** Very inefficient. Just temporary. */
+//		public BoardOccupantView TEMP_GetOccupantView (BoardOccupant _occupant) {
+//			foreach (BoardObjectView objectView in tileViews) {
+//				if (objectView is BoardOccupantView) {
+//					if (objectView.MyBoardObject == _occupant) {
+//						return objectView as BoardOccupantView;
+//					}
+////				BoardOccupantView occupantView = objectView as BoardOccupantView;
+		//		}
+		//	}
+		//	return null; // oops.
+		//}
+		///** Very inefficient. Just temporary. */
+		//public BoardObjectView TEMP_GetObjectView (BoardObject bo) {
+		//	foreach (BoardObjectView objectView in tileViews) {
+		//		if (objectView.MyBoardObject == bo) {
+		//			return objectView;
+		//		}
+		//	}
+		//	return null; // oops.
+		//}
 		private Rect TEMP_availableArea; // TEMP DEBUG
 //		private void OnDrawGizmos () {
 //			Gizmos.color = Color.yellow;
@@ -87,7 +88,7 @@ namespace ExtrudeMatch {
 				}
 			}
 			// Clear out all my lists!
-			allObjectViews = new List<BoardObjectView> ();
+			tileViews = new List<TileView>();
 			foreach (Tile bo in myBoard.tiles) { AddTileView (bo); }
 
 			// Look right right away!
@@ -118,7 +119,7 @@ namespace ExtrudeMatch {
 		TileView AddTileView (Tile data) {
 			TileView newObj = Instantiate(resourcesHandler.extrudeMatch_tileView).GetComponent<TileView>();
 			newObj.Initialize (this, data);
-			allObjectViews.Add (newObj);
+			tileViews.Add (newObj);
 			return newObj;
 		}
 
@@ -140,13 +141,13 @@ namespace ExtrudeMatch {
             // Clear out the list! We've used 'em.
             myBoard.tilesAddedThisMove.Clear();
         }
-		public void AnimateOutRemovedTiles() {
-			for (int i=allObjectViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
-				if (!allObjectViews[i].MyBoardObject.IsInPlay) {
-					// Destroy the object.
-					GameObject.Destroy (allObjectViews[i].gameObject);
+        public void AnimateOutRemovedTiles(RemovalTypes removalType) {
+            for (int i=tileViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
+				if (!tileViews[i].MyBoardObject.IsInPlay) {
+                    // It'll animate out and destroy itself.
+                    tileViews[i].AnimateOut(removalType);
 					// Remove it from the list of views.
-					allObjectViews.RemoveAt(i);
+					tileViews.RemoveAt(i);
 				}
 			}
 		}
@@ -167,12 +168,12 @@ namespace ExtrudeMatch {
 //			myBoard.objectsAddedThisMove.Clear();
 //		}
 		private void RemoveViewsNotInPlay() {
-			for (int i=allObjectViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
-				if (!allObjectViews[i].MyBoardObject.IsInPlay) {
+			for (int i=tileViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
+				if (!tileViews[i].MyBoardObject.IsInPlay) {
 					// Destroy the object.
-					GameObject.Destroy (allObjectViews[i].gameObject);
+					GameObject.Destroy (tileViews[i].gameObject);
 					// Remove it from the list of views.
-					allObjectViews.RemoveAt(i);
+					tileViews.RemoveAt(i);
 				}
 			}
 		}

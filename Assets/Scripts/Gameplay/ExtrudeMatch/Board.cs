@@ -5,13 +5,16 @@ using UnityEngine;
 namespace ExtrudeMatch {
 	[System.Serializable]
 	public class Board {
+        // Constants
+        private const int MIN_GROUP_SIZE = 3;
 		// Properties
 		private int numCols,numRows;
-		// Reference Lists
-		public List<Tile> tilesAddedThisMove;
 		// Objects
 		public BoardSpace[,] spaces;
-		public List<Tile> tiles;
+        public List<Tile> tiles;
+        // Reference Lists
+        public List<Tile> tilesAddedThisMove; // so the view knows what TileViews to add.
+        private List<List<Tile>> tileGroups; // for finding congruent groups of tiles
 
 		// Getters
 		public int NumCols { get { return numCols; } }
@@ -19,7 +22,8 @@ namespace ExtrudeMatch {
 
 		public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
 		public BoardSpace[,] Spaces { get { return spaces; } }
-		public Tile GetTile(Vector2Int pos) { return BoardUtils.GetOccupant(this, pos.x,pos.y) as Tile; }
+        public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
+        public Tile GetTile(int col,int row) { return BoardUtils.GetOccupant(this, col,row) as Tile; }
 
 		public Board Clone () {
 			BoardData data = SerializeAsData();
@@ -132,20 +136,50 @@ namespace ExtrudeMatch {
 				BoardPos newTilePos = new BoardPos(tile.Col+dir.x,tile.Row+dir.y);
 				AddTile(newTilePos, tile.ColorID);
 			}
-		}
-		public void MatchCongruentTiles() {
-			// TODO: This!
         }
-        //void clearCongruentTiles() {
-        //    calculateTileGroups();
+        public void ClearCongruentTiles() {
+            CalculateTileGroups();
 
-        //    // Clear tiles in big groups!
-        //    for (int i=0; i<tileGroups.length; i++) {
-        //        if (tileGroups[i].length >= MIN_GROUP_SIZE) {
-        //            clearTilesInGroup(tileGroups[i]);
-        //        }
-        //    }
-        //}//*/
+            for (int i=0; i<tileGroups.Count; i++) {
+                if (tileGroups[i].Count >= MIN_GROUP_SIZE) {
+                    ClearTilesInGroup(tileGroups[i]);
+                }
+            }
+        }
+
+
+        // ----------------------------------------------------------------
+        //  Tile Group-Finding
+        // ----------------------------------------------------------------
+        private void CalculateTileGroups() {
+            // FIRST, tell all tiles they're not used in the search algorithm
+            for (int i=0; i<tiles.Count; i++) {
+                tiles[i].WasUsedInSearchAlgorithm = false;
+            }
+            tileGroups = new List<List<Tile>>();
+            for (int i=tiles.Count-1; i>=0; --i) {
+                tileGroups.Add(new List<Tile>());
+                RecursiveTileFinding(tiles[i].Col,tiles[i].Row, tiles[i].ColorID);
+            }
+        }
+        void RecursiveTileFinding(int col,int row, int colorID) {
+            Tile tileHere = GetTile(col,row);
+            if (tileHere==null || tileHere.WasUsedInSearchAlgorithm) { return; } // No unused tile here? Stop.
+            if (tileHere.ColorID != colorID) { return; } // Not a match? Stop.
+            //if (tileGroups[tileGroups.Count-1].Count >= 2) return; // if this group is BIGGER THAN 2, then return. This is a shoehorn to change the mechanic without changing this algorithm.
+            tileHere.WasUsedInSearchAlgorithm = true;
+            tileGroups[tileGroups.Count-1].Add(tileHere);
+            if (col>0) { RecursiveTileFinding(col-1,row, colorID); }
+            if (row>0) { RecursiveTileFinding(col,row-1, colorID); }
+            if (col<numCols-1) { RecursiveTileFinding(col+1,row, colorID); }
+            if (row<numRows-1) { RecursiveTileFinding(col,row+1, colorID); }
+        }
+        void ClearTilesInGroup(List<Tile> tilesInGroup) {
+            for (int i=0; i<tilesInGroup.Count; i++) {
+                tilesInGroup[i].RemoveFromPlay();
+                //tilesInGroup[i].onMatchedInGroup();
+            }
+        }
 
 
 

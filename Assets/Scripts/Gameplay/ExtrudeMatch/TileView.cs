@@ -41,7 +41,7 @@ namespace ExtrudeMatch {
             Vector2 targetPos = Pos;
             float targetScale = 1;
 
-            Scale = 0.2f; // shrink me down
+            Scale = 0f; // shrink me down
 
             // If I came from a source, then start me there and animate me to my actual position!
             if (sourceTile != null) {
@@ -49,7 +49,7 @@ namespace ExtrudeMatch {
                 Pos = sourcePos;
             }
             // Animate!
-            float easing = 0.4f; // higher is faster.
+            float easing = 0.5f; // higher is faster.
             while (Pos!=targetPos || Scale!=targetScale) {
                 Pos += new Vector2((targetPos.x-Pos.x)*easing, (targetPos.y-Pos.y)*easing);
                 Scale += (targetScale-Scale) * easing;
@@ -57,6 +57,29 @@ namespace ExtrudeMatch {
                 if (Mathf.Approximately(Scale,targetScale)) { Scale = targetScale; } // Almost there? Get it!
                 yield return null;
             }
+        }
+
+        public void AnimateOut(RemovalTypes rt) {
+            StartCoroutine(Coroutine_AnimateOut(rt));
+        }
+        private IEnumerator Coroutine_AnimateOut(RemovalTypes rt) {
+            // I've been matched! Fade me before disappearing. :)
+            if (rt == RemovalTypes.Matched) {
+                //for (int i=0; i<6; i++) {
+                //    float alpha = i%2==0 ? 0.3f : 0.9f;
+                //    GameUtils.SetUIGraphicAlpha(i_body, alpha);
+                //    yield return new WaitForSeconds(0.08f);
+                //}
+                i_body.color = Color.Lerp(i_body.color, Color.white, 0.7f);
+                GameUtils.SetUIGraphicAlpha(i_body, 0.9f);
+                yield return new WaitForSeconds(0.5f);
+                yield return null;
+            }
+            // I've been clicked on as the source of an extrusion! Just let me disappear right away.
+            else if (rt == RemovalTypes.ExtrudeSource) { }
+
+            // Finally, totally destroy my GameObject!
+            Destroy(this.gameObject);
         }
 	}
 }

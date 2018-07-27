@@ -5,10 +5,11 @@ using UnityEngine;
 namespace ExtrudeMatch {
 	public class Level : MonoBehaviour {
 		// Components
-		[SerializeField] private RectTransform myRectTransform;
+		[SerializeField] private RectTransform myRectTransform=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
-		// Variable Properties
+		// Properties
+        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private bool isLevelOver = false;
 //		private Vector2Int mousePosBoard=new Vector2Int();
 		// References
@@ -22,6 +23,7 @@ namespace ExtrudeMatch {
 
 
 		private bool CanMakeAnyMove () {
+            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
 			if (isLevelOver) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
 		}
@@ -47,7 +49,7 @@ namespace ExtrudeMatch {
 			// Add initial tiles!
 			int numStartingTiles = Mathf.CeilToInt(board.NumCols*board.NumRows * 0.2f);
 			board.AddRandomTiles(numStartingTiles);
-			board.MatchCongruentTiles();
+			board.ClearCongruentTiles();
 //			board.CalculateScore();
 
 			// Update BoardView visuals!!
@@ -90,23 +92,29 @@ namespace ExtrudeMatch {
 			StartCoroutine(Coroutine_ExtrudeTileSeq(tile));
 		}
 		private IEnumerator Coroutine_ExtrudeTileSeq(Tile tile) {
+            isAnimatingTiles = true;
+
 			// Extrude the tile!
 			board.ExtrudeTile(tile);
             // Remove the removed view and animate in the new guys!
-            boardView.AnimateOutRemovedTiles();
+            boardView.AnimateOutRemovedTiles(RemovalTypes.ExtrudeSource);
             boardView.AnimateInNewTilesFromSource(tile);
 
-			// Wait a moment, then add a new random tile!
+			// Wait a moment, then match all congruent tiles!
 			yield return new WaitForSeconds(0.2f);
-			board.AddRandomTiles(1);
+			board.ClearCongruentTiles();
+            boardView.AnimateOutRemovedTiles(RemovalTypes.Matched);
+
+            // Wait a moment, then add a new random tile!
+            yield return new WaitForSeconds(0.6f);
+            board.AddRandomTiles(1);
             boardView.AnimateInNewTilesFromSource(null);
 
-			// Wait another moment, then match all congruent tiles!
-			yield return new WaitForSeconds(0.2f);
-			board.MatchCongruentTiles();
-			boardView.AnimateOutRemovedTiles();
-
 			// TODO: Update score
+
+            // Wait one last moment (for the new tile to animate in) before returning control to the player.
+            yield return new WaitForSeconds(0.06f);
+            isAnimatingTiles = false;
 		}
 
 
@@ -155,7 +163,7 @@ namespace ExtrudeMatch {
 			}
 		}
 		private void OnTouchDown() {
-			if (isLevelOver) { return; } // If the level's over, do nothing.
+            if (!CanMakeAnyMove()) { return; } // If the Dark Lord says not to make a move, you musn't, Cissy!
 
 			Vector2Int mousePosBoard = GetMousePosBoard();
 			Tile tileOver = board.GetTile(mousePosBoard);
