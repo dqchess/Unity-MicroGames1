@@ -41,7 +41,7 @@ namespace ExtrudeMatch {
 				OnSetScale ();
 			}
 		}
-		private Vector2 GetPosFromBO (BoardObject _bo) {
+        protected Vector2 GetPosFromBO (BoardObject _bo) {
 			return new Vector2 (myBoardView.BoardToX (_bo.Col), myBoardView.BoardToY (_bo.Row));
 		}
 		private float GetRotationFromBO (BoardObject _bo) {

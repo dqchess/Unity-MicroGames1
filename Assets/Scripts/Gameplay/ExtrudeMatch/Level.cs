@@ -51,7 +51,7 @@ namespace ExtrudeMatch {
 //			board.CalculateScore();
 
 			// Update BoardView visuals!!
-			boardView.AnimateInNewTiles(); // TODO: Clean this up!
+            boardView.AnimateInNewTilesFromSource(null); // TODO: Clean this up!
 		}
 		public void DestroySelf () {
 			// Tell my boardView it's toast!
@@ -92,12 +92,14 @@ namespace ExtrudeMatch {
 		private IEnumerator Coroutine_ExtrudeTileSeq(Tile tile) {
 			// Extrude the tile!
 			board.ExtrudeTile(tile);
-			boardView.AnimateInNewTiles();
+            // Remove the removed view and animate in the new guys!
+            boardView.AnimateOutRemovedTiles();
+            boardView.AnimateInNewTilesFromSource(tile);
 
 			// Wait a moment, then add a new random tile!
 			yield return new WaitForSeconds(0.2f);
 			board.AddRandomTiles(1);
-			boardView.AnimateInNewTiles();
+            boardView.AnimateInNewTilesFromSource(null);
 
 			// Wait another moment, then match all congruent tiles!
 			yield return new WaitForSeconds(0.2f);
@@ -127,16 +129,17 @@ namespace ExtrudeMatch {
 			//		UpdateMousePos();
 			//		UpdateMousePosBoard();
 			RegisterMouseInput();
+            //GetMousePosBoard();//
 		}
 
 		private Vector2Int GetMousePosBoard() {
 			Vector2 mousePosScaled = Input.mousePosition/gameController.Canvas.scaleFactor;
 			float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
 			mousePosScaled = new Vector2(mousePosScaled.x, canvasHeight-mousePosScaled.y); // convert to top-left space.
-			mousePosScaled -= boardView.Pos;
+			mousePosScaled += boardView.Pos;
 			int col = Mathf.FloorToInt(mousePosScaled.x / (float)boardView.UnitSize);
 			int row = Mathf.FloorToInt(mousePosScaled.y / (float)boardView.UnitSize);
-//			print("mousePosBoard: " + col+","+row + "   mousePosScaled: " + mousePosScaled);
+			//print("mousePosBoard: " + col+","+row + "   mousePosScaled: " + mousePosScaled);
 			return new Vector2Int(col,row);
 		}
 

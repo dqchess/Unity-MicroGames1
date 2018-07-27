@@ -30,5 +30,33 @@ namespace ExtrudeMatch {
 			i_body.color = GetBodyColor(_myObj.ColorID);
 		}
 
+
+        // ----------------------------------------------------------------
+        //  Animating
+        // ----------------------------------------------------------------
+        public void AnimateIn(Tile sourceTile) {
+            StartCoroutine(Coroutine_AnimateIn(sourceTile));
+        }
+        private IEnumerator Coroutine_AnimateIn(Tile sourceTile) {
+            Vector2 targetPos = Pos;
+            float targetScale = 1;
+
+            Scale = 0.2f; // shrink me down
+
+            // If I came from a source, then start me there and animate me to my actual position!
+            if (sourceTile != null) {
+                Vector2 sourcePos = GetPosFromBO(sourceTile);
+                Pos = sourcePos;
+            }
+            // Animate!
+            float easing = 0.4f; // higher is faster.
+            while (Pos!=targetPos || Scale!=targetScale) {
+                Pos += new Vector2((targetPos.x-Pos.x)*easing, (targetPos.y-Pos.y)*easing);
+                Scale += (targetScale-Scale) * easing;
+                if (Vector2.Distance(Pos,targetPos)<0.5f) { Pos = targetPos; } // Almost there? Get it!
+                if (Mathf.Approximately(Scale,targetScale)) { Scale = targetScale; } // Almost there? Get it!
+                yield return null;
+            }
+        }
 	}
 }

@@ -73,7 +73,7 @@ namespace ExtrudeMatch {
 			myBoard = _myBoard;
 			this.transform.SetParent (levelRef.transform);
 			this.transform.localScale = Vector3.one;
-			myRectTransform.anchoredPosition =Vector2.zero;//QQQ new Vector2(0,-200);
+			myRectTransform.anchoredPosition = new Vector2(0,-200);
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
@@ -91,7 +91,7 @@ namespace ExtrudeMatch {
 			foreach (Tile bo in myBoard.tiles) { AddTileView (bo); }
 
 			// Look right right away!
-			AnimateInNewTiles();
+            AnimateInNewTilesFromSource(null);
 		}
 		public void DestroySelf () {
 			// Destroy my entire GO.
@@ -132,13 +132,14 @@ namespace ExtrudeMatch {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		public void AnimateInNewTiles() {
-			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
-				AddObjectView (bo);
-			}
-			// Clear out the list! We've used 'em.
-			myBoard.objectsAddedThisMove.Clear();
-		}
+        public void AnimateInNewTilesFromSource(Tile sourceTile) {
+            foreach (Tile t in myBoard.tilesAddedThisMove) {
+                TileView newTV = AddTileView (t);
+                newTV.AnimateIn(sourceTile);
+            }
+            // Clear out the list! We've used 'em.
+            myBoard.tilesAddedThisMove.Clear();
+        }
 		public void AnimateOutRemovedTiles() {
 			for (int i=allObjectViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				if (!allObjectViews[i].MyBoardObject.IsInPlay) {

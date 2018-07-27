@@ -8,7 +8,7 @@ namespace ExtrudeMatch {
 		// Properties
 		private int numCols,numRows;
 		// Reference Lists
-		public List<BoardObject> objectsAddedThisMove;
+		public List<Tile> tilesAddedThisMove;
 		// Objects
 		public BoardSpace[,] spaces;
 		public List<Tile> tiles;
@@ -74,7 +74,7 @@ namespace ExtrudeMatch {
 			}
 		}
 		private void MakeEmptyPropLists () {
-			objectsAddedThisMove = new List<BoardObject>();
+			tilesAddedThisMove = new List<Tile>();
 
 			tiles = new List<Tile>();
 		}
@@ -93,7 +93,7 @@ namespace ExtrudeMatch {
 		private Tile AddTile (TileData data) {
 			Tile prop = new Tile (this, data);
 			tiles.Add (prop);
-			objectsAddedThisMove.Add(prop);
+			tilesAddedThisMove.Add(prop);
 			return prop;
 		}
 
