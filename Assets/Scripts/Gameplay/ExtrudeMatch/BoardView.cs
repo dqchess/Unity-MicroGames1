@@ -74,7 +74,9 @@ namespace ExtrudeMatch {
 			myBoard = _myBoard;
 			this.transform.SetParent (levelRef.transform);
 			this.transform.localScale = Vector3.one;
-			myRectTransform.anchoredPosition = new Vector2(0,-200);
+            // Position me nice and horz centered!
+            float parentWidth = levelRef.GetComponent<RectTransform>().rect.width;
+            myRectTransform.anchoredPosition = new Vector2((parentWidth-myRectTransform.rect.width)*0.5f,-200);
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
@@ -134,12 +136,12 @@ namespace ExtrudeMatch {
 		//  Doers
 		// ----------------------------------------------------------------
         public void AnimateInNewTilesFromSource(Tile sourceTile) {
-            foreach (Tile t in myBoard.tilesAddedThisMove) {
+            foreach (Tile t in myBoard.tilesRecentlyAdded) {
                 TileView newTV = AddTileView (t);
                 newTV.AnimateIn(sourceTile);
             }
             // Clear out the list! We've used 'em.
-            myBoard.tilesAddedThisMove.Clear();
+            myBoard.tilesRecentlyAdded.Clear();
         }
         public void AnimateOutRemovedTiles(RemovalTypes removalType) {
             for (int i=tileViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!

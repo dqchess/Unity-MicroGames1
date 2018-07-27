@@ -9,12 +9,15 @@ public static class SaveKeys {
     public const string VOLUME_SFX= "VolumeSfx";
 
 
-	// BouncePaint
-	public const string BouncePaint_HighestLevelUnlocked = "BouncePaint_HighestLevelUnlocked";
-	public const string BouncePaint_LastLevelPlayed = "BouncePaint_LastLevelPlayed";
-	public static string BouncePaint_NumLosses(int levelIndex) {
-		return "BouncePaint_NumLosses_Level" + levelIndex;
-	}
+    // BouncePaint
+    public const string BouncePaint_HighestLevelUnlocked = "BouncePaint_HighestLevelUnlocked";
+    public const string BouncePaint_LastLevelPlayed = "BouncePaint_LastLevelPlayed";
+    public static string BouncePaint_NumLosses(int levelIndex) {
+        return "BouncePaint_NumLosses_Level" + levelIndex;
+    }
+
+    // ExtrudeMatch
+    public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
 
 	// WaveTap
 	public const string WaveTap_HighestLevelUnlocked = "WaveTap_HighestLevelUnlocked";

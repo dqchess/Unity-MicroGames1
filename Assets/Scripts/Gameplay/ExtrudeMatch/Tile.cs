@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ExtrudeMatch {
-    public enum RemovalTypes { Matched, ExtrudeSource } // TODO: Put this in its own class, goro
-
 	public class Tile : BoardOccupant {
 		// Properties
 		private int colorID;

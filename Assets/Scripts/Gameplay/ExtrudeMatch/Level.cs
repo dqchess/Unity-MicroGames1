@@ -93,29 +93,44 @@ namespace ExtrudeMatch {
 		}
 		private IEnumerator Coroutine_ExtrudeTileSeq(Tile tile) {
             isAnimatingTiles = true;
+            int numTilesCleared = 0; // I'll add to this as we go along.
 
 			// Extrude the tile!
 			board.ExtrudeTile(tile);
             // Remove the removed view and animate in the new guys!
             boardView.AnimateOutRemovedTiles(RemovalTypes.ExtrudeSource);
             boardView.AnimateInNewTilesFromSource(tile);
+            yield return new WaitForSeconds(0.2f);
 
-			// Wait a moment, then match all congruent tiles!
-			yield return new WaitForSeconds(0.2f);
-			board.ClearCongruentTiles();
-            boardView.AnimateOutRemovedTiles(RemovalTypes.Matched);
+            // Match all congruent tiles! If we DID match, animate the view and wait for the animation.
+            if (ClearCongruentTiles()) {
+                yield return new WaitForSeconds(0.6f);
+            }
 
-            // Wait a moment, then add a new random tile!
-            yield return new WaitForSeconds(0.6f);
+            // Add a new random tile!
             board.AddRandomTiles(1);
             boardView.AnimateInNewTilesFromSource(null);
+            yield return new WaitForSeconds(0.2f);
 
-			// TODO: Update score
+            // Match all congruent tiles AGAIN! If we DID match, animate the view and wait for the animation.
+            if (ClearCongruentTiles()) {
+                yield return new WaitForSeconds(0.6f);
+            }
 
-            // Wait one last moment (for the new tile to animate in) before returning control to the player.
-            yield return new WaitForSeconds(0.06f);
             isAnimatingTiles = false;
+
+            // Is it game over, brah?
+            if (board.AreAllSpacesFilled()) {
+                gameController.GameOver();
+            }
 		}
+        private bool ClearCongruentTiles() {
+            int numCleared = board.ClearCongruentTiles();
+            boardView.AnimateOutRemovedTiles(RemovalTypes.Matched);
+            // Increase our score!
+            gameController.AddToScore(numCleared*10); // HARDCODED score scale. 10 points per tile cleared.
+            return numCleared>0;
+        }
 
 
 		// ----------------------------------------------------------------
@@ -144,7 +159,7 @@ namespace ExtrudeMatch {
 			Vector2 mousePosScaled = Input.mousePosition/gameController.Canvas.scaleFactor;
 			float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
 			mousePosScaled = new Vector2(mousePosScaled.x, canvasHeight-mousePosScaled.y); // convert to top-left space.
-			mousePosScaled += boardView.Pos;
+            mousePosScaled += new Vector2(-boardView.Pos.x, boardView.Pos.y); // Note: Idk why negative...
 			int col = Mathf.FloorToInt(mousePosScaled.x / (float)boardView.UnitSize);
 			int row = Mathf.FloorToInt(mousePosScaled.y / (float)boardView.UnitSize);
 			//print("mousePosBoard: " + col+","+row + "   mousePosScaled: " + mousePosScaled);

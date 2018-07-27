@@ -9,11 +9,12 @@ namespace ExtrudeMatch {
         private const int MIN_GROUP_SIZE = 3;
 		// Properties
 		private int numCols,numRows;
+        private int numMovesMade;
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
         // Reference Lists
-        public List<Tile> tilesAddedThisMove; // so the view knows what TileViews to add.
+        public List<Tile> tilesRecentlyAdded; // so the view knows what TileViews to add.
         private List<List<Tile>> tileGroups; // for finding congruent groups of tiles
 
 		// Getters
@@ -40,8 +41,24 @@ namespace ExtrudeMatch {
 			return bd;
 		}
 
+        public bool AreAllSpacesFilled() {
+            for (int col=0; col<numCols; col++) {
+                for (int row=0; row<numRows; row++) {
+                    if (spaces[col,row].IsOpen()) { return false; }
+                }
+            }
+            return true;
+        }
+
 		private int RandomTileColorID() {
-			return Random.Range(0, 4);
+            if (numMovesMade <= 3) { return Random.Range(0, 3); }
+            else if (numMovesMade <= 8) { return Random.Range(0, 4); }
+            else if (numMovesMade <= 18) { return Random.Range(0, 5); }
+            //// Now, *usually* prefer one of 5 colors. (Aka red will appear as an infrequent obstacle.)
+            //if (Random.Range(0f,1f) < 0.5f) {
+            //    return Random.Range(0, 5);
+            //}
+            return Random.Range(0, 6);
 		}
 		public bool CanExtrudeTile(Tile tile) {
 			return CanExtrudeTileInDir(tile, Vector2Int.T)
@@ -62,6 +79,7 @@ namespace ExtrudeMatch {
 		public Board (BoardData bd) {
 			numCols = bd.numCols;
 			numRows = bd.numRows;
+            numMovesMade = 0;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -78,7 +96,7 @@ namespace ExtrudeMatch {
 			}
 		}
 		private void MakeEmptyPropLists () {
-			tilesAddedThisMove = new List<Tile>();
+			tilesRecentlyAdded = new List<Tile>();
 
 			tiles = new List<Tile>();
 		}
@@ -97,7 +115,7 @@ namespace ExtrudeMatch {
 		private Tile AddTile (TileData data) {
 			Tile prop = new Tile (this, data);
 			tiles.Add (prop);
-			tilesAddedThisMove.Add(prop);
+			tilesRecentlyAdded.Add(prop);
 			return prop;
 		}
 
@@ -130,6 +148,8 @@ namespace ExtrudeMatch {
 			AddTileInDirAttempt(tile, Vector2Int.L);
 			// Remove the source Tile.
 			tile.RemoveFromPlay();
+            // We made a move!
+            numMovesMade ++;
 		}
 		private void AddTileInDirAttempt(Tile tile, Vector2Int dir) {
 			if (CanExtrudeTileInDir(tile, dir)) {
@@ -137,14 +157,16 @@ namespace ExtrudeMatch {
 				AddTile(newTilePos, tile.ColorID);
 			}
         }
-        public void ClearCongruentTiles() {
+        public int ClearCongruentTiles() {
             CalculateTileGroups();
-
+            int numTilesCleared = 0;
             for (int i=0; i<tileGroups.Count; i++) {
                 if (tileGroups[i].Count >= MIN_GROUP_SIZE) {
                     ClearTilesInGroup(tileGroups[i]);
+                    numTilesCleared += tileGroups[i].Count;
                 }
             }
+            return numTilesCleared;
         }
 
 
@@ -162,7 +184,7 @@ namespace ExtrudeMatch {
                 RecursiveTileFinding(tiles[i].Col,tiles[i].Row, tiles[i].ColorID);
             }
         }
-        void RecursiveTileFinding(int col,int row, int colorID) {
+        private void RecursiveTileFinding(int col,int row, int colorID) {
             Tile tileHere = GetTile(col,row);
             if (tileHere==null || tileHere.WasUsedInSearchAlgorithm) { return; } // No unused tile here? Stop.
             if (tileHere.ColorID != colorID) { return; } // Not a match? Stop.
@@ -174,10 +196,9 @@ namespace ExtrudeMatch {
             if (col<numCols-1) { RecursiveTileFinding(col+1,row, colorID); }
             if (row<numRows-1) { RecursiveTileFinding(col,row+1, colorID); }
         }
-        void ClearTilesInGroup(List<Tile> tilesInGroup) {
+        private void ClearTilesInGroup(List<Tile> tilesInGroup) {
             for (int i=0; i<tilesInGroup.Count; i++) {
                 tilesInGroup[i].RemoveFromPlay();
-                //tilesInGroup[i].onMatchedInGroup();
             }
         }
 

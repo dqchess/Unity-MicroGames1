@@ -38,12 +38,12 @@ namespace ExtrudeMatch {
 				GameUtils.SizeUIGraphic (i_backing, diameter,diameter);
 
                 float fillS = Random.Range(0.2f, 0.25f);
-                //float fillB = Random.Range(0.9f, 0.98f);
-                float fillB = Random.Range(0.01f, 0.06f);
+                float fillB = Random.Range(0.9f, 0.98f);
+                //float fillB = Random.Range(0.01f, 0.06f);
 				fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
 				i_backing.color = fillColor;
 				i_border.color = new ColorHSB(30/360f, 0.2f, 0.75f).ToColor();
-				i_border.enabled = false; // QQQ
+                i_border.enabled = false; // note: DISABLED borders!
 			}
 			// NOT playable? Destroy my sprites and do nothing.
 			else {

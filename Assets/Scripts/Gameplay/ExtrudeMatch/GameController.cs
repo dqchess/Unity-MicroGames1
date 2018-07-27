@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace ExtrudeMatch {
 	public class GameController : BaseGameController {
+        // Properties
+        private int score;
 		// Objects
 		private Level currentLevel;
 		// References
@@ -26,6 +28,32 @@ namespace ExtrudeMatch {
 		}
 
 
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        private void SetScore(int _score) {
+            score = _score;
+            // Update best score!
+            int bestScore = SaveStorage.GetInt(SaveKeys.ExtrudeMatch_BestScore, 0);
+            if (score >= bestScore) {
+                SaveStorage.SetInt(SaveKeys.ExtrudeMatch_BestScore, score);
+            }
+            // Update UI!
+            ui.UpdateScoreTexts(score);
+        }
+        public void AddToScore(int _value) {
+            SetScore(score + _value);
+        }
+
+
+        // ----------------------------------------------------------------
+        //  Game Events
+        // ----------------------------------------------------------------
+        public void GameOver() {
+            ui.OnGameOver();
+        }
+
+
 
 		// ----------------------------------------------------------------
 		//  Doers - Loading Level
@@ -39,15 +67,18 @@ namespace ExtrudeMatch {
 			//		ui.ShowLoadingOverlay (); Actually don't. It flashes too quickly. Kinda jarring.
 			yield return null;
 
-			// Reset some values
-			DestroyCurrentLevel ();
+            // Destroy the previous level.
+            DestroyCurrentLevel ();
+
+            // Reset some values
+            SetScore(0);
 
 			// Instantiate the Level from the provided LevelData!
 			currentLevel = ((GameObject) Instantiate (resourcesHandler.extrudeMatch_level)).GetComponent<Level>();
 			currentLevel.Initialize (this, canvas.transform);
 
-//			// Reset camera!
-//			cameraController.Reset ();
+			// Tell the people!
+            ui.OnStartLevel();
 //			// Dispatch event!
 //			GameManagers.Instance.EventManager.OnStartGameAtLevel (currentLevel);
 
