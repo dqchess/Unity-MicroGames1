@@ -1057,17 +1057,6 @@ namespace BouncePaint {
                 AddBlock(bs,  180,b).SetDontTap().SetUnpaintable();
                 AddBlock(bs,  240,b).SetDontTap().SetUnpaintable();
             }
-            //QQQ remove this level
-            else if (li == i++) { // Intersecting dangling strings
-                AddBlock(bs, new Vector2(-160,b    ), new Vector2( 160,b    )).SetSpeed(0.8f, 0f);
-                AddBlock(bs, new Vector2( 160,b+50 ), new Vector2(-160,b+50 )).SetSpeed(0.8f, 0.2f);
-                AddBlock(bs, new Vector2(-160,b+100), new Vector2( 160,b+100)).SetSpeed(0.8f, 0.4f);
-                AddBlock(bs, new Vector2( 160,b+150), new Vector2(-160,b+150)).SetSpeed(0.8f, 0.6f);
-                AddBlock(bs, new Vector2(-160,b+200), new Vector2( 160,b+200)).SetSpeed(0.8f, 0.8f);
-                AddBlock(bs, new Vector2( 160,b+250), new Vector2(-160,b+250)).SetSpeed(0.8f, 1f);
-                AddBlock(bs, new Vector2(-160,b+300), new Vector2( 160,b+300)).SetSpeed(0.8f, 1.2f);//.SetDontTap();
-                AddBlock(bs, new Vector2( 160,b+350), new Vector2(-160,b+350)).SetSpeed(0.8f, 1.4f);//.SetDontTap();
-            }
             else if (li == i++) {
                 gameController.PlayerGravityScale = 0.8f;
                 AddPlayer();
@@ -1076,7 +1065,7 @@ namespace BouncePaint {
                 AddBlock(bs, -240,b    ).SetDontTap().SetUnpaintable();
                 AddBlock(bs, -180,b    ).SetDontTap().SetUnpaintable();
                 AddBlock(bs, -120,b    ).SetDontTap().SetUnpaintable();
-                AddBlock(new Vector2(140,140),    0,b+100).SetHitsReq(4);//QQQ 8
+				AddBlock(new Vector2(140,140),    0,b+100).SetHitsReq(8);
                 AddBlock(bs,  120,b    ).SetDontTap().SetUnpaintable();
                 AddBlock(bs,  180,b    ).SetDontTap().SetUnpaintable();
                 AddBlock(bs,  240,b    ).SetDontTap().SetUnpaintable();

@@ -37,7 +37,8 @@ namespace BouncePaint {
         }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
-        private float fts { get { return TimeController.FrameTimeScale; } }
+        //private float fts { get { return TimeController.FrameTimeScale; } }
+        private float timeScale { get { return Time.timeScale; } }
         private Color bodyColor {
             get { return i_body.color; }
             set { i_body.color = value; }
@@ -122,8 +123,8 @@ namespace BouncePaint {
         }
 
         private float GetGravityY(int levelIndex) {
-            //float baseGravity = -0.35f - levelIndex*0.002f;
-            float baseGravity = (-0.35f - levelIndex*0.003f) * 0.8f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
+            float baseGravity = -0.35f - levelIndex*0.002f;
+            //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.8f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
         private float GetFallHeightNeutral(int levelIndex) {
@@ -287,7 +288,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Update
         // ----------------------------------------------------------------
-        private void FixedUpdate () {
+        private void Update () {
             if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
             if (gameController.IsFUEPlayerFrozen) { return; } // I'm all frozen? Do nothin'.
@@ -300,17 +301,17 @@ namespace BouncePaint {
             UpdateScaleRotation();
         }
         private void ApplyGravity() {
-            vel += gravity;// * fts;
+            vel += gravity * timeScale;
         }
         private void ApplyVel() {
-            pos += vel;// * fts;
+            pos += vel * timeScale;
         }
         private void ApplyBounds() {
             if (blockHeadingTo == null) { return; } // Safety check.
 
             float boundsY = blockHeadingTo.HitBox.yMin;
-            bool autoBounce = blockHeadingTo.IsSatisfied; // I automatically bounce on satisfied blocks. Matters for A) When the level's over, and B) Unpaintable Blocks.
-            //autoBounce = true; // Q for trailer recording
+            bool autoBounce = blockHeadingTo.IsSatisfied || !blockHeadingTo.DoTap; // I automatically bounce on satisfied OR don't-tap Blocks. Matters for A) When the level's over, and B) Unpaintable/Don't-tap Blocks.
+            autoBounce = true; // QQQ
             if (autoBounce) { // If I'm auto-bouncing, set my bounds to the VISUAL top of the block! So it looks like a solid, proper bounce.
                 boundsY = blockHeadingTo.BlockTop;
             }

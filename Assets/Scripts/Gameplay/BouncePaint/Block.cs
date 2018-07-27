@@ -30,12 +30,17 @@ namespace BouncePaint {
 		private int numHitsReq;
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
         // References
-        [SerializeField] private Sprite s_bodyDontTap;
+        [SerializeField] private Sprite s_bodyDontTap=null;
         private GameController gameController;
         private Level myLevel;
         // Editor-Settable Properties
-        [Header("SM Changes")]
+        [Header("Hitbox")]
         public float hitboxYOffset;
+        public float hitboxHeight=38f;
+        /// For when we make hitbox changes in the inspector! Updates us in real-time. :)
+        void OnValidate() {
+            UpdateHitBox();
+        }
 
 
 		// Getters (Public)
@@ -68,11 +73,14 @@ namespace BouncePaint {
 			get { return myRectTransform.anchoredPosition; }
 			set {
 				myRectTransform.anchoredPosition = value;
-				UpdateHitBoxPos();
+				UpdateHitBox();
 			}
-		}
-        private void UpdateHitBoxPos() {
-            // Update center.
+        }
+        //private float fts { get { return TimeController.FrameTimeScale; } }
+        private float timeScale { get { return Time.timeScale; } }
+        private void UpdateHitBox() {
+            // Update size and center!
+            hitBox.size = new Vector2(size.x+40, hitboxHeight); // Fudgily bloat the hitBox's width a bit (in case the block or ball are moving fast horizontally).
 			hitBox.center = new Vector2(
                 center.x,
                 center.y + (size.y+hitBox.height)*0.5f + hitboxYOffset);
@@ -107,10 +115,7 @@ namespace BouncePaint {
 
             // Make hitBox!
             hitBox = new Rect();
-            hitBox.size = new Vector2(size.x, 38);
-            // Fudgily bloat the hitBox's width a bit (in case the block or ball are moving fast horizontally).
-            hitBox.size += new Vector2(40, 0);
-            UpdateHitBoxPos();
+            UpdateHitBox();
 
 			// Now put/size me where I belong!
             myRectTransform.sizeDelta = size;
@@ -251,9 +256,9 @@ namespace BouncePaint {
 
 
         // ----------------------------------------------------------------
-        //  FixedUpdate
+        //  Update
         // ----------------------------------------------------------------
-        private void FixedUpdate() {
+        private void Update() {
             if (Time.timeScale == 0) { return; } // No time? No dice.
             if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 
@@ -263,7 +268,7 @@ namespace BouncePaint {
         }
 		private void UpdateTravel() {
 			if (doTravel) {
-				travelOscVal += travelSpeed;
+				travelOscVal += travelSpeed * timeScale;
 			}
 		}
         private void UpdatePosOffsets() {
