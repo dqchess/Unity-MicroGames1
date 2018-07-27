@@ -311,7 +311,7 @@ namespace BouncePaint {
 
             float boundsY = blockHeadingTo.HitBox.yMin;
             bool autoBounce = blockHeadingTo.IsSatisfied || !blockHeadingTo.DoTap; // I automatically bounce on satisfied OR don't-tap Blocks. Matters for A) When the level's over, and B) Unpaintable/Don't-tap Blocks.
-            autoBounce = true; // QQQ
+            //autoBounce = true; // qq
             if (autoBounce) { // If I'm auto-bouncing, set my bounds to the VISUAL top of the block! So it looks like a solid, proper bounce.
                 boundsY = blockHeadingTo.BlockTop;
             }
