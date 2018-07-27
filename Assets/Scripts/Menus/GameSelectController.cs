@@ -20,7 +20,11 @@ public class GameSelectController : MonoBehaviour {
 
     public void OpenScene_CircleGrow() { OpenScene(SceneNames.CircleGrow); }
 
+    public void OpenScene_ExtrudeMatch() { OpenScene(SceneNames.ExtrudeMatch); }
+
     public void OpenScene_LetterClear() { OpenScene(SceneNames.LetterClear); }
+
+    public void OpenScene_WaveTap() { OpenScene(SceneNames.WaveTap); }
 
 
 }

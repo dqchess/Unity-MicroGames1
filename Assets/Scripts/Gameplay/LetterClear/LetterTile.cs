@@ -119,9 +119,11 @@ namespace LetterClear {
         // ----------------------------------------------------------------
         private void FixedUpdate() {
             // Ease to target!
-            if (Pos != posTarget) {
-				Pos += (posTarget-Pos) * 0.3f;
-            }
+    //        if (Pos != posTarget) {
+				//Pos += (posTarget-Pos) * 0.3f;
+            //}
+            // Hack: Just go to target for now.
+            Pos = posTarget;
         }
 
 

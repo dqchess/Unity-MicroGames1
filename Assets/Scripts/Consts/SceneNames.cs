@@ -9,10 +9,14 @@ public static class SceneNames {
 	public const string AlphaTapOrder = "AlphaTapOrder";
 
     public const string BouncePaint_LevelSelect = "BouncePaintLevelSelect";
-    public const string BouncePaint_MainMenu = "BouncePaint_MainMenu";
+    public const string BouncePaint_MainMenu = "BouncePaintMainMenu";
     public const string BouncePaint_Gameplay = "BouncePaint";
 
     public const string CircleGrow = "CircleGrow";
 
+    public const string ExtrudeMatch = "ExtrudeMatch";
+
     public const string LetterClear = "LetterClear";
+
+    public const string WaveTap = "WaveTap";
 }

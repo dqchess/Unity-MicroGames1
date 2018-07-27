@@ -139,13 +139,13 @@ namespace LetterClear {
         }
 
 
-		// ----------------------------------------------------------------
-		//  FixedUpdate
-		// ----------------------------------------------------------------
-		private void FixedUpdate() {
-			// BRUTE FORCE update this every frame for safety. Note: This could definitely be simplified.
-			UpdateWordsPositions();
-		}
+		//// ----------------------------------------------------------------
+		////  FixedUpdate
+		//// ----------------------------------------------------------------
+		//private void FixedUpdate() {
+		//	// BRUTE FORCE update this every frame for safety. Note: This could definitely be simplified.
+		//	UpdateWordsPositions();
+		//}
 
 
         // ----------------------------------------------------------------
