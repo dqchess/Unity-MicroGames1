@@ -16,11 +16,11 @@ namespace ExtrudeMatch {
         private List<TileView> tileViews;
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
-		private Level levelRef;
+		private BoardController levelRef;
 
 		// Getters
 		public Board MyBoard { get { return myBoard; } }
-		public Level MyLevel { get { return levelRef; } }
+		public BoardController MyLevel { get { return levelRef; } }
 //		public Rect ViewRect { get { return viewRect; } }
 //		public Vector2 Pos { get { return viewRect.position; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
@@ -69,7 +69,7 @@ namespace ExtrudeMatch {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize (Level _levelRef, Board _myBoard) {
+		public void Initialize (BoardController _levelRef, Board _myBoard) {
 			levelRef = _levelRef;
 			myBoard = _myBoard;
 			this.transform.SetParent (levelRef.transform);

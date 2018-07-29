@@ -54,7 +54,7 @@ namespace BouncePaint {
             myRectTransform.sizeDelta = _size;
         }
         private void StartGameAtLevel() {
-            SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, levelIndex);
+			SaveStorage.SetInt(SaveKeys.LastLevelPlayed(GameNames.BouncePaint), levelIndex);
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.BouncePaint_Gameplay);
         }
 

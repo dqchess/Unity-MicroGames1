@@ -7,7 +7,7 @@ namespace ExtrudeMatch {
         // Properties
         private int score;
 		// Objects
-		private Level currentLevel;
+		private BoardController boardController;
 		// References
 		[SerializeField] private Canvas canvas=null;
 		[SerializeField] private GameUI ui=null;
@@ -74,8 +74,8 @@ namespace ExtrudeMatch {
             SetScore(0);
 
 			// Instantiate the Level from the provided LevelData!
-			currentLevel = ((GameObject) Instantiate (resourcesHandler.extrudeMatch_level)).GetComponent<Level>();
-			currentLevel.Initialize (this, canvas.transform);
+			boardController = ((GameObject) Instantiate (resourcesHandler.extrudeMatch_boardController)).GetComponent<BoardController>();
+			boardController.Initialize (this, canvas.transform);
 
 			// Tell the people!
             ui.OnStartLevel();
@@ -86,9 +86,9 @@ namespace ExtrudeMatch {
 		}
 
 		private void DestroyCurrentLevel () {
-			if (currentLevel != null) {
-				currentLevel.DestroySelf ();
-				currentLevel = null;
+			if (boardController != null) {
+				boardController.DestroySelf ();
+				boardController = null;
 			}
 		}
 

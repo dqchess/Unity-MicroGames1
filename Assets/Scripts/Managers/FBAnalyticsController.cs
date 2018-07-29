@@ -61,11 +61,11 @@ public class FBAnalyticsController : MonoBehaviour {
     // ----------------------------------------------------------------
     //  Gameplay Events!
     // ----------------------------------------------------------------
-    public void BouncePaint_OnWinLevel(int levelIndex) {
-        int numLosses = SaveStorage.GetInt(SaveKeys.BouncePaint_NumLosses(levelIndex),0);
+    public void OnWinLevel(string gameName, int levelIndex) {
+		int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
 
         var parameters = new Dictionary<string, object>();
-        parameters["Game"] = "BouncePaint";
+		parameters["Game"] = gameName;
         parameters["numLosses"] = numLosses;
         parameters[AppEventParameterName.Level] = levelIndex;
         FB.LogAppEvent(

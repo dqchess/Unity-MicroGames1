@@ -16,7 +16,7 @@ public class ResourcesHandler : MonoBehaviour {
 
 	[SerializeField] public GameObject extrudeMatch_boardSpaceView;
 	[SerializeField] public GameObject extrudeMatch_boardView;
-	[SerializeField] public GameObject extrudeMatch_level;
+	[SerializeField] public GameObject extrudeMatch_boardController;
 	[SerializeField] public GameObject extrudeMatch_tileView;
 
     [SerializeField] public GameObject letterClear_letterTile;

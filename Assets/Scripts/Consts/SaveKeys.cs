@@ -9,21 +9,32 @@ public static class SaveKeys {
     public const string VOLUME_SFX= "VolumeSfx";
 
 
-    // BouncePaint
-    public const string BouncePaint_HighestLevelUnlocked = "BouncePaint_HighestLevelUnlocked";
-    public const string BouncePaint_LastLevelPlayed = "BouncePaint_LastLevelPlayed";
-    public static string BouncePaint_NumLosses(int levelIndex) {
-        return "BouncePaint_NumLosses_Level" + levelIndex;
-    }
+	// BaseLevelGames
+	static public string HighestLevelUnlocked(string gameName) {
+		return gameName + "_HighestLevelUnlocked";
+	}
+	static public string LastLevelPlayed(string gameName) {
+		return gameName + "_LastLevelPlayed";
+	}
+	static public string NumLosses(string gameName, int levelIndex) {
+		return gameName + "_NumLosses_Level" + levelIndex;
+	}
 
     // ExtrudeMatch
     public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
 
-	// WaveTap
-	public const string WaveTap_HighestLevelUnlocked = "WaveTap_HighestLevelUnlocked";
-	public const string WaveTap_LastLevelPlayed = "WaveTap_LastLevelPlayed";
-	public static string WaveTap_NumLosses(int levelIndex) {
-		return "WaveTap_NumLosses_Level" + levelIndex;
-	}
+
+//	// CircleGrow
+//	public const string CircleGrow_HighestLevelUnlocked = "CircleGrow_HighestLevelUnlocked";
+//	public const string CircleGrow_LastLevelPlayed = "CircleGrow_LastLevelPlayed";
+//	public static string CircleGrow_NumLosses(int levelIndex) {
+//		return "CircleGrow_NumLosses_Level" + levelIndex;
+//	}
+//	// WaveTap
+//	public const string WaveTap_HighestLevelUnlocked = "WaveTap_HighestLevelUnlocked";
+//	public const string WaveTap_LastLevelPlayed = "WaveTap_LastLevelPlayed";
+//	public static string WaveTap_NumLosses(int levelIndex) {
+//		return "WaveTap_NumLosses_Level" + levelIndex;
+//	}
 
 }

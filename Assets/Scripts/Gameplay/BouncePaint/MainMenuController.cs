@@ -49,7 +49,7 @@ namespace BouncePaint {
         //    OpenScene(SceneNames.BouncePaint_Gameplay);
         //}
         public void OpenScene_LevelSelect() {
-             OpenScene(SceneNames.BouncePaint_LevelSelect);
+			OpenScene(SceneNames.LevelSelect(GameNames.BouncePaint));
            // OpenScene("BouncePaint_LevelSelect");
         }
 

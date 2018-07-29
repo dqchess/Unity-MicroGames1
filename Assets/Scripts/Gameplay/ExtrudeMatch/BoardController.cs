@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ExtrudeMatch {
-	public class Level : MonoBehaviour {
+	public class BoardController : MonoBehaviour {
 		// Components
 		[SerializeField] private RectTransform myRectTransform=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
@@ -93,7 +93,6 @@ namespace ExtrudeMatch {
 		}
 		private IEnumerator Coroutine_ExtrudeTileSeq(Tile tile) {
             isAnimatingTiles = true;
-            int numTilesCleared = 0; // I'll add to this as we go along.
 
 			// Extrude the tile!
 			board.ExtrudeTile(tile);

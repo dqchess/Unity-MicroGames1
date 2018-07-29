@@ -12,7 +12,7 @@ namespace ExtrudeMatch {
 		public int numCols,numRows;
 		// BoardObjects
 		public BoardSpaceData[,] spaceDatas;
-		private List<BoardObjectData> allObjectDatas;
+//		private List<BoardObjectData> allObjectDatas;
 		public List<TileData> tileDatas;
 
 		/*
@@ -205,7 +205,7 @@ namespace ExtrudeMatch {
 
 		private void MakeEmptyLists () {
 			//		spacesInThisDrag = new List<BoardSpace>();
-			allObjectDatas = new List<BoardObjectData>();
+//			allObjectDatas = new List<BoardObjectData>();
 			tileDatas = new List<TileData>();
 		}
 		private void MakeEmptyBoardSpaces () {

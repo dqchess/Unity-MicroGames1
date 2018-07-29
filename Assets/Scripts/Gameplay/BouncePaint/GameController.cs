@@ -4,31 +4,27 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BouncePaint {
-    public enum GameStates { Playing, GameOver, PostLevel }
     public enum LoseReasons { TapEarly, MissedTap, TappedDontTap }
 
-    public class GameController : BaseGameController {
-        // Properties
-        private GameStates gameState;
-        private float timeWhenLevelEnded;
-        // Components
-        private Level level;
+    public class GameController : BaseLevelGameController {
+		// Overrideables
+		override public string MyGameName() { return GameNames.BouncePaint; }
+		// Properties
+		private LoseReasons loseReason;
         // References
-        [SerializeField] private Canvas canvas=null;
         [SerializeField] private GameUI ui=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private BouncePaintSfxController sfxController=null;
+		private Level level; // MY game-specific Level class.
         public Player WinningPlayer; // the Player whose bounce won the level!
 
         // Getters (Public)
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
-        public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
         public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
         public List<Block> Blocks { get { return level.Blocks; } }
         public List<Player> Players { get { return level.Players; } }
         // Getters (Private)
-        private int LevelIndex { get { return level.LevelIndex; } }
         private bool IsEveryBlockSatisfied() {
             return NumBlocksSatisfied() >= Blocks.Count;
         }
@@ -41,66 +37,26 @@ namespace BouncePaint {
         }
 
 
-        // ----------------------------------------------------------------
-        //  Start
-        // ----------------------------------------------------------------
-        override protected void Start () {
-            base.Start();
-
-			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.BouncePaint_LastLevelPlayed, 1));
-
-            //SM changes
-            Application.targetFrameRate = 60;
-        }
+		// ----------------------------------------------------------------
+		//  Awake
+		// ----------------------------------------------------------------
+		private void Awake() {
+			level = baseLevel as Level;
+		}
 
 
-
-        // ----------------------------------------------------------------
-        //  Game Flow
-        // ----------------------------------------------------------------
-        private void RestartLevel() { SetCurrentLevel(LevelIndex); }
-        public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, LevelIndex-1)); }
-        public void StartNextLevel() { SetCurrentLevel(LevelIndex+1); }
-        private void SetGameOver(LoseReasons reason) {
-            gameState = GameStates.GameOver;
-            timeWhenLevelEnded = Time.time;
-            // Tell people!
-            ui.OnGameOver();
-            fueController.OnSetGameOver(reason);
-            sfxController.OnSetGameOver();
-            // Increment losses on this level.
-            string saveKey = SaveKeys.BouncePaint_NumLosses(LevelIndex);
-            int numLosses = SaveStorage.GetInt(saveKey,0);
-            SaveStorage.SetInt(saveKey, numLosses + 1);
-        }
-
-        private void OnWinLevel(Player _winningPlayer) {
-            WinningPlayer = _winningPlayer;
-            FBAnalyticsController.Instance.BouncePaint_OnWinLevel(LevelIndex); // Analytics call!
-            UpdateHighestLevelUnlocked(LevelIndex);
-            gameState = GameStates.PostLevel;
-            timeWhenLevelEnded = Time.time;
-            StartCoroutine(Coroutine_SetTimeScaleFromWinLevel());
-            StartCoroutine(Coroutine_StartNextLevel());
-            // Tell people!
-            level.OnWinLevel(WinningPlayer);
-            sfxController.OnCompleteLevel();
-        }
-        private void UpdateHighestLevelUnlocked(int _levelIndex) {
-            int highestRecord = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);
-            if (_levelIndex > highestRecord) {
-                SaveStorage.SetInt(SaveKeys.BouncePaint_HighestLevelUnlocked, _levelIndex);
-            }
-        }
-
+		// ----------------------------------------------------------------
+		//  Game Events
+		// ----------------------------------------------------------------
         public void OnPlayerBounceOnBlock(Player player, bool didPaintBlock) {
             // Tell people!
             sfxController.OnPlayerBounceOnBlock();
             // We DID paint it!
             if (didPaintBlock) {
                 // We're a champion?? Win!
-                if (gameState==GameStates.Playing && IsEveryBlockSatisfied()) {
-                    OnWinLevel(player);
+				if (IsGameStatePlaying && IsEveryBlockSatisfied()) {
+					WinningPlayer = player; // Assign the winning Player!
+                    WinLevel();
                 }
                 // Tell people!
                 fueController.OnPlayerPaintBlock();
@@ -110,10 +66,26 @@ namespace BouncePaint {
             //}
         }
         public void OnPlayerDie(LoseReasons reason) {
-            if (gameState == GameStates.Playing) {
-                SetGameOver(reason);
+			if (IsGameStatePlaying) {
+				loseReason = reason;
+				LoseLevel();
             }
-        }
+		}
+		override protected void LoseLevel() {
+			base.LoseLevel();
+			// Tell people!
+			ui.OnGameOver();
+			fueController.OnSetGameOver(loseReason);
+			sfxController.OnSetGameOver();
+		}
+		override protected void WinLevel() {
+			base.WinLevel();
+			StartCoroutine(Coroutine_SetTimeScaleFromWinLevel());
+			StartCoroutine(Coroutine_StartNextLevel());
+			// Tell people!
+			level.OnWinLevel(WinningPlayer);
+			sfxController.OnCompleteLevel();
+		}
 
 		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
 			// When the Player knows who it's going to, tell all Blocks to update their visuals!
@@ -127,21 +99,22 @@ namespace BouncePaint {
             SetCurrentLevel(LevelIndex+1, true);
         }
 
-        private void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
+		override protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
             StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
         }
+		override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {
+			level = _levelGO.GetComponent<Level>();
+			level.Initialize(this,canvas.transform, _levelIndex);
+			baseLevel = level;
+		}
         private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
             // Make the new level!
             Level prevLevel = level;
-            level = Instantiate(resourcesHandler.bouncePaint_level).GetComponent<Level>();
-            level.Initialize(this,canvas.transform, _levelIndex);
+			InitializeLevel(Instantiate(resourcesHandler.bouncePaint_level), _levelIndex);
 
-            SaveStorage.SetInt(SaveKeys.BouncePaint_LastLevelPlayed, LevelIndex);
+			base.OnSetCurrentLevel();
 
             // Set basics!
-            SetIsPaused(false);
-            timeWhenLevelEnded = -1;
-            gameState = GameStates.Playing;
             WinningPlayer = null;
 
             // Initialize level components, and reset Players!
@@ -185,10 +158,6 @@ namespace BouncePaint {
             yield return null;
         }
 
-        public void OpenScene_LevelSelect() {
-            OpenScene(SceneNames.BouncePaint_LevelSelect);
-        }
-
         private IEnumerator Coroutine_SetTimeScaleFromWinLevel() {
             // Wait a tiny moment in fast motion.
             //Time.timeScale = 2f;
@@ -211,58 +180,26 @@ namespace BouncePaint {
 
 
 
-        // ----------------------------------------------------------------
-        //  Update
-        // ----------------------------------------------------------------
-        override protected void Update () {
-            base.Update();
-
-            RegisterMouseInput();
-        }
-
-        private void RegisterMouseInput() {
-            if (Input.GetMouseButtonDown(0)) {
-                OnMouseDown();
-            }
-        }
-
-
 
         // ----------------------------------------------------------------
         //  Input
         // ----------------------------------------------------------------
-        private void OnMouseDown() {
-			OnTapScreen();
-		}
-        public void OnRetryButtonClick() {
-            RestartLevel();
-        }
-		private void OnTapScreen() {
+		override protected void OnTapScreen() {
 			// Paused? Ignore input.
 			if (Time.timeScale == 0f) { return; }
 
-            if (gameState == GameStates.Playing) {
+            if (IsGameStatePlaying) {
                 OnPressJumpButton();
             }
 
             // Tell people!
             fueController.OnTapScreen();
         }
-        override protected void RegisterButtonInput() {
-            base.RegisterButtonInput();
-
-			if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
-
-			// DEBUG
-            if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPrevLevel(); }
-            if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
-            if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
-        }
 
 
         private void OnPressJumpButton() {
             // Ignore jumps if...
-            if (gameState != GameStates.Playing) { return; }
+			if (!IsGameStatePlaying) { return; }
             if (level!=null && level.IsAnimatingIn) { return; }
 
             bool didAnyPlayerBounce = false; // I'll say otherwise next.
@@ -296,7 +233,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
-        private void Debug_WinLevel() {
+		override protected void Debug_WinLevel() {
             foreach (Block block in Blocks) {
                 for (int i=Mathf.Max(1,block.NumHitsReq); i>0; --i) {
                     if (i==1 && !block.IsAvailable) { continue; } // Test. Comment this out if you want to win right away.
@@ -305,10 +242,6 @@ namespace BouncePaint {
             }
             OnPlayerBounceOnBlock(Players[0], true);
         }
-		/// Jumps *10* levels back.
-        public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, LevelIndex-10)); }
-		/// Jumps *10* levels forward.
-        public void StartNextLevel10() { SetCurrentLevel(LevelIndex+10); }
 
 
 

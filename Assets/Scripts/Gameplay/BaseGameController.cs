@@ -23,7 +23,7 @@ abstract public class BaseGameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	virtual protected void Start () {
 		// Set application values
-	//	Application.targetFrameRate = GameVisualProperties.TARGET_FRAME_RATE;
+		Application.targetFrameRate = GameVisualProperties.TARGET_FRAME_RATE;
 
 		UpdateTimeScale();
 

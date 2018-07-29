@@ -9,8 +9,8 @@ namespace WaveTap {
 
 	public class GameController : BaseGameController {
 		// Components
-		[SerializeField] private Bar bar;
-		[SerializeField] private Player player;
+		[SerializeField] private Bar bar=null;
+		[SerializeField] private Player player=null;
 		// Properties
 		private GameStates gameState;
 		private int currentLevel;
@@ -35,7 +35,7 @@ namespace WaveTap {
 
 //			r_levelBounds = i_levelBounds.rectTransform.rect;
 
-			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.WaveTap_LastLevelPlayed, 1));
+//			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.WaveTap_LastLevelPlayed, 1));TODO: Convert this to level-based system
 		}
 
 
@@ -65,13 +65,13 @@ namespace WaveTap {
 			// Tell people!
 			ui.OnGameOver();
 			// Increment losses on this level.
-			string saveKey = SaveKeys.WaveTap_NumLosses(currentLevel);
-			int numLosses = SaveStorage.GetInt(saveKey,0);
-			SaveStorage.SetInt(saveKey, numLosses + 1);
+//			string saveKey = SaveKeys.WaveTap_NumLosses(currentLevel);TODO: Convert this to level-based system
+//			int numLosses = SaveStorage.GetInt(saveKey,0);
+//			SaveStorage.SetInt(saveKey, numLosses + 1);
 		}
 
 		private void WinLevel() {
-			//			FBAnalyticsController.Instance.WaveTap_OnWinLevel(LevelIndex); // Analytics call!
+//			FBAnalyticsController.Instance.WaveTap_OnWinLevel(LevelIndex); // Analytics call!TODO: Convert this to level-based system
 			UpdateHighestLevelUnlocked(currentLevel);
 			gameState = GameStates.Won;
 			//			// Tell people!
@@ -80,10 +80,10 @@ namespace WaveTap {
 			Invoke("StartNextLevel", 0.6f);
 		}
 		private void UpdateHighestLevelUnlocked(int _levelIndex) {
-			int highestRecord = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);
-			if (_levelIndex > highestRecord) {
-				SaveStorage.SetInt(SaveKeys.BouncePaint_HighestLevelUnlocked, _levelIndex);
-			}
+//			int highestRecord = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);TODO: Convert this to level-based system
+//			if (_levelIndex > highestRecord) {
+//				SaveStorage.SetInt(SaveKeys.BouncePaint_HighestLevelUnlocked, _levelIndex);
+//			}
 		}
 
 

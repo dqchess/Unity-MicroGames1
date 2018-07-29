@@ -24,7 +24,7 @@ namespace BouncePaint {
             return -GetLastPlayedTilePosY();// - 100; // move it down a little bit more so the last played tile isn't the topmost one.
         }
         private float GetLastPlayedTilePosY() {
-            int lastPlayedLevelIndex = SaveStorage.GetInt(SaveKeys.BouncePaint_LastLevelPlayed);
+			int lastPlayedLevelIndex = SaveStorage.GetInt(SaveKeys.LastLevelPlayed(GameNames.BouncePaint));
             foreach (LevelTile tile in levelTiles) {
                 if (tile.LevelIndex == lastPlayedLevelIndex) {
                     return tile.transform.localPosition.y;
@@ -51,7 +51,7 @@ namespace BouncePaint {
         }
         private void MakeLevelTiles () {
             GameObject go_prefab = ResourcesHandler.Instance.bouncePaint_levelTile;
-            int highestLevelUnlocked = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);
+			int highestLevelUnlocked = SaveStorage.GetInt(SaveKeys.HighestLevelUnlocked(GameNames.BouncePaint));
 
             levelTiles = new List<LevelTile>();
             for (int levelIndex=Level.FirstLevelIndex; levelIndex<=Level.LastLevelIndex; levelIndex++) {

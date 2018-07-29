@@ -11,13 +11,13 @@ namespace ExtrudeMatch {
 		// Properties
 		private Color fillColor;
 		// References
-		private BoardSpace mySpace;
+//		private BoardSpace mySpace;
 
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
 		public void Initialize (BoardView _boardView, BoardSpace mySpace) {
-			this.mySpace = mySpace;
+//			this.mySpace = mySpace;
 			int col = mySpace.Col;
 			int row = mySpace.Row;
 

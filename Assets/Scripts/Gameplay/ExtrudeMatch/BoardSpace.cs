@@ -8,7 +8,7 @@ namespace ExtrudeMatch {
 		private BoardPos boardPos;
 		private bool isPlayable = true;
 		// References
-		private Board myBoard;
+//		private Board myBoard;
 		private BoardOccupant myOccupant; // occupants sit on my face. Only one Occupant occupies each space.
 
 		// Getters
@@ -25,7 +25,7 @@ namespace ExtrudeMatch {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public BoardSpace (Board _boardRef, BoardSpaceData _data) {
-			myBoard = _boardRef;
+//			myBoard = _boardRef;
 			boardPos = _data.boardPos;
 			isPlayable = _data.isPlayable;
 		}

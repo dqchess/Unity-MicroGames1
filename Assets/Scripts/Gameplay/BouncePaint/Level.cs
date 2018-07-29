@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace BouncePaint {
-    public class Level : MonoBehaviour {
+    public class Level : BaseLevel {
         // Constants
         public static int FirstLevelIndex = 1;
         public static int LastLevelIndex = 101;
@@ -17,34 +17,25 @@ namespace BouncePaint {
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
         // Properties
-        public bool IsAnimatingIn;
         private float screenShakeVolume;
-        private int levelIndex;
         // References
         //[SerializeField] private RectTransform rt_blocks=null;
-        [SerializeField] private RectTransform myRectTransform=null;
         private GameController gameController;
 
 
         // Getters / Setters
-        private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
         public List<Block> Blocks { get { return blocks; } }
         public List<Player> Players { get { return players; } }
-        public int LevelIndex { get { return levelIndex; } }
 
 
+		// ----------------------------------------------------------------
+		//  Initialize
+		// ----------------------------------------------------------------
         public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
             gameController = _gameController;
-            levelIndex = _levelIndex;
+			BaseInitialize(tf_parent, _levelIndex);
 
-            t_levelName.text = "LEVEL " + levelIndex.ToString();
-
-            gameObject.name = "Level " + levelIndex;
-            myRectTransform.SetParent(tf_parent);
-            myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
-            myRectTransform.anchoredPosition = Vector2.zero;
-            myRectTransform.localScale = Vector2.one;
-            myRectTransform.localEulerAngles = Vector3.zero;
+            t_levelName.text = "LEVEL " + LevelIndex.ToString();
         }
 
         // ----------------------------------------------------------------
@@ -69,10 +60,6 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Adding Elements
         // ----------------------------------------------------------------
-        //      private Block AddBlock(Vector2 blockSize, float x,float y, bool doTap) {
-        //          Vector2 pos = new Vector2(x,y);
-        //          return AddBlock(blockSize, pos,pos, 0,0, 1, doTap);
-        //      }
         private Block AddBlock(Vector2 blockSize, float x,float y) {
             Vector2 pos = new Vector2(x,y);
             return AddBlock(blockSize, pos,pos);
@@ -1161,7 +1148,7 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2(-200,b+300), new Vector2( 200,b+300)).SetSpeed(1.1f, 3.142f);
             }
 
-            else if (levelIndex == i++) { // Hypercube spotted boogie
+            else if (li == i++) { // Hypercube spotted boogie
                 AddPlayer();
                 AddBlock(bs, new Vector2(-240,b    ), new Vector2(-180,b    )).SetSpeed(3f, 0f);//.SetDontTap();
                 AddBlock(bs, new Vector2( 240,b    ), new Vector2( 180,b    )).SetSpeed(3f, 3.142f).SetDontTap();
