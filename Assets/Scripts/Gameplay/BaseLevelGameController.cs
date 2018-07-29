@@ -14,11 +14,12 @@ abstract public class BaseLevelGameController : BaseGameController {
 	protected BaseLevel baseLevel;
 	// References
 	[SerializeField] protected Canvas canvas=null;
+	[SerializeField] private LevelGameUI levelGameUI=null; // All BaseLevelGames come with a boilerplate LevelGameUI. Retry, Quit, and Debug buttons.
 
 	// Getters (Public)
 	public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
 	// Getters (Protected)
-	protected bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
+	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
 	protected int LevelIndex { get { return baseLevel.LevelIndex; } }
 
 
@@ -68,21 +69,31 @@ abstract public class BaseLevelGameController : BaseGameController {
 	/// Jumps *10* levels forward.
 	public void StartNextLevel10() { SetCurrentLevel(LevelIndex+10); }
 
-	protected void OnSetCurrentLevel() {
-		SaveStorage.SetInt(SaveKeys.LastLevelPlayed(MyGameName()), LevelIndex);
+	/** This function handles a bunch of random paperwork.
+	 * For consistency, call this within InitializeLevel. */
+	protected void OnInitializeLevel(BaseLevel _baseLevel) {
+		// Assign baseLevel reference here!
+		baseLevel = _baseLevel;
+		// Reset basic stuff
 		SetIsPaused(false);
 		timeWhenLevelEnded = -1;
 		gameState = GameStates.Playing;
+		// Save values!
+		SaveStorage.SetInt(SaveKeys.LastLevelPlayed(MyGameName()), LevelIndex);
+		// Tell people!
+		levelGameUI.OnStartLevel(LevelIndex);
 	}
 
 
-	virtual protected void LoseLevel() {
+	virtual public void LoseLevel() {
 		gameState = GameStates.GameOver;
 		timeWhenLevelEnded = Time.time;
 		// Increment losses on this level.
 		string saveKey = SaveKeys.NumLosses(MyGameName(), LevelIndex);
 		int numLosses = SaveStorage.GetInt(saveKey,0);
 		SaveStorage.SetInt(saveKey, numLosses + 1);
+		// Tell people!
+		levelGameUI.OnGameOver();
 	}
 	virtual protected void WinLevel() {
 		FBAnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex); // Analytics call!

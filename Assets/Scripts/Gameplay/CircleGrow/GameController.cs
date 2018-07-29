@@ -4,135 +4,144 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CircleGrow {
-    public enum GameStates { Playing, GameOver, PostLevel }
-
-    public class GameController : BaseGameController {
+	public class GameController : BaseLevelGameController {
+		// Overrideables
+		override public string MyGameName() { return GameNames.CircleGrow; }
         // Components
-        [SerializeField] private Image i_levelBounds=null;
-        private List<Circle> circles;
+		[SerializeField] private GameUI gameUI;
+//        [SerializeField] private Image i_levelBounds=null;
+		private Level level;
         // Properties
-        private GameStates gameState;
-        private float timeWhenLevelEnded;
         private Rect r_levelBounds;
-        // References
-        [SerializeField] private Canvas canvas=null;
-        [SerializeField] private GameUI ui=null;
+        
 
 
         // Getters (Public)
         //public Rect r_LevelBounds { get { return r_levelBounds; } }
-        // Getters (Private)
-        private Vector2 GetBestPosForNewCircle() {
-            Vector2 randPos;
-            // Kinda sloppy! Brute-force-y.
-            randPos = GetOpenPosForNewCircle(200);
-            if (randPos.x != Mathf.NegativeInfinity) { return randPos; }
-            randPos = GetOpenPosForNewCircle(100); // TODO: CLean up this negative infinity awkwardness checksings.
-            if (randPos.x != Mathf.NegativeInfinity) { return randPos; }
-            randPos = GetOpenPosForNewCircle(50);
-            if (randPos.x != Mathf.NegativeInfinity) { return randPos; }
-            randPos = GetOpenPosForNewCircle(10);
-            if (randPos.x != Mathf.NegativeInfinity) { return randPos; }
-            Debug.Log("Couldn't find open pos for new circle!");
-            return Vector2.negativeInfinity;
-        }
-        private Vector2 GetOpenPosForNewCircle(float newRadius) {
-            Vector2 pos;
-            int safetyCount=0;
-            do {
-                pos = new Vector2(Random.Range(r_levelBounds.xMin,r_levelBounds.xMax), Random.Range(r_levelBounds.yMin,r_levelBounds.yMax));
-                if (CanAddCircleAtPos(pos, newRadius)) { break; }
-                if (safetyCount++>499) {
-                    //Debug.Log("Couldn't find open pos for new circle!");
-                    return Vector2.negativeInfinity;
-                }
-            }
-            while(true);
-            return pos;
-        }
-        private bool IsCircleIllegalOverlap(Circle circle) {
-            return IsCircleAtPos(circle.Pos, circle.Radius) || !IsCircleInBounds(circle.Pos, circle.Radius);
-        }
-        private bool CanAddCircleAtPos(Vector2 pos, float radius) {
-            return !IsCircleAtPos(pos, radius) && IsCircleInBounds(pos, radius);
-        }
-        private bool IsCircleInBounds(Vector2 pos, float radius) {
-            if (pos.x-radius < r_levelBounds.xMin) { return false; }
-            if (pos.x+radius > r_levelBounds.xMax) { return false; }
-            if (pos.y-radius < r_levelBounds.yMin) { return false; }
-            if (pos.y+radius > r_levelBounds.yMax) { return false; }
-            return true;
-        }
-        private bool IsCircleAtPos(Vector2 pos, float radius) {
-            foreach (Circle c in circles) {
-                if (c.Pos==pos && c.Radius==radius) { continue; } // Skip itself.
-                if (DoCirclesOverlap(c.Pos,c.Radius, pos,radius)) { return true; }
-            }
-            return false; // We're good!
-        }
-        //private bool IsCircleOverlappingAnother(Circle circle) {
-        //    foreach (Circle c in circles) {
-        //        if (c == circle) { continue; } // Skip itself of course.
-        //        if (DoCirclesOverlap(c, circle)) { return true; }
-        //    }
-        //    return false; // We're good!
-        //}
-        private bool DoCirclesOverlap(Circle circleA, Circle circleB) {
-            return DoCirclesOverlap(circleA.Pos,circleA.Radius, circleB.Pos,circleB.Radius);
-        }
-        private bool DoCirclesOverlap(Vector2 posA,float radiusA, Vector2 posB,float radiusB) {
-            float dist = Vector2.Distance(posA,posB);
-            return dist < radiusA+radiusB;
-        }
-
 
 
         // ----------------------------------------------------------------
         //  Start
         // ----------------------------------------------------------------
-        override protected void Start () {
+		override protected void Start () {
+			//levelBounds = new Rect(-300,-300, 600,600);
+			//i_levelBounds.anchoredPosition = levelBounds.position;
+			//i_levelBounds.sizeDelta = levelBounds.size;
+//			r_levelBounds = i_levelBounds.rectTransform.rect;
+
             base.Start();
-
-            //levelBounds = new Rect(-300,-300, 600,600);
-            //i_levelBounds.anchoredPosition = levelBounds.position;
-            //i_levelBounds.sizeDelta = levelBounds.size;
-            r_levelBounds = i_levelBounds.rectTransform.rect;
-
-            RestartLevel();
         }
 
 
-        private void DestroyCircles() {
-            if (circles != null) {
-                for (int i=circles.Count-1; i>=0; --i) {
-                    Destroy(circles[i].gameObject);
-                }
-            }
-            circles = new List<Circle>();
-        }
+
+
+		// ----------------------------------------------------------------
+		//  Doers
+		// ----------------------------------------------------------------
+		private void UpdateScore() {
+			float score = 0;
+			foreach (Circle c in level.Circles) {
+				float area = Mathf.PI * c.Radius * c.Radius;
+				score += area;
+			}
+			score /= 100f; // HARDcoded.
+			// Update the UI!
+			gameUI.SetScoreText(score);
+		}
+
+
+
+
+
+		// ----------------------------------------------------------------
+		//  Game Flow Events
+		// ----------------------------------------------------------------
+		override public void LoseLevel() {
+			base.LoseLevel();
+		}
+		override protected void WinLevel() {
+			base.WinLevel();
+			StartCoroutine(Coroutine_StartNextLevel());
+			// Tell people!
+//			level.OnWinLevel(WinningPlayer);
+		}
+
+		private IEnumerator Coroutine_StartNextLevel() {
+			yield return new WaitForSecondsRealtime(2.6f);
+			SetCurrentLevel(LevelIndex+1, true);
+		}
+
+		override protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
+			StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
+		}
+		override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {
+			level = _levelGO.GetComponent<Level>();
+			level.Initialize(this, canvas.transform, _levelIndex);
+			base.OnInitializeLevel(level);
+		}
+		private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
+			Level prevLevel = level;
+
+			// Make the new level!
+			InitializeLevel(Instantiate(resourcesHandler.circleGrow_level), _levelIndex);
+
+			// DO animate!
+			if (doAnimate) {
+				float duration = 1f;
+
+				level.IsAnimatingIn = true;
+				float height = 1200;
+				Vector3 levelDefaultPos = level.transform.localPosition;
+				level.transform.localPosition += new Vector3(0, height, 0);
+				LeanTween.moveLocal(level.gameObject, levelDefaultPos, duration).setEaseInOutQuart();
+				LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
+				yield return new WaitForSeconds(duration);
+
+				level.IsAnimatingIn = false;
+				if (prevLevel!=null) {
+					Destroy(prevLevel.gameObject);
+				}
+			}
+			// DON'T animate? Ok, just destroy the old level.
+			else {
+				if (prevLevel!=null) {
+					Destroy(prevLevel.gameObject);
+				}
+			}
+
+			yield return null;
+		}
 
 
 
         // ----------------------------------------------------------------
-        //  Game Doers
+        //  Input
         // ----------------------------------------------------------------
-        private void AddNewCircle() {
-            float startingRadius = 5f;
-            Vector2 randPos = GetBestPosForNewCircle();
-            // Can't find a suitable position to put this circle? We're outta room!
-            if (randPos.x == Mathf.NegativeInfinity) {
-                SetGameOver();
+        override protected void OnTapScreen() {
+            // Paused? Ignore input.
+            if (Time.timeScale == 0f) { return; }
+
+			if (IsGameStatePlaying) {
+				level.SolidifyCurrentCircle();
             }
-            // We DID find a suitable pos for this new circle! Add it!
-            else {
-                Circle newCircle = Instantiate(resourcesHandler.circleGrow_circle).GetComponent<Circle>();
-                newCircle.Initialize(this, canvas.transform, randPos, startingRadius);
-                circles.Add(newCircle);
-                newCircle.SetIsOscillating(true); // Start it out oscillating up up!
-            }
-            // Update the score now! :)
-            UpdateScore();
         }
+
+
+
+		// ----------------------------------------------------------------
+		//  Debug
+		// ----------------------------------------------------------------
+		override protected void Debug_WinLevel() {
+			// TODO: This.
+		}
+
+
+
+
+    }
+}
+
+/*
         private void SolidifyOscillatingCircles() {
             // Make 'em stop oscillating!
             for (int i=circles.Count-1; i>=0; --i) {
@@ -141,138 +150,8 @@ namespace CircleGrow {
                 }
             }
             // If we didn't lose, add a new circle!
-            if (gameState != GameStates.GameOver) {
+			if (IsGameStatePlaying) {
                 AddNewCircle();
             }
         }
-        private void SolidifyCircle(Circle circle) {
-            circle.SetIsOscillating(false);
-            //if (IsCir(circle)) {
-            //    circle.OnIllegalOverlap();
-            //    SetGameOver();
-            //}
-        }
-        private void OnCircleIllegalOverlap(Circle circle) {
-            circle.OnIllegalOverlap();
-            SetGameOver();
-            //SolidifyCircle(circle);
-            //AddNewCircle();
-        }
-
-
-
-
-
-
-        // ----------------------------------------------------------------
-        //  Game Flow
-        // ----------------------------------------------------------------
-        private void RestartLevel() {
-            // Set basics!
-            SetIsPaused(false);
-            timeWhenLevelEnded = -1;
-            gameState = GameStates.Playing;
-            //Camera.main.backgroundColor = new Color(0.99f,0.99f,0.99f);
-
-            DestroyCircles();
-
-            AddNewCircle();
-
-            // Tell the people!
-            ui.OnStartLevel();
-        }
-
-        private void SetGameOver() {
-            gameState = GameStates.GameOver;
-            timeWhenLevelEnded = Time.time;
-            // Tell people!
-            //ui.OnGameOver();
-        }
-
-        private void UpdateScore() {
-            float score = 0;
-            foreach (Circle c in circles) {
-                float area = Mathf.PI * c.Radius * c.Radius;
-                score += area;
-            }
-            score /= 100f; // HARDcoded.
-            // Update the UI!
-            ui.SetScoreText(score);
-        }
-
-        // ----------------------------------------------------------------
-        //  Update
-        // ----------------------------------------------------------------
-        override protected void Update () {
-            base.Update();
-
-            RegisterMouseInput();
-
-            CheckOscillatingCirclesOverlaps();
-        }
-        private void CheckOscillatingCirclesOverlaps() {
-            // Make 'em stop oscillating!
-            for (int i=circles.Count-1; i>=0; --i) {
-                if (circles[i].IsOscillating) {
-                    if (IsCircleIllegalOverlap(circles[i])) {
-                        OnCircleIllegalOverlap(circles[i]);
-                    }
-                }
-            }
-        }
-
-        private void RegisterMouseInput() {
-            if (Input.GetMouseButtonDown(0)) {
-                OnMouseDown();
-            }
-        }
-
-
-
-        // ----------------------------------------------------------------
-        //  Input
-        // ----------------------------------------------------------------
-        private void OnMouseDown() {
-            OnTapScreen();
-        }
-        public void OnRetryButtonClick() {
-            RestartLevel();
-        }
-        private void OnTapScreen() {
-            // Paused? Ignore input.
-            if (Time.timeScale == 0f) { return; }
-
-            if (gameState == GameStates.GameOver) {
-                // Make us wait a short moment so we visually register what's happened.
-                if (Time.time>timeWhenLevelEnded+2f) { // NOTE: Idk why 2 doesn't feel like actual 2 seconds. :P
-                    RestartLevel();
-                    return;
-                }
-            }
-            else if (gameState == GameStates.PostLevel) {
-                //// Make us wait a short moment so we visually register what's happened.
-                //if (Time.time>timeWhenLevelEnded+0.2f) {
-                //             StartNextLevel();
-                //             return;
-                //}
-            }
-            else {
-                SolidifyOscillatingCircles();
-            }
-        }
-        override protected void RegisterButtonInput() {
-            base.RegisterButtonInput();
-
-            if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
-            if (Input.GetKeyDown(KeyCode.Return)) { RestartLevel(); }
-        }
-
-
-
-
-
-
-
-    }
-}
-
+        */

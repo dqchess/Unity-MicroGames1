@@ -4,34 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CircleGrow {
-    public class GameUI : MonoBehaviour {
-        // Components
-        [SerializeField] private Text t_score=null;
+	public class GameUI : MonoBehaviour {
+		// Components
+		[SerializeField] private Text t_score;
+
+		public void SetScoreText(float score) {
+			t_score.text = Mathf.RoundToInt(score).ToString();
+		}
 
 
-        // ----------------------------------------------------------------
-        //  Start
-        // ----------------------------------------------------------------
-        private void Start () {
-            //SetScoreText(0);
-        }
-
-
-        // ----------------------------------------------------------------
-        //  Events
-        // ----------------------------------------------------------------
-        public void OnStartLevel() {
-            SetScoreText(0);
-        }
-
-        // ----------------------------------------------------------------
-        //  Doers
-        // ----------------------------------------------------------------
-        public void SetScoreText(float score) {
-            score = Mathf.Round(score); // no decimal places, ok?
-            t_score.text = score.ToString();
-        }
-
-
-    }
+	}
 }

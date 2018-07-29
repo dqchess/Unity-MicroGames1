@@ -141,9 +141,8 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Making Level!
         // ----------------------------------------------------------------
-        // HARDCODED Level-adding.
-        public void AddLevelComponents() {
-            DestroyLevelComponents(); // Just in case
+		override protected void AddLevelComponents() {
+            DestroyLevelComponents(); // Just in case.
             blocks = new List<Block>();
             players = new List<Player>();
             if (resourcesHandler == null) { return; } // Safety check for runtime compile.
@@ -160,7 +159,7 @@ namespace BouncePaint {
 
             float b = -240; // bottom.
             int li = LevelIndex;
-            int i=FirstLevelIndex; // Temp until we make levels into XML or Json.
+            int i=FirstLevelIndex;
             if (false) {}
 
 

@@ -27,7 +27,15 @@ public abstract class BaseLevel : MonoBehaviour {
 		myRectTransform.anchoredPosition = Vector2.zero;
 		myRectTransform.localScale = Vector2.one;
 		myRectTransform.localEulerAngles = Vector3.zero;
+
+		AddLevelComponents();
 	}
+
+
+	// ----------------------------------------------------------------
+	//  Abstract Methods
+	// ----------------------------------------------------------------
+	abstract protected void AddLevelComponents();
 
 
 

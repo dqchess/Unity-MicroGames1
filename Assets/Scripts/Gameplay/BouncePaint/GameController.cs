@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BouncePaint {
     public enum LoseReasons { TapEarly, MissedTap, TappedDontTap }
@@ -12,7 +11,6 @@ namespace BouncePaint {
 		// Properties
 		private LoseReasons loseReason;
         // References
-        [SerializeField] private GameUI ui=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private BouncePaintSfxController sfxController=null;
 		private Level level; // MY game-specific Level class.
@@ -64,17 +62,27 @@ namespace BouncePaint {
             //foreach (Block block in blocks) {
             //    block.OnPlayerPaintedABlock();
             //}
-        }
+		}
+		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
+			// When the Player knows who it's going to, tell all Blocks to update their visuals!
+			foreach (Block b in Blocks) {
+				b.SetIntentionVisuals(b == blockHeadingTo);
+			}
+		}
         public void OnPlayerDie(LoseReasons reason) {
 			if (IsGameStatePlaying) {
 				loseReason = reason;
 				LoseLevel();
             }
 		}
-		override protected void LoseLevel() {
+
+
+		// ----------------------------------------------------------------
+		//  Game Flow Events
+		// ----------------------------------------------------------------
+		override public void LoseLevel() {
 			base.LoseLevel();
 			// Tell people!
-			ui.OnGameOver();
 			fueController.OnSetGameOver(loseReason);
 			sfxController.OnSetGameOver();
 		}
@@ -87,13 +95,6 @@ namespace BouncePaint {
 			sfxController.OnCompleteLevel();
 		}
 
-		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
-			// When the Player knows who it's going to, tell all Blocks to update their visuals!
-			foreach (Block b in Blocks) {
-				b.SetIntentionVisuals(b == blockHeadingTo);
-			}
-        }
-
         private IEnumerator Coroutine_StartNextLevel() {
             yield return new WaitForSecondsRealtime(2.6f);
             SetCurrentLevel(LevelIndex+1, true);
@@ -104,21 +105,18 @@ namespace BouncePaint {
         }
 		override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {
 			level = _levelGO.GetComponent<Level>();
-			level.Initialize(this,canvas.transform, _levelIndex);
-			baseLevel = level;
+			level.Initialize(this, canvas.transform, _levelIndex);
+			base.OnInitializeLevel(level);
 		}
         private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
-            // Make the new level!
-            Level prevLevel = level;
-			InitializeLevel(Instantiate(resourcesHandler.bouncePaint_level), _levelIndex);
+			Level prevLevel = level;
 
-			base.OnSetCurrentLevel();
+            // Make the new level!
+			InitializeLevel(Instantiate(resourcesHandler.bouncePaint_level), _levelIndex);
 
             // Set basics!
             WinningPlayer = null;
 
-            // Initialize level components, and reset Players!
-            level.AddLevelComponents();
             // HACK! For now until I know how this is gonna work.
             if (PlayerGravityScale == 1f) { // if we didn't specify the gravity scale...
                 PlayerGravityScale = Players.Count == 1 ? 1f : 0.6f;
@@ -152,7 +150,6 @@ namespace BouncePaint {
             }
 
             // Tell things!
-            ui.OnStartLevel(LevelIndex);
             fueController.OnStartLevel(level);
 
             yield return null;
