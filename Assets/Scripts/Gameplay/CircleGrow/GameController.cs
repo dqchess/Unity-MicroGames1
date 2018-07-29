@@ -8,7 +8,7 @@ namespace CircleGrow {
 		// Overrideables
 		override public string MyGameName() { return GameNames.CircleGrow; }
         // Components
-		[SerializeField] private GameUI gameUI;
+		[SerializeField] private GameUI gameUI=null;
 //        [SerializeField] private Image i_levelBounds=null;
 		private Level level;
         // Properties
@@ -38,11 +38,10 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		private void UpdateScore() {
+		public void UpdateScore() {
 			float score = 0;
 			foreach (Circle c in level.Circles) {
-				float area = Mathf.PI * c.Radius * c.Radius;
-				score += area;
+				score += c.ScoreValue();
 			}
 			score /= 100f; // HARDcoded.
 			// Update the UI!
@@ -67,7 +66,7 @@ namespace CircleGrow {
 		}
 
 		private IEnumerator Coroutine_StartNextLevel() {
-			yield return new WaitForSecondsRealtime(2.6f);
+			yield return new WaitForSecondsRealtime(1.2f);
 			SetCurrentLevel(LevelIndex+1, true);
 		}
 
@@ -132,7 +131,7 @@ namespace CircleGrow {
 		//  Debug
 		// ----------------------------------------------------------------
 		override protected void Debug_WinLevel() {
-			// TODO: This.
+			WinLevel();
 		}
 
 

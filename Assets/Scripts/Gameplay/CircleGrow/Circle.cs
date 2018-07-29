@@ -24,6 +24,10 @@ namespace CircleGrow {
 			get { return myRectTransform.anchoredPosition; }
 			set { myRectTransform.anchoredPosition = value; }
 		}
+		public int ScoreValue() {
+			float area = Mathf.PI * Radius*Radius;
+			return Mathf.CeilToInt(area * multiplier);
+		}
 		// Getters (Private)
 		private Color bodyColor {
 			get { return i_body.color; }
@@ -42,7 +46,7 @@ namespace CircleGrow {
 			return 10;
 		}
 		private static Color GetBodyColorFromMultiplier(int _mult) {
-//			switch (_mult) {TODO: This.
+//			switch (_mult) {TEMP disabled until we make the color scheme.
 //			case 0: return new ColorHSB(0,0,0).ToColor(); // Hmm.
 //			default: return Color.black; // Hmm.
 //			}

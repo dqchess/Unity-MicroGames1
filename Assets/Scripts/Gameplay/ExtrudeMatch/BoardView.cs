@@ -8,8 +8,8 @@ namespace ExtrudeMatch {
 		private float unitSize; // how big each board space is in pixels
 //		private Rect viewRect; // contains my pos and size.
 		// Components
-		[SerializeField] private RectTransform myRectTransform;
-		[SerializeField] private Transform tf_boardSpaces;
+		[SerializeField] private RectTransform myRectTransform=null;
+		[SerializeField] private Transform tf_boardSpaces=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
         //private List<BoardObjectView> allObjectViews; // includes EVERY single BoardObjectView!
@@ -39,27 +39,6 @@ namespace ExtrudeMatch {
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
 
-//		/** Very inefficient. Just temporary. */
-//		public BoardOccupantView TEMP_GetOccupantView (BoardOccupant _occupant) {
-//			foreach (BoardObjectView objectView in tileViews) {
-//				if (objectView is BoardOccupantView) {
-//					if (objectView.MyBoardObject == _occupant) {
-//						return objectView as BoardOccupantView;
-//					}
-////				BoardOccupantView occupantView = objectView as BoardOccupantView;
-		//		}
-		//	}
-		//	return null; // oops.
-		//}
-		///** Very inefficient. Just temporary. */
-		//public BoardObjectView TEMP_GetObjectView (BoardObject bo) {
-		//	foreach (BoardObjectView objectView in tileViews) {
-		//		if (objectView.MyBoardObject == bo) {
-		//			return objectView;
-		//		}
-		//	}
-		//	return null; // oops.
-		//}
 		private Rect TEMP_availableArea; // TEMP DEBUG
 //		private void OnDrawGizmos () {
 //			Gizmos.color = Color.yellow;
@@ -102,20 +81,8 @@ namespace ExtrudeMatch {
 		}
 
 		private void UpdatePosAndSize() {
-			
 			Rect r_availableArea = myRectTransform.rect;
-			//TODO: Clean this up
-//			const float minGapBottom = 40;
-//			const float minGapTop = 180;
-//			const float minGapLeft = 40;
-//			const float minGapRight = 40;
-//			Rect r_availableArea = new Rect(minGapLeft,minGapBottom, screenSize.x-minGapLeft-minGapRight,screenSize.y-minGapBottom-minGapTop);
 			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
-//			// Position us real good!
-//			viewRect = new Rect();
-//			viewRect.size = new Vector2(unitSize*numCols, unitSize*numRows);
-//			viewRect.position = new Vector2(r_availableArea.position.x,r_availableArea.yMax);
-//			viewRect.position += new Vector2((r_availableArea.size.x-viewRect.size.x)*0.5f, -(r_availableArea.size.y-viewRect.size.y)); // horizontally center us, dawg!
 		}
 
 		TileView AddTileView (Tile data) {
@@ -155,20 +122,6 @@ namespace ExtrudeMatch {
 		}
 
 
-//		public void UpdateViewsPostMove () {
-//			RemoveViewsNotInPlay();
-//			AddViewsForAddedObjects();
-//			for (int i=allObjectViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
-//				allObjectViews[i].UpdateVisualsPostMove ();
-//			}
-//		}
-//		private void AddViewsForAddedObjects () {
-//			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
-//				AddObjectView (bo);
-//			}
-//			// Clear out the list! We've used 'em.
-//			myBoard.objectsAddedThisMove.Clear();
-//		}
 		private void RemoveViewsNotInPlay() {
 			for (int i=tileViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				if (!tileViews[i].MyBoardObject.IsInPlay) {
@@ -184,3 +137,58 @@ namespace ExtrudeMatch {
 
 	}
 }
+
+
+//		public void UpdateViewsPostMove () {
+//			RemoveViewsNotInPlay();
+//			AddViewsForAddedObjects();
+//			for (int i=allObjectViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
+//				allObjectViews[i].UpdateVisualsPostMove ();
+//			}
+//		}
+//		private void AddViewsForAddedObjects () {
+//			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
+//				AddObjectView (bo);
+//			}
+//			// Clear out the list! We've used 'em.
+//			myBoard.objectsAddedThisMove.Clear();
+//		}
+
+//		/** Very inefficient. Just temporary. */
+//		public BoardOccupantView TEMP_GetOccupantView (BoardOccupant _occupant) {
+//			foreach (BoardObjectView objectView in tileViews) {
+//				if (objectView is BoardOccupantView) {
+//					if (objectView.MyBoardObject == _occupant) {
+//						return objectView as BoardOccupantView;
+//					}
+////				BoardOccupantView occupantView = objectView as BoardOccupantView;
+//		}
+//	}
+//	return null; // oops.
+//}
+///** Very inefficient. Just temporary. */
+//public BoardObjectView TEMP_GetObjectView (BoardObject bo) {
+//	foreach (BoardObjectView objectView in tileViews) {
+//		if (objectView.MyBoardObject == bo) {
+//			return objectView;
+//		}
+//	}
+//	return null; // oops.
+//}
+/*
+		private void UpdatePosAndSize() {
+			Rect r_availableArea = myRectTransform.rect;
+			//TODO: Clean this up
+//			const float minGapBottom = 40;
+//			const float minGapTop = 180;
+//			const float minGapLeft = 40;
+//			const float minGapRight = 40;
+//			Rect r_availableArea = new Rect(minGapLeft,minGapBottom, screenSize.x-minGapLeft-minGapRight,screenSize.y-minGapBottom-minGapTop);
+			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
+//			// Position us real good!
+//			viewRect = new Rect();
+//			viewRect.size = new Vector2(unitSize*numCols, unitSize*numRows);
+//			viewRect.position = new Vector2(r_availableArea.position.x,r_availableArea.yMax);
+//			viewRect.position += new Vector2((r_availableArea.size.x-viewRect.size.x)*0.5f, -(r_availableArea.size.y-viewRect.size.y)); // horizontally center us, dawg!
+		}
+		*/

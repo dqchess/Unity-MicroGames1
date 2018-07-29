@@ -1011,7 +1011,7 @@ namespace BouncePaint {
                 AddBlock(bs,    0,b).SetHitsReq(2);
                 AddBlock(bs,  140,b).SetHitsReq(3);
             }
-            // TODO: These levels
+            // TO DO: These levels
             // Multi-Hit +
             //      varying y pos
             //      irregular layouts
@@ -1360,7 +1360,7 @@ namespace BouncePaint {
                     AddBlock(new Vector2(160,20),  160, b+100);
                     AddBlock(new Vector2(160,20),  160, b);
                 }
-            //else if (levelIndex == i++) { // Pluses TODO: These lvls
+            //else if (levelIndex == i++) { // Pluses TO DO: These lvls
             //}
             //else if (levelIndex == i++) { // Zig-zags
             //}

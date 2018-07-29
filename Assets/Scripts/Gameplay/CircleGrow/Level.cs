@@ -88,11 +88,8 @@ namespace CircleGrow {
 		public void SolidifyCurrentCircle() {
 			if (currentCircle == null) { return; } // Safety check.
 
+			// Solidify current, and move onto the next one!
 			currentCircle.OnSolidify();
-
-			// TODO: Calculate score and stuff too
-
-			// Move onto the next circle!
 			SetCurrentCircleIndex(currentCircleIndex + 1);
 		}
 		private void OnCircleIllegalOverlap(Circle circle) {
@@ -101,14 +98,16 @@ namespace CircleGrow {
 		}
 		private void SetCurrentCircleIndex(int _index) {
 			currentCircleIndex = _index;
-			//			circles[currentCircleIndex].SetIsOscillating(true);
+//			circles[currentCircleIndex].SetIsOscillating(true);
+
+			gameController.UpdateScore();
+
 			// There IS another circle!
 			if (currentCircle != null) {
-//				currentCircle.
 			}
 			// There is NOT another circle! End the level.
 			else {
-				// TODO: This.
+				
 			}
 		}
 
