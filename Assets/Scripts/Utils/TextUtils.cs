@@ -17,6 +17,9 @@ public class TextUtils {
 	public static int ParseInt (string _string) { return int.Parse (_string, parserCulture); }
 
 
+    static public string AddCommas(float f) {
+        return f.ToString("#,##0");
+    }
 	static public string ToTimeString_msm (float timeFloat, string displayStringIf0) {
 		if (timeFloat == 0) { return displayStringIf0; }
 		return ToTimeString_msm (timeFloat);

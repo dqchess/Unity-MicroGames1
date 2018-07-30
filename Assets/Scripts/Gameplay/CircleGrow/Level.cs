@@ -17,14 +17,16 @@ namespace CircleGrow {
 		private List<Circle> circles;
 		// Properties
 //		private float screenShakeVolume;
+        private int scoreRequired;
 		private int currentCircleIndex;
 		private Rect r_levelBounds; // set to i_bounds.rect in Initialize.
 		// References
 		private GameController gameController;
 
 
-		// Getters (Public)
-		public List<Circle> Circles { get { return circles; } }
+        // Getters (Public)
+        public float ScoreRequired { get { return scoreRequired; } }
+        public List<Circle> Circles { get { return circles; } }
 		// Getters (Private)
 		private Circle currentCircle {
 			get {
@@ -94,7 +96,7 @@ namespace CircleGrow {
 		}
 		private void OnCircleIllegalOverlap(Circle circle) {
 			circle.OnIllegalOverlap();
-			gameController.LoseLevel();
+            gameController.OnCircleIllegalOverlap();
 		}
 		private void SetCurrentCircleIndex(int _index) {
 			currentCircleIndex = _index;
@@ -104,10 +106,11 @@ namespace CircleGrow {
 
 			// There IS another circle!
 			if (currentCircle != null) {
+                currentCircle.OnStartGrowing();
 			}
 			// There is NOT another circle! End the level.
 			else {
-				
+                gameController.OnAllCirclesSolidified();
 			}
 		}
 
@@ -149,9 +152,9 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Adding Elements
 		// ----------------------------------------------------------------
-		private void AddCircle(float radius, float x,float y) {
+        private void AddCircle(float radius, float growSpeed, float x,float y) {
 			Circle newCircle = Instantiate(resourcesHandler.circleGrow_circle).GetComponent<Circle>();
-			newCircle.Initialize(this.transform, new Vector2(x,y), radius);
+			newCircle.Initialize(this.transform, new Vector2(x,y), radius, growSpeed);
 			circles.Add(newCircle);
 		}
 
@@ -167,8 +170,10 @@ namespace CircleGrow {
 			// Reset values
 			circles = new List<Circle>();
 
-			// Specify default values
-			float sr = 10; // startingRadius
+            // Specify default values
+            float sr = 10; // startingRadius
+            float gs = 0.8f; // growSpeed
+            scoreRequired = 1000;
 
 			// NOTE: All coordinates are based off of a 600x800 available playing space! :)
 
@@ -179,12 +184,20 @@ namespace CircleGrow {
 
 			// Simple, together.
 			else if (li == i++) {
-				AddCircle(sr, 0,0);
-			}
-			else if (li == i++) {
-				AddCircle(sr, 0,-200);
-				AddCircle(sr, 0, 200);
-			}
+                scoreRequired = 1000;
+				AddCircle(sr,gs, 0,0);
+            }
+            else if (li == i++) {
+                scoreRequired = 1000;
+                AddCircle(sr,gs, 0,-150);
+                AddCircle(sr,gs, 0, 150);
+            }
+            else if (li == i++) {
+                scoreRequired = 1500;
+                AddCircle(sr,gs,  50,-150);
+                AddCircle(sr,gs, -150,  0);
+                AddCircle(sr,gs,  50, 150);
+            }
 
 
 			else {
