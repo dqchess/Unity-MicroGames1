@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CircleGrow {
-    public enum CircleStates {
-        Sleeping, Growing, Solidified
-    }
+    public enum GrowerStates { Sleeping, Growing, Solidified }
+    public enum GrowerShapes{ Circle, Square, Triangle }
 
-	public class Circle : MonoBehaviour {
+	public class Grower : MonoBehaviour {
 		// Constants
 		static public readonly Color color_oscillating = new Color(250/255f, 200/255f, 110/255f);
 		static public readonly Color color_solid = new Color(37/255f, 166/255f, 170/255f);
@@ -18,13 +17,13 @@ namespace CircleGrow {
 		[SerializeField] private Text t_multiplier=null;
 		[SerializeField] private RectTransform myRectTransform=null;
         // Properties
-        private CircleStates currentState;
+        private GrowerStates currentState;
         private float growSpeed;
         private float radius;
 		private int multiplier;
 
         // Getters (Public)
-        public CircleStates CurrentState { get { return currentState; } }
+        public GrowerStates CurrentState { get { return currentState; } }
         public float Radius { get { return radius; } }
 		public Vector2 Pos {
 			get { return myRectTransform.anchoredPosition; }
@@ -67,7 +66,7 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize(Transform tf_parent, Vector2 _pos, float _radius, float _growSpeed) {
+		public void Initialize(Transform tf_parent, Vector2 _pos, GrowerShapes _shape, float _radius, float _growSpeed) {
 			this.transform.SetParent(tf_parent);
 			this.transform.localScale = Vector3.one;
 			this.transform.localPosition = Vector3.zero;
@@ -75,8 +74,9 @@ namespace CircleGrow {
 
 			Pos = _pos;
             growSpeed = _growSpeed;
+            //_shape
 			SetRadius(_radius);
-            SetCurrentState(CircleStates.Sleeping);
+            SetCurrentState(GrowerStates.Sleeping);
 		}
 
 
@@ -92,18 +92,18 @@ namespace CircleGrow {
             t_multiplier.text = TextUtils.AddCommas(ScoreValue());
 			i_body.color = GetBodyColorFromMultiplier(multiplier);
         }
-        private void SetCurrentState(CircleStates _state) {
+        private void SetCurrentState(GrowerStates _state) {
             currentState = _state;
             // Only show my text if I'm NOT sleeping!
-            t_multiplier.enabled = _state != CircleStates.Sleeping;
+            t_multiplier.enabled = _state != GrowerStates.Sleeping;
         }
 
         public void OnStartGrowing() {
-            SetCurrentState(CircleStates.Growing);
+            SetCurrentState(GrowerStates.Growing);
         }
 		public void OnSolidify() {
             bodyColor = color_solid;
-            SetCurrentState(CircleStates.Solidified);
+            SetCurrentState(GrowerStates.Solidified);
 		}
 		public void OnIllegalOverlap() {
 			bodyColor = color_illegal;

@@ -12,7 +12,7 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject bouncePaint_level;
 	[SerializeField] public GameObject bouncePaint_player;
 
-	[SerializeField] public GameObject circleGrow_circle;
+	[SerializeField] public GameObject circleGrow_grower;
 	[SerializeField] public GameObject circleGrow_level;
 
 	[SerializeField] public GameObject extrudeMatch_boardSpaceView;

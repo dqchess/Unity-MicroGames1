@@ -308,7 +308,7 @@ MonoBehaviour:
     type: 2}
   bouncePaint_player: {fileID: 1857669726947748, guid: ae5ab297af6ef4c05b765191fc4a1a12,
     type: 2}
-  circleGrow_circle: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
+  circleGrow_grower: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
     type: 2}
   circleGrow_level: {fileID: 1645702038941974, guid: 3a372c6878e71a54d85b18f4e0bffff0,
     type: 2}

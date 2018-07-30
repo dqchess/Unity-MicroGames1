@@ -14,11 +14,11 @@ namespace CircleGrow {
 		[SerializeField] private Image i_bounds=null;
 		[SerializeField] private TextMeshProUGUI t_levelName=null;
 		[SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
-		private List<Circle> circles;
+		private List<Grower> growers;
 		// Properties
 //		private float screenShakeVolume;
         private int scoreRequired;
-		private int currentCircleIndex;
+		private int currentGrowerIndex;
 		private Rect r_levelBounds; // set to i_bounds.rect in Initialize.
 		// References
 		private GameController gameController;
@@ -26,15 +26,15 @@ namespace CircleGrow {
 
         // Getters (Public)
         public float ScoreRequired { get { return scoreRequired; } }
-        public List<Circle> Circles { get { return circles; } }
+        public List<Grower> Growers { get { return growers; } }
 		// Getters (Private)
-		private Circle currentCircle {
+		private Grower currentGrower {
 			get {
-				if (currentCircleIndex<0 || currentCircleIndex>=circles.Count) { return null; } // Index outta bounds? Return null.
-				return circles[currentCircleIndex];
+				if (currentGrowerIndex<0 || currentGrowerIndex>=growers.Count) { return null; } // Index outta bounds? Return null.
+				return growers[currentGrowerIndex];
 			}
 		}
-		private bool IsCircleIllegalOverlap(Circle circle) {
+		private bool IsIllegalOverlap(Grower circle) {
 			return IsCircleAtPos(circle.Pos, circle.Radius) || !IsCircleInBounds(circle.Pos, circle.Radius);
 		}
 		private bool IsCircleInBounds(Vector2 pos, float radius) {
@@ -45,20 +45,13 @@ namespace CircleGrow {
 			return true;
 		}
 		private bool IsCircleAtPos(Vector2 pos, float radius) {
-			foreach (Circle c in circles) {
+			foreach (Grower c in growers) {
 				if (c.Pos==pos && c.Radius==radius) { continue; } // Skip itself.
 				if (DoCirclesOverlap(c.Pos,c.Radius, pos,radius)) { return true; }
 			}
 			return false; // We're good!
 		}
-		//private bool IsCircleOverlappingAnother(Circle circle) {
-		//    foreach (Circle c in circles) {
-		//        if (c == circle) { continue; } // Skip itself of course.
-		//        if (DoCirclesOverlap(c, circle)) { return true; }
-		//    }
-		//    return false; // We're good!
-		//}
-		private bool DoCirclesOverlap(Circle circleA, Circle circleB) {
+		private bool DoCirclesOverlap(Grower circleA, Grower circleB) {
 			return DoCirclesOverlap(circleA.Pos,circleA.Radius, circleB.Pos,circleB.Radius);
 		}
 		private bool DoCirclesOverlap(Vector2 posA,float radiusA, Vector2 posB,float radiusB) {
@@ -78,39 +71,38 @@ namespace CircleGrow {
 			t_levelName.text = "LEVEL " + LevelIndex.ToString();
 
 			r_levelBounds = i_bounds.rectTransform.rect;
-			r_levelBounds.center += new Vector2(0, r_levelBounds.height*0.5f);// Hacky center the bounds because Level and Circle anchors are currently different :P
+			r_levelBounds.center += new Vector2(0, r_levelBounds.height*0.5f);// Hacky center the bounds because Level and Grower anchors are currently different :P
 
-			i_border.color = Circle.color_solid;
+			i_border.color = Grower.color_solid;
 		}
 
 
 		// ----------------------------------------------------------------
 		//  Game Doers
 		// ----------------------------------------------------------------
-		public void SolidifyCurrentCircle() {
-			if (currentCircle == null) { return; } // Safety check.
+		public void SolidifyCurrentGrower() {
+			if (currentGrower == null) { return; } // Safety check.
 
 			// Solidify current, and move onto the next one!
-			currentCircle.OnSolidify();
-			SetCurrentCircleIndex(currentCircleIndex + 1);
+			currentGrower.OnSolidify();
+			SetCurrentGrowerIndex(currentGrowerIndex + 1);
 		}
-		private void OnCircleIllegalOverlap(Circle circle) {
-			circle.OnIllegalOverlap();
-            gameController.OnCircleIllegalOverlap();
+        private void OnIllegalOverlap(Grower grower) {
+			grower.OnIllegalOverlap();
+            gameController.OnIllegalOverlap();
 		}
-		private void SetCurrentCircleIndex(int _index) {
-			currentCircleIndex = _index;
-//			circles[currentCircleIndex].SetIsOscillating(true);
+		private void SetCurrentGrowerIndex(int _index) {
+            currentGrowerIndex = _index;
 
 			gameController.UpdateScore();
 
-			// There IS another circle!
-			if (currentCircle != null) {
-                currentCircle.OnStartGrowing();
+			// There IS another Grower!
+			if (currentGrower != null) {
+                currentGrower.OnStartGrowing();
 			}
-			// There is NOT another circle! End the level.
+            // There is NOT another Grower! End the level.
 			else {
-                gameController.OnAllCirclesSolidified();
+                gameController.OnAllGrowersSolidified();
 			}
 		}
 
@@ -125,15 +117,15 @@ namespace CircleGrow {
 			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
 
 			if (gameController.IsGameStatePlaying) {
-				GrowCurrentCircle();
+				GrowCurrentGrower();
 			}
 		}
-		private void GrowCurrentCircle() {
-			if (currentCircle == null) { return; } // Safety check.
+        private void GrowCurrentGrower() {
+			if (currentGrower == null) { return; } // Safety check.
 
-			currentCircle.GrowStep();
-			if (IsCircleIllegalOverlap(currentCircle)) {
-				OnCircleIllegalOverlap(currentCircle);
+            currentGrower.GrowStep();
+            if (IsIllegalOverlap(currentGrower)) {
+				OnIllegalOverlap(currentGrower);
 			}
 		}
 
@@ -142,20 +134,20 @@ namespace CircleGrow {
 		//  Destroying Elements
 		// ----------------------------------------------------------------
 		private void DestroyLevelComponents() {
-			if (circles != null) {
-				for (int i=circles.Count-1; i>=0; --i) {
-					Destroy(circles[i].gameObject);
+			if (growers != null) {
+				for (int i=growers.Count-1; i>=0; --i) {
+					Destroy(growers[i].gameObject);
 				}
 			}
-			circles = new List<Circle>();
+			growers = new List<Grower>();
 		}
 		// ----------------------------------------------------------------
 		//  Adding Elements
 		// ----------------------------------------------------------------
-        private void AddCircle(float radius, float growSpeed, float x,float y) {
-			Circle newCircle = Instantiate(resourcesHandler.circleGrow_circle).GetComponent<Circle>();
-			newCircle.Initialize(this.transform, new Vector2(x,y), radius, growSpeed);
-			circles.Add(newCircle);
+        private void AddGrower(GrowerShapes shape, float radius, float growSpeed, float x,float y) {
+            Grower newObj = Instantiate(resourcesHandler.circleGrow_grower).GetComponent<Grower>();
+            newObj.Initialize(this.transform, new Vector2(x,y), shape, radius, growSpeed);
+            growers.Add(newObj);
 		}
 
 
@@ -168,9 +160,10 @@ namespace CircleGrow {
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
 			// Reset values
-			circles = new List<Circle>();
+			growers = new List<Grower>();
 
             // Specify default values
+            GrowerShapes sh = GrowerShapes.Circle;
             float sr = 10; // startingRadius
             float gs = 0.8f; // growSpeed
             scoreRequired = 1000;
@@ -185,18 +178,18 @@ namespace CircleGrow {
 			// Simple, together.
 			else if (li == i++) {
                 scoreRequired = 1000;
-				AddCircle(sr,gs, 0,0);
+                AddGrower(sh,sr,gs, 0,0);
             }
             else if (li == i++) {
                 scoreRequired = 1000;
-                AddCircle(sr,gs, 0,-150);
-                AddCircle(sr,gs, 0, 150);
+                AddGrower(sh,sr,gs, 0,-150);
+                AddGrower(sh,sr,gs, 0, 150);
             }
             else if (li == i++) {
                 scoreRequired = 1500;
-                AddCircle(sr,gs,  50,-150);
-                AddCircle(sr,gs, -150,  0);
-                AddCircle(sr,gs,  50, 150);
+                AddGrower(sh,sr,gs,  50,-150);
+                AddGrower(sh,sr,gs, -150,  0);
+                AddGrower(sh,sr,gs,  50, 150);
             }
 
 
@@ -206,8 +199,8 @@ namespace CircleGrow {
 				Debug.LogWarning("No level data available for level: " + li);
 			}
 
-			// Start with the first circle oscillating!
-			SetCurrentCircleIndex(0);
+			// Start growing the first dude!
+            SetCurrentGrowerIndex(0);
 		}
 
 	}

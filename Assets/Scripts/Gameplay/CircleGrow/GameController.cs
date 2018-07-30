@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CircleGrow {
-    public enum LoseReasons { Undefined, CircleOverlap, InsufficientScore }
+    public enum LoseReasons { Undefined, IllegalOverlap, InsufficientScore }
 
     public class GameController : BaseLevelGameController {
         // Overrideables
@@ -43,8 +43,8 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         public void UpdateScore() {
             score = 0;
-            foreach (Circle c in level.Circles) {
-                if (c.CurrentState != CircleStates.Solidified) { continue; } // Skip ones that haven't been solidified, of course.
+            foreach (Grower c in level.Growers) {
+                if (c.CurrentState != GrowerStates.Solidified) { continue; } // Skip ones that haven't been solidified, of course.
                 score += c.ScoreValue();
             }
             // Update the UI!
@@ -58,8 +58,8 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         //  Game Flow Events
         // ----------------------------------------------------------------
-        public void OnCircleIllegalOverlap() {
-            loseReason = LoseReasons.CircleOverlap;
+        public void OnIllegalOverlap() {
+            loseReason = LoseReasons.IllegalOverlap;
             LoseLevel();
         }
 
@@ -128,7 +128,7 @@ namespace CircleGrow {
         }
 
 
-        public void OnAllCirclesSolidified() {
+        public void OnAllGrowersSolidified() {
             bool didWin = score >= level.ScoreRequired;
             if (didWin) {
                 WinLevel();
@@ -149,7 +149,7 @@ namespace CircleGrow {
             if (Time.timeScale == 0f) { return; }
 
             if (IsGameStatePlaying) {
-                level.SolidifyCurrentCircle();
+                level.SolidifyCurrentGrower();
             }
         }
 
