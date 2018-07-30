@@ -10,12 +10,12 @@ namespace CircleGrow {
         // Overrideables
         override public string MyGameName() { return GameNames.CircleGrow; }
         // Components
-        [SerializeField] private GameUI gameUI=null;
 //        [SerializeField] private Image i_levelBounds=null;
         private Level level;
         // Properties
         private LoseReasons loseReason;
-        private int score;
+        private int scorePossible; // includes the Grower that's currently growing!
+        private int scoreSolidified; // ONLY includes Growers that've been solidified.
         
 
 
@@ -42,13 +42,16 @@ namespace CircleGrow {
         //  Doers
         // ----------------------------------------------------------------
         public void UpdateScore() {
-            score = 0;
-            foreach (Grower c in level.Growers) {
-                if (c.CurrentState != GrowerStates.Solidified) { continue; } // Skip ones that haven't been solidified, of course.
-                score += c.ScoreValue();
+            scorePossible = 0;
+            scoreSolidified = 0;
+            foreach (Grower g in level.Growers) {
+                scorePossible += g.ScoreValue();
+                if (g.CurrentState==GrowerStates.Solidified) {
+                    scoreSolidified += g.ScoreValue();
+                }
             }
             // Update the UI!
-            gameUI.SetScoreText(score);
+            level.UpdateScoreUI(scorePossible, scoreSolidified);
         }
 
 
@@ -66,13 +69,13 @@ namespace CircleGrow {
         override public void LoseLevel() {
             base.LoseLevel();
             // Tell people!
-            gameUI.OnLoseLevel(loseReason);
+            level.OnLoseLevel(loseReason);
         }
         override protected void WinLevel() {
             base.WinLevel();
             StartCoroutine(Coroutine_StartNextLevel());
             // Tell people!
-            gameUI.OnWinLevel();
+            level.OnWinLevel();
         }
 
         private IEnumerator Coroutine_StartNextLevel() {
@@ -121,15 +124,12 @@ namespace CircleGrow {
                 }
             }
 
-            // Update the UI!
-            gameUI.OnStartLevel(level.ScoreRequired);
-
             yield return null;
         }
 
 
         public void OnAllGrowersSolidified() {
-            bool didWin = score >= level.ScoreRequired;
+            bool didWin = scoreSolidified >= level.ScoreRequired;
             if (didWin) {
                 WinLevel();
             }

@@ -20,8 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224658759679658434}
   - component: {fileID: 114126013776524474}
-  - component: {fileID: 222965949461168440}
-  - component: {fileID: 114384411774580936}
   m_Layer: 5
   m_Name: Grower
   m_TagString: Untagged
@@ -40,7 +38,7 @@ GameObject:
   - component: {fileID: 222169729389290728}
   - component: {fileID: 114517799003190274}
   m_Layer: 5
-  m_Name: t_Multiplier
+  m_Name: t_ScoreValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57,36 +55,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32e7018449a3d43dfbbcd447132daf65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  i_body: {fileID: 114384411774580936}
-  t_multiplier: {fileID: 114517799003190274}
+  t_scoreValue: {fileID: 114517799003190274}
   myRectTransform: {fileID: 224658759679658434}
---- !u!114 &114384411774580936
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1007506403029170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.40009785, g: 0, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f6848ebe717dd4b78ae5b6e8394994fd, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
 --- !u!114 &114517799003190274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,19 +89,13 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 9x
+  m_Text: 999
 --- !u!222 &222169729389290728
 CanvasRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1696041085263206}
---- !u!222 &222965949461168440
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1007506403029170}
 --- !u!224 &224656155983780620
 RectTransform:
   m_ObjectHideFlags: 1

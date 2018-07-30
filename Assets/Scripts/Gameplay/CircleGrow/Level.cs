@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +9,11 @@ namespace CircleGrow {
 		public static int FirstLevelIndex = 1;
 //		public static int LastLevelIndex = 101;
 		// Components
-		[SerializeField] private Image i_border=null;
-		[SerializeField] private Image i_bounds=null;
-		[SerializeField] private TextMeshProUGUI t_levelName=null;
-		[SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
+        [SerializeField] private Image i_border=null;
+        [SerializeField] private Image i_bounds=null;
+        [SerializeField] private LevelUI levelUI=null;
+        [SerializeField] private RectTransform rt_gameComponents=null; // Growers go on this!
+        //[SerializeField] private LevelBoundsColliders boundsColliders=null;
 		private List<Grower> growers;
 		// Properties
 //		private float screenShakeVolume;
@@ -25,7 +25,7 @@ namespace CircleGrow {
 
 
         // Getters (Public)
-        public float ScoreRequired { get { return scoreRequired; } }
+        public int ScoreRequired { get { return scoreRequired; } }
         public List<Grower> Growers { get { return growers; } }
 		// Getters (Private)
 		private Grower currentGrower {
@@ -34,6 +34,7 @@ namespace CircleGrow {
 				return growers[currentGrowerIndex];
 			}
 		}
+        /*
 		private bool IsIllegalOverlap(Grower circle) {
 			return IsCircleAtPos(circle.Pos, circle.Radius) || !IsCircleInBounds(circle.Pos, circle.Radius);
 		}
@@ -58,6 +59,7 @@ namespace CircleGrow {
 			float dist = Vector2.Distance(posA,posB);
 			return dist < radiusA+radiusB;
 		}
+		*/
 
 
 
@@ -68,27 +70,41 @@ namespace CircleGrow {
 			gameController = _gameController;
 			BaseInitialize(tf_parent, _levelIndex);
 
-			t_levelName.text = "LEVEL " + LevelIndex.ToString();
+            levelUI.Initialize();
 
 			r_levelBounds = i_bounds.rectTransform.rect;
 			r_levelBounds.center += new Vector2(0, r_levelBounds.height*0.5f);// Hacky center the bounds because Level and Grower anchors are currently different :P
 
 			i_border.color = Grower.color_solid;
-		}
+        }
 
 
-		// ----------------------------------------------------------------
-		//  Game Doers
-		// ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        public void UpdateScoreUI(int scorePossible, int scoreSolidified) {
+            levelUI.UpdateScoreUI(scorePossible, scoreSolidified);
+        }
+        public void OnLoseLevel(LoseReasons reason) {
+            levelUI.OnLoseLevel(reason);
+        }
+        public void OnWinLevel() {
+            levelUI.OnWinLevel();
+        }
+
+
+        // ----------------------------------------------------------------
+        //  Game Doers
+        // ----------------------------------------------------------------
 		public void SolidifyCurrentGrower() {
 			if (currentGrower == null) { return; } // Safety check.
+            if (currentGrower.CurrentState != GrowerStates.Growing) { return; } // Oh, if it's only pre-growing, DON'T do anything.
 
 			// Solidify current, and move onto the next one!
-			currentGrower.OnSolidify();
+			currentGrower.Solidify();
 			SetCurrentGrowerIndex(currentGrowerIndex + 1);
 		}
-        private void OnIllegalOverlap(Grower grower) {
-			grower.OnIllegalOverlap();
+        public void OnIllegalOverlap() {
             gameController.OnIllegalOverlap();
 		}
 		private void SetCurrentGrowerIndex(int _index) {
@@ -98,7 +114,7 @@ namespace CircleGrow {
 
 			// There IS another Grower!
 			if (currentGrower != null) {
-                currentGrower.OnStartGrowing();
+                currentGrower.StartGrowing();
 			}
             // There is NOT another Grower! End the level.
 			else {
@@ -123,10 +139,15 @@ namespace CircleGrow {
         private void GrowCurrentGrower() {
 			if (currentGrower == null) { return; } // Safety check.
 
-            currentGrower.GrowStep();
-            if (IsIllegalOverlap(currentGrower)) {
-				OnIllegalOverlap(currentGrower);
-			}
+            // Grow it, and update our score!
+            if (currentGrower.CurrentState == GrowerStates.Growing) {
+                currentGrower.GrowStep();
+                gameController.UpdateScore();
+            }
+
+   //         if (IsIllegalOverlap(currentGrower)) {
+			//	OnIllegalOverlap(currentGrower);
+			//}
 		}
 
 
@@ -146,7 +167,7 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
         private void AddGrower(GrowerShapes shape, float radius, float growSpeed, float x,float y) {
             Grower newObj = Instantiate(resourcesHandler.circleGrow_grower).GetComponent<Grower>();
-            newObj.Initialize(this.transform, new Vector2(x,y), shape, radius, growSpeed);
+            newObj.Initialize(this, rt_gameComponents, new Vector2(x,y), shape, radius, growSpeed);
             growers.Add(newObj);
 		}
 
@@ -195,7 +216,7 @@ namespace CircleGrow {
 
 			else {
 				DestroyLevelComponents();
-				t_moreLevelsComingSoon.gameObject.SetActive(true);
+                levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
 				Debug.LogWarning("No level data available for level: " + li);
 			}
 
