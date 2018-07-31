@@ -9,17 +9,14 @@ namespace CircleGrow {
 		public static int FirstLevelIndex = 1;
 //		public static int LastLevelIndex = 101;
 		// Components
-        [SerializeField] private Image i_border=null;
-        [SerializeField] private Image i_bounds=null;
+        [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;
         [SerializeField] private RectTransform rt_gameComponents=null; // Growers go on this!
-        //[SerializeField] private LevelBoundsColliders boundsColliders=null;
 		private List<Grower> growers;
 		// Properties
 //		private float screenShakeVolume;
         private int scoreRequired;
 		private int currentGrowerIndex;
-		private Rect r_levelBounds; // set to i_bounds.rect in Initialize.
 		// References
 		private GameController gameController;
 
@@ -68,14 +65,10 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
 			gameController = _gameController;
+
+            bounds.Initialize();
 			BaseInitialize(tf_parent, _levelIndex);
-
             levelUI.Initialize();
-
-			r_levelBounds = i_bounds.rectTransform.rect;
-			r_levelBounds.center += new Vector2(0, r_levelBounds.height*0.5f);// Hacky center the bounds because Level and Grower anchors are currently different :P
-
-			i_border.color = Grower.color_solid;
         }
 
 
@@ -189,15 +182,16 @@ namespace CircleGrow {
             float sr = 10; // startingRadius
             float gs = 0.8f; // growSpeed
             scoreRequired = 1000;
+            bounds.SetSize(550,750); // Default to 600x800 with 25px padding on all sides.
 
-			// NOTE: All coordinates are based off of a 600x800 available playing space! :)
+            // NOTE: All coordinates are based off of LevelBounds's playing space (specified here! 550x750 or less)!
 
 			int li = LevelIndex;
 			int i=FirstLevelIndex;
 			if (false) {}
 
 
-			// Simple, together.
+            // Balls to the Walls
 			else if (li == i++) { // One.
                 scoreRequired = 1000;
                 AddGrower(sh,sr,gs, 0,0);
@@ -213,6 +207,14 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs, -60,-160);
                 AddGrower(sh,sr,gs,  60, 160);
             }
+            else if (li == i++) { // 2 stack narrow
+                bounds.SetSize(300,750);
+                scoreRequired = 1500;
+                AddGrower(sh,sr,gs, 0,-150);
+                AddGrower(sh,sr,gs, 0, 150);
+            }
+
+            // Balls to the Balls
             else if (li == i++) { // Easy V
                 scoreRequired = 2600;
                 AddGrower(sh,sr,gs, -140,  240);
@@ -317,6 +319,16 @@ namespace CircleGrow {
              * Two pairs next to each other
              * One tucked in a corner
              */
+
+            // UNTESTED
+            else if (li == i++) { // 5-die max-fit
+                scoreRequired = 3000;
+                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr,gs, -200, -300);
+                AddGrower(sh,sr,gs,  200, -300);
+                AddGrower(sh,sr,gs, -200,  300);
+                AddGrower(sh,sr,gs,  200,  300);
+            }
 
             /*
             else if (li == i++) { // Rhombus

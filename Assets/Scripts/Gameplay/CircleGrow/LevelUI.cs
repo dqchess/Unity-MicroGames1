@@ -38,7 +38,6 @@ namespace CircleGrow {
             i_barBorder.color = barColor_solid;
             i_barFillPossible.color = barColor_possible;
             i_barFillSolidified.color = barColor_solid;
-            //t_score.color = barColor_solid;
             t_scoreRequired.color = barColor_solid;
 
             // LevelIndex
@@ -61,7 +60,7 @@ namespace CircleGrow {
             i_barFillPossible.rectTransform.sizeDelta = new Vector2(fillPossibleWidth, scoreBarSize.y);
             i_barFillSolidified.rectTransform.sizeDelta = new Vector2(fillSolidifiedWidth, scoreBarSize.y);
             // Update color!
-            if (scoreSolidified >= scoreRequired) { // We won already!!
+            if (scorePossible >= scoreRequired) { // We've potentially won already!!
                 t_score.color = Color.green;
             }
             else { // Haven't won yet...!
