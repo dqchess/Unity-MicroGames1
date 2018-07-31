@@ -108,6 +108,7 @@ namespace CircleGrow {
             gameController.OnIllegalOverlap();
 		}
 		private void SetCurrentGrowerIndex(int _index) {
+            if (growers.Count == 0) { return; } // Safety check.
             currentGrowerIndex = _index;
 
 			gameController.UpdateScore();
@@ -197,21 +198,140 @@ namespace CircleGrow {
 
 
 			// Simple, together.
-			else if (li == i++) {
+			else if (li == i++) { // One.
                 scoreRequired = 1000;
                 AddGrower(sh,sr,gs, 0,0);
             }
-            else if (li == i++) {
-                scoreRequired = 1000;
+            //TODO: Have first 4 lvls have no Grower-touching action. Walls are only obstacle.
+            else if (li == i++) { // 2 stack.
+                scoreRequired = 1500;
                 AddGrower(sh,sr,gs, 0,-150);
                 AddGrower(sh,sr,gs, 0, 150);
             }
-            else if (li == i++) {
-                scoreRequired = 1500;
-                AddGrower(sh,sr,gs,  50,-150);
-                AddGrower(sh,sr,gs, -150,  0);
-                AddGrower(sh,sr,gs,  50, 150);
+            else if (li == i++) { // 2 diagonal.
+                scoreRequired = 1800;
+                AddGrower(sh,sr,gs, -60,-160);
+                AddGrower(sh,sr,gs,  60, 160);
             }
+            else if (li == i++) { // Easy V
+                scoreRequired = 2600;
+                AddGrower(sh,sr,gs, -140,  240);
+                AddGrower(sh,sr,gs,  140,  240);
+                AddGrower(sh,sr,gs,    0, -140);
+            }
+            else if (li == i++) { // Snowman
+                scoreRequired = 1600;
+                AddGrower(sh,sr,gs, 0, -200);
+                AddGrower(sh,sr,gs, 0,  100);
+                AddGrower(sh,sr,gs, 0,  300);
+            }
+            else if (li == i++) { // 4 Side-huggers
+            }
+            else if (li == i++) { // 4 Random
+            }
+
+            else if (li == i++) { // 4 square
+                scoreRequired = 2000;
+                AddGrower(sh,sr,gs, -130, -130);
+                AddGrower(sh,sr,gs,  130,  130);
+                AddGrower(sh,sr,gs,  130, -130);
+                AddGrower(sh,sr,gs, -130,  130);
+            }
+            else if (li == i++) { // 4 Random
+            }
+            else if (li == i++) { // 4 in corners
+                scoreRequired = 1500;
+                AddGrower(sh,sr,gs, -160, -260);
+                AddGrower(sh,sr,gs,  160, -260);
+                AddGrower(sh,sr,gs, -160,  260);
+                AddGrower(sh,sr,gs,  160,  260);
+            }
+            else if (li == i++) { // + perfect fit
+                scoreRequired = 2500;
+                AddGrower(sh,sr,gs, -190,   0);
+                AddGrower(sh,sr,gs,  190,   0);
+                AddGrower(sh,sr,gs,    0, -190);
+                AddGrower(sh,sr,gs,    0,  190);
+            }
+
+
+            else if (li == i++) { // 2 out-of-order diagonal
+                scoreRequired = 2200;
+                AddGrower(sh,sr,gs,  140, 160);
+                AddGrower(sh,sr,gs,    0,-100);
+            }
+            else if (li == i++) { // 3 diagonal
+                scoreRequired = 1800;
+                AddGrower(sh,sr,gs, -100, 200);
+                AddGrower(sh,sr,gs,  100,-200);
+                AddGrower(sh,sr,gs,    0,   0);
+            }
+            else if (li == i++) { // 3 diagonal OOO
+                scoreRequired = 1800;
+                AddGrower(sh,sr,gs,    0,   0);
+                AddGrower(sh,sr,gs, -100, 200);
+                AddGrower(sh,sr,gs,  100,-200);
+            }
+            else if (li == i++) { // 3 V OOO
+                scoreRequired = 2000;
+                AddGrower(sh,sr,gs, -100, 200);
+                AddGrower(sh,sr,gs,  100, 200);
+                AddGrower(sh,sr,gs,    0,-100);
+            }
+            else if (li == i++) { // N tetronimo
+                scoreRequired = 1600;
+                AddGrower(sh,sr,gs, -100, -180);
+                AddGrower(sh,sr,gs,  100,    0);
+                AddGrower(sh,sr,gs, -100,    0);
+                AddGrower(sh,sr,gs,  100,  180);
+            }
+            else if (li == i++) { // Random 4
+            }
+            else if (li == i++) { // 5-die
+                scoreRequired = 1700;
+                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr,gs, -120, -150);
+                AddGrower(sh,sr,gs,  120, -150);
+                AddGrower(sh,sr,gs, -120,  150);
+                AddGrower(sh,sr,gs,  120,  150);
+            }
+            else if (li == i++) { // 3 haphazard V
+                scoreRequired = 2000;
+                AddGrower(sh,sr,gs, -100, -200);
+                AddGrower(sh,sr,gs,  100, -200);
+                AddGrower(sh,sr,gs,  -60,  100);
+            }
+            else if (li == i++) { // Random 5
+            }
+
+            else if (li == i++) { // 4 top-lined
+                scoreRequired = 570;
+                AddGrower(sh,sr,gs, -195, 295);
+                AddGrower(sh,sr,gs,  -65, 295);
+                AddGrower(sh,sr,gs,   65, 295);
+                AddGrower(sh,sr,gs,  210, 310);
+            }
+
+            /* Level ideas
+             * Two right next to each other
+             * Two pairs next to each other
+             * One tucked in a corner
+             */
+
+            /*
+            else if (li == i++) { // Rhombus
+                scoreRequired = 1700;
+                AddGrower(sh,sr,gs,  -74, -100);
+                AddGrower(sh,sr,gs,  100,    0);
+                AddGrower(sh,sr,gs, -100,  100);
+                AddGrower(sh,sr,gs,   74,  200);
+            }
+            else if (li == i++) { // 2 in-order diagonal
+                scoreRequired = 2200;
+                AddGrower(sh,sr,gs,    0,-100);
+                AddGrower(sh,sr,gs,  140, 160);
+            }
+            */
 
 
 			else {
