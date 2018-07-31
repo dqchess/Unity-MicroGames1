@@ -12,7 +12,7 @@ namespace CircleGrow {
         //  Doers
         // ----------------------------------------------------------------
         override public void SetRadius(float radius) {
-            radius = radius - 1; // ooh, have a TIIIny amount of grace. :)
+            radius = radius - HITBOX_SHRINK; // use our grace shrinkage!
             myCollider.radius = radius;
         }
 

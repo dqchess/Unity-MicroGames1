@@ -251,7 +251,9 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs,  60, 160);
             }
             else if (li == i++) { // Easy V
-                scoreRequired = 2500;
+                scoreRequired = 2700;
+                AddWallCircle(-275,-375, 240);
+                AddWallCircle( 275,-375, 240);
                 AddGrower(sh,sr,gs, -140,  240);
                 AddGrower(sh,sr,gs,  140,  240);
                 AddGrower(sh,sr,gs,    0, -140);
@@ -262,44 +264,39 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs, 0,  100);
                 AddGrower(sh,sr,gs, 0,  300);
             }
-            else if (li == i++) { // 3 diagonal with round walls
-                scoreRequired = 1500;
-                //AddWall( 180, 280, 300,200);
-                //AddWall(-180,-280, 300,200);
-                AddWallCircle(-275,-375, 550);
-                AddWallCircle( 275, 375, 550);
-                AddGrower(sh,sr,gs,  122, -220);
-                AddGrower(sh,sr,gs, -122,  220);
+            else if (li == i++) { // One close call
+                scoreRequired = 700;
+                AddWallCircle(-500,0, 700);
+                AddWallCircle( 500,0, 700);
                 AddGrower(sh,sr,gs,    0,    0);
             }
-            else if (li == i++) { // 4 Side-huggers
+            else if (li == i++) { // 2 close call
+                scoreRequired = 1500;
+                AddWallCircle(-138, 22, 100);
+                AddWallCircle( 138, 22, 100);
+                AddGrower(sh,sr,gs,    0,  200);
+                AddGrower(sh,sr,gs,    0, -112);
             }
-            else if (li == i++) { // 4 Random
-            }
-
             else if (li == i++) { // 4 square
-                scoreRequired = 2000;
+                scoreRequired = 2100;
+                //float r = 50;
+                //AddWallCircle(-(275-r),-(375-r), r*2);
+                //AddWallCircle(-(275-r), (375-r), r*2);
+                //AddWallCircle( (275-r),-(375-r), r*2);
+                //AddWallCircle( (275-r), (375-r), r*2);
+                float r = 140;
+                AddWallCircle(-275,-375, r*2);
+                AddWallCircle(-275, 375, r*2);
+                AddWallCircle( 275,-375, r*2);
+                AddWallCircle( 275, 375, r*2);
+                //AddWallCircle(0,0, 20);
                 AddGrower(sh,sr,gs, -130, -130);
                 AddGrower(sh,sr,gs,  130,  130);
                 AddGrower(sh,sr,gs,  130, -130);
                 AddGrower(sh,sr,gs, -130,  130);
             }
-            else if (li == i++) { // 4 Random
-            }
-            else if (li == i++) { // + perfect fit
-                scoreRequired = 2500;
-                AddGrower(sh,sr,gs, -190,   0);
-                AddGrower(sh,sr,gs,  190,   0);
-                AddGrower(sh,sr,gs,    0, -190);
-                AddGrower(sh,sr,gs,    0,  190);
-            }
 
 
-            else if (li == i++) { // 2 out-of-order diagonal
-                scoreRequired = 2200;
-                AddGrower(sh,sr,gs,  140, 160);
-                AddGrower(sh,sr,gs,    0,-100);
-            }
             else if (li == i++) { // 3 diagonal
                 scoreRequired = 1800;
                 AddGrower(sh,sr,gs, -100, 200);
@@ -311,6 +308,16 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs,    0,   0);
                 AddGrower(sh,sr,gs, -100, 200);
                 AddGrower(sh,sr,gs,  100,-200);
+            }
+            //else if (li == i++) { // 2 in-order diagonal
+            //    scoreRequired = 2200;
+            //    AddGrower(sh,sr,gs,    0,-100);
+            //    AddGrower(sh,sr,gs,  140, 160);
+            //}
+            else if (li == i++) { // 2 out-of-order diagonal
+                scoreRequired = 2200;
+                AddGrower(sh,sr,gs,  140, 160);
+                AddGrower(sh,sr,gs,    0,-100);
             }
             else if (li == i++) { // 3 V OOO
                 scoreRequired = 2000;
@@ -325,31 +332,55 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs, -100,    0);
                 AddGrower(sh,sr,gs,  100,  180);
             }
-            else if (li == i++) { // Random 4
-            }
             else if (li == i++) { // 5-die
-                scoreRequired = 1700;
+                scoreRequired = 1800;
                 AddGrower(sh,sr,gs,    0,    0);
                 AddGrower(sh,sr,gs, -120, -150);
                 AddGrower(sh,sr,gs,  120, -150);
                 AddGrower(sh,sr,gs, -120,  150);
                 AddGrower(sh,sr,gs,  120,  150);
             }
+
+
+
+
+
             else if (li == i++) { // 3 haphazard V
                 scoreRequired = 2000;
                 AddGrower(sh,sr,gs, -100, -200);
                 AddGrower(sh,sr,gs,  100, -200);
                 AddGrower(sh,sr,gs,  -60,  100);
             }
-            else if (li == i++) { // Random 5
+            else if (li == i++) { // + perfect fit
+                scoreRequired = 2500;
+                AddGrower(sh,sr,gs, -190,   0);
+                AddGrower(sh,sr,gs,  190,   0);
+                AddGrower(sh,sr,gs,    0, -190);
+                AddGrower(sh,sr,gs,    0,  190);
             }
-
-            else if (li == i++) { // 4 top-lined
-                scoreRequired = 570;
-                AddGrower(sh,sr,gs, -195, 295);
-                AddGrower(sh,sr,gs,  -65, 295);
-                AddGrower(sh,sr,gs,   65, 295);
-                AddGrower(sh,sr,gs,  210, 310);
+            else if (li == i++) { // 3 diagonal with round walls
+                scoreRequired = 1700;
+                AddWallCircle(-275,-375, 550);
+                AddWallCircle( 275, 375, 550);
+                AddGrower(sh,sr,gs,  122, -220);
+                AddGrower(sh,sr,gs, -122,  220);
+                AddGrower(sh,sr,gs,    0,    0);
+            }
+            else if (li == i++) { // TEST
+                scoreRequired = 2000;
+                AddWallCircle(-275,0, 300);
+                AddWallCircle( 275,0, 300);
+                AddGrower(sh,sr,gs, -120, -190);
+                AddGrower(sh,sr,gs,  120,  190);
+                AddGrower(sh,sr,gs,    0,    0);
+            }
+            else if (li == i++) { // TEST
+                scoreRequired = 2000;
+                AddWallCircle(-500,0, 700);
+                AddWallCircle( 500,0, 700);
+                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr,gs, -120, -190);
+                AddGrower(sh,sr,gs,  120,  190);
             }
 
             /* Level ideas
@@ -369,6 +400,23 @@ namespace CircleGrow {
             }
 
             /*
+            else if (li == i++) { // 4 top-lined
+                scoreRequired = 570;
+                AddGrower(sh,sr,gs, -195, 295);
+                AddGrower(sh,sr,gs,  -65, 295);
+                AddGrower(sh,sr,gs,   65, 295);
+                AddGrower(sh,sr,gs,  210, 310);
+            }
+            else if (li == i++) { // 4 Side-huggers
+            }
+            else if (li == i++) { // 4 Random
+            }
+            else if (li == i++) { // 4 Random
+            }
+            else if (li == i++) { // Random 4
+            }
+            else if (li == i++) { // Random 5
+            }
             else if (li == i++) { // Rhombus
                 scoreRequired = 1700;
                 AddGrower(sh,sr,gs,  -74, -100);
