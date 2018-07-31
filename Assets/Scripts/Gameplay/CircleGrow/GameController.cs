@@ -84,6 +84,7 @@ namespace CircleGrow {
         }
 
         override protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
+            StopCoroutine("Coroutine_SetCurrentLevel");
             StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
         }
         override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {

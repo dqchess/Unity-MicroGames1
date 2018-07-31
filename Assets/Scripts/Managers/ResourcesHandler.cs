@@ -15,7 +15,9 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject circleGrow_grower;
     [SerializeField] public GameObject circleGrow_growerBody_circle;
     [SerializeField] public GameObject circleGrow_growerBody_square;
-	[SerializeField] public GameObject circleGrow_level;
+    [SerializeField] public GameObject circleGrow_level;
+    [SerializeField] public GameObject circleGrow_wallCircle;
+    [SerializeField] public GameObject circleGrow_wallRect;
 
 	[SerializeField] public GameObject extrudeMatch_boardSpaceView;
 	[SerializeField] public GameObject extrudeMatch_boardView;

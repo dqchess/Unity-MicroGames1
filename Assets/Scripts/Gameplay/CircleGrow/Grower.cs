@@ -117,7 +117,7 @@ namespace CircleGrow {
             SetCurrentState(GrowerStates.PreGrowing);
             // Flash first.
             bodyColor = color_growing;
-            for (int i=0; i<7; i++) {
+            for (int i=0; i<5; i++) {
                 bodyColor = i%2==0 ? color_growing : Color.black;
                 yield return new WaitForSeconds(0.12f);
             }

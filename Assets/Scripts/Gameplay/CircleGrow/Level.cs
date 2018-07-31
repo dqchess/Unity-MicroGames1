@@ -12,7 +12,8 @@ namespace CircleGrow {
         [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;
         [SerializeField] private RectTransform rt_gameComponents=null; // Growers go on this!
-		private List<Grower> growers;
+        private List<Grower> growers;
+        private List<Wall> walls;
 		// Properties
 //		private float screenShakeVolume;
         private int scoreRequired;
@@ -148,13 +149,19 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Destroying Elements
 		// ----------------------------------------------------------------
-		private void DestroyLevelComponents() {
-			if (growers != null) {
-				for (int i=growers.Count-1; i>=0; --i) {
-					Destroy(growers[i].gameObject);
-				}
-			}
-			growers = new List<Grower>();
+        private void DestroyLevelComponents() {
+            if (growers != null) {
+                for (int i=growers.Count-1; i>=0; --i) {
+                    Destroy(growers[i].gameObject);
+                }
+            }
+            growers = new List<Grower>();
+            if (walls != null) {
+                for (int i=walls.Count-1; i>=0; --i) {
+                    Destroy(walls[i].gameObject);
+                }
+            }
+            walls = new List<Wall>();
 		}
 		// ----------------------------------------------------------------
 		//  Adding Elements
@@ -164,6 +171,16 @@ namespace CircleGrow {
             newObj.Initialize(this, rt_gameComponents, new Vector2(x,y), shape, radius, growSpeed);
             growers.Add(newObj);
 		}
+        private void AddWallCircle(float x,float y, float diameter) {
+            WallCircle newObj = Instantiate(resourcesHandler.circleGrow_wallCircle).GetComponent<WallCircle>();
+            newObj.Initialize(rt_gameComponents, new Vector2(x,y), new Vector2(diameter,diameter));
+            walls.Add(newObj);
+        }
+        private void AddWallRect(float x,float y, float w,float h) {
+            WallRect newObj = Instantiate(resourcesHandler.circleGrow_wallRect).GetComponent<WallRect>();
+            newObj.Initialize(rt_gameComponents, new Vector2(x,y), new Vector2(w,h));
+            walls.Add(newObj);
+        }
 
 
 
@@ -174,8 +191,9 @@ namespace CircleGrow {
 			DestroyLevelComponents(); // Just in case.
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
-			// Reset values
-			growers = new List<Grower>();
+            // Reset values
+            growers = new List<Grower>();
+            walls = new List<Wall>();
 
             // Specify default values
             GrowerShapes sh = GrowerShapes.Circle;
@@ -192,40 +210,67 @@ namespace CircleGrow {
 
 
             // Balls to the Walls
-			else if (li == i++) { // One.
+            else if (li == i++) { // One.
                 scoreRequired = 1000;
                 AddGrower(sh,sr,gs, 0,0);
             }
-            //TODO: Have first 4 lvls have no Grower-touching action. Walls are only obstacle.
-            else if (li == i++) { // 2 stack.
+            else if (li == i++) { // Two against walls
+                scoreRequired = 1200;
+                AddWallRect(0,0, 600,100);
+                AddGrower(sh,sr,gs, 0, 214);
+                AddGrower(sh,sr,gs, 0,-214);
+            }
+            else if (li == i++) { // Triplex
+                scoreRequired = 900;
+                AddWallRect(0,-140, 600,25);
+                AddWallRect(0, 140, 600,25);
+                AddGrower(sh,sr,gs,  150,  262);
+                AddGrower(sh,sr,gs, -150, -262);
+                AddGrower(sh,sr,gs,    0,    0);
+            }
+            else if (li == i++) { // 4 in corners
                 scoreRequired = 1500;
-                AddGrower(sh,sr,gs, 0,-150);
-                AddGrower(sh,sr,gs, 0, 150);
+                AddWallRect(0,0, 600,50);
+                AddWallRect(0,0, 50,800);
+                AddGrower(sh,sr,gs,  150,  200);
+                AddGrower(sh,sr,gs, -150, -200);
+                AddGrower(sh,sr,gs,  150, -200);
+                AddGrower(sh,sr,gs, -150,  200);
+            }
+
+
+            // Balls against Balls
+            else if (li == i++) { // 2 pair.
+                scoreRequired = 600;
+                AddGrower(sh,sr,gs, -120,0);
+                AddGrower(sh,sr,gs,  120,0);
             }
             else if (li == i++) { // 2 diagonal.
-                scoreRequired = 1800;
+                scoreRequired = 1600;
                 AddGrower(sh,sr,gs, -60,-160);
                 AddGrower(sh,sr,gs,  60, 160);
             }
-            else if (li == i++) { // 2 stack narrow
-                bounds.SetSize(300,750);
-                scoreRequired = 1500;
-                AddGrower(sh,sr,gs, 0,-150);
-                AddGrower(sh,sr,gs, 0, 150);
-            }
-
-            // Balls to the Balls
             else if (li == i++) { // Easy V
-                scoreRequired = 2600;
+                scoreRequired = 2500;
                 AddGrower(sh,sr,gs, -140,  240);
                 AddGrower(sh,sr,gs,  140,  240);
                 AddGrower(sh,sr,gs,    0, -140);
             }
             else if (li == i++) { // Snowman
-                scoreRequired = 1600;
+                scoreRequired = 1500;
                 AddGrower(sh,sr,gs, 0, -200);
                 AddGrower(sh,sr,gs, 0,  100);
                 AddGrower(sh,sr,gs, 0,  300);
+            }
+            else if (li == i++) { // 3 diagonal with round walls
+                scoreRequired = 1500;
+                //AddWall( 180, 280, 300,200);
+                //AddWall(-180,-280, 300,200);
+                AddWallCircle(-275,-375, 550);
+                AddWallCircle( 275, 375, 550);
+                AddGrower(sh,sr,gs,  122, -220);
+                AddGrower(sh,sr,gs, -122,  220);
+                AddGrower(sh,sr,gs,    0,    0);
             }
             else if (li == i++) { // 4 Side-huggers
             }
@@ -240,13 +285,6 @@ namespace CircleGrow {
                 AddGrower(sh,sr,gs, -130,  130);
             }
             else if (li == i++) { // 4 Random
-            }
-            else if (li == i++) { // 4 in corners
-                scoreRequired = 1500;
-                AddGrower(sh,sr,gs, -160, -260);
-                AddGrower(sh,sr,gs,  160, -260);
-                AddGrower(sh,sr,gs, -160,  260);
-                AddGrower(sh,sr,gs,  160,  260);
             }
             else if (li == i++) { // + perfect fit
                 scoreRequired = 2500;
