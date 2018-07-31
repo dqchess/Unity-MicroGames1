@@ -62,8 +62,10 @@ namespace CircleGrow {
         //  Game Flow Events
         // ----------------------------------------------------------------
         public void OnIllegalOverlap() {
-            loseReason = LoseReasons.IllegalOverlap;
-            LoseLevel();
+            if (IsGameStatePlaying) { // If we're playing...!
+                loseReason = LoseReasons.IllegalOverlap;
+                LoseLevel();
+            }
         }
 
         override public void LoseLevel() {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace CircleGrow {
     abstract public class GrowerBody : MonoBehaviour {
         // Constants
-        protected const float HITBOX_SHRINK = 2; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.
+        protected const float HITBOX_SHRINK = 1; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.
         // Components
         [SerializeField] private Image i_body=null;
         // References

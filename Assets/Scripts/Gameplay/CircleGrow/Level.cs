@@ -166,20 +166,23 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Adding Elements
 		// ----------------------------------------------------------------
-        private void AddGrower(GrowerShapes shape, float radius, float growSpeed, float x,float y) {
+        private Grower AddGrower(GrowerShapes shape, float radius, float x,float y) {
             Grower newObj = Instantiate(resourcesHandler.circleGrow_grower).GetComponent<Grower>();
-            newObj.Initialize(this, rt_gameComponents, new Vector2(x,y), shape, radius, growSpeed);
+            newObj.Initialize(this, rt_gameComponents, new Vector2(x,y), shape, radius);
             growers.Add(newObj);
+            return newObj;
 		}
-        private void AddWallCircle(float x,float y, float diameter) {
+        private WallCircle AddWallCircle(float x,float y, float diameter) {
             WallCircle newObj = Instantiate(resourcesHandler.circleGrow_wallCircle).GetComponent<WallCircle>();
             newObj.Initialize(rt_gameComponents, new Vector2(x,y), new Vector2(diameter,diameter));
             walls.Add(newObj);
+            return newObj;
         }
-        private void AddWallRect(float x,float y, float w,float h) {
+        private WallRect AddWallRect(float x,float y, float w,float h) {
             WallRect newObj = Instantiate(resourcesHandler.circleGrow_wallRect).GetComponent<WallRect>();
             newObj.Initialize(rt_gameComponents, new Vector2(x,y), new Vector2(w,h));
             walls.Add(newObj);
+            return newObj;
         }
 
 
@@ -198,7 +201,6 @@ namespace CircleGrow {
             // Specify default values
             GrowerShapes sh = GrowerShapes.Circle;
             float sr = 10; // startingRadius
-            float gs = 0.8f; // growSpeed
             scoreRequired = 1000;
             bounds.SetSize(550,750); // Default to 600x800 with 25px padding on all sides.
 
@@ -211,71 +213,71 @@ namespace CircleGrow {
 
             // Balls to the Walls
             else if (li == i++) { // One.
-                scoreRequired = 1000;
-                AddGrower(sh,sr,gs, 0,0);
+                scoreRequired = 2000;
+                AddGrower(sh,sr, 0,0);
             }
-            else if (li == i++) { // Two against walls
+            else if (li == i++) { // One close call
+                scoreRequired = 650;
+                AddWallCircle(-500,0, 700);
+                AddWallCircle( 500,0, 700);
+                AddGrower(sh,sr,    0,    0);
+            }
+            else if (li == i++) { // Two against walls TODO: Make asymmetrical
                 scoreRequired = 1200;
                 AddWallRect(0,0, 600,100);
-                AddGrower(sh,sr,gs, 0, 214);
-                AddGrower(sh,sr,gs, 0,-214);
+                AddGrower(sh,sr, 0, 214);
+                AddGrower(sh,sr, 0,-214);
+            }
+            else if (li == i++) { // 2 pair.
+                scoreRequired = 600;
+                AddGrower(sh,sr, -120,0);
+                AddGrower(sh,sr,  120,0);
             }
             else if (li == i++) { // Triplex
                 scoreRequired = 900;
                 AddWallRect(0,-140, 600,25);
                 AddWallRect(0, 140, 600,25);
-                AddGrower(sh,sr,gs,  150,  262);
-                AddGrower(sh,sr,gs, -150, -262);
-                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr,  150,  262);
+                AddGrower(sh,sr, -150, -262);
+                AddGrower(sh,sr,    0,    0);
             }
-            else if (li == i++) { // 4 in corners
+            else if (li == i++) { // 4 in corners TODO: Only sequester top left one
                 scoreRequired = 1500;
                 AddWallRect(0,0, 600,50);
                 AddWallRect(0,0, 50,800);
-                AddGrower(sh,sr,gs,  150,  200);
-                AddGrower(sh,sr,gs, -150, -200);
-                AddGrower(sh,sr,gs,  150, -200);
-                AddGrower(sh,sr,gs, -150,  200);
+                AddGrower(sh,sr,  150,  200);
+                AddGrower(sh,sr, -150, -200);
+                AddGrower(sh,sr,  150, -200);
+                AddGrower(sh,sr, -150,  200);
             }
 
 
             // Balls against Balls
-            else if (li == i++) { // 2 pair.
-                scoreRequired = 600;
-                AddGrower(sh,sr,gs, -120,0);
-                AddGrower(sh,sr,gs,  120,0);
-            }
             else if (li == i++) { // 2 diagonal.
                 scoreRequired = 1600;
-                AddGrower(sh,sr,gs, -60,-160);
-                AddGrower(sh,sr,gs,  60, 160);
+                AddGrower(sh,sr, -60,-160);
+                AddGrower(sh,sr,  60, 160);
             }
             else if (li == i++) { // Easy V
                 scoreRequired = 2700;
                 AddWallCircle(-275,-375, 240);
                 AddWallCircle( 275,-375, 240);
-                AddGrower(sh,sr,gs, -140,  240);
-                AddGrower(sh,sr,gs,  140,  240);
-                AddGrower(sh,sr,gs,    0, -140);
+                AddGrower(sh,sr, -140,  240);
+                AddGrower(sh,sr,  140,  240);
+                AddGrower(sh,sr,    0, -140);
             }
             else if (li == i++) { // Snowman
                 scoreRequired = 1500;
-                AddGrower(sh,sr,gs, 0, -200);
-                AddGrower(sh,sr,gs, 0,  100);
-                AddGrower(sh,sr,gs, 0,  300);
-            }
-            else if (li == i++) { // One close call
-                scoreRequired = 700;
-                AddWallCircle(-500,0, 700);
-                AddWallCircle( 500,0, 700);
-                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr, 0, -200);
+                AddGrower(sh,sr, 0,  100);
+                AddGrower(sh,sr, 0,  300);
             }
             else if (li == i++) { // 2 close call
                 scoreRequired = 1500;
                 AddWallCircle(-138, 22, 100);
                 AddWallCircle( 138, 22, 100);
-                AddGrower(sh,sr,gs,    0,  200);
-                AddGrower(sh,sr,gs,    0, -112);
+                AddGrower(sh,sr,    0,  200);
+                AddGrower(sh,sr,    0, -112);
             }
             else if (li == i++) { // 4 square
                 scoreRequired = 2100;
@@ -290,122 +292,182 @@ namespace CircleGrow {
                 AddWallCircle( 275,-375, r*2);
                 AddWallCircle( 275, 375, r*2);
                 //AddWallCircle(0,0, 20);
-                AddGrower(sh,sr,gs, -130, -130);
-                AddGrower(sh,sr,gs,  130,  130);
-                AddGrower(sh,sr,gs,  130, -130);
-                AddGrower(sh,sr,gs, -130,  130);
+                AddGrower(sh,sr, -130, -130);
+                AddGrower(sh,sr,  130,  130);
+                AddGrower(sh,sr,  130, -130);
+                AddGrower(sh,sr, -130,  130);
             }
 
 
             else if (li == i++) { // 3 diagonal
                 scoreRequired = 1800;
-                AddGrower(sh,sr,gs, -100, 200);
-                AddGrower(sh,sr,gs,  100,-200);
-                AddGrower(sh,sr,gs,    0,   0);
+                AddGrower(sh,sr, -100, 200);
+                AddGrower(sh,sr,  100,-200);
+                AddGrower(sh,sr,    0,   0);
             }
             else if (li == i++) { // 3 diagonal OOO
                 scoreRequired = 1800;
-                AddGrower(sh,sr,gs,    0,   0);
-                AddGrower(sh,sr,gs, -100, 200);
-                AddGrower(sh,sr,gs,  100,-200);
-            }
-            //else if (li == i++) { // 2 in-order diagonal
-            //    scoreRequired = 2200;
-            //    AddGrower(sh,sr,gs,    0,-100);
-            //    AddGrower(sh,sr,gs,  140, 160);
-            //}
-            else if (li == i++) { // 2 out-of-order diagonal
-                scoreRequired = 2200;
-                AddGrower(sh,sr,gs,  140, 160);
-                AddGrower(sh,sr,gs,    0,-100);
+                AddGrower(sh,sr,    0,   0);
+                AddGrower(sh,sr, -100, 200);
+                AddGrower(sh,sr,  100,-200);
             }
             else if (li == i++) { // 3 V OOO
                 scoreRequired = 2000;
-                AddGrower(sh,sr,gs, -100, 200);
-                AddGrower(sh,sr,gs,  100, 200);
-                AddGrower(sh,sr,gs,    0,-100);
-            }
-            else if (li == i++) { // N tetronimo
-                scoreRequired = 1600;
-                AddGrower(sh,sr,gs, -100, -180);
-                AddGrower(sh,sr,gs,  100,    0);
-                AddGrower(sh,sr,gs, -100,    0);
-                AddGrower(sh,sr,gs,  100,  180);
+                AddGrower(sh,sr, -100, 200);
+                AddGrower(sh,sr,  100, 200);
+                AddGrower(sh,sr,    0,-100);
             }
             else if (li == i++) { // 5-die
                 scoreRequired = 1800;
-                AddGrower(sh,sr,gs,    0,    0);
-                AddGrower(sh,sr,gs, -120, -150);
-                AddGrower(sh,sr,gs,  120, -150);
-                AddGrower(sh,sr,gs, -120,  150);
-                AddGrower(sh,sr,gs,  120,  150);
+                AddGrower(sh,sr,    0,    0);
+                AddGrower(sh,sr, -120, -150);
+                AddGrower(sh,sr,  120, -150);
+                AddGrower(sh,sr, -120,  150);
+                AddGrower(sh,sr,  120,  150);
             }
 
 
+            // Different Speed Growers
+
+            else if (li == i++) { // Fast and slow
+                scoreRequired = 2500;
+                AddGrower(sh,sr, 0, -190).SetGrowSpeed(4);
+                AddGrower(sh,sr, 0,  190).SetGrowSpeed(0.8f);
+            }
+            else if (li == i++) { // + perfect fit
+                scoreRequired = 2500;
+                //AddGrower(sh,sr,    0, -190).SetGrowSpeed(;
+                AddGrower(sh,sr,    0,  190);
+                AddGrower(sh,sr, -190,   0);
+                AddGrower(sh,sr,  190,   0);
+            }
+
+
+            // Moving Growers
+            else if (li == i++) { // One moving Grower
+                scoreRequired = 1200;
+                AddGrower(sh,sr, -100,0).SetPosB(100,0);
+            }
+            else if (li == i++) {
+                scoreRequired = 1600;
+                AddGrower(sh,sr, -100, 160).SetPosB(100, 160);
+                AddGrower(sh,sr, -100,-160).SetPosB(100,-160).SetMoveSpeed(1, Mathf.PI);
+            }
+            else if (li == i++) { // Cutoff monitor
+                scoreRequired = 1300;
+                float o = 1.5f;
+                AddGrower(sh,sr,    0, 200);
+                AddGrower(sh,sr,    0,-220).SetGrowSpeed(0.4f);
+                AddGrower(sh,sr, -180,  60).SetPosB(180, 60).SetMoveSpeed(0.1f, 0);//TODO: Make into a Wall
+            }
+
+            else if (li == i++) { // First one is super slow, gotta just tap it right away to save time
+                scoreRequired = 1000;
+                float o = 1.5f;
+                AddGrower(sh,sr, -230, 330).SetGrowSpeed(0.1f);
+                AddGrower(sh,sr,    0, 170);
+                AddGrower(sh,sr, -180,  60).SetPosB(180, 60).SetMoveSpeed(0.2f, -1.5f);//TODO: Make into a Wall
+            }
+            else if (li == i++) { //TEST
+                scoreRequired = 1400;
+                float o = 1.5f;
+                AddGrower(sh,sr, -140, 140).SetPosB(140, 140);
+                AddGrower(sh,sr, -140,   0).SetPosB(140,   0).SetMoveSpeed(1, o*1);
+                AddGrower(sh,sr, -140,-140).SetPosB(140,-140).SetMoveSpeed(1, o*2);
+            }
+            else if (li == i++) { //TEST
+                scoreRequired = 1400;
+                float o = 1.5f;
+                AddGrower(sh,sr, -140, 250).SetPosB(140, 250);
+                AddGrower(sh,sr, -140, 125).SetPosB(140, 125).SetMoveSpeed(1, o*1);
+                AddGrower(sh,sr, -140,   0).SetPosB(140,   0).SetMoveSpeed(1, o*2);
+                AddGrower(sh,sr, -140,-125).SetPosB(140,-125).SetMoveSpeed(1, o*3);
+                AddGrower(sh,sr, -140,-250).SetPosB(140,-250).SetMoveSpeed(1, o*4);
+            }
+
+            else if (li == i++) { // 2 out-of-order diagonal
+                scoreRequired = 2200;
+                AddGrower(sh,sr,  140, 160);
+                AddGrower(sh,sr,    0,-100);
+            }
 
 
 
             else if (li == i++) { // 3 haphazard V
                 scoreRequired = 2000;
-                AddGrower(sh,sr,gs, -100, -200);
-                AddGrower(sh,sr,gs,  100, -200);
-                AddGrower(sh,sr,gs,  -60,  100);
+                AddGrower(sh,sr, -100, -200);
+                AddGrower(sh,sr,  100, -200);
+                AddGrower(sh,sr,  -60,  100);
             }
             else if (li == i++) { // + perfect fit
                 scoreRequired = 2500;
-                AddGrower(sh,sr,gs, -190,   0);
-                AddGrower(sh,sr,gs,  190,   0);
-                AddGrower(sh,sr,gs,    0, -190);
-                AddGrower(sh,sr,gs,    0,  190);
+                AddGrower(sh,sr, -190,   0);
+                AddGrower(sh,sr,  190,   0);
+                AddGrower(sh,sr,    0, -190);
+                AddGrower(sh,sr,    0,  190);
             }
             else if (li == i++) { // 3 diagonal with round walls
                 scoreRequired = 1700;
                 AddWallCircle(-275,-375, 550);
                 AddWallCircle( 275, 375, 550);
-                AddGrower(sh,sr,gs,  122, -220);
-                AddGrower(sh,sr,gs, -122,  220);
-                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr,  122, -220);
+                AddGrower(sh,sr, -122,  220);
+                AddGrower(sh,sr,    0,    0);
             }
             else if (li == i++) { // TEST
                 scoreRequired = 2000;
                 AddWallCircle(-275,0, 300);
                 AddWallCircle( 275,0, 300);
-                AddGrower(sh,sr,gs, -120, -190);
-                AddGrower(sh,sr,gs,  120,  190);
-                AddGrower(sh,sr,gs,    0,    0);
+                AddGrower(sh,sr, -120, -190);
+                AddGrower(sh,sr,  120,  190);
+                AddGrower(sh,sr,    0,    0);
             }
             else if (li == i++) { // TEST
                 scoreRequired = 2000;
                 AddWallCircle(-500,0, 700);
                 AddWallCircle( 500,0, 700);
-                AddGrower(sh,sr,gs,    0,    0);
-                AddGrower(sh,sr,gs, -120, -190);
-                AddGrower(sh,sr,gs,  120,  190);
+                AddGrower(sh,sr,    0,    0);
+                AddGrower(sh,sr, -120, -190);
+                AddGrower(sh,sr,  120,  190);
             }
 
+            else if (li == i++) { // TEST
+                scoreRequired = 3000;
+                AddGrower(sh,sr, 0,0).SetGrowSpeed(3f);
+            }
             /* Level ideas
              * Two right next to each other
              * Two pairs next to each other
-             * One tucked in a corner
+             * One hidden-tucked in a corner
+             * A few lvls with different speed growing
+             * A few lvls with random scattered dots
              */
 
             // UNTESTED
             else if (li == i++) { // 5-die max-fit
                 scoreRequired = 3000;
-                AddGrower(sh,sr,gs,    0,    0);
-                AddGrower(sh,sr,gs, -200, -300);
-                AddGrower(sh,sr,gs,  200, -300);
-                AddGrower(sh,sr,gs, -200,  300);
-                AddGrower(sh,sr,gs,  200,  300);
+                AddGrower(sh,sr,    0,    0);
+                AddGrower(sh,sr, -200, -300);
+                AddGrower(sh,sr,  200, -300);
+                AddGrower(sh,sr, -200,  300);
+                AddGrower(sh,sr,  200,  300);
             }
 
+
             /*
+            else if (li == i++) { // N tetronimo TO DO: Add some more dots here and there
+                scoreRequired = 1600;
+                AddGrower(sh,sr, -100, -180);
+                AddGrower(sh,sr,  100,    0);
+                AddGrower(sh,sr, -100,    0);
+                AddGrower(sh,sr,  100,  180);
+            }
             else if (li == i++) { // 4 top-lined
                 scoreRequired = 570;
-                AddGrower(sh,sr,gs, -195, 295);
-                AddGrower(sh,sr,gs,  -65, 295);
-                AddGrower(sh,sr,gs,   65, 295);
-                AddGrower(sh,sr,gs,  210, 310);
+                AddGrower(sh,sr, -195, 295);
+                AddGrower(sh,sr,  -65, 295);
+                AddGrower(sh,sr,   65, 295);
+                AddGrower(sh,sr,  210, 310);
             }
             else if (li == i++) { // 4 Side-huggers
             }
@@ -419,15 +481,15 @@ namespace CircleGrow {
             }
             else if (li == i++) { // Rhombus
                 scoreRequired = 1700;
-                AddGrower(sh,sr,gs,  -74, -100);
-                AddGrower(sh,sr,gs,  100,    0);
-                AddGrower(sh,sr,gs, -100,  100);
-                AddGrower(sh,sr,gs,   74,  200);
+                AddGrower(sh,sr,  -74, -100);
+                AddGrower(sh,sr,  100,    0);
+                AddGrower(sh,sr, -100,  100);
+                AddGrower(sh,sr,   74,  200);
             }
             else if (li == i++) { // 2 in-order diagonal
                 scoreRequired = 2200;
-                AddGrower(sh,sr,gs,    0,-100);
-                AddGrower(sh,sr,gs,  140, 160);
+                AddGrower(sh,sr,    0,-100);
+                AddGrower(sh,sr,  140, 160);
             }
             */
 

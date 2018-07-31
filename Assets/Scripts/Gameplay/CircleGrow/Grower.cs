@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace CircleGrow {
     public enum GrowerStates { Sleeping, PreGrowing, Growing, Solidified }
-    public enum GrowerShapes{ Circle, Square, Triangle }
+    public enum GrowerShapes { Circle, Square, Triangle }
 
 	public class Grower : MonoBehaviour {
         // Constants
@@ -22,6 +22,10 @@ namespace CircleGrow {
         private GrowerShapes shape;
         private float growSpeed;
         private float radius;
+        private bool doMove;
+        private float moveSpeed=1f; // for MOVING Growers.
+        private float moveOscVal; // for MOVING Growers.
+        private Vector2 posA,posB; // for MOVING Growers.
         // References
         private Level myLevel;
 
@@ -41,13 +45,14 @@ namespace CircleGrow {
             get { return body.color; }
             set { body.color = value; }
         }
+        private float timeScale { get { return Time.timeScale; } }
         private float Area() { return Mathf.PI * Radius*Radius; }
 
 
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-        public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos, GrowerShapes _shape, float _radius, float _growSpeed) {
+        public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos, GrowerShapes _shape, float _radius) {
             myLevel = _myLevel;
 
             this.transform.SetParent(tf_parent);
@@ -55,9 +60,11 @@ namespace CircleGrow {
 			this.transform.localPosition = Vector3.zero;
 			this.transform.localEulerAngles = Vector3.zero;
 
-			Pos = _pos;
-            growSpeed = _growSpeed;
+            posA = posB = _pos; // default BOTH poses to the one provided. Assume we don't move.
+            ApplyPos();
             shape = _shape;
+            SetGrowSpeed(1);
+            SetMoveSpeed(1, 0); // Default my move-speed values.
 
             MakeBody();
             bodyColor = color_sleeping;
@@ -82,6 +89,22 @@ namespace CircleGrow {
             body.Initialize(this);
         }
 
+        public Grower SetGrowSpeed(float _speed) {
+            growSpeed = _speed*0.8f; // awkward scaling the speed here.
+            return this;
+        }
+        public Grower SetPosB(float x,float y) {
+            posB = new Vector2(x,y);
+            return this;
+        }
+        public Grower SetMoveSpeed(float _speed, float _startLocOffset=0) {
+            moveSpeed = _speed*0.02f; // awkward scaling down the speed here.
+            doMove = moveSpeed != 0;
+            moveOscVal = _startLocOffset;
+            ApplyPos();
+            return this;
+        }
+
 
 		// ----------------------------------------------------------------
 		//  Doers
@@ -93,10 +116,25 @@ namespace CircleGrow {
 			// Update text!
             t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
         }
+
+        private void ApplyPos() {
+            // Do move?? Lerp me between my two poses.
+            if (doMove) {
+                float moveLoc = MathUtils.Sin01(moveOscVal);
+                Pos = Vector2.Lerp(posA,posB, moveLoc);// + posDipOffset + posDanceOffset;
+            }
+            // DON'T move? Just put me at my one known pos.
+            else {
+                Pos = posA;// + posDipOffset + posDanceOffset;
+            }
+        }
+
+
         private void SetCurrentState(GrowerStates _state) {
             currentState = _state;
             // Only show my text if I've at least started growing!
-            t_scoreValue.enabled = _state!=GrowerStates.Sleeping && _state!=GrowerStates.PreGrowing;
+            //t_scoreValue.enabled = _state!=GrowerStates.Sleeping && _state!=GrowerStates.PreGrowing;
+            t_scoreValue.enabled = _state==GrowerStates.Solidified;
         }
 
         public void StartGrowing() {
@@ -108,7 +146,8 @@ namespace CircleGrow {
 		}
         public void OnBodyTriggerEnter() {
             // Illegal overlap!
-			bodyColor = color_illegal;
+            SetCurrentState(GrowerStates.Solidified);
+            bodyColor = color_illegal;
             myLevel.OnIllegalOverlap();
 		}
 
@@ -132,7 +171,20 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		public void GrowStep() {
 			SetRadius(radius + growSpeed*Time.timeScale);
-		}
+        }
+
+        private void Update() {
+            if (Time.timeScale == 0) { return; } // No time? No dice.
+            if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
+
+            UpdateMove();
+            ApplyPos();
+        }
+        private void UpdateMove() {
+            if (doMove && currentState!=GrowerStates.Solidified) {
+                moveOscVal += moveSpeed * timeScale;
+            }
+        }
 
 	}
 }
