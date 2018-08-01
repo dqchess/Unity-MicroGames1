@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 namespace CircleGrow {
     public enum GrowerStates { Sleeping, PreGrowing, Growing, Solidified }
-    public enum GrowerShapes { Circle, Square, Triangle }
 
-	public class Grower : MonoBehaviour {
+	abstract public class Grower : Prop {
+		// Constants
+		protected const float HITBOX_SHRINK = 1; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.
         // Constants
         static public readonly Color color_sleeping = new Color(250/255f, 200/255f, 110/255f);
         static public readonly Color color_growing = new Color(250/255f, 200/255f, 110/255f);
@@ -15,93 +16,46 @@ namespace CircleGrow {
 		static public readonly Color color_illegal = new Color(255/255f, 132/255f, 118/255f);
 		// Components
         [SerializeField] private Text t_scoreValue=null;
-		[SerializeField] private RectTransform myRectTransform=null;
-        private GrowerBody body;
         // Properties
         private GrowerStates currentState;
-        private GrowerShapes shape;
         private float growSpeed;
         private float radius;
-        private bool doMove;
-        private float moveSpeed=1f; // for MOVING Growers.
-        private float moveOscVal; // for MOVING Growers.
-        private Vector2 posA,posB; // for MOVING Growers.
-        // References
-        private Level myLevel;
 
         // Getters (Public)
         public GrowerStates CurrentState { get { return currentState; } }
         public float Radius { get { return radius; } }
-		public Vector2 Pos {
-			get { return myRectTransform.anchoredPosition; }
-			set { myRectTransform.anchoredPosition = value; }
-		}
 		public int ScoreValue() {
             if (currentState == GrowerStates.Sleeping) { return 0; } // Sleeping? I'm worth 0 points.
             return Mathf.CeilToInt(Area()/100f); // HARDCODED. Bring down the values into a reasonable range.
 		}
+		// Getters (Protected)
+		override protected bool MayMove() {
+			return base.MayMove() && currentState!=GrowerStates.Solidified;
+		}
+		override protected bool MayRotate() {
+			return base.MayRotate() && currentState!=GrowerStates.Solidified;
+		}
         // Getters (Private)
-        private Color bodyColor {
-            get { return body.color; }
-            set { body.color = value; }
-        }
-        private float timeScale { get { return Time.timeScale; } }
         private float Area() { return Mathf.PI * Radius*Radius; }
 
 
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-        public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos, GrowerShapes _shape, float _radius) {
-            myLevel = _myLevel;
+		public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos) {
+			float startingRadius = 10; // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
+			Vector2 _size = new Vector2(startingRadius, startingRadius);
+			BaseInitialize(_myLevel, tf_parent, _pos, _size);
 
-            this.transform.SetParent(tf_parent);
-			this.transform.localScale = Vector3.one;
-			this.transform.localPosition = Vector3.zero;
-			this.transform.localEulerAngles = Vector3.zero;
-
-            posA = posB = _pos; // default BOTH poses to the one provided. Assume we don't move.
-            ApplyPos();
-            shape = _shape;
             SetGrowSpeed(1);
-            SetMoveSpeed(1, 0); // Default my move-speed values.
 
-            MakeBody();
             bodyColor = color_sleeping;
-            SetRadius(_radius);
+			SetRadius(startingRadius);
             SetCurrentState(GrowerStates.Sleeping);
 		}
-        private void MakeBody() {
-            GameObject prefabGO;
-            switch (shape) {
-                case GrowerShapes.Circle:
-                    prefabGO = ResourcesHandler.Instance.circleGrow_growerBody_circle;
-                    break;
-                case GrowerShapes.Square:
-                    prefabGO = ResourcesHandler.Instance.circleGrow_growerBody_square;
-                    break;
-                default:
-                    Debug.LogError("No GrowerBody associated with this shape! Gotta add it: " + shape);
-                    prefabGO = null;
-                    break;
-            }
-            body = Instantiate(prefabGO).GetComponent<GrowerBody>();
-            body.Initialize(this);
-        }
 
         public Grower SetGrowSpeed(float _speed) {
             growSpeed = _speed*0.8f; // awkward scaling the speed here.
-            return this;
-        }
-        public Grower SetPosB(float x,float y) {
-            posB = new Vector2(x,y);
-            return this;
-        }
-        public Grower SetMoveSpeed(float _speed, float _startLocOffset=0) {
-            moveSpeed = _speed*0.02f; // awkward scaling down the speed here.
-            doMove = moveSpeed != 0;
-            moveOscVal = _startLocOffset;
-            ApplyPos();
             return this;
         }
 
@@ -109,24 +63,11 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		private void SetRadius(float _radius) {
+		virtual protected void SetRadius(float _radius) { // Override this so we can update my collider sizes! :)
 			radius = _radius;
 			myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
-            body.SetRadius(radius); // tell my body so it can update its collider!
 			// Update text!
             t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
-        }
-
-        private void ApplyPos() {
-            // Do move?? Lerp me between my two poses.
-            if (doMove) {
-                float moveLoc = MathUtils.Sin01(moveOscVal);
-                Pos = Vector2.Lerp(posA,posB, moveLoc);// + posDipOffset + posDanceOffset;
-            }
-            // DON'T move? Just put me at my one known pos.
-            else {
-                Pos = posA;// + posDipOffset + posDanceOffset;
-            }
         }
 
 
@@ -143,12 +84,6 @@ namespace CircleGrow {
 		public void Solidify() {
             bodyColor = color_solid;
             SetCurrentState(GrowerStates.Solidified);
-		}
-        public void OnBodyTriggerEnter() {
-            // Illegal overlap!
-            SetCurrentState(GrowerStates.Solidified);
-            bodyColor = color_illegal;
-            myLevel.OnIllegalOverlap();
 		}
 
         private IEnumerator Coroutine_StartGrowing() {
@@ -167,23 +102,21 @@ namespace CircleGrow {
 
 
 		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		private void OnTriggerEnter2D(Collider2D collision) {
+			// Illegal overlap!
+			SetCurrentState(GrowerStates.Solidified);
+			bodyColor = color_illegal;
+			myLevel.OnIllegalOverlap();
+		}
+
+
+		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
 		public void GrowStep() {
 			SetRadius(radius + growSpeed*Time.timeScale);
-        }
-
-        private void Update() {
-            if (Time.timeScale == 0) { return; } // No time? No dice.
-            if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
-
-            UpdateMove();
-            ApplyPos();
-        }
-        private void UpdateMove() {
-            if (doMove && currentState!=GrowerStates.Solidified) {
-                moveOscVal += moveSpeed * timeScale;
-            }
         }
 
 	}

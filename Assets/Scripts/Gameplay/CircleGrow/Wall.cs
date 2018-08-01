@@ -4,23 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace CircleGrow {
-    abstract public class Wall : MonoBehaviour {
-        // Components
-        [SerializeField] protected Image i_body;
+    abstract public class Wall : Prop {
 
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-        virtual public void Initialize(Transform tf_parent, Vector2 center, Vector2 size) {
-            // Parent jazz!
-            this.transform.SetParent(tf_parent);
-            this.transform.localScale = Vector3.one;
-            this.transform.localEulerAngles = Vector3.zero;
-
-            // Size/position me!
-            RectTransform myRectTransform = this.GetComponent<RectTransform>();
-            myRectTransform.sizeDelta = size;
-            myRectTransform.anchoredPosition = center;
+		virtual public void Initialize(Level _myLevel, Transform tf_parent, Vector2 center, Vector2 size) {
+			BaseInitialize(_myLevel, tf_parent, center, size);
 
             // Color me impressed!
             i_body.color = Grower.color_solid;

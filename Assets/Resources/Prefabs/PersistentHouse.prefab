@@ -308,13 +308,11 @@ MonoBehaviour:
     type: 2}
   bouncePaint_player: {fileID: 1857669726947748, guid: ae5ab297af6ef4c05b765191fc4a1a12,
     type: 2}
-  circleGrow_grower: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
-    type: 2}
-  circleGrow_growerBody_circle: {fileID: 1639624235426292, guid: 373bbcbb6ede441e6acb4cead424a4bd,
-    type: 2}
-  circleGrow_growerBody_square: {fileID: 1020485920417822, guid: 04d79c0f685984f8fa28b0414cd5f866,
-    type: 2}
   circleGrow_level: {fileID: 1645702038941974, guid: 3a372c6878e71a54d85b18f4e0bffff0,
+    type: 2}
+  circleGrow_growerCircle: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
+    type: 2}
+  circleGrow_growerRect: {fileID: 1762275864868292, guid: 6064797fc306824418ecb136fbaf69fd,
     type: 2}
   circleGrow_wallCircle: {fileID: 1581440064843480, guid: d588b50b1535342fc89c812bb8a15a4d,
     type: 2}

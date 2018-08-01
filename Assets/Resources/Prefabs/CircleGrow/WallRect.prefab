@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   i_body: {fileID: 114084200957579434}
+  myRectTransform: {fileID: 224314914190224042}
   myCollider: {fileID: 61952507017432682}
 --- !u!222 &222291075000709772
 CanvasRenderer:
