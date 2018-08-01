@@ -225,9 +225,13 @@ namespace CircleGrow {
             // Specify default values
 			PropShapes gs = PropShapes.Circle; // default growerShape!
             scoreRequired = 1000;
-            bounds.SetSize(550,750); // Default to 600x800 with 25px padding on all sides.
+			bounds.SetSize(550,750); // Default to 600x800 with 25px padding on all sides.
+			float l=-550*0.5f;
+			float r= 550*0.5f;
+			float b=-750*0.5f;
+			float t= 750*0.5f;
 
-            // NOTE: All coordinates are based off of LevelBounds's playing space (specified here! 550x750 or less)!
+			// NOTE: All coordinates are based off of LevelBounds's playing space (specified here! 550x750 or less)!
 
 			int li = LevelIndex;
 			int i=FirstLevelIndex;
@@ -238,102 +242,180 @@ namespace CircleGrow {
             else if (li == i++) { // One.
                 scoreRequired = 2000;
                 AddGrower(gs, 0,0);
-            }
-            else if (li == i++) { // One close call
-                scoreRequired = 650;
-                AddWall(-500,0, 700);
-                AddWall( 500,0, 700);
-                AddGrower(gs, 0, 0);
-            }
-            else if (li == i++) { // Two against walls TODO: Make asymmetrical
-                scoreRequired = 1200;
-                AddWall(0,0, 600,100);
-                AddGrower(gs, 0, 214);
-                AddGrower(gs, 0,-214);
-            }
-            else if (li == i++) { // 2 pair.
-                scoreRequired = 600;
+			}
+//			else if (li == i++) { // One, with high fence
+//				scoreRequired = 300;
+//				AddWall(0,-250, 600,600);
+//				AddGrower(gs, 0, 160).SetGrowSpeed(0.7f);
+			//			}
+//			else if (li == i++) { // One, with single WallCircle (vertical)
+//				scoreRequired = 900;
+//				AddGrower(gs, 0, 130);
+//				AddWall(0,-100, 100);
+//			}
+			else if (li == i++) { // One, with single WallCircle (horizontal)
+				scoreRequired = 700;
+				AddGrower(gs, -30,30).SetGrowSpeed(0.8f);
+				AddWall(172,30, 92);
+			}
+//			else if (li == i++) { // Two, opposite sides MAYBE use
+//				scoreRequired = 800;
+//				AddGrower(gs,   0,t-100);
+//				AddGrower(gs, 120, -120);
+//			}
+//			else if (li == i++) { // Two, with center diamond wall
+//				scoreRequired = 1200;
+//				AddGrower(gs,  -167,282);
+//				AddGrower(gs,  -42,-181);
+//				AddWall(-45,145, 200,200).SetRotation(45);
+	//			}
+			else if (li == i++) { // One, with compressing walls!
+				scoreRequired = 1200;
+				AddGrower(gs,  0,0).SetGrowSpeed(1.2f);
+				AddWall(-230,0, 400,800).SetPosB(-450,0).SetMoveSpeed(0.8f,-Mathf.PI*0.5f);
+				AddWall( 230,0, 400,800).SetPosB( 450,0).SetMoveSpeed(0.8f,-Mathf.PI*0.5f);
+			}
+			else if (li == i++) { // Two, with center WallCircle
+				scoreRequired = 900;
+				AddGrower(gs,  0, -184).SetGrowSpeed(0.9f);
+				AddGrower(gs,  0,  150).SetGrowSpeed(0.9f);
+				AddWall(0,13, 92);
+			}
+			else if (li == i++) { // Two, in a field of landmines!
+				scoreRequired = 900;
+				AddGrower(gs, -100,-160);
+				AddGrower(gs,   56, 132);
+				AddWall(-185, 265, 150);
+				AddWall(-175,  21,  190);
+				AddWall(  54, 333,  82);
+				AddWall( 169,-108, 206);
+				AddWall(-225,-250, 100);
+				AddWall( 216, 316, 166);
+				AddWall(  59,-277, 192);
+			}
+			else if (li == i++) { // One, with rotating center plank
+				scoreRequired = 800;
+				AddGrower(gs,  0, 100);
+				AddWall(0,-100, 30,300).SetPosB(0,-220).SetMoveSpeed(2.5f).SetRotateSpeed(1f);
+			}
+			else if (li == i++) { // Three, with center diamond wall
+				scoreRequired = 900;
+				AddGrower(gs, -130, -130);
+				AddGrower(gs,  150, -250);
+				AddGrower(gs,    0,  258);
+				AddWall(0,0, 200,200).SetRotation(45);
+			}
+
+			else if (li == i++) { // One, concave narrow squish
+				scoreRequired = 650;
+				AddWall(-500,0, 700);
+				AddWall( 500,0, 700);
+				AddGrower(gs, 0, 0);
+			}
+//            else if (li == i++) { // Two in chambers
+//                scoreRequired = 1600;
+//                AddWall(0,100, 600,100);
+//                AddGrower(gs, 0, 214+50);
+//                AddGrower(gs, 0,-214+50);
+//            }
+            else if (li == i++) { // 2 alone.
+                scoreRequired = 800;
                 AddGrower(gs, -120,0);
                 AddGrower(gs,  120,0);
-            }
-            else if (li == i++) { // Triplex
-                scoreRequired = 900;
+			}
+			else if (li == i++) { // One moving Grower
+				scoreRequired = 1400;
+				AddGrower(gs, 0,-100).SetPosB(0,330).SetMoveSpeed(0.8f);
+			}
+//            else if (li == i++) { // 4 in corners. Squidward-Robot.
+//				scoreRequired = 1500;
+////				AddWall(0,0, 600,50);
+////				AddWall(0,0, 50,800);
+//				AddWall(0,t, 50,t*2);
+////				AddWall(l*0.5, -l,50);
+//                AddGrower(gs,  150,  200);
+//                AddGrower(gs, -150, -200);
+//                AddGrower(gs,  150, -200);
+//                AddGrower(gs, -150,  200);
+//            }
+
+
+			else if (li == i++) { // Triplex moving
+				scoreRequired = 1000;
 				AddWall(0,-140, 600,25);
 				AddWall(0, 140, 600,25);
-                AddGrower(gs,  150,  262);
-                AddGrower(gs, -150, -262);
-                AddGrower(gs,    0,    0);
-            }
-            else if (li == i++) { // 4 in corners TODO: Only sequester top left one
-                scoreRequired = 1500;
-				AddWall(0,0, 600,50);
-				AddWall(0,0, 50,800);
-                AddGrower(gs,  150,  200);
-                AddGrower(gs, -150, -200);
-                AddGrower(gs,  150, -200);
-                AddGrower(gs, -150,  200);
-            }
-
-
-            // Balls against Balls
+				AddGrower(gs, -150,  262).SetPosB(150, 262).SetMoveSpeed(1, 0);
+				AddGrower(gs, -150, -262).SetPosB(150,-262).SetMoveSpeed(1, Mathf.PI);
+				AddGrower(gs, -150,    0).SetPosB(150,   0).SetMoveSpeed(1, Mathf.PI*0.5f);
+			}
             else if (li == i++) { // 2 diagonal.
-                scoreRequired = 1600;
+                scoreRequired = 1700;
                 AddGrower(gs, -60,-160);
                 AddGrower(gs,  60, 160);
-            }
+			}
             else if (li == i++) { // Easy V
                 scoreRequired = 2700;
-				AddWall(-275,-375, 240);
-				AddWall( 275,-375, 240);
-                AddGrower(gs, -140,  240);
-                AddGrower(gs,  140,  240);
-                AddGrower(gs,    0, -140);
-            }
+				AddWall(-275,-375, 250);
+				AddWall( 275,-375, 250);
+                AddGrower(gs, -140,  240).SetGrowSpeed(1.2f);
+                AddGrower(gs,  140,  240).SetGrowSpeed(1.2f);
+                AddGrower(gs,    0, -140).SetGrowSpeed(1.2f);
+			}
             else if (li == i++) { // Snowman
                 scoreRequired = 1500;
                 AddGrower(gs, 0, -200);
                 AddGrower(gs, 0,  100);
                 AddGrower(gs, 0,  300);
-            }
-            else if (li == i++) { // 2 close call
-                scoreRequired = 1500;
+			}
+
+			else if (li == i++) { // Moving Grower Limbo-esque activation (start early)
+				scoreRequired = 2000;
+				AddGrower(gs, 0,-100).SetPosB(0,300).SetMoveSpeed(0.8f);
+			}
+
+			else if (li == i++) { // 3 diagonal
+				scoreRequired = 1800;
+				AddGrower(gs, -100, 200);
+				AddGrower(gs,  100,-200);
+				AddGrower(gs,    0,   0);
+			}
+			else if (li == i++) { // 3 diagonal OOO
+				scoreRequired = 1800;
+				AddGrower(gs,    0,   0);
+				AddGrower(gs, -100, 200);
+				AddGrower(gs,  100,-200);
+			}
+			else if (li == i++) { // 3 V OOO
+				scoreRequired = 2000;
+				AddGrower(gs, -100, 200);
+				AddGrower(gs,  100, 200);
+				AddGrower(gs,    0,-100);
+			}
+			//TODO one with moving obstacles!
+
+			else if (li == i++) { // One moving, one static
+				scoreRequired = 1600;
+				AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.9f);
+				AddGrower(gs, 0, 200);
+			}
+			else if (li == i++) { // One moving, one static reversed
+				scoreRequired = 1350;
+				AddGrower(gs, 0, 200);
+				AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.8f);
+			}
+//			else if (li == i++) { // 3 moving in sync. TODO: This
+//				scoreRequired = 100;
+//				AddGrower(gs, -60,-160);
+//			}
+			else if (li == i++) { // 2 close call
+				scoreRequired = 1500;
 				AddWall(-138, 22, 100);
 				AddWall( 138, 22, 100);
-                AddGrower(gs, 0,  200);
-                AddGrower(gs, 0, -112);
-            }
-            else if (li == i++) { // 4 square
-                scoreRequired = 2100;
-                float r = 140;
-				AddWall(-275,-375, r*2);
-				AddWall(-275, 375, r*2);
-				AddWall( 275,-375, r*2);
-				AddWall( 275, 375, r*2);
-                AddGrower(gs, -130, -130);
-                AddGrower(gs,  130,  130);
-                AddGrower(gs,  130, -130);
-                AddGrower(gs, -130,  130);
-            }
+				AddGrower(gs, 0,  200);
+				AddGrower(gs, 0, -112);
+			}
+			//TODO one with a moving obstacle!
 
-
-            else if (li == i++) { // 3 diagonal
-                scoreRequired = 1800;
-                AddGrower(gs, -100, 200);
-                AddGrower(gs,  100,-200);
-                AddGrower(gs,    0,   0);
-            }
-            else if (li == i++) { // 3 diagonal OOO
-                scoreRequired = 1800;
-                AddGrower(gs,    0,   0);
-                AddGrower(gs, -100, 200);
-                AddGrower(gs,  100,-200);
-            }
-            else if (li == i++) { // 3 V OOO
-                scoreRequired = 2000;
-                AddGrower(gs, -100, 200);
-                AddGrower(gs,  100, 200);
-                AddGrower(gs,    0,-100);
-            }
             else if (li == i++) { // 5-die
                 scoreRequired = 1800;
                 AddGrower(gs,    0,    0);
@@ -341,7 +423,26 @@ namespace CircleGrow {
                 AddGrower(gs,  120, -150);
                 AddGrower(gs, -120,  150);
                 AddGrower(gs,  120,  150);
-            }
+			}
+			else if (li == i++) { // 2 in-n-out.
+				scoreRequired = 1400;
+				AddGrower(gs, 0, 100).SetGrowSpeed(1.2f).SetPosB(0, 250).SetMoveSpeed(1.2f);
+				AddGrower(gs, 0,-100).SetGrowSpeed(1.2f).SetPosB(0,-250).SetMoveSpeed(1.2f);
+			}
+
+			else if (li == i++) { // 4 square
+				scoreRequired = 2100;
+				float rd = 140;
+				AddWall(-275,-375, rd*2);
+				AddWall(-275, 375, rd*2);
+				AddWall( 275,-375, rd*2);
+				AddWall( 275, 375, rd*2);
+				AddGrower(gs, -130, -130);
+				AddGrower(gs,  130,  130);
+				AddGrower(gs,  130, -130);
+				AddGrower(gs, -130,  130);
+			}
+
 
 
             // Different Speed Growers
@@ -361,10 +462,6 @@ namespace CircleGrow {
 
 
             // Moving Growers
-            else if (li == i++) { // One moving Grower
-                scoreRequired = 1200;
-                AddGrower(gs, -100,0).SetPosB(100,0);
-            }
             else if (li == i++) {
                 scoreRequired = 1600;
                 AddGrower(gs, -100, 160).SetPosB(100, 160);
@@ -456,6 +553,7 @@ namespace CircleGrow {
              * One hidden-tucked in a corner
              * A few lvls with different speed growing
              * A few lvls with random scattered dots
+             * Have to do 3 small-ish ones, then one bigger hard one when the pressure's on!
              */
 
             // UNTESTED
@@ -470,6 +568,9 @@ namespace CircleGrow {
 
 
 			// TESTSSS
+			else if (li == i++) {
+				AddGrower(gs, -140, 270).SetPosB(140, 270);
+			}
 			else if (li == i++) {
 				AddGrower(gs, 260, 0);
 			}
@@ -497,7 +598,15 @@ namespace CircleGrow {
 
 
 
-            /*
+			/*
+			else if (li == i++) { // Triplex
+				scoreRequired = 1000;
+				AddWall(0,-140, 600,25);
+				AddWall(0, 140, 600,25);
+				AddGrower(gs,  150,  262);
+				AddGrower(gs, -150, -262);
+				AddGrower(gs,    0,    0);
+			}
             else if (li == i++) { // N tetronimo TO DO: Add some more dots here and there
                 scoreRequired = 1600;
                 AddGrower(gs,  -100, -180);

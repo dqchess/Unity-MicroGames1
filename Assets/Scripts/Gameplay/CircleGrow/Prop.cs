@@ -30,8 +30,12 @@ namespace CircleGrow {
 			get { return i_body.color; }
 			set { i_body.color = value; }
 		}
-		virtual protected bool MayMove() {
+		private bool DoesMove() {
 			return moveSpeed != 0;
+		}
+		/** DoesMove returns if we are a MOVING Prop. MayMove returns if we're a moving Prop AND we're allowed to move (e.g. false for solid Growers). */
+		virtual protected bool MayMove() {
+			return DoesMove() && myLevel.IsGameStatePlaying;
 		}
 		virtual protected bool MayRotate() {
 			return rotateSpeed != 0;
@@ -49,21 +53,27 @@ namespace CircleGrow {
 			GameUtils.ParentAndReset(this.gameObject, tf_parent);
 			SetSize(_size);
 
-			SetPosA(_pos); // default BOTH poses to the one provided. Assume we don't move.
-			SetPosB(_pos);
+//			SetPosA(_pos); // default BOTH poses to the one provided. Assume we don't move.
+//			SetPosB(_pos);
+			SetPoses(_pos.x,_pos.y); // default BOTH poses to the one provided. Assume we don't move.
 
-			SetMoveSpeed(0, 0); // Default my move-speed values.
+			SetMoveSpeed(1, 0); // Default my move-speed values.
 		}
 		virtual public Prop SetSize(Vector2 _size) {
 			myRectTransform.sizeDelta = _size;
 			return this;
 		}
-		public Prop SetPosA(Vector2 _pos) { return SetPosA(_pos.x, _pos.y); }
-		public Prop SetPosA(float x,float y) {
-			posA = new Vector2(x,y);
-			ApplyPos();
-			return this;
+		public void SetPoses(float x,float y) {
+			Vector2 _pos = new Vector2(x,y);
+			posA = _pos;
+			SetPosB(_pos);
 		}
+//		public Prop SetPosA(Vector2 _pos) { return SetPosA(_pos.x, _pos.y); }
+//		public Prop SetPosA(float x,float y) {
+//			posA = new Vector2(x,y);
+//			ApplyPos();
+//			return this;
+//		}
 		public Prop SetPosB(Vector2 _pos) { return SetPosB(_pos.x, _pos.y); }
 		public Prop SetPosB(float x,float y) {
 			posB = new Vector2(x,y);
@@ -76,9 +86,13 @@ namespace CircleGrow {
 			ApplyPos();
 			return this;
 		}
+		public Prop SetRotation(float _rotation) {
+			Rotation = _rotation;
+			return this;
+		}
 		public Prop SetRotateSpeed(float _rotateSpeed, float _startRotation=0) {
 			rotateSpeed = _rotateSpeed;
-			Rotation = _startRotation;
+			SetRotation(_startRotation);
 			return this;
 		}
 
@@ -88,7 +102,7 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		private void ApplyPos() {
 			// Do move?? Lerp me between my two poses.
-			if (MayMove()) {
+			if (DoesMove()) {
 				float moveLoc = MathUtils.Sin01(moveOscVal);
 				Pos = Vector2.Lerp(posA,posB, moveLoc);// + posDipOffset + posDanceOffset;
 			}

@@ -45,7 +45,7 @@ void PrintGrowerCoordinates() {
   println("Grower Coordinates:");
   for (int i=0; i<growers.size(); i++) {
     Grower obj = (Grower) growers.get(i);
-    println((int)obj.pos.x, (int)obj.pos.y);
+    println((int)obj.pos.x, -(int)obj.pos.y, "    " + obj.radius); // Note: Flip Y when we print! To match Unity's coordinate system.
   }
 }
 

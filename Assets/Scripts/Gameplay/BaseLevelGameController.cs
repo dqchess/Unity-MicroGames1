@@ -121,11 +121,15 @@ abstract public class BaseLevelGameController : BaseGameController {
 	override protected void RegisterButtonInput() {
 		base.RegisterButtonInput();
 
+		bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
 		if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
 
 		// DEBUG
-		if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPrevLevel(); }
-		if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
+		if (Input.GetKeyDown(KeyCode.P))			{ StartPrevLevel10(); return; } // P = Back 10 levels.
+		if (Input.GetKeyDown(KeyCode.LeftBracket))	{ StartPrevLevel(); return; } // [ = Back 1 level.
+		if (Input.GetKeyDown(KeyCode.RightBracket))	{ StartNextLevel(); return; } // ] = Ahead 1 level.
+		if (Input.GetKeyDown(KeyCode.Backslash))	{ StartNextLevel10(); return; } // \ = Ahead 10 levels.
 		if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
 	}
 

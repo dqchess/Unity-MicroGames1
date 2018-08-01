@@ -78,6 +78,11 @@ namespace CircleGrow {
             StartCoroutine(Coroutine_StartNextLevel());
             // Tell people!
             level.OnWinLevel();
+			// Update best score!
+			int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
+			if (scoreSolidified > bestScore) {
+				SaveStorage.SetInt(SaveKeys.BestScore(MyGameName(),LevelIndex), scoreSolidified);
+			}
         }
 
         private IEnumerator Coroutine_StartNextLevel() {

@@ -50,10 +50,10 @@ namespace CircleGrow {
             i_bounds.rectTransform.anchoredPosition = r_bounds.center;
 
 			float wt = 100; // wallThickness. TODO: Set this individually for each wall, math-correctly!
-			walls[Sides.L].SetPosA(r_bounds.xMin-wt*0.5f, r_bounds.center.y);
-			walls[Sides.R].SetPosA(r_bounds.xMax+wt*0.5f, r_bounds.center.y);
-			walls[Sides.B].SetPosA(r_bounds.center.x, r_bounds.yMin-wt*0.5f);
-			walls[Sides.T].SetPosA(r_bounds.center.x, r_bounds.yMax+wt*0.5f);
+			walls[Sides.L].SetPoses(r_bounds.xMin-wt*0.5f, r_bounds.center.y);
+			walls[Sides.R].SetPoses(r_bounds.xMax+wt*0.5f, r_bounds.center.y);
+			walls[Sides.B].SetPoses(r_bounds.center.x, r_bounds.yMin-wt*0.5f);
+			walls[Sides.T].SetPoses(r_bounds.center.x, r_bounds.yMax+wt*0.5f);
 
 			walls[Sides.L].SetSize(new Vector2(wt, r_bounds.height+wt));
 			walls[Sides.R].SetSize(new Vector2(wt, r_bounds.height+wt));
