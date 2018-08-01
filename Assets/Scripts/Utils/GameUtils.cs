@@ -6,7 +6,7 @@ using System.IO;
 public class GameUtils {
 
 	/** Parents GO to TF, and resets GO's pos, scale, and rotation! */
-	public static void ResetParentTransform(GameObject go, Transform tf) {
+	public static void ParentAndReset(GameObject go, Transform tf) {
 		go.transform.SetParent(tf);
 		go.transform.localPosition = Vector3.zero;
 		go.transform.localEulerAngles = Vector3.zero;

@@ -9,14 +9,17 @@ namespace CircleGrow {
 	abstract public class Grower : Prop {
 		// Constants
 		protected const float HITBOX_SHRINK = 1; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.
-        // Constants
-        static public readonly Color color_sleeping = new Color(250/255f, 200/255f, 110/255f);
-        static public readonly Color color_growing = new Color(250/255f, 200/255f, 110/255f);
-		static public readonly Color color_solid = new Color(37/255f, 166/255f, 170/255f);
-		static public readonly Color color_illegal = new Color(255/255f, 132/255f, 118/255f);
+		// Constants
+		static public  readonly Color color_sleeping = new Color(250/255f, 200/255f, 110/255f);
+		static private readonly Color color_pregrowingA = color_sleeping;
+		static private readonly Color color_pregrowingB = new Color(100/255f, 0/255f, 165/255f);
+        static public  readonly Color color_growing = new Color(250/255f, 200/255f, 110/255f);
+		static public  readonly Color color_solid = new Color(37/255f, 166/255f, 170/255f);
+		static public  readonly Color color_illegal = new Color(255/255f, 132/255f, 118/255f);
 		// Components
         [SerializeField] private Text t_scoreValue=null;
         // Properties
+		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
         private GrowerStates currentState;
         private float growSpeed;
         private float radius;
@@ -36,7 +39,17 @@ namespace CircleGrow {
 			return base.MayRotate() && currentState!=GrowerStates.Solidified;
 		}
         // Getters (Private)
-        private float Area() { return Mathf.PI * Radius*Radius; }
+		private float Area() { return Mathf.PI * Radius*Radius; }
+		private Vector2 GetCollisionPoint(Collision2D collision) {
+			Vector2 point = collision.contacts[0].point;
+			// TODO: Fix overlapPoint to be in screen-space!
+			//			overlapPoint = Camera.main.WorldToScreenPoint(overlapPoint);
+			//			print("overlapPoint: " + overlapPoint);
+			//			// H ACK HARDCODED Offset overlapPoint to be in UI coordinates.
+			//			overlapPoint += new Vector2(0, -3.147f); // NOTE: I don't know what the X offset is! Don't need to now tho, as levels are all x-centered.
+			//			overlapPoint *= 10.7f;//9.54057f;
+			return point;
+		}
 
 
 		// ----------------------------------------------------------------
@@ -73,19 +86,89 @@ namespace CircleGrow {
 
         private void SetCurrentState(GrowerStates _state) {
             currentState = _state;
-            // Only show my text if I've at least started growing!
-            //t_scoreValue.enabled = _state!=GrowerStates.Sleeping && _state!=GrowerStates.PreGrowing;
-            t_scoreValue.enabled = _state==GrowerStates.Solidified;
+            // Only show my text if I'm a healthy, non-overlapped solid!
+			t_scoreValue.enabled = _state==GrowerStates.Solidified && !didIllegalOverlap;
         }
 
+		public void SetAsPreGrowing() {
+			// Just set my state, and I'll flash in Update!
+			SetCurrentState(GrowerStates.PreGrowing);
+		}
+		public void StartGrowing() {
+			// Set my color, and we're off!
+			bodyColor = color_growing;
+			SetCurrentState(GrowerStates.Growing);
+		}
+		public void Solidify() {
+			bodyColor = color_solid;
+			SetCurrentState(GrowerStates.Solidified);
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		private void OnCollisionEnter2D(Collision2D collision) {
+			if (!myLevel.IsGameStatePlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
+			if (currentState == GrowerStates.Sleeping) { return; } // Ignore sleeping beauties! (At least for now.)
+			Prop otherProp = collision.collider.GetComponent<Prop>();
+			// Illegal overlap!
+			if (otherProp != null) {
+				OnIllegalOverlap();
+				otherProp.OnIllegalOverlap();
+				Vector2 overlapPoint = GetCollisionPoint(collision);
+				// Tell my Level!
+				myLevel.OnIllegalOverlap(overlapPoint);
+			}
+		}
+		override public void OnIllegalOverlap() {
+			didIllegalOverlap = true;
+			SetCurrentState(GrowerStates.Solidified);
+			bodyColor = color_illegal;
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Update
+		// ----------------------------------------------------------------
+		override protected void Update() {
+			base.Update();
+			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
+
+			UpdatePreGrowingFlash();
+			UpdateGrowing();
+		}
+		private void UpdatePreGrowingFlash() {
+			if (!myLevel.IsGameStatePlaying) { return; } // Not playing? Do nothing.
+			// Am I pre-growing? Then flash!
+			if (currentState==GrowerStates.PreGrowing) {
+				float colorLoc = MathUtils.SinRange(-0.3f, 1.3f, Time.time*14f);
+				bodyColor = Color.Lerp(color_pregrowingA, color_pregrowingB, colorLoc);
+//				bodyColor = colorLoc<0.5f ? color_pregrowingA : color_pregrowingB;
+			}
+		}
+		private void UpdateGrowing() {
+			if (!myLevel.IsGameStatePlaying) { return; } // Not playing? Do nothing.
+			// If I'm growing, then GROW!
+			if (currentState==GrowerStates.Growing) {
+				GrowStep();
+			}
+		}
+		private void GrowStep() {
+			// Grow, and tell my Level I grew (so we can update score)!
+			SetRadius(radius + growSpeed*Time.timeScale);
+			myLevel.OnGrowerGrowStep();
+		}
+
+	}
+}
+
+
+
+/*
         public void StartGrowing() {
             StartCoroutine(Coroutine_StartGrowing());
         }
-		public void Solidify() {
-            bodyColor = color_solid;
-            SetCurrentState(GrowerStates.Solidified);
-		}
-
         private IEnumerator Coroutine_StartGrowing() {
             // Pre-growing.
             SetCurrentState(GrowerStates.PreGrowing);
@@ -99,38 +182,7 @@ namespace CircleGrow {
             bodyColor = color_growing;
             SetCurrentState(GrowerStates.Growing);
         }
-
-
-		// ----------------------------------------------------------------
-		//  Events
-		// ----------------------------------------------------------------
-		private void OnCollisionEnter2D(Collision2D collision) {
-			if (!myLevel.IsGameStatePlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
-			// Illegal overlap!
-			SetCurrentState(GrowerStates.Solidified);
-			bodyColor = color_illegal;
-			Vector2 overlapPoint = collision.contacts[0].point;
-			// TODO: Fix overlapPoint to be in screen-space!
-//			overlapPoint = Camera.main.WorldToScreenPoint(overlapPoint);
-//			print("overlapPoint: " + overlapPoint);
-//			// HACK HARDCODED Offset overlapPoint to be in UI coordinates.
-//			overlapPoint += new Vector2(0, -3.147f); // NOTE: I don't know what the X offset is! Don't need to now tho, as levels are all x-centered.
-//			overlapPoint *= 10.7f;//9.54057f;
-			myLevel.OnIllegalOverlap(overlapPoint);
-		}
-
-
-		// ----------------------------------------------------------------
-		//  Update
-		// ----------------------------------------------------------------
-		public void GrowStep() {
-			SetRadius(radius + growSpeed*Time.timeScale);
-        }
-
-	}
-}
-
-
+		*/
 /*
 //      private static int GetMultiplierForRadius(float _radius) {
     //          //if (_radius <  20) { return 1; }TEMP DISABLED

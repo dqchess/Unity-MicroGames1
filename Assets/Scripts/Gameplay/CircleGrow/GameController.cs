@@ -152,7 +152,7 @@ namespace CircleGrow {
             if (Time.timeScale == 0f) { return; }
 
             if (IsGameStatePlaying) {
-                level.SolidifyCurrentGrower();
+				level.OnTapScreen();
             }
         }
 

@@ -9,12 +9,19 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-		virtual public void Initialize(Level _myLevel, Transform tf_parent, Vector2 center, Vector2 size) {
+		public void Initialize(Level _myLevel, Transform tf_parent, Vector2 center, Vector2 size) {
 			BaseInitialize(_myLevel, tf_parent, center, size);
 
             // Color me impressed!
-            i_body.color = Grower.color_solid;
-        }
+            bodyColor = Grower.color_solid;
+		}
 
+		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		override public void OnIllegalOverlap() {
+//			// Color me disappointed!
+//			bodyColor = Grower.color_illegal;
+		}
     }
 }

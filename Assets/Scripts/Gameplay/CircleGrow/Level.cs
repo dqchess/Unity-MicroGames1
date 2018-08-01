@@ -11,7 +11,7 @@ namespace CircleGrow {
 		// Components
         [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;
-        [SerializeField] private RectTransform rt_gameComponents=null; // Growers go on this!
+        [SerializeField] private RectTransform rt_gameComponents=null; // Growers and Walls go on this!
 		private List<Grower> growers;
 		private List<Wall> walls;
 		private List<Image> i_collisionIcons;
@@ -27,6 +27,7 @@ namespace CircleGrow {
 		public bool IsGameStatePlaying { get { return gameController.IsGameStatePlaying; } }
         public int ScoreRequired { get { return scoreRequired; } }
         public List<Grower> Growers { get { return growers; } }
+		public RectTransform rt_GameComponents { get { return rt_gameComponents; } }
 		// Getters (Private)
 		private Grower currentGrower {
 			get {
@@ -54,30 +55,18 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         public void UpdateScoreUI(int scorePossible, int scoreSolidified) {
             levelUI.UpdateScoreUI(scorePossible, scoreSolidified);
-        }
-        public void OnLoseLevel(LoseReasons reason) {
-            levelUI.OnLoseLevel(reason);
-        }
-        public void OnWinLevel() {
-            levelUI.OnWinLevel();
-        }
+		}
+		private void AddIllegalOverlapIcon(Vector2 pos) {
+			Image iconImage = Instantiate(resourcesHandler.circleGrow_collisionIcon).GetComponent<Image>();
+			GameUtils.ParentAndReset(iconImage.gameObject, rt_gameComponents);
+			iconImage.rectTransform.anchoredPosition = pos;
+			i_collisionIcons.Add(iconImage);
+		}
 
 
         // ----------------------------------------------------------------
         //  Game Doers
-        // ----------------------------------------------------------------
-		public void SolidifyCurrentGrower() {
-			if (currentGrower == null) { return; } // Safety check.
-            if (currentGrower.CurrentState != GrowerStates.Growing) { return; } // Oh, if it's only pre-growing, DON'T do anything.
-
-			// Solidify current, and move onto the next one!
-			currentGrower.Solidify();
-			SetCurrentGrowerIndex(currentGrowerIndex + 1);
-		}
-		public void OnIllegalOverlap(Vector2 pos) {
-//			AddIllegalOverlapIcon(pos); // Add the no-no icon! TEMP DISABLED for now. Coordinates not right yet.
-            gameController.OnIllegalOverlap(); // Tattle to GameController!!
-		}
+		// ----------------------------------------------------------------
 		private void SetCurrentGrowerIndex(int _index) {
             if (growers.Count == 0) { return; } // Safety check.
             currentGrowerIndex = _index;
@@ -86,19 +75,57 @@ namespace CircleGrow {
 
 			// There IS another Grower!
 			if (currentGrower != null) {
-                currentGrower.StartGrowing();
+				currentGrower.SetAsPreGrowing();
 			}
             // There is NOT another Grower! End the level.
 			else {
                 gameController.OnAllGrowersSolidified();
 			}
 		}
+		private void StartGrowingCurrentGrower() {
+			if (currentGrower != null) {
+				currentGrower.StartGrowing();
+			}
+		}
+		private void SolidifyCurrentGrower() {
+			if (currentGrower == null) { return; } // Safety check.
+			if (currentGrower.CurrentState != GrowerStates.Growing) { return; } // Oh, if it's only pre-growing, DON'T do anything.
 
-		private void AddIllegalOverlapIcon(Vector2 pos) {
-			Image iconImage = Instantiate(resourcesHandler.circleGrow_collisionIcon).GetComponent<Image>();
-			GameUtils.ResetParentTransform(iconImage.gameObject, rt_gameComponents);
-			iconImage.rectTransform.anchoredPosition = pos;
-			i_collisionIcons.Add(iconImage);
+			// Solidify current, and move onto the next one!
+			currentGrower.Solidify();
+			SetCurrentGrowerIndex(currentGrowerIndex + 1);
+		}
+
+
+
+		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		public void OnLoseLevel(LoseReasons reason) {
+			levelUI.OnLoseLevel(reason);
+		}
+		public void OnWinLevel() {
+			levelUI.OnWinLevel();
+		}
+
+		public void OnTapScreen() {
+			if (currentGrower == null) { return; } // No grower? Do nothin'.
+			// PreGrowing -> Growing!
+			if (currentGrower.CurrentState == GrowerStates.PreGrowing) {
+				StartGrowingCurrentGrower();
+			}
+			// Growing -> Solidified!
+			else if (currentGrower.CurrentState == GrowerStates.Growing) {
+				SolidifyCurrentGrower();
+			}
+		}
+		public void OnIllegalOverlap(Vector2 pos) {
+//			AddIllegalOverlapIcon(pos); // Add the no-no icon! TEMP DISABLED for now. Coordinates not right yet.
+			gameController.OnIllegalOverlap(); // Tattle to GameController!!
+		}
+		/** Growers are responsible for telling me when they've changed their size, so we can update the score. */
+		public void OnGrowerGrowStep() {
+			gameController.UpdateScore();
 		}
 
 
@@ -107,26 +134,26 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void Update () {
-			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
-
-			if (IsGameStatePlaying) {
-				GrowCurrentGrower();
-			}
-		}
-        private void GrowCurrentGrower() {
-			if (currentGrower == null) { return; } // Safety check.
-
-            // Grow it, and update our score!
-            if (currentGrower.CurrentState == GrowerStates.Growing) {
-                currentGrower.GrowStep();
-                gameController.UpdateScore();
-            }
-
-   //         if (IsIllegalOverlap(currentGrower)) {
-			//	OnIllegalOverlap(currentGrower);
-			//}
-		}
+//		private void Update () {
+//			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
+//
+//			if (IsGameStatePlaying) {
+//				GrowCurrentGrower();
+//			}
+//		}
+//        private void GrowCurrentGrower() {
+//			if (currentGrower == null) { return; } // Safety check.
+//
+//            // Grow it, and update our score!
+//            if (currentGrower.CurrentState == GrowerStates.Growing) {
+//                currentGrower.GrowStep();
+//                gameController.UpdateScore();
+//            }
+//
+//   //         if (IsIllegalOverlap(currentGrower)) {
+//			//	OnIllegalOverlap(currentGrower);
+//			//}
+//		}
 
 
 		// ----------------------------------------------------------------
@@ -277,17 +304,11 @@ namespace CircleGrow {
             }
             else if (li == i++) { // 4 square
                 scoreRequired = 2100;
-                //float r = 50;
-				//AddWall(-(275-r),-(375-r), r*2);
-				//AddWall(-(275-r), (375-r), r*2);
-				//AddWall( (275-r),-(375-r), r*2);
-				//AddWall( (275-r), (375-r), r*2);
                 float r = 140;
 				AddWall(-275,-375, r*2);
 				AddWall(-275, 375, r*2);
 				AddWall( 275,-375, r*2);
 				AddWall( 275, 375, r*2);
-				//AddWall(0,0, 20);
                 AddGrower(gs, -130, -130);
                 AddGrower(gs,  130,  130);
                 AddGrower(gs,  130, -130);
@@ -449,6 +470,9 @@ namespace CircleGrow {
 
 
 			// TESTSSS
+			else if (li == i++) {
+				AddGrower(gs, 260, 0);
+			}
 			else if (li == i++) {
 				AddGrower(gs,-50, 0);
 				AddGrower(gs, 10, 0);

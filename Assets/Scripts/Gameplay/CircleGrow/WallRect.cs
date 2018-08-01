@@ -8,9 +8,14 @@ namespace CircleGrow {
         [SerializeField] private BoxCollider2D myCollider;
 
 
-		override public void Initialize(Level _myLevel, Transform tf_parent, Vector2 center, Vector2 size) {
-            base.Initialize(_myLevel, tf_parent, center, size);
-            myCollider.size = size;
-        }
+		// ----------------------------------------------------------------
+		//  Doers
+		// ----------------------------------------------------------------
+		override public Prop SetSize(Vector2 _size) {
+			base.SetSize(_size);
+			myCollider.size = _size;
+			return this;
+		}
+
     }
 }

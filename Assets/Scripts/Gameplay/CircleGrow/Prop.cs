@@ -17,11 +17,11 @@ namespace CircleGrow {
 		protected Level myLevel;
 
 		// Getters (Public)
-		public Vector2 Pos {
+		private Vector2 Pos {
 			get { return myRectTransform.anchoredPosition; }
 			set { myRectTransform.anchoredPosition = value; }
 		}
-		public float Rotation {
+		private float Rotation {
 			get { return myRectTransform.localEulerAngles.z; }
 			set { myRectTransform.localEulerAngles = new Vector3(myRectTransform.localEulerAngles.x, myRectTransform.localEulerAngles.y, value); }
 		}
@@ -46,19 +46,28 @@ namespace CircleGrow {
 		protected void BaseInitialize(Level _myLevel, Transform tf_parent, Vector2 _pos, Vector2 _size) {
 			myLevel = _myLevel;
 
-			this.transform.SetParent(tf_parent);
-			this.transform.localScale = Vector3.one;
-			this.transform.localPosition = Vector3.zero;
-			this.transform.localEulerAngles = Vector3.zero;
-			myRectTransform.sizeDelta = _size;
+			GameUtils.ParentAndReset(this.gameObject, tf_parent);
+			SetSize(_size);
 
-			posA = posB = _pos; // default BOTH poses to the one provided. Assume we don't move.
-			ApplyPos();
+			SetPosA(_pos); // default BOTH poses to the one provided. Assume we don't move.
+			SetPosB(_pos);
 
-			SetMoveSpeed(1, 0); // Default my move-speed values.
+			SetMoveSpeed(0, 0); // Default my move-speed values.
 		}
+		virtual public Prop SetSize(Vector2 _size) {
+			myRectTransform.sizeDelta = _size;
+			return this;
+		}
+		public Prop SetPosA(Vector2 _pos) { return SetPosA(_pos.x, _pos.y); }
+		public Prop SetPosA(float x,float y) {
+			posA = new Vector2(x,y);
+			ApplyPos();
+			return this;
+		}
+		public Prop SetPosB(Vector2 _pos) { return SetPosB(_pos.x, _pos.y); }
 		public Prop SetPosB(float x,float y) {
 			posB = new Vector2(x,y);
+			ApplyPos();
 			return this;
 		}
 		public Prop SetMoveSpeed(float _speed, float _startLocOffset=0) {
@@ -89,11 +98,16 @@ namespace CircleGrow {
 			}
 		}
 
+		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		abstract public void OnIllegalOverlap();
+
 
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void Update() {
+		virtual protected void Update() {
 			if (Time.timeScale == 0) { return; } // No time? No dice.
 			if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
 

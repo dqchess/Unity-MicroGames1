@@ -8,6 +8,8 @@ public class MathUtils {
 	static public float Cos01(float val) { return (1-Mathf.Sin(val)) * 0.5f; }
 	/// Maps Sin from (-1 to 1) to (0 to 1); also offsets so 0 returns 0.
 	static public float Sin01(float val) { return (1-Mathf.Cos(val)) * 0.5f; }
+	/// Maps Sin from (-1 to 1) to (a to b).
+	static public float SinRange(float a,float b, float val) { return Mathf.Lerp(a,b, Sin01(val)); }
 
 	static public bool IsSameSign (float a, float b) { return a*b >= 0; }
 	static public bool IsSameSign (double a, double b) { return a*b >= 0; }
