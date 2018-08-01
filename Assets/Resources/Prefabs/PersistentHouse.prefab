@@ -310,6 +310,8 @@ MonoBehaviour:
     type: 2}
   circleGrow_level: {fileID: 1645702038941974, guid: 3a372c6878e71a54d85b18f4e0bffff0,
     type: 2}
+  circleGrow_collisionIcon: {fileID: 1855592669416724, guid: 12f183303ae318949ae8ee542ce0f9e8,
+    type: 2}
   circleGrow_growerCircle: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
     type: 2}
   circleGrow_growerRect: {fileID: 1762275864868292, guid: 6064797fc306824418ecb136fbaf69fd,

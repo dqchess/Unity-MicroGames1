@@ -12,8 +12,9 @@ namespace CircleGrow {
         [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;
         [SerializeField] private RectTransform rt_gameComponents=null; // Growers go on this!
-        private List<Grower> growers;
-        private List<Wall> walls;
+		private List<Grower> growers;
+		private List<Wall> walls;
+		private List<Image> i_collisionIcons;
 		// Properties
 //		private float screenShakeVolume;
         private int scoreRequired;
@@ -23,6 +24,7 @@ namespace CircleGrow {
 
 
         // Getters (Public)
+		public bool IsGameStatePlaying { get { return gameController.IsGameStatePlaying; } }
         public int ScoreRequired { get { return scoreRequired; } }
         public List<Grower> Growers { get { return growers; } }
 		// Getters (Private)
@@ -72,8 +74,9 @@ namespace CircleGrow {
 			currentGrower.Solidify();
 			SetCurrentGrowerIndex(currentGrowerIndex + 1);
 		}
-        public void OnIllegalOverlap() {
-            gameController.OnIllegalOverlap();
+		public void OnIllegalOverlap(Vector2 pos) {
+//			AddIllegalOverlapIcon(pos); // Add the no-no icon! TEMP DISABLED for now. Coordinates not right yet.
+            gameController.OnIllegalOverlap(); // Tattle to GameController!!
 		}
 		private void SetCurrentGrowerIndex(int _index) {
             if (growers.Count == 0) { return; } // Safety check.
@@ -91,6 +94,13 @@ namespace CircleGrow {
 			}
 		}
 
+		private void AddIllegalOverlapIcon(Vector2 pos) {
+			Image iconImage = Instantiate(resourcesHandler.circleGrow_collisionIcon).GetComponent<Image>();
+			GameUtils.ResetParentTransform(iconImage.gameObject, rt_gameComponents);
+			iconImage.rectTransform.anchoredPosition = pos;
+			i_collisionIcons.Add(iconImage);
+		}
+
 
 
 
@@ -100,7 +110,7 @@ namespace CircleGrow {
 		private void Update () {
 			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
 
-			if (gameController.IsGameStatePlaying) {
+			if (IsGameStatePlaying) {
 				GrowCurrentGrower();
 			}
 		}
@@ -128,13 +138,19 @@ namespace CircleGrow {
                     Destroy(growers[i].gameObject);
                 }
             }
-            growers = new List<Grower>();
-            if (walls != null) {
-                for (int i=walls.Count-1; i>=0; --i) {
-                    Destroy(walls[i].gameObject);
-                }
-            }
-            walls = new List<Wall>();
+			growers = new List<Grower>();
+			if (walls != null) {
+				for (int i=walls.Count-1; i>=0; --i) {
+					Destroy(walls[i].gameObject);
+				}
+			}
+			walls = new List<Wall>();
+			if (i_collisionIcons != null) {
+				for (int i=i_collisionIcons.Count-1; i>=0; --i) {
+					Destroy(i_collisionIcons[i].gameObject);
+				}
+			}
+			i_collisionIcons = new List<Image>();
 		}
 		// ----------------------------------------------------------------
 		//  Adding Elements
@@ -178,10 +194,6 @@ namespace CircleGrow {
 		override protected void AddLevelComponents() {
 			DestroyLevelComponents(); // Just in case.
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
-
-            // Reset values
-            growers = new List<Grower>();
-            walls = new List<Wall>();
 
             // Specify default values
 			PropShapes gs = PropShapes.Circle; // default growerShape!
@@ -438,7 +450,22 @@ namespace CircleGrow {
 
 			// TESTSSS
 			else if (li == i++) {
-				scoreRequired = 3000;
+				AddGrower(gs,-50, 0);
+				AddGrower(gs, 10, 0);
+			}
+			else if (li == i++) {
+				AddGrower(gs,-50, 200);
+				AddGrower(gs, 10, 200);
+			}
+			else if (li == i++) {
+				AddGrower(gs, 0, -50);
+				AddGrower(gs, 0,  10);
+			}
+			else if (li == i++) {
+				AddGrower(gs, 200, -50);
+				AddGrower(gs, 200,  10);
+			}
+			else if (li == i++) {
 				AddGrower(PropShapes.Rect, 0,0).SetRotateSpeed(1f);
 				AddWall(0,200, 50,50).SetPosB(200,200).SetMoveSpeed(2f);
 				AddWall(0,-200, 100,50).SetRotateSpeed(1f).SetPosB(200,200).SetMoveSpeed(2f);

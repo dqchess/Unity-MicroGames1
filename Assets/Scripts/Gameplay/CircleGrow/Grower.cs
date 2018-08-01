@@ -104,11 +104,19 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		private void OnTriggerEnter2D(Collider2D collision) {
+		private void OnCollisionEnter2D(Collision2D collision) {
+			if (!myLevel.IsGameStatePlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
 			// Illegal overlap!
 			SetCurrentState(GrowerStates.Solidified);
 			bodyColor = color_illegal;
-			myLevel.OnIllegalOverlap();
+			Vector2 overlapPoint = collision.contacts[0].point;
+			// TODO: Fix overlapPoint to be in screen-space!
+//			overlapPoint = Camera.main.WorldToScreenPoint(overlapPoint);
+//			print("overlapPoint: " + overlapPoint);
+//			// HACK HARDCODED Offset overlapPoint to be in UI coordinates.
+//			overlapPoint += new Vector2(0, -3.147f); // NOTE: I don't know what the X offset is! Don't need to now tho, as levels are all x-centered.
+//			overlapPoint *= 10.7f;//9.54057f;
+			myLevel.OnIllegalOverlap(overlapPoint);
 		}
 
 
