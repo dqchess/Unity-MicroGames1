@@ -318,11 +318,19 @@ namespace CircleGrow {
 //                AddGrower(gs, 0, 214+50);
 //                AddGrower(gs, 0,-214+50);
 //            }
-            else if (li == i++) { // 2 alone.
-                scoreRequired = 800;
-                AddGrower(gs, -120,0);
-                AddGrower(gs,  120,0);
-			}
+            else if (li == i++) { // Biig rotating squares you gotta wait for
+                scoreRequired = 850;
+                AddGrower(gs, -220, 0);
+                AddGrower(gs,  220, 0);
+                AddGrower(gs, 0, 0);
+                AddWall(0,-520, 700,700).SetRotateSpeed( 0.2f);
+                AddWall(0, 520, 700,700).SetRotateSpeed( 0.2f);
+            }
+            //else if (li == i++) { // 2 alone.
+            //    scoreRequired = 800;
+            //    AddGrower(gs, -120,0);
+            //    AddGrower(gs,  120,0);
+            //}
 			else if (li == i++) { // One moving Grower
 				scoreRequired = 1400;
 				AddGrower(gs, 0,-100).SetPosB(0,330).SetMoveSpeed(0.8f);
@@ -349,14 +357,16 @@ namespace CircleGrow {
 				AddGrower(gs, -150,    0).SetPosB(150,   0).SetMoveSpeed(1, Mathf.PI*0.5f);
 			}
             else if (li == i++) { // 2 diagonal.
-                scoreRequired = 1700;
+                scoreRequired = 1850;
                 AddGrower(gs, -60,-160);
                 AddGrower(gs,  60, 160);
 			}
             else if (li == i++) { // Easy V
                 scoreRequired = 2700;
-				AddWall(-275,-375, 250);
-				AddWall( 275,-375, 250);
+                AddWall(-275,-375, 250).SetPosB(-350,-450).SetMoveSpeed(1.2f);
+                AddWall( 275,-375, 250).SetPosB( 350,-450).SetMoveSpeed(1.2f);
+                AddWall(-275, 375,  80).SetPosB(-350, 450).SetMoveSpeed(1.2f, Mathf.PI);
+                AddWall( 275, 375,  80).SetPosB( 350, 450).SetMoveSpeed(1.2f, Mathf.PI);
                 AddGrower(gs, -140,  240).SetGrowSpeed(1.2f);
                 AddGrower(gs,  140,  240).SetGrowSpeed(1.2f);
                 AddGrower(gs,    0, -140).SetGrowSpeed(1.2f);
@@ -368,22 +378,32 @@ namespace CircleGrow {
                 AddGrower(gs, 0,  300);
 			}
 
-			else if (li == i++) { // Moving Grower Limbo-esque activation (start early)
-				scoreRequired = 2000;
-				AddGrower(gs, 0,-100).SetPosB(0,300).SetMoveSpeed(0.8f);
-			}
+
+
+            else if (li == i++) { // One patrolling Wall
+                scoreRequired = 1300;
+                AddGrower(gs, -120,  220).SetGrowSpeed(1.2f);
+                AddGrower(gs,  120, -220).SetGrowSpeed(1.2f);
+                AddWall(0,250, 60).SetPosB(0,-250).SetMoveSpeed(0.2f);
+            }
+
+			//else if (li == i++) { // Moving Grower Limbo-esque activation (start early)
+			//	scoreRequired = 2100;
+			//	AddGrower(gs, 0,-100).SetPosB(0,300).SetMoveSpeed(0.8f);
+			//}
+
 
 			else if (li == i++) { // 3 diagonal
 				scoreRequired = 1800;
-				AddGrower(gs, -100, 200);
-				AddGrower(gs,  100,-200);
-				AddGrower(gs,    0,   0);
+				AddGrower(gs, -100, 200).SetGrowSpeed(1.2f);
+				AddGrower(gs,  100,-200).SetGrowSpeed(1.2f);
+				AddGrower(gs,    0,   0).SetGrowSpeed(1.2f);
 			}
 			else if (li == i++) { // 3 diagonal OOO
 				scoreRequired = 1800;
-				AddGrower(gs,    0,   0);
-				AddGrower(gs, -100, 200);
-				AddGrower(gs,  100,-200);
+				AddGrower(gs,    0,   0).SetGrowSpeed(1.2f);
+				AddGrower(gs, -100, 200).SetGrowSpeed(1.2f);
+				AddGrower(gs,  100,-200).SetGrowSpeed(1.2f);
 			}
 			else if (li == i++) { // 3 V OOO
 				scoreRequired = 2000;
@@ -391,67 +411,181 @@ namespace CircleGrow {
 				AddGrower(gs,  100, 200);
 				AddGrower(gs,    0,-100);
 			}
-			//TODO one with moving obstacles!
 
-			else if (li == i++) { // One moving, one static
-				scoreRequired = 1600;
-				AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.9f);
-				AddGrower(gs, 0, 200);
-			}
-			else if (li == i++) { // One moving, one static reversed
-				scoreRequired = 1350;
-				AddGrower(gs, 0, 200);
-				AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.8f);
-			}
+            else if (li == i++) { // 3 square Wall gears! Flashy.
+                scoreRequired = 600;
+                AddGrower(gs, -150, 250).SetGrowSpeed(0.7f);
+                AddGrower(gs,  150,-250).SetGrowSpeed(0.7f);
+                AddWall(   0,   0, 210,210).SetRotateSpeed(-0.9f);
+                AddWall(-110,-210, 210,210).SetRotateSpeed( 0.9f);
+                AddWall( 110, 210, 210,210).SetRotateSpeed( 0.9f);
+            }
+
+
+            //else if (li == i++) { // One moving, one static
+            //    scoreRequired = 1600;
+            //    AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.9f);
+            //    AddGrower(gs, 0, 200);
+            //}
+            else if (li == i++) { // One moving, one static reversed
+                scoreRequired = 1350;
+                AddGrower(gs, 0, 200);
+                AddGrower(gs, 0, 50).SetPosB(0,-200).SetMoveSpeed(0.8f);
+            }
+
+
+            //else if (li == i++) { // TODO: This Lots of moving stuff! Gotta wait for the right moment. Relatively easy.
+            //    scoreRequired = 1600;
+            //    AddGrower(gs, 0,-200);
+            //    AddGrower(gs, 0, 200);
+            //    //AddWall(
+            //}
+
+            else if (li == i++) { // Surprise wall squish!
+                scoreRequired = 2000;
+                AddGrower(gs, 0, 0).SetGrowSpeed(2f);
+                //AddWall(-140,0, 80,800).SetPosB(-2000,0).SetMoveSpeed(0.8f, Mathf.PI);
+                //AddWall( 140,0, 80,800).SetPosB( 2000,0).SetMoveSpeed(0.8f, Mathf.PI);
+                AddWall(0,-300, 600,500).SetPosB(0,-4000).SetMoveSpeed(0.7f, 0.15f);
+                AddWall(0, 300, 600,500).SetPosB(0, 4000).SetMoveSpeed(0.7f, 0.15f);
+            }
+            else if (li == i++) { // Three-wall squish
+                scoreRequired = 1400;
+                AddGrower(gs, 0,-250).SetGrowSpeed(1.5f);
+                AddGrower(gs, 0,   0).SetGrowSpeed(1.5f);
+                AddGrower(gs, 0, 250).SetGrowSpeed(1.5f);
+                AddWall(-230,-280, 400,280).SetPosB(-450,-280).SetMoveSpeed(0.28f,    0f);
+                AddWall( 230,-280, 400,280).SetPosB( 450,-280).SetMoveSpeed(0.28f,    0f);
+                AddWall(-230,   0, 400,280).SetPosB(-450,   0).SetMoveSpeed(0.28f, -1.2f);
+                AddWall( 230,   0, 400,280).SetPosB( 450,   0).SetMoveSpeed(0.28f, -1.2f);
+                AddWall(-230, 280, 400,280).SetPosB(-450, 280).SetMoveSpeed(0.28f, -2.4f);
+                AddWall( 230, 280, 400,280).SetPosB( 450, 280).SetMoveSpeed(0.28f, -2.4f);
+            }
+
+
+
 //			else if (li == i++) { // 3 moving in sync. TODO: This
 //				scoreRequired = 100;
 //				AddGrower(gs, -60,-160);
 //			}
+
+
+
+            else if (li == i++) { // You're squares!
+                scoreRequired = 1600;
+                AddGrower(PropShapes.Rect,    0, 200).SetSize(20,10);
+                AddGrower(PropShapes.Rect, -130,-230);
+                AddGrower(PropShapes.Rect,  130,-230);
+            }
+            else if (li == i++) { // Random, rotated squares
+                scoreRequired = 1600;
+                AddGrower(gs, 0,-200);
+                AddGrower(gs, 0, 200);
+            }
+            else if (li == i++) { // Three-wall wave offset!
+                scoreRequired = 1200;
+                AddGrower(PropShapes.Rect, 0,-250).SetGrowSpeed(1.5f).SetRotateSpeed(1f);
+                AddGrower(PropShapes.Rect, 0,   0).SetGrowSpeed(1.5f).SetRotateSpeed(1f);
+                AddGrower(PropShapes.Rect, 0, 250).SetGrowSpeed(1.5f).SetRotateSpeed(1f);
+                AddWall(-320,-280, 400,280).SetPosB(-400,-280).SetMoveSpeed(1f,    0f);
+                AddWall( 320,-280, 400,280).SetPosB( 400,-280).SetMoveSpeed(1f,    0f+Mathf.PI);
+                AddWall(-320,   0, 400,280).SetPosB(-400,   0).SetMoveSpeed(1f, -1.2f);
+                AddWall( 320,   0, 400,280).SetPosB( 400,   0).SetMoveSpeed(1f, -1.2f+Mathf.PI);
+                AddWall(-320, 280, 400,280).SetPosB(-400, 280).SetMoveSpeed(1f, -2.4f);
+                AddWall( 320, 280, 400,280).SetPosB( 400, 280).SetMoveSpeed(1f, -2.4f+Mathf.PI);
+            }
+            // TODO: You're squares AND circles
+
+            else if (li == i++) { // One slowly rotating GrowerSquare. Gotta time it right not to hit sides.
+                scoreRequired = 2400;
+                AddGrower(PropShapes.Rect, 0,0).SetSize(40,40).SetRotateSpeed(0.2f);
+            }
+            else if (li == i++) { // GrowerSquare fitting in with WallSquares
+                scoreRequired = 600;
+                AddGrower(PropShapes.Rect, 0,0).SetRotateSpeed(0.3f);
+                AddWall(    0,-200, 120,120).SetRotateSpeed(-0.3f);
+                AddWall(    0, 200, 120,120).SetRotateSpeed(-0.3f);
+            }
 			else if (li == i++) { // 2 close call
 				scoreRequired = 1500;
-				AddWall(-138, 22, 100);
-				AddWall( 138, 22, 100);
 				AddGrower(gs, 0,  200);
-				AddGrower(gs, 0, -112);
-			}
-			//TODO one with a moving obstacle!
-
-            else if (li == i++) { // 5-die
-                scoreRequired = 1800;
-                AddGrower(gs,    0,    0);
-                AddGrower(gs, -120, -150);
-                AddGrower(gs,  120, -150);
-                AddGrower(gs, -120,  150);
-                AddGrower(gs,  120,  150);
-			}
-			else if (li == i++) { // 2 in-n-out.
-				scoreRequired = 1400;
-				AddGrower(gs, 0, 100).SetGrowSpeed(1.2f).SetPosB(0, 250).SetMoveSpeed(1.2f);
-				AddGrower(gs, 0,-100).SetGrowSpeed(1.2f).SetPosB(0,-250).SetMoveSpeed(1.2f);
-			}
-
-			else if (li == i++) { // 4 square
-				scoreRequired = 2100;
-				float rd = 140;
-				AddWall(-275,-375, rd*2);
-				AddWall(-275, 375, rd*2);
-				AddWall( 275,-375, rd*2);
-				AddWall( 275, 375, rd*2);
-				AddGrower(gs, -130, -130);
-				AddGrower(gs,  130,  130);
-				AddGrower(gs,  130, -130);
-				AddGrower(gs, -130,  130);
-			}
-
-
-
-            // Different Speed Growers
-
-            else if (li == i++) { // Fast and slow
-                scoreRequired = 2500;
-                AddGrower(gs, 0, -190).SetGrowSpeed(4);
-                AddGrower(gs, 0,  190).SetGrowSpeed(0.8f);
+                AddGrower(gs, 0, -112);
+                AddWall(-138, 22, 100);//.SetPosB(-200,22).SetMoveSpeed(0.9f);
+                AddWall( 138, 22, 100);//.SetPosB( 200,22).SetMoveSpeed(0.9f);
             }
+            else if (li == i++) { // 2 in-n-out.
+                scoreRequired = 1400;
+                AddGrower(gs, 0, 100).SetGrowSpeed(1.2f).SetPosB(0, 250).SetMoveSpeed(1.2f);
+                AddGrower(gs, 0,-100).SetGrowSpeed(1.2f).SetPosB(0,-250).SetMoveSpeed(1.2f);
+            }
+            else if (li == i++) { // Perfect square fit
+                scoreRequired = 1800;
+                bounds.SetSize(500,500);
+                AddGrower(PropShapes.Rect, 0,0).SetGrowSpeed(2f).SetRotateSpeed(0.6f);
+            }
+            else if (li == i++) { // Fast 4 square
+                scoreRequired = 2080;
+                float rd = 140;
+                float m = 70f;
+                AddGrower(gs, -130, -130).SetGrowSpeed(3f);
+                AddGrower(gs,  130,  130).SetGrowSpeed(3f);
+                AddGrower(gs,  130, -130).SetGrowSpeed(3f);
+                AddGrower(gs, -130,  130).SetGrowSpeed(3f);
+                AddWall(-275,-375, rd*2);
+                AddWall(-275, 375, rd*2);
+                AddWall( 275,-375, rd*2);
+                AddWall( 275, 375, rd*2);
+            }
+
+            else if (li == i++) { // Four-square Foursquare
+                scoreRequired = 2000;
+                AddGrower(PropShapes.Rect, -134,-134).SetGrowSpeed(1.8f).SetRotateSpeed(0.5f);
+                AddGrower(PropShapes.Rect, -134, 134).SetGrowSpeed(1.8f).SetRotateSpeed(0.5f);
+                AddGrower(PropShapes.Rect,  134,-134).SetGrowSpeed(1.8f).SetRotateSpeed(0.5f);
+                AddGrower(PropShapes.Rect,  134, 134).SetGrowSpeed(1.8f).SetRotateSpeed(0.5f);
+            }
+
+
+            //else if (li == i++) { // 4 square
+            //    scoreRequired = 2100;
+            //    float rd = 140;
+            //    float m = 70f;
+            //    AddGrower(gs, -130, -130);//.SetPosB(-130,-130+m).SetMoveSpeed(1f);
+            //    AddGrower(gs,  130,  130);//.SetPosB( 130, 130+m).SetMoveSpeed(1f, Mathf.PI);
+            //    AddGrower(gs,  130, -130);//.SetPosB( 130,-130+m).SetMoveSpeed(1f, Mathf.PI);
+            //    AddGrower(gs, -130,  130);//.SetPosB(-130, 130+m).SetMoveSpeed(1f);
+            //    AddWall(-275,-375, rd*2);//.SetPosB(-275,-375+m).SetMoveSpeed(1f);
+            //    AddWall(-275, 375, rd*2);//.SetPosB(-275, 375+m).SetMoveSpeed(1f);
+            //    AddWall( 275,-375, rd*2);//.SetPosB( 275,-375+m).SetMoveSpeed(1f, Mathf.PI);
+            //    AddWall( 275, 375, rd*2);//.SetPosB( 275, 375+m).SetMoveSpeed(1f, Mathf.PI);
+            //}
+
+            else if (li == i++) { // Two frozen guys
+                scoreRequired = 1350;
+                float m = 120;
+                AddGrower(gs, -100, -130).SetGrowSpeed(2f).SetPosB(-100,-130+m).SetMoveSpeed(1f);
+                AddGrower(gs,  100,  130).SetGrowSpeed(2f).SetPosB( 100, 130+m).SetMoveSpeed(1f);
+                AddWall(-100,-440, 1000,200).SetPosB(-100,-440+m).SetMoveSpeed(1f);
+                AddWall( 100, 440, 1000,200).SetPosB( 100, 440+m).SetMoveSpeed(1f);
+            }
+
+
+            else if (li == i++) { // Double slash time
+                scoreRequired = 1800;
+                float s = 190;
+                AddGrower(gs,    0, 0).SetGrowSpeed(1.3f);
+                AddWall(-s,-s, 30).SetPosB( s,-s).SetMoveSpeed(0.3f);
+                AddWall(-s, s, 30).SetPosB( s, s).SetMoveSpeed(0.3f, Mathf.PI);
+                AddWall(-s, s, 30).SetPosB(-s,-s).SetMoveSpeed(0.3f);
+                AddWall( s, s, 30).SetPosB( s,-s).SetMoveSpeed(0.3f, Mathf.PI);
+            }
+
+
+            //else if (li == i++) { // Fast and slow
+            //    scoreRequired = 2500;
+            //    AddGrower(gs, 0, -190).SetGrowSpeed(4);
+            //    AddGrower(gs, 0,  190).SetGrowSpeed(0.8f);
+            //}
             else if (li == i++) { // + perfect fit
                 scoreRequired = 2500;
                 //AddGrower(gs,     0, -190).SetGrowSpeed(;
@@ -462,24 +596,19 @@ namespace CircleGrow {
 
 
             // Moving Growers
-            else if (li == i++) {
-                scoreRequired = 1600;
-                AddGrower(gs, -100, 160).SetPosB(100, 160);
-                AddGrower(gs, -100,-160).SetPosB(100,-160).SetMoveSpeed(1, Mathf.PI);
-            }
             else if (li == i++) { // Cutoff monitor
                 scoreRequired = 1300;
                 AddGrower(gs,    0, 200);
-                AddGrower(gs,    0,-220).SetGrowSpeed(0.4f);
-                AddGrower(gs, -180,  60).SetPosB(180, 60).SetMoveSpeed(0.1f, 0);//TODO: Make into a Wall
+                AddGrower(gs,    0,-220).SetGrowSpeed(1f);
+                AddWall(-180,60, 30).SetPosB(180, 60).SetMoveSpeed(0.12f, 0);
             }
 
-            else if (li == i++) { // First one is super slow, gotta just tap it right away to save time
-                scoreRequired = 1000;
-                AddGrower(gs, -230, 330).SetGrowSpeed(0.1f);
-                AddGrower(gs,    0, 170);
-                AddGrower(gs, -180,  60).SetPosB(180, 60).SetMoveSpeed(0.2f, -1.5f);//TODO: Make into a Wall
-            }
+            //else if (li == i++) { // First one is super slow, gotta just tap it right away to save time
+            //    scoreRequired = 1000;
+            //    AddGrower(gs, -230, 330).SetGrowSpeed(0.1f);
+            //    AddGrower(gs,    0, 170);
+            //    AddWall(-180,60, 30).SetPosB(180, 60).SetMoveSpeed(0.2f, -1.5f);
+            //}
             else if (li == i++) { //TEST
                 scoreRequired = 1400;
                 float o = 1.5f;
@@ -598,7 +727,20 @@ namespace CircleGrow {
 
 
 
-			/*
+            /*
+            else if (li == i++) { // Simple 2 moving contra
+                scoreRequired = 1600;
+                AddGrower(gs, -100, 160).SetPosB(100, 160);
+                AddGrower(gs, -100,-160).SetPosB(100,-160).SetMoveSpeed(1, Mathf.PI);
+            }
+            else if (li == i++) { // 5-die (Cut because it requires thinking)
+                scoreRequired = 1800;
+                AddGrower(gs,    0,    0);
+                AddGrower(gs, -120, -150);
+                AddGrower(gs,  120, -150);
+                AddGrower(gs, -120,  150);
+                AddGrower(gs,  120,  150);
+            }
 			else if (li == i++) { // Triplex
 				scoreRequired = 1000;
 				AddWall(0,-140, 600,25);

@@ -13,7 +13,8 @@ namespace CircleGrow {
 		private float moveSpeed=1f; // for MOVING Props.
 		private float moveOscVal; // for MOVING Props.
 		private float rotateSpeed=0f; // for ROTATING Props.
-		private Vector2 posA,posB; // for MOVING Props.
+        private Vector2 posA,posB; // for MOVING Props.
+        private Vector2 size;
 		// References
 		protected Level myLevel;
 
@@ -24,13 +25,17 @@ namespace CircleGrow {
 		}
 		private float Rotation {
 			get { return myRectTransform.localEulerAngles.z; }
-			set { myRectTransform.localEulerAngles = new Vector3(myRectTransform.localEulerAngles.x, myRectTransform.localEulerAngles.y, value); }
+			set {
+                myRectTransform.localEulerAngles = new Vector3(myRectTransform.localEulerAngles.x, myRectTransform.localEulerAngles.y, value);
+                OnSetRotation();
+            }
 		}
 		// Getters (Protected)
 		protected Color bodyColor {
 			get { return i_body.color; }
 			set { i_body.color = value; }
         }
+        protected Vector2 Size { get { return size; } }
         /** DoesMove returns if we are a MOVING Prop. MayMove returns if we're a moving Prop AND we're allowed to move (e.g. false for solid Growers). */
         private bool DoesMove() { return moveSpeed != 0; }
         private bool DoesRotate() { return rotateSpeed!=0; }
@@ -64,8 +69,10 @@ namespace CircleGrow {
         }
 
 
+        public Prop SetSize(float x,float y) { return SetSize(new Vector2(x,y)); }
 		virtual public Prop SetSize(Vector2 _size) {
-			myRectTransform.sizeDelta = _size;
+            size = _size;
+			myRectTransform.sizeDelta = size;
 			return this;
 		}
 		public void SetPoses(float x,float y) {
@@ -129,6 +136,7 @@ namespace CircleGrow {
         }
 
 
+
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
@@ -147,6 +155,7 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
+        virtual protected void OnSetRotation() { } // Override this if you wanna do something when this happens. #code #programming
 		abstract public void OnIllegalOverlap();
 
 

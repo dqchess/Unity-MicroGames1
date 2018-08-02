@@ -63,10 +63,10 @@ namespace CircleGrow {
             i_barFillSolidified.rectTransform.sizeDelta = new Vector2(fillSolidifiedWidth, scoreBarSize.y);
             // Update color!
             if (scorePossible >= scoreRequired) { // We've potentially won already!!
-                t_score.color = Color.green;
+                t_score.color = t_scoreRequired.color = Color.green;
             }
             else { // Haven't won yet...!
-                t_score.color = Color.white;
+                t_score.color = t_scoreRequired.color = Color.white;
             }
         }
 

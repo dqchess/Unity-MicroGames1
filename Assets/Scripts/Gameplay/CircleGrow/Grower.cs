@@ -22,11 +22,10 @@ namespace CircleGrow {
 		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
         private GrowerStates currentState;
         private float growSpeed;
-        private float radius;
 
         // Getters (Public)
         public GrowerStates CurrentState { get { return currentState; } }
-        public float Radius { get { return radius; } }
+        //public float Radius { get { return radius; } }
 		public int ScoreValue() {
             if (currentState == GrowerStates.Sleeping) { return 0; } // Sleeping? I'm worth 0 points.
             return Mathf.CeilToInt(Area()/100f); // HARDCODED. Bring down the values into a reasonable range.
@@ -39,7 +38,7 @@ namespace CircleGrow {
 			return base.MayRotate() && currentState!=GrowerStates.Solidified;
 		}
         // Getters (Private)
-		private float Area() { return Mathf.PI * Radius*Radius; }
+        abstract public float Area();
 		private Vector2 GetCollisionPoint(Collision2D collision) {
 			Vector2 point = collision.contacts[0].point;
             point = transform.parent.InverseTransformPoint(point); // Convert the point from world to Level space.
@@ -51,14 +50,13 @@ namespace CircleGrow {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos) {
-			float startingRadius = 10; // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
-			Vector2 _size = new Vector2(startingRadius, startingRadius);
-			BaseInitialize(_myLevel, tf_parent, _pos, _size);
+            Vector2 startingSize = new Vector2(30,30); // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
+            BaseInitialize(_myLevel, tf_parent, _pos, startingSize);
 
             SetGrowSpeed(1);
 
             bodyColor = color_sleeping;
-			SetRadius(startingRadius);
+			//SetRadius(startingRadius);
             SetCurrentState(GrowerStates.Sleeping);
 		}
 
@@ -70,13 +68,19 @@ namespace CircleGrow {
 
 		// ----------------------------------------------------------------
 		//  Doers
-		// ----------------------------------------------------------------
-		virtual protected void SetRadius(float _radius) { // Override this so we can update my collider sizes! :)
-			radius = _radius;
-			myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
-			// Update text!
+        // ----------------------------------------------------------------
+        override public Prop SetSize(Vector2 _size) { // Override this (again) so we can update my collider sizes! :)
+            base.SetSize(_size);
+            // Update text!
             t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
+            return this;
         }
+        //virtual protected void SetRadius(float _radius) { // Override this so we can update my collider sizes! :)
+        //    radius = _radius;
+        //    myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
+        //    // Update text!
+        //    t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
+        //}
 
 
         private void SetCurrentState(GrowerStates _state) {
@@ -90,6 +94,8 @@ namespace CircleGrow {
 			SetCurrentState(GrowerStates.PreGrowing);
 		}
 		public void StartGrowing() {
+            // Shrink me down a little first! To make it a little easier.
+            SetSize(Size*0.5f);
 			// Set my color, and we're off!
 			bodyColor = color_growing;
 			SetCurrentState(GrowerStates.Growing);
@@ -103,6 +109,10 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
+        override protected void OnSetRotation() {
+            base.OnSetRotation();
+            t_scoreValue.transform.localEulerAngles = new Vector3(0, 0, -this.transform.localEulerAngles.z); // Rotate my text BACK so it's always horizontal.
+        }
 		private void OnCollisionEnter2D(Collision2D collision) {
 			if (!myLevel.IsGameStatePlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
 			if (currentState == GrowerStates.Sleeping) { return; } // Ignore sleeping beauties! (At least for now.)
@@ -151,7 +161,8 @@ namespace CircleGrow {
 		}
 		private void GrowStep() {
 			// Grow, and tell my Level I grew (so we can update score)!
-			SetRadius(radius + growSpeed*Time.timeScale);
+            float growAmount = growSpeed*Time.timeScale;
+            SetSize(Size.x+growAmount, Size.y+growAmount);
 			myLevel.OnGrowerGrowStep();
 		}
 
