@@ -8,9 +8,10 @@ namespace CircleGrow {
     public class LevelUI : MonoBehaviour {
         // Components
         [SerializeField] private GameObject go_scoreBar=null;
-        [SerializeField] private Image i_barBorder=null;
+        //[SerializeField] private Image i_barBorder=null;
         [SerializeField] private Image i_barFillPossible=null;
         [SerializeField] private Image i_barFillSolidified=null;
+        [SerializeField] private Image i_fullBacking=null; // the solid square image that's behind EVERYthing (gameplay AND UI)
         [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] public  TextMeshProUGUI t_moreLevelsComingSoon=null;
         [SerializeField] private TextMeshProUGUI t_score=null;
@@ -18,8 +19,8 @@ namespace CircleGrow {
         // References
         [SerializeField] private Level myLevel=null;
         // Properties
-        private readonly Color barColor_solid = Grower.color_solid;
-        private readonly Color barColor_possible = Grower.color_growing;
+        //private readonly Color barColor_solid = Grower.color_solid;
+        //private readonly Color barColor_possible = Grower.color_growing;
         private Vector2 scoreBarSize; // set in Initialize.
 
         // Getters (Private)
@@ -35,10 +36,11 @@ namespace CircleGrow {
             // Define scoreBarSize! Make it exactly my size.
             scoreBarSize = go_scoreBar.GetComponent<RectTransform>().rect.size;
             // Color elements right-o.
-            i_barBorder.color = barColor_solid;
-            i_barFillPossible.color = barColor_possible;
-            i_barFillSolidified.color = barColor_solid;
-            t_scoreRequired.color = barColor_solid;
+            //i_barBorder.color = barColor_solid;
+            //i_barFillPossible.color = barColor_possible;
+            //i_barFillSolidified.color = barColor_solid;
+            //t_scoreRequired.color = barColor_solid;
+            i_fullBacking.color = Grower.color_solid;
 
             // LevelIndex
             t_levelName.text = "LEVEL " + levelIndex.ToString();
@@ -64,7 +66,7 @@ namespace CircleGrow {
                 t_score.color = Color.green;
             }
             else { // Haven't won yet...!
-                t_score.color = barColor_solid;
+                t_score.color = Color.white;
             }
         }
 

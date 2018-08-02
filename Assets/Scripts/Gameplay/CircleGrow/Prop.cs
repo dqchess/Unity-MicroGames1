@@ -6,8 +6,9 @@ using UnityEngine.UI;
 namespace CircleGrow {
 	abstract public class Prop : MonoBehaviour {
 		// Components
-		[SerializeField] protected Image i_body;
-		[SerializeField] protected RectTransform myRectTransform=null;
+        [SerializeField] protected Image i_body;
+        [SerializeField] protected RectTransform myRectTransform=null;
+        protected ImageLine il_movePathLine; // for MOVING Props.
 		// Properties
 		private float moveSpeed=1f; // for MOVING Props.
 		private float moveOscVal; // for MOVING Props.
@@ -29,16 +30,15 @@ namespace CircleGrow {
 		protected Color bodyColor {
 			get { return i_body.color; }
 			set { i_body.color = value; }
-		}
-		private bool DoesMove() {
-			return moveSpeed != 0;
-		}
-		/** DoesMove returns if we are a MOVING Prop. MayMove returns if we're a moving Prop AND we're allowed to move (e.g. false for solid Growers). */
+        }
+        /** DoesMove returns if we are a MOVING Prop. MayMove returns if we're a moving Prop AND we're allowed to move (e.g. false for solid Growers). */
+        private bool DoesMove() { return moveSpeed != 0; }
+        private bool DoesRotate() { return rotateSpeed!=0; }
 		virtual protected bool MayMove() {
 			return DoesMove() && myLevel.IsGameStatePlaying;
 		}
 		virtual protected bool MayRotate() {
-			return rotateSpeed != 0;
+            return DoesRotate() && myLevel.IsGameStatePlaying;
 		}
 		// Getters (Private)
 		private float timeScale { get { return Time.timeScale; } }
@@ -59,6 +59,11 @@ namespace CircleGrow {
 
 			SetMoveSpeed(1, 0); // Default my move-speed values.
 		}
+        virtual protected void OnDestroy() {
+            DestroyMovePathLine();
+        }
+
+
 		virtual public Prop SetSize(Vector2 _size) {
 			myRectTransform.sizeDelta = _size;
 			return this;
@@ -78,6 +83,7 @@ namespace CircleGrow {
 		public Prop SetPosB(float x,float y) {
 			posB = new Vector2(x,y);
 			ApplyPos();
+            UpdateMovePathLine();
 			return this;
 		}
 		public Prop SetMoveSpeed(float _speed, float _startLocOffset=0) {
@@ -95,6 +101,32 @@ namespace CircleGrow {
 			SetRotation(_startRotation);
 			return this;
 		}
+
+        private void UpdateMovePathLine() {
+            // We SHOULD have a MovePathLine! Update (and/or add) it!
+            if (posA != posB) {
+                if (il_movePathLine == null) { AddMovePathLine(); }
+                il_movePathLine.StartPos = posA;
+                il_movePathLine.EndPos = posB;
+            }
+        }
+        private void AddMovePathLine() {
+            il_movePathLine = Instantiate(ResourcesHandler.Instance.imageLine).GetComponent<ImageLine>();
+            il_movePathLine.Initialize(transform.parent); // put it as the same level as me! I'll MANUALLY destroy it when we're destroyed. //myLevel.tf_MovePathLines
+            il_movePathLine.name = "PathLine_" + this.name;
+            il_movePathLine.transform.SetSiblingIndex(3); // put it BEHIND all Props! NOTE: HARDCODED 3!! We want it in front of border and bounds.
+            il_movePathLine.SetColor(new Color(0,0,0, 0.3f));
+            il_movePathLine.SetThickness(2f);
+            il_movePathLine.rectTransform.anchorMax = myRectTransform.anchorMax;
+            il_movePathLine.rectTransform.anchorMin = myRectTransform.anchorMin;
+            //il_movePathLine
+        }
+        private void DestroyMovePathLine() {
+            if (il_movePathLine != null) {
+                Destroy(il_movePathLine.gameObject);
+                il_movePathLine = null;
+            }
+        }
 
 
 		// ----------------------------------------------------------------

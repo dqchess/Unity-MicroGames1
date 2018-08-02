@@ -42,12 +42,7 @@ namespace CircleGrow {
 		private float Area() { return Mathf.PI * Radius*Radius; }
 		private Vector2 GetCollisionPoint(Collision2D collision) {
 			Vector2 point = collision.contacts[0].point;
-			// TODO: Fix overlapPoint to be in screen-space!
-			//			overlapPoint = Camera.main.WorldToScreenPoint(overlapPoint);
-			//			print("overlapPoint: " + overlapPoint);
-			//			// H ACK HARDCODED Offset overlapPoint to be in UI coordinates.
-			//			overlapPoint += new Vector2(0, -3.147f); // NOTE: I don't know what the X offset is! Don't need to now tho, as levels are all x-centered.
-			//			overlapPoint *= 10.7f;//9.54057f;
+            point = transform.parent.InverseTransformPoint(point); // Convert the point from world to Level space.
 			return point;
 		}
 
@@ -185,7 +180,7 @@ namespace CircleGrow {
 		*/
 /*
 //      private static int GetMultiplierForRadius(float _radius) {
-    //          //if (_radius <  20) { return 1; }TEMP DISABLED
+    //          //if (_radius <  20) { return 1; }
     //          //if (_radius <  40) { return 2; }
     //          //if (_radius <  60) { return 3; }
     //          //if (_radius <  80) { return 4; }
@@ -197,11 +192,11 @@ namespace CircleGrow {
     //          return 10;
     //      }
     //      private static Color GetBodyColorFromMultiplier(int _mult) {
-    ////            switch (_mult) {TEMP disabled until we make the color scheme.
+    ////            switch (_mult) { disabled until we make the color scheme.
     ////            case 0: return new ColorHSB(0,0,0).ToColor(); // Hmm.
     ////            default: return Color.black; // Hmm.
     ////            }
-    //  //float h = (0.3f + _mult*0.08f) % 1;TEMP DISABLED this, too
+    //  //float h = (0.3f + _mult*0.08f) % 1; DISABLED this, too
     //  //return new ColorHSB(h, 0.5f, 1).ToColor();
     //          return color_oscillating;
     //}

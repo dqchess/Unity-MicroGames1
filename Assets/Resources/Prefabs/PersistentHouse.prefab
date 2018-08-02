@@ -296,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9143cf1fe8970426684f6a9e2b0a41b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imageLine: {fileID: 1551218063471392, guid: de3622acacb6d4addaff526139e77f7b, type: 2}
   alphaTapOrder_tapSpace: {fileID: 1108421674652232, guid: 765d3bb2025a9244fb8204ddc28e0d83,
     type: 2}
   bouncePaint_levelTile: {fileID: 1834149489998284, guid: 4d079a1809bab4a099b817311ae8310c,

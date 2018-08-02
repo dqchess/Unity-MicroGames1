@@ -178,7 +178,7 @@ namespace ExtrudeMatch {
 /*
 		private void UpdatePosAndSize() {
 			Rect r_availableArea = myRectTransform.rect;
-			//TODO: Clean this up
+			//TO DO: Clean this up
 //			const float minGapBottom = 40;
 //			const float minGapTop = 180;
 //			const float minGapLeft = 40;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
     // References!
+    [SerializeField] public GameObject imageLine;
+
     [SerializeField] public GameObject alphaTapOrder_tapSpace;
 
     [SerializeField] public GameObject bouncePaint_levelTile;

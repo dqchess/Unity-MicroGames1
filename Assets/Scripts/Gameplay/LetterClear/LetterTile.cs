@@ -49,7 +49,7 @@ namespace LetterClear {
             myWordTile = _myWordTile;
             myChar = _myChar;
             myCharLower = myChar.ToString().ToLower().ToCharArray()[0];
-            // TEMP TEST everything's lowercase
+            // TEST everything's lowercase
             myChar = myCharLower;
 			isWild = false;//myCharLower == 'e';// WordUtils.IsVowel(myCharLower);
             textField.text = myChar.ToString();
