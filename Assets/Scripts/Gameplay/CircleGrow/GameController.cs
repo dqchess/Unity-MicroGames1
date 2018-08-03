@@ -116,7 +116,8 @@ namespace CircleGrow {
             if (doAnimate) {
                 float duration = 1f;
 
-                level.IsAnimatingIn = true;
+                level.IsAnimating = true;
+                prevLevel.IsAnimating = true;
                 float height = 1200;
                 Vector3 levelDefaultPos = level.transform.localPosition;
                 level.transform.localPosition += new Vector3(0, height, 0);
@@ -124,7 +125,7 @@ namespace CircleGrow {
                 LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
                 yield return new WaitForSeconds(duration);
 
-                level.IsAnimatingIn = false;
+                level.IsAnimating = false;
                 if (prevLevel!=null) {
                     Destroy(prevLevel.gameObject);
                 }

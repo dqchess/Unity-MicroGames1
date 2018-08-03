@@ -129,7 +129,7 @@ namespace BouncePaint {
             if (doAnimate) {
                 float duration = 1f;
 
-                level.IsAnimatingIn = true;
+                level.IsAnimating = true;
                 float height = 1200;
                 Vector3 levelDefaultPos = level.transform.localPosition;
                 level.transform.localPosition += new Vector3(0, height, 0);
@@ -137,7 +137,7 @@ namespace BouncePaint {
                 LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
                 yield return new WaitForSeconds(duration);
 
-                level.IsAnimatingIn = false;
+                level.IsAnimating = false;
                 if (prevLevel!=null) {
                     Destroy(prevLevel.gameObject);
                 }
@@ -197,7 +197,7 @@ namespace BouncePaint {
         private void OnPressJumpButton() {
             // Ignore jumps if...
 			if (!IsGameStatePlaying) { return; }
-            if (level!=null && level.IsAnimatingIn) { return; }
+            if (level!=null && level.IsAnimating) { return; }
 
             bool didAnyPlayerBounce = false; // I'll say otherwise next.
             foreach (Player player in Players) {

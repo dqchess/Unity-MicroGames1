@@ -148,6 +148,10 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
+        public void SetColliderEnabled(bool _isEnabled) {
+            Collider2D collider = GetComponent<Collider2D>();
+            if (collider != null) { collider.enabled = _isEnabled; }
+        }
 		private void ApplyPos() {
 			// Do move?? Lerp me between my two poses.
 			if (DoesMove()) {
@@ -172,7 +176,7 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		virtual protected void Update() {
 			if (Time.timeScale == 0) { return; } // No time? No dice.
-			if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
+            if (myLevel.IsAnimating || !myLevel.IsGameStatePlaying) { return; } // Animating in? Don't move.
 
 			UpdateMove();
 			UpdateRotate();

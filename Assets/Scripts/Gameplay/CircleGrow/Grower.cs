@@ -77,7 +77,7 @@ namespace CircleGrow {
 		}
 
         public Grower SetGrowSpeed(float _speed) {
-            growSpeed = _speed*2f; // awkward scaling the speed here.
+            growSpeed = _speed*0.8f; // awkward scaling the speed here.
             return this;
         }
 
@@ -154,7 +154,8 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		override protected void Update() {
 			base.Update();
-			if (Time.timeScale == 0) { return; } // No time? Do nothin'.
+            if (Time.timeScale == 0) { return; } // No time? Do nothin'.
+            if (myLevel.IsAnimating || !myLevel.IsGameStatePlaying) { return; } // Animating in? Don't move.
 
 			UpdatePreGrowingFlash();
 			UpdateGrowing();

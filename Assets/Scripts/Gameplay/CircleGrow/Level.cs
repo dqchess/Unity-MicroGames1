@@ -17,9 +17,10 @@ namespace CircleGrow {
 		private List<Wall> walls;
 		private List<Image> i_collisionIcons;
 		// Properties
-//		private float screenShakeVolume;
+//      private float screenShakeVolume;
         private int scoreRequired;
-		private int currentGrowerIndex;
+        private int currentGrowerIndex;
+        private string description; // only for DEVELOPER. Makes debugging easier. It's what comes after "LEVEL" in the Level.txt string.
 		// References
 		private GameController gameController;
 
@@ -63,6 +64,10 @@ namespace CircleGrow {
 			iconImage.rectTransform.anchoredPosition = pos;
 			i_collisionIcons.Add(iconImage);
 		}
+        private void SetAllPropCollidersEnabled(bool _isEnabled) {
+            foreach (Grower prop in growers) { prop.SetColliderEnabled(_isEnabled); }
+            foreach (Wall prop in walls) { prop.SetColliderEnabled(_isEnabled); }
+        }
 
 
         // ----------------------------------------------------------------
@@ -107,6 +112,7 @@ namespace CircleGrow {
 		}
 		public void OnWinLevel() {
 			levelUI.OnWinLevel();
+            SetAllPropCollidersEnabled(false);
 		}
 
 		public void OnTapScreen() {
@@ -248,6 +254,7 @@ namespace CircleGrow {
         private void MakeLevelFromString(string _str) {
             try {
                 string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
+                description = lines[0]; // Description will be the first line (what follows "LEVEL ").
                 foreach (string s in lines) {
                     if (s.StartsWith("scoreReq")) {
                         SetScoreRequiredFromString(s);
@@ -261,7 +268,7 @@ namespace CircleGrow {
                 }
             }
             catch (Exception e) {
-                Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ". Error: " + e);
+                Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
             }
         }
         private void SetScoreRequiredFromString(string s) {

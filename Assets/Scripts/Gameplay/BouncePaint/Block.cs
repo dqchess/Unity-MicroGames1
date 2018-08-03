@@ -260,7 +260,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void Update() {
             if (Time.timeScale == 0) { return; } // No time? No dice.
-            if (myLevel.IsAnimatingIn) { return; } // Animating in? Don't move.
+            if (myLevel.IsAnimating) { return; } // Animating in? Don't move.
 
 			UpdateTravel();
             UpdatePosOffsets();
