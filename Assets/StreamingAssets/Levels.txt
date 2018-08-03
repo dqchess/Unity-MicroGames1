@@ -1,27 +1,413 @@
-LEVEL TEST
+
+
+LEVEL - One
 scoreReq=2000
-growerC 0,0; growSpeed=.5
-wallC 0, 200; 100
-wallR 0,-200; 100,100
+growerC 0,0
 
-
-
-LEVEL One
-scoreReq=2000
-growerC 0,0; growSpeed=10
-
-LEVEL One, with single WallCircle (horz)
+LEVEL - One, with single WallCircle (horz)
 scoreReq=700
 growerC -30,30; growSpeed=0.8
 wallC 172,30; 92
 
-LEVEL One, with compressing walls!
+LEVEL - One, with compressing walls!
 growerC 0,0; growSpeed=1.2
-wallR -230,0; 400,800; posB=-450,0; moveSpeed=0.8,-1.5708
-wallR  230,0; 400,800; posB= 450,0; moveSpeed=0.8,-1.5708
+wallR -230,0; 400,800; posB=-450,0; moveSpeed=0.8; moveLocOffset=-1.5708
+wallR  230,0; 400,800; posB= 450,0; moveSpeed=0.8; moveLocOffset=-1.5708
 
-LEVEL Two, with center WallCircle
+LEVEL - Two, with center WallCircle
 scoreReq=900
 growerC 0,-184; growSpeed=0.9
 growerC 0, 150; growSpeed=0.9
 wallC 0,13; 92
+
+LEVEL - Two, in a field of landmines!
+scoreReq=900
+growerC -100,-160
+growerC   56, 132
+wallC -185, 265; 150
+wallC -175,  21; 190
+wallC   54, 333;  82
+wallC  169,-108; 206
+wallC -225,-250; 100
+wallC  216, 316; 166
+wallC   59,-277; 192
+
+
+LEVEL - One, with rotating center plank
+scoreReq=800
+growerC 0, 100
+wallR 0,-100; 30,300; posB=0,-220; moveSpeed=2.5; rotateSpeed=1
+
+
+LEVEL - Three, with center diamond wall
+scoreReq=900
+growerC -130, -130
+growerC  150, -250
+growerC    0,  258
+wallR 0,0; 200,200; rotation=45
+
+LEVEL - One, concave narrow squish
+scoreReq=650
+wallC -500,0; 700
+wallC  500,0; 700
+growerC 0, 0
+
+//            LEVEL - Two in chambers
+//                scoreReq=1600
+//                wallR 0,100; 600,100
+//                growerC 0, 214+50
+//                growerC 0,-214+50
+//            
+LEVEL - Biig rotating squares you gotta wait for
+scoreReq=850
+growerC -220, 0
+growerC  220, 0
+growerC 0, 0
+wallR 0,-520; 700,700; rotateSpeed= 0.2
+wallR 0, 520; 700,700; rotateSpeed= 0.2
+
+//LEVEL - 2 alone.
+//    scoreReq=800
+//    growerC -120,0
+//    growerC  120,0
+//
+
+LEVEL - One moving Grower
+scoreReq=1400
+growerC 0,-100; posB=0,330; moveSpeed=0.8
+
+//            LEVEL - 4 in corners. Squidward-Robot.
+//				scoreReq=1500
+////				wallR 0,0; 600,50
+////				wallR 0,0; 50,800
+//				wallR 0,t; 50,t*2
+////				wallR l*0.5; -l,50
+//                growerC  150,  200
+//                growerC -150, -200
+//                growerC  150, -200
+//                growerC -150,  200
+//            
+
+
+LEVEL - Triplex moving
+scoreReq=1000
+wallR 0,-140; 600,25
+wallR 0, 140; 600,25
+growerC -150,  262; posB=150, 262; moveSpeed=1; moveLocOffset= 0
+growerC -150, -262; posB=150,-262; moveSpeed=1; moveLocOffset= 3.14159
+growerC -150,    0; posB=150,   0; moveSpeed=1; moveLocOffset= 1.5708
+
+LEVEL - 2 diagonal.
+scoreReq=1850
+growerC -60,-160
+growerC  60, 160
+
+LEVEL - Easy V
+scoreReq=2700
+wallC -275,-375; 250; posB=-350,-450; moveSpeed=1.2
+wallC  275,-375; 250; posB= 350,-450; moveSpeed=1.2
+wallC -275, 375;  80; posB=-350, 450; moveSpeed=1.2; moveLocOffset= 3.14159
+wallC  275, 375;  80; posB= 350, 450; moveSpeed=1.2; moveLocOffset= 3.14159
+growerC -140,  240; growSpeed=1.2
+growerC  140,  240; growSpeed=1.2
+growerC    0, -140; growSpeed=1.2
+
+LEVEL - Snowman
+scoreReq=1500
+growerC 0, -200
+growerC 0,  100
+growerC 0,  300
+
+
+
+
+LEVEL - One patrolling Wall
+scoreReq=1300
+growerC -120,  220; growSpeed=1.2
+growerC  120, -220; growSpeed=1.2
+wallC 0,250; 60; posB=0,-250; moveSpeed=0.2
+
+
+//LEVEL - Moving Grower Limbo-esque activation (start early)
+//	scoreReq=2100
+//	growerC 0,-100 posB=0,300; moveSpeed=0.8
+//
+
+
+LEVEL - 3 diagonal
+scoreReq=1800
+growerC -100, 200; growSpeed=1.2
+growerC  100,-200; growSpeed=1.2
+growerC    0,   0; growSpeed=1.2
+
+LEVEL - 3 diagonal OOO
+scoreReq=1800
+growerC    0,   0; growSpeed=1.2
+growerC -100, 200; growSpeed=1.2
+growerC  100,-200; growSpeed=1.2
+
+LEVEL - 3 V OOO
+scoreReq=2000
+growerC -100, 200
+growerC  100, 200
+growerC    0,-100
+
+
+LEVEL - 3 square Wall gears! Flashy.
+scoreReq=600
+growerC -150, 250; growSpeed=0.7
+growerC  150,-250; growSpeed=0.7
+wallR    0,   0; 210,210; rotateSpeed=-0.9
+wallR -110,-210; 210,210; rotateSpeed= 0.9
+wallR  110, 210; 210,210; rotateSpeed= 0.9
+
+
+
+//LEVEL - One moving, one static
+//    scoreReq=1600
+//    growerC 0, 50 posB=0,-200; moveSpeed=0.9
+//    growerC 0, 200
+//
+LEVEL - One moving, one static reversed
+scoreReq=1350
+growerC 0, 200
+growerC 0, 50; posB=0,-200; moveSpeed=0.8
+
+
+
+//LEVEL - TODO: This Lots of moving stuff! Gotta wait for the right moment. Relatively easy.
+//    scoreReq=1600
+//    growerC 0,-200
+//    growerC 0, 200
+//    //wall 
+//
+
+LEVEL - Surprise wall squish!
+scoreReq=2000
+growerC 0, 0; growSpeed=2
+//wallR -140,0; 80,800; posB=-2000,0; moveSpeed=0.8; moveLocOffset=3.14159
+//wallR  140,0; 80,800; posB= 2000,0; moveSpeed=0.8; moveLocOffset=3.14159
+wallR 0,-300; 600,500; posB=0,-4000; moveSpeed=0.7; moveLocOffset=0.15
+wallR 0, 300; 600,500; posB=0, 4000; moveSpeed=0.7; moveLocOffset=0.15
+
+LEVEL - Three-wall squish
+scoreReq=1400
+growerC 0,-250; growSpeed=1.5
+growerC 0,   0; growSpeed=1.5
+growerC 0, 250; growSpeed=1.5
+wallR -230,-280; 400,280; posB=-450,-280; moveSpeed=0.28; moveLocOffset=    0
+wallR  230,-280; 400,280; posB= 450,-280; moveSpeed=0.28; moveLocOffset=    0
+wallR -230,   0; 400,280; posB=-450,   0; moveSpeed=0.28; moveLocOffset= -1.2
+wallR  230,   0; 400,280; posB= 450,   0; moveSpeed=0.28; moveLocOffset= -1.2
+wallR -230, 280; 400,280; posB=-450, 280; moveSpeed=0.28; moveLocOffset= -2.4
+wallR  230, 280; 400,280; posB= 450, 280; moveSpeed=0.28; moveLocOffset= -2.4
+
+
+
+
+//			LEVEL - 3 moving in sync. TODO: This
+//				scoreReq=100
+//				growerC -60,-160
+//			
+
+
+
+LEVEL - You're squares!
+scoreReq=1600
+growerR    0, 200; size=20,10
+growerR -130,-230
+growerR  130,-230
+
+LEVEL - Random, rotated squares
+scoreReq=1600
+growerC 0,-200
+growerC 0, 200
+
+LEVEL - Three-wall wave offset!
+scoreReq=1200
+growerR 0,-250; growSpeed=1.5; rotateSpeed=1
+growerR 0,   0; growSpeed=1.5; rotateSpeed=1
+growerR 0, 250; growSpeed=1.5; rotateSpeed=1
+wallR -320,-280; 400,280; posB=-400,-280; moveSpeed=1; moveLocOffset=   0
+wallR  320,-280; 400,280; posB= 400,-280; moveSpeed=1; moveLocOffset=   0+3.14159
+wallR -320,   0; 400,280; posB=-400,   0; moveSpeed=1; moveLocOffset=-1.2
+wallR  320,   0; 400,280; posB= 400,   0; moveSpeed=1; moveLocOffset=-1.2+3.14159
+wallR -320, 280; 400,280; posB=-400, 280; moveSpeed=1; moveLocOffset=-2.4
+wallR  320, 280; 400,280; posB= 400, 280; moveSpeed=1; moveLocOffset=-2.4+3.14159
+
+// TODO: You're squares AND circles
+
+LEVEL - One slowly rotating GrowerSquare. Gotta time it right not to hit sides.
+scoreReq=2400
+growerR 0,0; size=40,40; rotateSpeed=0.2
+
+LEVEL - GrowerSquare fitting in with WallSquares
+scoreReq=600
+growerR 0,0; rotateSpeed=0.3
+wallR     0,-200, 120,120; rotateSpeed=-0.3
+wallR     0, 200, 120,120; rotateSpeed=-0.3
+
+LEVEL - 2 close call
+scoreReq=1500
+growerC 0,  200
+growerC 0, -112
+wallC -138, 22; 100//; posB=-200,22; moveSpeed=0.9
+wallC  138, 22; 100//; posB= 200,22; moveSpeed=0.9
+
+LEVEL - 2 in-n-out.
+scoreReq=1400
+growerC 0, 100; growSpeed=1.2; posB=0, 250; moveSpeed=1.2
+growerC 0,-100; growSpeed=1.2; posB=0,-250; moveSpeed=1.2
+
+LEVEL - Perfect square fit
+scoreReq=1800
+bounds=500,500
+growerR 0,0; growSpeed=2; rotateSpeed=0.6
+
+LEVEL - Fast 4 square
+scoreReq=2080
+growerC -130, -130; growSpeed=3
+growerC  130,  130; growSpeed=3
+growerC  130, -130; growSpeed=3
+growerC -130,  130; growSpeed=3
+wallC -275,-375; 280
+wallC -275, 375; 280
+wallC  275,-375; 280
+wallC  275, 375; 280
+
+
+LEVEL - Four-square Foursquare
+scoreReq=2000
+growerR -134,-134; growSpeed=1.8; rotateSpeed=0.5
+growerR -134, 134; growSpeed=1.8; rotateSpeed=0.5
+growerR  134,-134; growSpeed=1.8; rotateSpeed=0.5
+growerR  134, 134; growSpeed=1.8; rotateSpeed=0.5
+
+
+
+//LEVEL - 4 square
+//    scoreReq=2100
+//    float rd = 140
+//    float m = 70
+//    growerC -130, -130//; posB=-130,-130+m; moveSpeed=1
+//    growerC  130,  130//; posB= 130, 130+m; moveSpeed=1; moveLocOffset= 3.14159
+//    growerC  130, -130//; posB= 130,-130+m; moveSpeed=1; moveLocOffset= 3.14159
+//    growerC -130,  130//; posB=-130, 130+m; moveSpeed=1
+//    wall -275,-375, rd*2//; posB=-275,-375+m; moveSpeed=1
+//    wall -275, 375, rd*2//; posB=-275, 375+m; moveSpeed=1
+//    wall  275,-375, rd*2//; posB= 275,-375+m; moveSpeed=1; moveLocOffset= 3.14159
+//    wall  275, 375, rd*2//; posB= 275, 375+m; moveSpeed=1; moveLocOffset= 3.14159
+//
+
+LEVEL - Two frozen guys
+scoreReq=1350
+growerC -100, -130; growSpeed=2; posB=-100, -10; moveSpeed=1
+growerC  100,  130; growSpeed=2; posB= 100, 250; moveSpeed=1
+wallR -100,-440; 1000,200; posB=-100,-320; moveSpeed=1
+wallR  100, 440; 1000,200; posB= 100, 560; moveSpeed=1
+
+
+
+LEVEL - Double slash time
+scoreReq=1800
+float s = 190
+growerC    0, 0; growSpeed=1.3
+wallC -s,-s, 30 posB= s,-s; moveSpeed=0.3
+wallC -s, s, 30 posB= s, s; moveSpeed=0.3; moveLocOffset=3.14159
+wallC -s, s, 30 posB=-s,-s; moveSpeed=0.3
+wallC  s, s, 30 posB= s,-s; moveSpeed=0.3; moveLocOffset=3.14159
+
+
+
+//LEVEL - Fast and slow
+//    scoreReq=2500
+//    growerC 0, -190; growSpeed=4
+//    growerC 0,  190; growSpeed=0.8
+//
+else if (li == i++) { // + perfect fit
+scoreReq=2500
+//growerC     0, -190; growSpeed=
+growerC    0,  190
+growerC -190,   0
+growerC  190,   0
+
+
+
+// Moving Growers
+LEVEL - Cutoff monitor
+scoreReq=1300
+growerC    0, 200
+growerC    0,-220; growSpeed=1
+wallC -180,60; 30; posB=180, 60; moveSpeed=0.12
+
+
+//LEVEL - First one is super slow, gotta just tap it right away to save time
+//    scoreReq=1000
+//    growerC -230, 330; growSpeed=0.1
+//    growerC    0, 170
+//    wall -180,60, 30 posB=180, 60; moveSpeed=0.2; moveLocOffset= -1.5
+//
+else if (li == i++) { //TEST
+scoreReq=1400
+float o = 1.5
+growerC -140, 140 posB=140, 140
+growerC -140,   0 posB=140,   0; moveSpeed=1; moveLocOffset= o*1
+growerC -140,-140 posB=140,-140; moveSpeed=1; moveLocOffset= o*2
+
+else if (li == i++) { //TEST
+scoreReq=1400
+float o = 1.5
+growerC -140, 250 posB=140, 250
+growerC -140, 125 posB=140, 125; moveSpeed=1; moveLocOffset= o*1
+growerC -140,   0 posB=140,   0; moveSpeed=1; moveLocOffset= o*2
+growerC -140,-125 posB=140,-125; moveSpeed=1; moveLocOffset= o*3
+growerC -140,-250 posB=140,-250; moveSpeed=1; moveLocOffset= o*4
+
+
+LEVEL - 2 out-of-order diagonal
+scoreReq=2200
+growerC 140, 160
+growerC   0,-100
+
+
+
+
+LEVEL - 3 haphazard V
+scoreReq=2000
+growerC -100, -200
+growerC  100, -200
+growerC  -60,  100
+
+else if (li == i++) { // + perfect fit
+scoreReq=2500
+growerC -190,   0
+growerC  190,   0
+growerC    0, -190
+growerC    0,  190
+
+LEVEL - 3 diagonal with round walls
+scoreReq=1700
+wall -275,-375, 550
+wall  275, 375, 550
+growerC  122, -220
+growerC -122,  220
+growerC    0,    0
+
+LEVEL - TEST
+scoreReq=2000
+wall -275,0, 300
+wall  275,0, 300
+growerC  -120, -190
+growerC   120,  190
+growerC     0,    0
+
+LEVEL - TEST
+scoreReq=2000
+wall -500,0, 700
+wall  500,0, 700
+growerC    0,    0
+growerC -120, -190
+growerC  120,  190
+
+
+

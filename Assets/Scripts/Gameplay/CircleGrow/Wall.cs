@@ -9,8 +9,8 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-		public void Initialize(Level _myLevel, Transform tf_parent, Vector2 center, Vector2 size) {
-			BaseInitialize(_myLevel, tf_parent, center, size);
+        public void Initialize(Level _myLevel, Transform tf_parent, WallData data) {// Vector2 center, Vector2 size) {
+			BaseInitialize(_myLevel, tf_parent, data);
 
             // Color me impressed!
             bodyColor = Grower.color_solid;

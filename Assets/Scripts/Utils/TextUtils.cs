@@ -75,7 +75,23 @@ public class TextUtils {
 		//		return lines;
 		return wholeString.Split (LINE_BREAKS_STRINGS, StringSplitOptions.RemoveEmptyEntries);
 //		return "yes,okay".Split (LINE_BREAKS_STRINGS, StringSplitOptions.None);
-	}
+    }
+    static public string RemoveCommentedLines(string fileString, string commentPrefix="//") {
+        string newFileString = "";
+        string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(fileString);
+        for (int i=0; i<lines.Length; i++) {
+            string line = lines[i];
+            int commentIndex = lines[i].IndexOf(commentPrefix);
+            if (commentIndex >= 0) {
+                line = line.Substring(0, commentIndex);
+            }
+            newFileString += line + System.Environment.NewLine;
+        }
+        return newFileString;
+    }
+
+
+
 	static public Rect GetRectFromString (string str) {
 		// This function parses a string AS FORMATTED by Rect's ToString() function. Example: (x:0.68, y:76.18, width:400.00, height:400.00)
 		int colonIndex, commaIndex;

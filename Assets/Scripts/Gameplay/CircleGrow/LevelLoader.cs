@@ -16,6 +16,7 @@ public class LevelLoader : MonoBehaviour {
             StreamReader file = File.OpenText(filePath);
             string levelsFile = file.ReadToEnd();
             file.Close();
+            levelsFile = TextUtils.RemoveCommentedLines(levelsFile);
             levelStrings = levelsFile.Split(levelHeader, System.StringSplitOptions.None);
         }
         else {
@@ -30,6 +31,7 @@ public class LevelLoader : MonoBehaviour {
         }
         return levelStrings[levelIndex];
     }
+
 
 
 }

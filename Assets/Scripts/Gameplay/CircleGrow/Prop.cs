@@ -52,17 +52,25 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		protected void BaseInitialize(Level _myLevel, Transform tf_parent, Vector2 _pos, Vector2 _size) {
+        protected void BaseInitialize(Level _myLevel, Transform tf_parent, PropData data) {//, Vector2 _pos, Vector2 _size) {
 			myLevel = _myLevel;
 
 			GameUtils.ParentAndReset(this.gameObject, tf_parent);
-			SetSize(_size);
 
-//			SetPosA(_pos); // default BOTH poses to the one provided. Assume we don't move.
-//			SetPosB(_pos);
-			SetPoses(_pos.x,_pos.y); // default BOTH poses to the one provided. Assume we don't move.
+            SetPoses(data.pos.x, data.pos.y);
+            SetMoveSpeed(data.moveSpeed, data.moveLocOffset);
+            SetSize(data.size);
+            SetRotation(data.rotation);
+            SetRotateSpeed(data.rotateSpeed);
+            if (data.posB.x != Mathf.Infinity) { // TODO: #cleancode. Clean this pos A/B business up.
+                SetPosB(data.posB);
+            }
 
-			SetMoveSpeed(1, 0); // Default my move-speed values.
+////			SetPosA(_pos); // default BOTH poses to the one provided. Assume we don't move.
+////			SetPosB(_pos);
+			//SetPoses(_pos.x,_pos.y); // default BOTH poses to the one provided. Assume we don't move.
+
+			//SetMoveSpeed(1, 0); // Default my move-speed values.
 		}
         virtual protected void OnDestroy() {
             DestroyMovePathLine();

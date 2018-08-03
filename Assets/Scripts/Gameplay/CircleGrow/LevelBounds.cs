@@ -16,7 +16,7 @@ namespace CircleGrow {
         // Properties
         private Rect r_bounds;
 		// References
-		[SerializeField] private Level myLevel;
+		[SerializeField] private Level myLevel=null;
 
 
         // ----------------------------------------------------------------
@@ -30,7 +30,7 @@ namespace CircleGrow {
 			walls = new WallRect[4];
 			for (int i=0; i<walls.Length; i++) {
 				walls[i] = Instantiate(prefabGO).GetComponent<WallRect>();
-				walls[i].Initialize(myLevel, myLevel.rt_GameComponents, Vector2.zero, Vector2.zero);
+                walls[i].Initialize(myLevel, myLevel.rt_GameComponents, new WallData());
 				walls[i].name = "BoundsWall_" + i;
 			}
         }

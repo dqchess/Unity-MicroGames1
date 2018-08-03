@@ -13,8 +13,9 @@ namespace CircleGrow {
         public Vector2 size=new Vector2(30,30);
         public float rotation=0;
         public float rotateSpeed=0;
-        public Vector2 posB=Vector2.zero;
+        public Vector2 posB=Vector2.positiveInfinity; // default to unused.
         public float moveSpeed=1;
+        public float moveLocOffset=0;
     }
     public class GrowerData : PropData {
         public float growSpeed=1;
@@ -65,19 +66,18 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize(Level _myLevel, Transform tf_parent, Vector2 _pos) {
-            Vector2 startingSize = new Vector2(30,30); // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
-            BaseInitialize(_myLevel, tf_parent, _pos, startingSize);
+        public void Initialize(Level _myLevel, Transform tf_parent, GrowerData data) {
+            //Vector2 startingSize = new Vector2(30,30); // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
+            BaseInitialize(_myLevel, tf_parent, data);
 
-            SetGrowSpeed(1);
+            SetGrowSpeed(data.growSpeed);
 
             bodyColor = color_sleeping;
-			//SetRadius(startingRadius);
             SetCurrentState(GrowerStates.Sleeping);
 		}
 
         public Grower SetGrowSpeed(float _speed) {
-            growSpeed = _speed*0.8f; // awkward scaling the speed here.
+            growSpeed = _speed*2f; // awkward scaling the speed here.
             return this;
         }
 
