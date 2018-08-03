@@ -6,23 +6,6 @@ using UnityEngine.UI;
 namespace CircleGrow {
     public enum GrowerStates { Sleeping, PreGrowing, Growing, Solidified }
 
-    // TODO: Move this into PropDatas.cs
-    public class PropData {
-        public PropShapes shape=PropShapes.Circle;
-        public Vector2 pos=Vector2.zero;
-        public Vector2 size=new Vector2(30,30);
-        public float rotation=0;
-        public float rotateSpeed=0;
-        public Vector2 posB=Vector2.positiveInfinity; // default to unused.
-        public float moveSpeed=1;
-        public float moveLocOffset=0;
-    }
-    public class GrowerData : PropData {
-        public float growSpeed=1;
-    }
-    public class WallData : PropData {
-    }
-
 	abstract public class Grower : Prop {
 		// Constants
 		protected const float HITBOX_SHRINK = 1; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.
@@ -37,6 +20,7 @@ namespace CircleGrow {
         [SerializeField] private Text t_scoreValue=null;
         // Properties
 		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
+        private bool doMoveWhenSolid=false; // MEH. Makes things inconsistent. Though we can have cooler layouts.
         private GrowerStates currentState;
         private float growSpeed;
 
@@ -49,10 +33,10 @@ namespace CircleGrow {
 		}
 		// Getters (Protected)
 		override protected bool MayMove() {
-			return base.MayMove() && currentState!=GrowerStates.Solidified;
+            return base.MayMove() && (currentState!=GrowerStates.Solidified || doMoveWhenSolid);
 		}
 		override protected bool MayRotate() {
-			return base.MayRotate() && currentState!=GrowerStates.Solidified;
+            return base.MayRotate() && (currentState!=GrowerStates.Solidified || doMoveWhenSolid);
 		}
         // Getters (Private)
         abstract public float Area();
@@ -70,6 +54,7 @@ namespace CircleGrow {
             //Vector2 startingSize = new Vector2(30,30); // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
             BaseInitialize(_myLevel, tf_parent, data);
 
+            doMoveWhenSolid = data.doMoveWhenSolid;
             SetGrowSpeed(data.growSpeed);
 
             bodyColor = color_sleeping;
@@ -78,6 +63,8 @@ namespace CircleGrow {
 
         public Grower SetGrowSpeed(float _speed) {
             growSpeed = _speed*0.8f; // awkward scaling the speed here.
+            // Hack for old radius/rect-size business. :P Would be nice to make this cleaner!
+            if (MyShape == PropShapes.Circle) { growSpeed *= 2; }
             return this;
         }
 

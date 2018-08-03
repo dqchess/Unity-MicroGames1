@@ -13,6 +13,7 @@ namespace CircleGrow {
 		private float moveSpeed=1f; // for MOVING Props.
 		private float moveOscVal; // for MOVING Props.
 		private float rotateSpeed=0f; // for ROTATING Props.
+        private PropShapes myShape;
         private Vector2 posA,posB; // for MOVING Props.
         private Vector2 size;
 		// References
@@ -35,6 +36,7 @@ namespace CircleGrow {
 			get { return i_body.color; }
 			set { i_body.color = value; }
         }
+        protected PropShapes MyShape { get { return myShape; } }
         protected Vector2 Size { get { return size; } }
         /** DoesMove returns if we are a MOVING Prop. MayMove returns if we're a moving Prop AND we're allowed to move (e.g. false for solid Growers). */
         private bool DoesMove() { return moveSpeed != 0; }
@@ -57,6 +59,7 @@ namespace CircleGrow {
 
 			GameUtils.ParentAndReset(this.gameObject, tf_parent);
 
+            myShape = data.shape;
             SetPoses(data.pos.x, data.pos.y);
             SetMoveSpeed(data.moveSpeed, data.moveLocOffset);
             SetSize(data.size);
@@ -111,9 +114,8 @@ namespace CircleGrow {
 			Rotation = _rotation;
 			return this;
 		}
-		public Prop SetRotateSpeed(float _rotateSpeed, float _startRotation=0) {
+		public Prop SetRotateSpeed(float _rotateSpeed) {
 			rotateSpeed = _rotateSpeed;
-			SetRotation(_startRotation);
 			return this;
 		}
 

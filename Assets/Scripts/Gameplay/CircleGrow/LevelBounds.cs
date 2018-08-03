@@ -38,6 +38,7 @@ namespace CircleGrow {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
+        public void SetSize(Vector2 _size) { SetSize(_size.x, _size.y); }
         /// Note that this function AUTOMATICALLY updates our position to keep us centered! (We can THEN set our offset, in case we want the level off-centered.)
         public void SetSize(float w,float h) {
             r_bounds.size = new Vector2(w,h);
