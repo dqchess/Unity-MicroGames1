@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -223,9 +224,169 @@ namespace CircleGrow {
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
             // Specify default values
-			PropShapes gs = PropShapes.Circle; // default growerShape!
+			//PropShapes gs = PropShapes.Circle; // default growerShape!
             scoreRequired = 1000;
 			bounds.SetSize(550,750); // Default to 600x800 with 25px padding on all sides.
+
+            string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
+            if (!string.IsNullOrEmpty(levelString)) {
+                MakeLevelFromString(levelString);
+            }
+            else {
+                DestroyLevelComponents();
+                levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
+                Debug.LogWarning("No level data available for level: " + LevelIndex);
+            }
+
+            // Start growing the first dude!
+            SetCurrentGrowerIndex(0);
+        }
+        private void MakeLevelFromString(string _str) {
+            try {
+                string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
+                foreach (string s in lines) {
+                    if (s.StartsWith("scoreReq")) {
+                        SetScoreRequiredFromString(s);
+                    }
+                    else if (s.StartsWith("grower")) {
+                        AddGrowerFromString(s);
+                    }
+                    else if (s.StartsWith("wall")) {
+                        AddWallFromString(s);
+                    }
+                }
+            }
+            catch (Exception e) {
+                Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ". Error: " + e);
+            }
+        }
+        private void SetScoreRequiredFromString(string s) {
+            scoreRequired = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
+        }
+        private void AddGrowerFromString(string fullLine) {
+            GrowerData data = new GrowerData();
+            data.shape = GetGrowerShapeFromLine(fullLine);
+            fullLine = fullLine.Substring(fullLine.IndexOf(" ")+1); // remove "growerX ".
+            string[] properties = fullLine.Split(';');
+            // Prop Properties!
+            data.pos = TextUtils.GetVector2FromStringNoParens(properties[0]);
+            SetPropDataProperties(data, properties, 1); // Note: Skip the first property, which must always be pos.
+            // Grower-specific Properties
+            for (int i=1; i<properties.Length; i++) {
+                string s = properties[i].TrimStart();
+                if (s.StartsWith("growSpeed=")) {
+                    data.growSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                }
+            }
+            // Add the dude! TODO: If this is working out, then we can clean this up! Initialize a Grower by its PropData!
+            Grower newObj = AddGrower(data.shape, data.pos.x,data.pos.y);
+            newObj.SetGrowSpeed(data.growSpeed);
+            newObj.SetPosB(data.posB);
+            newObj.SetMoveSpeed(data.moveSpeed);
+            newObj.SetSize(data.size);
+            newObj.SetRotation(data.rotation);
+            newObj.SetRotateSpeed(data.rotateSpeed);
+        }
+        private void AddWallFromString(string fullLine) {
+            WallData data = new WallData();
+            data.shape = GetWallShapeFromLine(fullLine);
+            fullLine = fullLine.Substring(fullLine.IndexOf(" ")+1); // remove "wallX ".
+            string[] properties = fullLine.Split(';');
+            // Prop Properties!
+            data.pos = TextUtils.GetVector2FromStringNoParens(properties[0]);
+            data.size = GetWallSizeFromString(properties[1]);
+            SetPropDataProperties(data, properties, 2); // Note: Skip the first TWO properties, which are pos and size.
+            // Add the dude!
+            Wall newObj = AddWall(data.shape, data.pos.x,data.pos.y, data.size.x,data.size.y);
+            newObj.SetPosB(data.posB);
+            newObj.SetMoveSpeed(data.moveSpeed);
+            newObj.SetSize(data.size);
+            newObj.SetRotation(data.rotation);
+            newObj.SetRotateSpeed(data.rotateSpeed);
+        }
+        /// The startIndex makes this confusing, so ignore it (it's for optimization). We use this function to convert string properties from Levels.txt to PropData properties. :)
+        private void SetPropDataProperties(PropData data, string[] properties, int startIndex) {
+            for (int i=startIndex; i<properties.Length; i++) {
+                string s = properties[i].TrimStart();
+                if (s.StartsWith("posB=")) {
+                    data.posB = TextUtils.GetVector2FromStringNoParens(s.Substring(s.IndexOf('=')+1));
+                }
+                else if (s.StartsWith("moveSpeed=")) {
+                    data.moveSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                }
+                else if (s.StartsWith("size=")) {
+                    data.size = TextUtils.GetVector2FromStringNoParens(s.Substring(s.IndexOf('=')+1));
+                }
+                else if (s.StartsWith("rotation=")) {
+                    data.rotation = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                }
+                else if (s.StartsWith("rotateSpeed=")) {
+                    data.rotateSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                }
+            }
+        }
+        /*
+        private void AddWallFromString(string fullLine) {
+            fullLine = fullLine.Substring(fullLine.IndexOf(" ")+1); // remove "wall ".
+            string[] properties = fullLine.Split(';');
+            // Pos
+            Vector2 pos = TextUtils.GetVector2FromStringNoParens(properties[0]);
+            WallData newData = WallData(pos);
+            // Properties!
+            for (int i=1; i<properties.Length; i++) { // Note: Skip the first property (which must always be pos).
+                string s = properties[i].TrimStart();
+                if (s.StartsWith("growSpeed=")) {
+                    float val = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetGrowSpeed(val);
+                }
+                else if (s.StartsWith("posB=")) {
+                    Vector2 val = TextUtils.GetVector2FromStringNoParens(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetPosB(val);
+                }
+                else if (s.StartsWith("moveSpeed=")) {
+                    float val = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetMoveSpeed(val);
+                }
+                else if (s.StartsWith("size=")) {
+                    float val = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetSize(val);
+                }
+                else if (s.StartsWith("rotation=")) {
+                    float val = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetRotation(val);
+                }
+                else if (s.StartsWith("rotateSpeed=")) {
+                    float val = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+                    newObj.SetRotateSpeed(val);
+                }
+            }
+        }
+        */
+
+        private PropShapes GetGrowerShapeFromLine(string s) {
+            if (s.StartsWith("growerC")) { return PropShapes.Circle; }
+            else if (s.StartsWith("growerR")) { return PropShapes.Rect; }
+            Debug.LogError("Grower shape not recognized or specified! Line: \"" + s + "\".");
+            return PropShapes.Circle;
+        }
+        private PropShapes GetWallShapeFromLine(string s) {
+            if (s.StartsWith("wallC")) { return PropShapes.Circle; }
+            else if (s.StartsWith("wallR")) { return PropShapes.Rect; }
+            Debug.LogError("Wall shape not recognized or specified! Line: \"" + s + "\".");
+            return PropShapes.Circle;
+        }
+        /// Complicated here, for easier text-file editing. We can specify JUST the radius ("25"), or give both w/h dimensions ("50,50"). This will accept/interpret either. :)
+        private Vector2 GetWallSizeFromString(string s) {
+            string[] split = s.Split(',');
+            if (split.Length == 1) { // We provided ONE value, the radius. Interpret it from "25" to "50,50"!
+                return new Vector2(TextUtils.ParseFloat(split[0])*2, TextUtils.ParseFloat(split[0])*2);
+            }
+            // We provided TWO values, width and height. Interpret it as is!
+            return new Vector2(TextUtils.ParseFloat(split[0]), TextUtils.ParseFloat(split[1]));
+        }
+
+
+        /*
 			float l=-550*0.5f;
 			float r= 550*0.5f;
 			float b=-750*0.5f;
@@ -683,7 +844,7 @@ namespace CircleGrow {
              * A few lvls with different speed growing
              * A few lvls with random scattered dots
              * Have to do 3 small-ish ones, then one bigger hard one when the pressure's on!
-             */
+             * /
 
             // UNTESTED
             else if (li == i++) { // 5-die max-fit
@@ -785,7 +946,7 @@ namespace CircleGrow {
                 AddGrower(gs,     0,-100);
                 AddGrower(gs,   140, 160);
             }
-            */
+            * /
 
 
 			else {
@@ -797,6 +958,7 @@ namespace CircleGrow {
 			// Start growing the first dude!
             SetCurrentGrowerIndex(0);
 		}
+    */
 
 	}
 }

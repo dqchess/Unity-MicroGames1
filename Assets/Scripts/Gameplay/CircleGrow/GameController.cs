@@ -10,7 +10,7 @@ namespace CircleGrow {
         // Overrideables
         override public string MyGameName() { return GameNames.CircleGrow; }
         // Components
-//        [SerializeField] private Image i_levelBounds=null;
+        [SerializeField] private LevelLoader levelLoader;
         private Level level;
         // Properties
         private LoseReasons loseReason;
@@ -20,6 +20,7 @@ namespace CircleGrow {
 
 
         // Getters (Public)
+        public LevelLoader LevelLoader { get { return levelLoader; } }
         //public Rect r_LevelBounds { get { return r_levelBounds; } }
 
 
@@ -31,6 +32,9 @@ namespace CircleGrow {
             //i_levelBounds.anchoredPosition = levelBounds.position;
             //i_levelBounds.sizeDelta = levelBounds.size;
 //          r_levelBounds = i_levelBounds.rectTransform.rect;
+
+            // Initialize LevelLoader!
+            levelLoader.ReloadLevelsFile();
 
             base.Start();
         }

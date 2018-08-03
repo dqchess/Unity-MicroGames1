@@ -6,6 +6,22 @@ using UnityEngine.UI;
 namespace CircleGrow {
     public enum GrowerStates { Sleeping, PreGrowing, Growing, Solidified }
 
+    // TODO: Move this into PropDatas.cs
+    public class PropData {
+        public PropShapes shape=PropShapes.Circle;
+        public Vector2 pos=Vector2.zero;
+        public Vector2 size=new Vector2(30,30);
+        public float rotation=0;
+        public float rotateSpeed=0;
+        public Vector2 posB=Vector2.zero;
+        public float moveSpeed=1;
+    }
+    public class GrowerData : PropData {
+        public float growSpeed=1;
+    }
+    public class WallData : PropData {
+    }
+
 	abstract public class Grower : Prop {
 		// Constants
 		protected const float HITBOX_SHRINK = 1; // 1 or 2 pixels is good. How much smaller we make our hit area than our image.

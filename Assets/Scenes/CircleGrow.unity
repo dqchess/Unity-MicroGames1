@@ -1220,6 +1220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1724769480}
   - component: {fileID: 1724769481}
+  - component: {fileID: 1724769482}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1253,6 +1254,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 447625659}
   levelGameUI: {fileID: 1291554891}
+  levelLoader: {fileID: 1724769482}
+--- !u!114 &1724769482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1724769479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a75aeef45eb1d4b95a6d74a4b582d904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1905050093
 Prefab:
   m_ObjectHideFlags: 0

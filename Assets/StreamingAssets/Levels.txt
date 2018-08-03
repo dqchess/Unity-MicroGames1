@@ -1,0 +1,27 @@
+LEVEL TEST
+scoreReq=2000
+growerC 0,0; growSpeed=.5
+wallC 0, 200; 100
+wallR 0,-200; 100,100
+
+
+
+LEVEL One
+scoreReq=2000
+growerC 0,0; growSpeed=10
+
+LEVEL One, with single WallCircle (horz)
+scoreReq=700
+growerC -30,30; growSpeed=0.8
+wallC 172,30; 92
+
+LEVEL One, with compressing walls!
+growerC 0,0; growSpeed=1.2
+wallR -230,0; 400,800; posB=-450,0; moveSpeed=0.8,-1.5708
+wallR  230,0; 400,800; posB= 450,0; moveSpeed=0.8,-1.5708
+
+LEVEL Two, with center WallCircle
+scoreReq=900
+growerC 0,-184; growSpeed=0.9
+growerC 0, 150; growSpeed=0.9
+wallC 0,13; 92
