@@ -65,7 +65,9 @@ abstract public class BaseLevelSelectController : MonoBehaviour {
 	private void PositionLevelTiles () {
 		float containerWidth = 600;//HACKy hardcoded. rt_scrollContent.rect.width; // let's use this value to determine how much horz. space I've got for the tiles.
 
-		float tempX = tileGap.x; // where we're putting things! Added to as we go along.
+		int numCols = (int)(containerWidth / (tileSize.x+tileGap.x));
+		float xOffset = (containerWidth-(tileSize.x+tileGap.x)*numCols) * 0.5f;
+		float tempX = xOffset; // where we're putting things! Added to as we go along.
 		float tempY = -tileGap.y; // where we're putting things! Added to as we go along.
 
 		for (int i=0; i<levelTiles.Count; i++) {
@@ -74,7 +76,7 @@ abstract public class BaseLevelSelectController : MonoBehaviour {
 			tile.SetPosSize (new Vector2(tempX,tempY), tileSize);
 			tempX += tileSize.x+tileGap.x;
 			if (tempX+tileSize.x > containerWidth) { // wrap to the next row
-				tempX = tileGap.x;
+				tempX = xOffset;
 				tempY -= tileSize.y+tileGap.y;
 			}
 		}

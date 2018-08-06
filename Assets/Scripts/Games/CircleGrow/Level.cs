@@ -8,7 +8,7 @@ namespace CircleGrow {
 	public class Level : BaseLevel {
 		// Constants
 		public static int FirstLevelIndex = 1;
-		public static int LastLevelIndex = 40;
+		public static int LastLevelIndex = 37;
 		// Components
         [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;

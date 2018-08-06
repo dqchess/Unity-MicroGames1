@@ -21,8 +21,8 @@ namespace CircleGrow {
 		//  Start
 		// ----------------------------------------------------------------
 		override protected void Start() {
-			tileSize = new Vector2(110,110); // to override, set these values in Start() before calling base.Start().
-			tileGap = new Vector2(24,24);
+			tileSize = new Vector2(120,120); // to override, set these values in Start() before calling base.Start().
+			tileGap = new Vector2(8,8);
 
 			base.Start();
 

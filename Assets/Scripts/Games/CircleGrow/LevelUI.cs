@@ -51,6 +51,9 @@ namespace CircleGrow {
             // Score
             t_scoreRequired.text = TextUtils.AddCommas(scoreRequired);
             //UpdateScoreUI(0);
+			// Not playable? Hide the score UI!
+			bool isPlayable = levelIndex <= Level.LastLevelIndex;
+			go_scoreBar.SetActive(isPlayable);
         }
 
 
