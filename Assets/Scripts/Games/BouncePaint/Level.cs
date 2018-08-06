@@ -33,7 +33,7 @@ namespace BouncePaint {
 		// ----------------------------------------------------------------
         public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
             gameController = _gameController;
-			BaseInitialize(tf_parent, _levelIndex);
+			BaseInitialize(gameController, tf_parent, _levelIndex);
 
             t_levelName.text = "LEVEL " + LevelIndex.ToString();
         }

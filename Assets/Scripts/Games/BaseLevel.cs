@@ -9,24 +9,27 @@ public abstract class BaseLevel : MonoBehaviour {
 	private int levelIndex;
 	// Components
 	[SerializeField] protected RectTransform myRectTransform=null;
+	// References
+	private BaseLevelGameController myGameController;
 
-	// Getters
-	protected ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
+	// Getters (Public)
+	public Canvas Canvas { get { return myGameController.Canvas; } }
 	public int LevelIndex { get { return levelIndex; } }
+	// Getters (Protected)
+	protected ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
 
 
 	// ----------------------------------------------------------------
 	//  Initialize
 	// ----------------------------------------------------------------
-	protected void BaseInitialize(Transform tf_parent, int _levelIndex) {
+	protected void BaseInitialize(BaseLevelGameController _myGameController, Transform tf_parent, int _levelIndex) {
+		myGameController = _myGameController;
 		levelIndex = _levelIndex;
 
 		gameObject.name = "Level " + levelIndex;
-		myRectTransform.SetParent(tf_parent);
+		GameUtils.ParentAndReset(this.gameObject, tf_parent);
 		myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
 		myRectTransform.anchoredPosition = Vector2.zero;
-		myRectTransform.localScale = Vector2.one;
-		myRectTransform.localEulerAngles = Vector3.zero;
 
 		AddLevelComponents();
 	}

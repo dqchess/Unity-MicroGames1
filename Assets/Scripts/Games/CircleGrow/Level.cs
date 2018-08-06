@@ -46,8 +46,8 @@ namespace CircleGrow {
 		public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
 			gameController = _gameController;
 
-            bounds.Initialize();
-			BaseInitialize(tf_parent, _levelIndex);
+			bounds.Initialize();
+			BaseInitialize(gameController, tf_parent, _levelIndex);
             levelUI.Initialize();
         }
 

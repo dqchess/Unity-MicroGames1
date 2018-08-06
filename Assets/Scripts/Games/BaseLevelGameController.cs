@@ -18,6 +18,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 
 	// Getters (Public)
 	public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
+	public Canvas Canvas { get { return canvas; } }
 	// Getters (Protected)
 	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
 	protected int LevelIndex { get { return baseLevel.LevelIndex; } }
