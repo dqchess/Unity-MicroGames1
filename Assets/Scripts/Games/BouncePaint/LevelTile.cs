@@ -9,6 +9,15 @@ namespace BouncePaint {
 		float colorOscLoc;
 
 
+		// ----------------------------------------------------------------
+		//  Doers
+		// ----------------------------------------------------------------
+		override protected void UpdateLockedVisuals() {
+			base.UpdateLockedVisuals();
+			t_levelNumber.color = IsLocked ? new Color(0,0,0, 0.5f) : new Color(0,0,0, 0.9f);
+		}
+
+
         // ----------------------------------------------------------------
         //  Update
         // ----------------------------------------------------------------

@@ -7,7 +7,7 @@ abstract public class BaseLevelTile : MonoBehaviour {
 	// Components
 	[SerializeField] private   Button myButton=null;
 	[SerializeField] protected Image i_backing=null;
-	[SerializeField] private   Text t_levelNumber=null;
+	[SerializeField] protected Text t_levelNumber=null;
 	[SerializeField] private   RectTransform myRectTransform=null;
 	// Properties
 	private bool isLocked;
@@ -41,9 +41,8 @@ abstract public class BaseLevelTile : MonoBehaviour {
 		UpdateLockedVisuals();
 		t_levelNumber.text = levelIndex.ToString();
 	}
-	private void UpdateLockedVisuals() {
+	virtual protected void UpdateLockedVisuals() {
 		myButton.interactable = !isLocked;
-		t_levelNumber.color = isLocked ? new Color(0,0,0, 0.5f) : new Color(0,0,0, 0.9f);
 	}
 
 

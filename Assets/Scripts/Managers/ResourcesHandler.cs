@@ -14,6 +14,7 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject bouncePaint_level;
 	[SerializeField] public GameObject bouncePaint_player;
 
+	[SerializeField] public GameObject circleGrow_levelTile;
 	[SerializeField] public GameObject circleGrow_level;
 	[SerializeField] public GameObject circleGrow_collisionIcon;
     [SerializeField] public GameObject circleGrow_growerCircle;
