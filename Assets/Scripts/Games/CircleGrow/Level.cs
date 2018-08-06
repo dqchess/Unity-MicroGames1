@@ -286,7 +286,7 @@ namespace CircleGrow {
                 }
             }
             // Add the dude!
-            Grower newObj = AddGrower(data);
+            AddGrower(data);
         }
         private void AddWallFromString(string fullLine) {
             WallData data = new WallData();
@@ -298,7 +298,7 @@ namespace CircleGrow {
             data.size = GetWallSizeFromString(properties[1]);
             SetPropDataProperties(data, properties, 2); // Note: Skip the first TWO properties, which are pos and size.
             // Add the dude!
-            Wall newObj = AddWall(data);//.shape, data.pos.x,data.pos.y, data.size.x,data.size.y);
+            AddWall(data);//.shape, data.pos.x,data.pos.y, data.size.x,data.size.y);
         }
         /// The startIndex makes this confusing, so ignore it (it's for optimization). We use this function to convert string properties from Levels.txt to PropData properties. :)
         private void SetPropDataProperties(PropData data, string[] properties, int startIndex) {

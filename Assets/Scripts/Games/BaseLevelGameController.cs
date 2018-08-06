@@ -121,7 +121,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 	override protected void RegisterButtonInput() {
 		base.RegisterButtonInput();
 
-		bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+//		bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
 		if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
 
