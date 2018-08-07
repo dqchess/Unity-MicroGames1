@@ -57,7 +57,6 @@ growerC 0, 0
 //                wallR 0,100; 600,100
 //                growerC 0, 214+50
 //                growerC 0,-214+50
-//            
 
 
 LEVEL - Biig rotating squares you gotta wait for
