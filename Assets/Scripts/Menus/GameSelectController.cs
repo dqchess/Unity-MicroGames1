@@ -16,9 +16,9 @@ public class GameSelectController : MonoBehaviour {
 	public void OpenScene_AlphaTapMost() { OpenScene(SceneNames.AlphaTapMost); }
     public void OpenScene_AlphaTapOrder() { OpenScene(SceneNames.AlphaTapOrder); }
 
-    public void OpenScene_BouncePaint() { OpenScene(SceneNames.BouncePaint_MainMenu); }
+	public void OpenScene_BouncePaint() { OpenScene(SceneNames.MainMenu(GameNames.BouncePaint)); }
 
-    public void OpenScene_CircleGrow() { OpenScene(SceneNames.CircleGrow); }
+	public void OpenScene_CircleGrow() { OpenScene(SceneNames.MainMenu(GameNames.CircleGrow)); }
 
     public void OpenScene_ExtrudeMatch() { OpenScene(SceneNames.ExtrudeMatch); }
 

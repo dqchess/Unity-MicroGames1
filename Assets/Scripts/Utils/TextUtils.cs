@@ -75,7 +75,23 @@ public class TextUtils {
 		//		return lines;
 		return wholeString.Split (LINE_BREAKS_STRINGS, StringSplitOptions.RemoveEmptyEntries);
 //		return "yes,okay".Split (LINE_BREAKS_STRINGS, StringSplitOptions.None);
-	}
+    }
+    static public string RemoveCommentedLines(string fileString, string commentPrefix="//") {
+        string newFileString = "";
+        string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(fileString);
+        for (int i=0; i<lines.Length; i++) {
+            string line = lines[i];
+            int commentIndex = lines[i].IndexOf(commentPrefix);
+            if (commentIndex >= 0) {
+                line = line.Substring(0, commentIndex);
+            }
+            newFileString += line + System.Environment.NewLine;
+        }
+        return newFileString;
+    }
+
+
+
 	static public Rect GetRectFromString (string str) {
 		// This function parses a string AS FORMATTED by Rect's ToString() function. Example: (x:0.68, y:76.18, width:400.00, height:400.00)
 		int colonIndex, commaIndex;
@@ -97,9 +113,9 @@ public class TextUtils {
 		Rect returnRect = new Rect (TextUtils.ParseFloat (xString),TextUtils.ParseFloat (yString), TextUtils.ParseFloat (wString),TextUtils.ParseFloat (hString));
 		return returnRect;
 	}
-	static public Vector2 GetVector2FromString (string str) {
-		// This function parses a string AS FORMATTED by Vector2's ToString() function.
-		int indexOfComma = str.IndexOf (',');
+    /// This function parses a string AS FORMATTED by Vector2's ToString() function.
+    static public Vector2 GetVector2FromString (string str) {
+        int indexOfComma = str.IndexOf (',');
 		string xString = str.Substring (1, (-1) + (indexOfComma));
 		string yString = str.Substring (indexOfComma+1, -(indexOfComma+1) + (str.Length-1));
 //		try { // test
@@ -111,7 +127,13 @@ public class TextUtils {
 //			Debug.Log ("Error parsing Vector2 string. x: " + xString + ", y: " + yString);
 //			return new Vector2 (0,0);
 //		}
-	}
+    }
+    /// Parses "0,0", or "  -100, 49".
+    public static Vector2 GetVector2FromStringNoParens(string s) {
+        string[] split = s.Split(','); // e.g. "0,0", or "  212, -100"
+        if (split.Length < 2) { Debug.LogError("Vector string incorrect formatting. (Needs to be like \"0,0\"."); return Vector2.zero; }
+        return new Vector2(ParseFloat(split[0]), ParseFloat(split[1]));
+    }
 	static public float[] GetFloatArrayFromString (string _string, char separator=',') {
 		string[] stringArray = _string.Split (separator);
 		float[] floatArray = new float[stringArray.Length];

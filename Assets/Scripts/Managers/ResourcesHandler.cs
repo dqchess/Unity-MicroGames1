@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
     // References!
+    [SerializeField] public GameObject imageLine;
+
     [SerializeField] public GameObject alphaTapOrder_tapSpace;
 
     [SerializeField] public GameObject bouncePaint_levelTile;
@@ -12,10 +14,11 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject bouncePaint_level;
 	[SerializeField] public GameObject bouncePaint_player;
 
-    [SerializeField] public GameObject circleGrow_grower;
-    [SerializeField] public GameObject circleGrow_growerBody_circle;
-    [SerializeField] public GameObject circleGrow_growerBody_square;
-    [SerializeField] public GameObject circleGrow_level;
+	[SerializeField] public GameObject circleGrow_levelTile;
+	[SerializeField] public GameObject circleGrow_level;
+	[SerializeField] public GameObject circleGrow_collisionIcon;
+    [SerializeField] public GameObject circleGrow_growerCircle;
+    [SerializeField] public GameObject circleGrow_growerRect;
     [SerializeField] public GameObject circleGrow_wallCircle;
     [SerializeField] public GameObject circleGrow_wallRect;
 

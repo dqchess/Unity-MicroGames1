@@ -6,6 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+<<<<<<< HEAD
     path: Assets/Scenes/GameSelect.unity
     guid: 87f40d0bf310644f6a8749500cda931a
   - enabled: 1
@@ -20,10 +21,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BouncePaintLevelSelect.unity
     guid: aee793477d1ae4c6ab268f7d766dda6f
+=======
+    path: Assets/Scenes/CircleGrowMainMenu.unity
+    guid: 0bde556557e1b3a43a8321fb54f6cfd6
+  - enabled: 1
+    path: Assets/Scenes/CircleGrowLevelSelect.unity
+    guid: f519bd2bd405ba14aa463dbc9c988dec
+>>>>>>> f458532882ec8cc29a329127922af0e7b8b584a2
   - enabled: 1
     path: Assets/Scenes/CircleGrow.unity
     guid: a43ed2c4338ab4156a29f7d9ed72a6e1
-  - enabled: 1
-    path: Assets/Scenes/WaveTap.unity
-    guid: fe1a2e64210750e48887bd97ee4d842a
-  m_configObjects: {}

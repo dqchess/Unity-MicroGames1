@@ -296,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9143cf1fe8970426684f6a9e2b0a41b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  imageLine: {fileID: 1551218063471392, guid: de3622acacb6d4addaff526139e77f7b, type: 2}
   alphaTapOrder_tapSpace: {fileID: 1108421674652232, guid: 765d3bb2025a9244fb8204ddc28e0d83,
     type: 2}
   bouncePaint_levelTile: {fileID: 1834149489998284, guid: 4d079a1809bab4a099b817311ae8310c,
@@ -308,13 +309,15 @@ MonoBehaviour:
     type: 2}
   bouncePaint_player: {fileID: 1857669726947748, guid: ae5ab297af6ef4c05b765191fc4a1a12,
     type: 2}
-  circleGrow_grower: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
-    type: 2}
-  circleGrow_growerBody_circle: {fileID: 1639624235426292, guid: 373bbcbb6ede441e6acb4cead424a4bd,
-    type: 2}
-  circleGrow_growerBody_square: {fileID: 1020485920417822, guid: 04d79c0f685984f8fa28b0414cd5f866,
+  circleGrow_levelTile: {fileID: 1906033332169312, guid: 508bdaeb72c77b542bc26db36e307860,
     type: 2}
   circleGrow_level: {fileID: 1645702038941974, guid: 3a372c6878e71a54d85b18f4e0bffff0,
+    type: 2}
+  circleGrow_collisionIcon: {fileID: 1855592669416724, guid: 12f183303ae318949ae8ee542ce0f9e8,
+    type: 2}
+  circleGrow_growerCircle: {fileID: 1007506403029170, guid: 30d898246e4334fabb801b430f8a31c4,
+    type: 2}
+  circleGrow_growerRect: {fileID: 1762275864868292, guid: 6064797fc306824418ecb136fbaf69fd,
     type: 2}
   circleGrow_wallCircle: {fileID: 1581440064843480, guid: d588b50b1535342fc89c812bb8a15a4d,
     type: 2}
