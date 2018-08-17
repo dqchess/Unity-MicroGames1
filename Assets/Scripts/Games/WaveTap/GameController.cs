@@ -5,101 +5,82 @@ using UnityEngine.UI;
 
 namespace WaveTap {
 	public enum GameStates { Playing, Lost, Won }
-	public enum LoseReasons { TapEarly, MissedTap }
+	public enum LoseReasons { Undefined, TapEarly, MissedTap }
 
-	public class GameController : BaseGameController {
+	public class GameController : BaseLevelGameController {
+		// Overrideables
+		override public string MyGameName() { return GameNames.WaveTap; }
 		// Components
-		[SerializeField] private Bar bar=null;
-		[SerializeField] private Player player=null;
+		private Level level; // MY game-specific Level class.
 		// Properties
-		private GameStates gameState;
-		private int currentLevel;
-//		private Rect r_levelBounds;
-		// References
-//		[SerializeField] private Canvas canvas=null;
-		[SerializeField] private GameUI ui=null;
-
-		// Getters (Public)
-		public bool IsLevelWon { get { return gameState == GameStates.Won; } }
-		// Getters (Private)
-		private bool IsPlayerTouchingBar() {
-			return Mathf.Abs(player.PosY-bar.PosY) <= player.Radius;
-		}
-
-
-		// ----------------------------------------------------------------
-		//  Start
-		// ----------------------------------------------------------------
-		override protected void Start () {
-			base.Start();
-
-//			r_levelBounds = i_levelBounds.rectTransform.rect;
-
-//			SetCurrentLevel(SaveStorage.GetInt(SaveKeys.WaveTap_LastLevelPlayed, 1));TEMP. Gonna convert this to level-based system
-		}
+		private LoseReasons loseReason;
 
 
 
 		// ----------------------------------------------------------------
-		//  Game Flow
+		//  Game Flow Events
 		// ----------------------------------------------------------------
-		private void RestartLevel() { SetCurrentLevel(currentLevel); }
-		public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, currentLevel-1)); }
-		public void StartNextLevel() { SetCurrentLevel(currentLevel+1); }
-		private void SetCurrentLevel(int _currentLevel) {
-			currentLevel = _currentLevel;
-
-			// Set basics!
-			SetIsPaused(false);
-			gameState = GameStates.Playing;
-
-			bar.Reset(currentLevel);
-			player.Reset(currentLevel);
-
-			// Tell the people!
-			ui.OnStartLevel(currentLevel);
-		}
-
-		private void LoseLevel(LoseReasons reason) {
-			gameState = GameStates.Lost;
+		override public void LoseLevel() {
+			base.LoseLevel();
 			// Tell people!
-			ui.OnGameOver();
-			// Increment losses on this level.
-//			string saveKey = SaveKeys.WaveTap_NumLosses(currentLevel);TEMP. Gonna convert this to level-based system
-//			int numLosses = SaveStorage.GetInt(saveKey,0);
-//			SaveStorage.SetInt(saveKey, numLosses + 1);
+			level.OnLoseLevel(loseReason);
+		}
+		override protected void WinLevel() {
+			base.WinLevel();
+			StartCoroutine(Coroutine_StartNextLevel());
+			// Tell people!
+			level.OnWinLevel();
 		}
 
-		private void WinLevel() {
-//			FBAnalyticsController.Instance.WaveTap_OnWinLevel(LevelIndex); // Analytics call!TEMP. Gonna convert this to level-based system
-			UpdateHighestLevelUnlocked(currentLevel);
-			gameState = GameStates.Won;
-			//			// Tell people!
-			//			level.OnWinLevel(WinningPlayer);
-			//			sfxController.OnCompleteLevel();
-			Invoke("StartNextLevel", 0.6f);
-		}
-		private void UpdateHighestLevelUnlocked(int _levelIndex) {
-//			int highestRecord = SaveStorage.GetInt(SaveKeys.BouncePaint_HighestLevelUnlocked);TEMP. Gonna convert this to level-based system
-//			if (_levelIndex > highestRecord) {
-//				SaveStorage.SetInt(SaveKeys.BouncePaint_HighestLevelUnlocked, _levelIndex);
-//			}
+		private IEnumerator Coroutine_StartNextLevel() {
+			yield return new WaitForSecondsRealtime(1.2f);
+			SetCurrentLevel(LevelIndex+1, true);
 		}
 
-
-		// ----------------------------------------------------------------
-		//  Update
-		// ----------------------------------------------------------------
-		override protected void Update () {
-			base.Update();
-
-			RegisterMouseInput();
+		override protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
+			StopCoroutine("Coroutine_SetCurrentLevel");
+			StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
 		}
+		override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {
+			level = _levelGO.GetComponent<Level>();
+			level.Initialize(this, canvas.transform, _levelIndex);
+			base.OnInitializeLevel(level);
+		}
+		private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
+			Level prevLevel = level;
 
-		private void RegisterMouseInput() {
-			if (Input.GetMouseButtonDown(0)) {
-				OnMouseDown();
+			// Reset basics.
+			loseReason = LoseReasons.Undefined;
+
+			// Make the new level!
+			InitializeLevel(Instantiate(resourcesHandler.waveTap_level), _levelIndex);
+
+			// DO animate!
+			if (doAnimate) {
+				float duration = 1f;
+
+				level.IsAnimating = true;
+				prevLevel.IsAnimating = true;
+				float height = 1200;
+				Vector3 levelDefaultPos = level.transform.localPosition;
+				level.transform.localPosition += new Vector3(0, height, 0);
+				LeanTween.moveLocal(level.gameObject, levelDefaultPos, duration).setEaseInOutQuart();
+				LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
+				yield return new WaitForSeconds(duration);
+
+				level.IsAnimating = false;
+				if (prevLevel!=null) {
+					Destroy(prevLevel.gameObject);
+				}
 			}
+			// DON'T animate? Ok, just destroy the old level.
+			else {
+				if (prevLevel!=null) {
+					Destroy(prevLevel.gameObject);
+				}
+			}
+
+			yield return null;
 		}
 
 
@@ -107,60 +88,44 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//  Input
 		// ----------------------------------------------------------------
-		private void OnMouseDown() {
-			OnTapScreen();
-		}
-		public void OnRetryButtonClick() {
-			RestartLevel();
-		}
-		private void OnTapScreen() {
-			// Paused? Ignore input.
-			if (Time.timeScale == 0f) { return; }
+		override protected void OnTapScreen() {
+			if (Time.timeScale == 0f) { return; } // Paused? Ignore input.
+			if (!IsGameStatePlaying) { return; } // Not playing? Ignore input.
 
-			if (gameState == GameStates.Playing) {
-				OnPressHitButton();
-			}
-		}
-		override protected void RegisterButtonInput() {
-			base.RegisterButtonInput();
-
-			if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
-
-			// DEBUG
-			if (Input.GetKeyDown(KeyCode.LeftBracket)) { StartPrevLevel(); }
-			if (Input.GetKeyDown(KeyCode.RightBracket)) { StartNextLevel(); }
-//			if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
-		}
-
-
-		private void OnPressHitButton() {
-			// Ignore hits if...
-			if (gameState != GameStates.Playing) { return; }
-//			if (level!=null && level.IsAnimatingIn) { return; }
-
-			if (IsPlayerTouchingBar()) {
-				OnPlayerHitBar();
+			if (level.IsPlayerTouchingNextBar()) {
+				level.PlayerHitNextBar();
 			}
 			else {
-				player.Die(LoseReasons.TapEarly);
+				OnTapEarly();
 			}
 		}
 
 
+		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		public void OnHitLastBar() {
+			WinLevel();
+		}
+		private void OnTapEarly() {
+			loseReason = LoseReasons.TapEarly;
+			LoseLevel();
+		}
+		public void OnMissedNextBar() {
+			loseReason = LoseReasons.MissedTap;
+			LoseLevel();
+		}
 
 
-		private void OnPlayerHitBar() {
-			bar.HitMe();
-			player.OnHitBar();
-			if (bar.NumHitsLeft <= 0) {
-				WinLevel();
-			}
+
+		// ----------------------------------------------------------------
+		//  Debug
+		// ----------------------------------------------------------------
+		override protected void Debug_WinLevel() {
+			WinLevel();
 		}
-		public void OnPlayerDie(LoseReasons reason) {
-			if (gameState == GameStates.Playing) {
-				LoseLevel(reason);
-			}
-		}
+
+
 
 
 

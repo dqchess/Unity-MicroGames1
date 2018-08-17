@@ -4,25 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace WaveTap {
-	public class Bar : MonoBehaviour {
+	public class Bar : Prop {
 		// Components
 		[SerializeField] private Image i_body=null;
-		[SerializeField] private RectTransform myRectTransform=null;
 		[SerializeField] private Text t_numHitsLeft=null;
 		// Properties
 		private int numHitsLeft;
 
 		// Getters (Public)
-		public float PosY { get { return Pos.y; } }
+		public bool IsDone { get { return NumHitsLeft <= 0; } }
 		public int NumHitsLeft { get { return numHitsLeft; } }
 		// Getters (Private)
 		private Color bodyColor {
 			get { return i_body.color; }
 			set { i_body.color = value; }
-		}
-		private Vector2 Pos {
-			get { return myRectTransform.anchoredPosition; }
-			set { myRectTransform.anchoredPosition = value; }
 		}
 
 
@@ -38,10 +33,13 @@ namespace WaveTap {
 //
 //			Pos = _pos;
 //			SetNumHitsLeft(_numHitsLeft);
-//		}
-		public void Reset(int currentLevel) {
-			Pos = Vector2.zero;
-			SetNumHitsLeft(currentLevel);
+		//		}
+		public void Initialize(Level _level, Transform tf_parent, BarData _data) {
+			InitializeAsProp(_level, tf_parent, _data);
+
+			myRectTransform.offsetMin = myRectTransform.offsetMax = Vector2.zero;
+
+			SetNumHitsLeft(_data.numHitsReq);
 		}
 
 

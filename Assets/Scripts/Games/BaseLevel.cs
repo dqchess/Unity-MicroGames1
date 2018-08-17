@@ -13,6 +13,7 @@ public abstract class BaseLevel : MonoBehaviour {
 	private BaseLevelGameController myGameController;
 
 	// Getters (Public)
+	public bool IsGameStatePlaying { get { return myGameController.IsGameStatePlaying; } }
 	public Canvas Canvas { get { return myGameController.Canvas; } }
 	public int LevelIndex { get { return levelIndex; } }
 	// Getters (Protected)

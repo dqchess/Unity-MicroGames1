@@ -335,6 +335,12 @@ MonoBehaviour:
     type: 2}
   letterClear_wordTile: {fileID: 1588581518580352, guid: cf18deb6e071c47d79e2d7324ae15533,
     type: 2}
+  waveTap_level: {fileID: 1479912835452602, guid: 59ab38c13237eab41b9569cd8d67943d,
+    type: 2}
+  waveTap_bar: {fileID: 1691589418277400, guid: e9735740c59a21f4dbfc0787fd20938e,
+    type: 2}
+  waveTap_player: {fileID: 1539549726947888, guid: ffc72a8322a74a843a50629e88628430,
+    type: 2}
 --- !u!223 &223970956200102408
 Canvas:
   m_ObjectHideFlags: 1
