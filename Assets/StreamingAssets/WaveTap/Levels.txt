@@ -2,21 +2,23 @@
 
 LEVEL - One
 player loc=0; range=300,-300
-bar 0,0; numHitsReq=1
+bar 0,0; numKnocksReq=1
 
-LEVEL - Hit one twice
+LEVEL - Knock one twice
 player loc=0; range=300,-300
-bar 0,0; numHitsReq=2
+bar 0,0; numKnocksReq=2
 
-LEVEL - Hit two once
-bar 0,-100; numHitsReq=1
-bar 0, 100; numHitsReq=1
+LEVEL - Knock two once
+bar 0,-100; numKnocksReq=1
+bar 0, 100; numKnocksReq=1
 
-LEVEL - Two, with center WallCircle
-scoreReq=900
-growerC 0,-184; growSpeed=0.9
-growerC 0, 150; growSpeed=0.9
-wallC 0,13; 92
+
+
+
+
+
+
+
 
 LEVEL - Two, in a field of landmines!
 scoreReq=900

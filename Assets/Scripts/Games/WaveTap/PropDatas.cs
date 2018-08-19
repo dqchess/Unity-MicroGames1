@@ -7,7 +7,7 @@ namespace WaveTap {
 	}
 
 	public class BarData : PropData {
-		public int numHitsReq=1;
+		public int numKnocksReq=1;
 //		public Vector2 posB=Vector2.positiveInfinity; // default to unused.
 //		public float moveSpeed=1;
 //		public float moveLocOffset=0;

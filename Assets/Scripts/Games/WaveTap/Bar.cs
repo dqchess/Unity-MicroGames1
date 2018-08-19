@@ -6,14 +6,15 @@ using UnityEngine.UI;
 namespace WaveTap {
 	public class Bar : Prop {
 		// Components
+		[SerializeField] private BoxCollider2D myCollider=null;
 		[SerializeField] private Image i_body=null;
-		[SerializeField] private Text t_numHitsLeft=null;
+		[SerializeField] private Text t_numKnocksLeft=null;
 		// Properties
-		private int numHitsLeft;
+		private int numKnocksLeft;
 
 		// Getters (Public)
-		public bool IsDone { get { return NumHitsLeft <= 0; } }
-		public int NumHitsLeft { get { return numHitsLeft; } }
+		public bool DidRapDuringContact { get; set; }
+		public bool IsDone { get { return numKnocksLeft <= 0; } }
 		// Getters (Private)
 		private Color bodyColor {
 			get { return i_body.color; }
@@ -24,37 +25,29 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-//		public void Initialize(GameController _gameController, Transform tf_parent, Vector2 _pos, int _numHitsLeft) {
-//			//gameController = _gameController;
-//			this.transform.SetParent(tf_parent);
-//			this.transform.localScale = Vector3.one;
-//			this.transform.localPosition = Vector3.zero;
-//			this.transform.localEulerAngles = Vector3.zero;
-//
-//			Pos = _pos;
-//			SetNumHitsLeft(_numHitsLeft);
-		//		}
 		public void Initialize(Level _level, Transform tf_parent, BarData _data) {
 			InitializeAsProp(_level, tf_parent, _data);
 
 			myRectTransform.offsetMin = myRectTransform.offsetMax = Vector2.zero;
+			myRectTransform.anchoredPosition = _data.pos;
+			myCollider.size = new Vector2(800, 2);//myRectTransform.sizeDelta; // set my "hitbox"
 
-			SetNumHitsLeft(_data.numHitsReq);
+			SetNumKnocksLeft(_data.numKnocksReq);
 		}
 
 
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		private void SetNumHitsLeft(int _numHitsLeft) {
-			numHitsLeft = _numHitsLeft;
-			t_numHitsLeft.text = numHitsLeft.ToString();
+		private void SetNumKnocksLeft(int _numKnocksLeft) {
+			numKnocksLeft = _numKnocksLeft;
+			t_numKnocksLeft.text = numKnocksLeft.ToString();
 //			myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
-			if (numHitsLeft > 0) { // Still more hits left? Rando my colo!
+			if (numKnocksLeft > 0) { // Still more knocks left? Rando my colo!
 				float h = Random.Range(0f, 1f);
 				bodyColor = new ColorHSB(h, 0.8f, 1f).ToColor();
 			}
-			else { // We're done being hit! Go green!
+			else { // We're done being knocked! Go green!
 				bodyColor = Color.green;
 			}
 		}
@@ -63,8 +56,9 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		public void HitMe() {
-			SetNumHitsLeft(numHitsLeft - 1);
+		public void RapMe() {
+			DidRapDuringContact = true;
+			SetNumKnocksLeft(numKnocksLeft - 1);
 		}
 		public void OnMissMe() {
 			bodyColor = Color.red;

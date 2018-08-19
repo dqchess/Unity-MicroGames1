@@ -6,6 +6,7 @@ using UnityEngine.UI;
 namespace WaveTap {
 	public class Player : Prop {
 		// Components
+		[SerializeField] private CircleCollider2D myCollider=null;
 		[SerializeField] private Image i_body=null;
 		// Properties
 		private float loc; // from 0 (TOP of wave) to 1 (BOTTOM of wave).
@@ -17,18 +18,17 @@ namespace WaveTap {
 		private float posYWhenPassBar; // nextBar's y pos +/- my radius.
 		private int dirMoving; // Direction moving. -1 or 1.
 //		private int dirWhenPassBar; // Direction moving. -1 or 1.
-		private List<Bar> barsBeforeTurn; // the nice list of all the bars we gotta hit before we turn around! Set every time we turn around.
+		private List<Bar> barsTouching; // 99% of the time will have ZERO or ONE element. Added/removed from by OnTriggerEnter/Exit2D. We may only tap when we're touching a bar!
 		// References
 		[SerializeField] private Sprite s_bodyNormal=null;
 		[SerializeField] private Sprite s_bodyDashedOutline=null;
 
 
 		// Getters (Public)
+		public bool IsTouchingABar() { return barsTouching.Count > 0; }
 		public float Radius { get { return radius; } }
 		public int DirMoving { get { return dirMoving; } }
 		// Getters (Private)
-		private Bar NextBar { get { return level.NextBar; } }
-		private float NextBarY { get { return NextBar==null ? 0 : NextBar.PosY; } }
 		private Color bodyColor {
 			get { return i_body.color; }
 			set { i_body.color = value; }
@@ -36,6 +36,9 @@ namespace WaveTap {
 		private float bodyColorAlpha {
 			get { return i_body.color.a; }
 			set { i_body.color = new Color(i_body.color.r,i_body.color.g,i_body.color.b, value); }
+		}
+		private Bar GetBarFromCollider(Collider2D col) {
+			return col.GetComponent<Bar>();
 		}
 
 
@@ -52,6 +55,7 @@ namespace WaveTap {
 			bodyColor = new Color(0/255f, 214/255f, 190/255f);
 			SetRadius(20);
 			SetDirMoving(1);
+			barsTouching = new List<Bar>();
 
 			// Let's goo!
 			StartCoroutine(Coroutine_StartMoving());
@@ -79,24 +83,55 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		private void SetRadius(float _radius) {
 			radius = _radius;
-			i_body.rectTransform.sizeDelta = new Vector2(radius*2, radius*2);
+			float diameter = radius*2;
+			i_body.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+			myCollider.radius = radius;
 		}
 		private void TurnAround() {
 			dirMoving *= -1;
-//			didHitBar = false; // when we turn around, this is set to false!
 		}
 		private void SetDirMoving(int _dirMoving) {
-			dirMoving = dirMoving;
-			barsBeforeTurn = level.GetBarsInOrder(dirMoving);
+			dirMoving = _dirMoving;
 		}
+		public void RapBarsTouching() {
+			foreach (Bar bar in barsTouching) {
+				RapBar(bar);
+			}
+		}
+		private void RapBar(Bar bar) {
+			bar.RapMe();
+
+		}
+
 
 
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		private void OnMissedNextBar() {
-			level.OnMissedNextBar();
+		private void OnTriggerEnter2D(Collider2D col) {
+			Bar bar = GetBarFromCollider(col);
+			if (bar != null) { OnTriggerEnterBar(bar); }
 		}
+		private void OnTriggerExit2D(Collider2D col) {
+			Bar bar = GetBarFromCollider(col);
+			if (bar != null) { OnTriggerExitBar(bar); }
+		}
+
+		private void OnTriggerEnterBar(Bar bar) {
+//			if (barsTouching.Contains(bar)) { Debug.LogError("Whoa, Player just touched a Bar it was ALREADY touching. Brett! Fix some collision code!"); return; } // Safety check.
+			barsTouching.Add(bar);
+			bar.DidRapDuringContact = false; // Set to false so we can set to true when we rap before we lose contact!
+		}
+		private void OnTriggerExitBar(Bar bar) {
+			// Snap, did we NOT rap it in time? Then lose!
+			if (!bar.DidRapDuringContact) {
+				level.OnMissedNextBar();
+			}
+			bar.DidRapDuringContact = false; // Clear this out for cleanliness.
+			barsTouching.Remove(bar);
+		}
+
+
 		public void OnWinLevel() {
 			// Stop moving and turn green!
 			baseLocSpeed = 0;
@@ -108,13 +143,11 @@ namespace WaveTap {
 			i_body.sprite = s_bodyDashedOutline;
 			bodyColor = new Color(1f, 0.1f, 0f);
 		}
-		public void OnHitBar() {
-		}
-		public void OnSetNextBar(bool isNextBarInSameDir) {
-//			bool  = NextBarIndex==0;
-			dirWhenPassBar = dirMoving * (isNextBarInSameDir?1:-1);
-			posYWhenPassBar = NextBarY - radius*dirWhenPassBar;
-		}
+//		public void OnSetNextBar(bool isNextBarInSameDir) {
+////			bool  = NextBarIndex==0;
+//			dirWhenPassBar = dirMoving * (isNextBarInSameDir?1:-1);
+//			posYWhenPassBar = NextBarY - radius*dirWhenPassBar;
+//		}
 
 
 
@@ -126,7 +159,7 @@ namespace WaveTap {
 
 			AdvanceLoc();
 			ApplyLocBounds();
-			CheckIfPassedBar();
+//			CheckIfPassedBar();
 			UpdatePosY();
 		}
 		private void AdvanceLoc() {
@@ -137,15 +170,15 @@ namespace WaveTap {
 			if (dirMoving>0 && loc>=1) { TurnAround(); }
 			else if (dirMoving<0 && loc<=0) { TurnAround(); }
 		}
-		private void CheckIfPassedBar() {
-//			if (didHitBar) { return; } // Don't check if we just hit it.
-			if (!level.IsGameStatePlaying) { return; } // If we're not playing, do nothing.
-
-			if ((dirWhenPassBar>0 && dirMoving>0 && posY<posYWhenPassBar)
-			|| (dirWhenPassBar<0 && dirMoving<0 && posY>posYWhenPassBar)) {
-				OnMissedNextBar();
-			}
-		}
+//		private void CheckIfPassedBar() {
+////			if (didHitBar) { return; } // Don't check if we just hit it.
+//			if (!level.IsGameStatePlaying) { return; } // If we're not playing, do nothing.
+//
+//			if ((dirWhenPassBar>0 && dirMoving>0 && posY<posYWhenPassBar)
+//			|| (dirWhenPassBar<0 && dirMoving<0 && posY>posYWhenPassBar)) {
+//				OnMissedNextBar();
+//			}
+//		}
 		private void UpdatePosY() {
 			posY = Mathf.Lerp(posYStart, posYEnd, loc);
 		}

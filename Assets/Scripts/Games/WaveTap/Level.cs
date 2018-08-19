@@ -22,9 +22,9 @@ namespace WaveTap {
 
 
 		// Getters (Private)
-		public bool IsTouchingNextBar() {
-			return Mathf.Abs(PosY-NextBar.PosY) <= Radius;
-		}
+//		public bool IsTouchingNextBar() {
+//			return Mathf.Abs(PosY-NextBar.PosY) <= Radius;
+//		}
 		private bool AreAllBarsDone() {
 			foreach (Bar bar in bars) {
 				if (!bar.IsDone) { return false; }
@@ -41,14 +41,14 @@ namespace WaveTap {
 //				return bars[nextBarIndex];
 //			}
 		//		}
-		public bool IsPlayerTouchingNextBar() {
-			return player.IsTouchingNextBar();
+		public bool IsPlayerTouchingABar() {
+			return player.IsTouchingABar();
 		}
-		public List<Bar> GetBarsInOrder(int dir) {
-			// TODO: Make sure the list of bars is in order by y position when we add all of them!
-			if (dir>0) { return new List<Bar>(bars); }
-			return new List<Bar>(bars).Reverse();
-		}
+//		public List<Bar> GetBarsInOrder(int dir) {
+//			// TODO: Make sure the list of bars is in order by y position when we add all of them!
+//			if (dir>0) { return new List<Bar>(bars); }
+//			return new List<Bar>(bars).Reverse();
+//		}
 
 
 
@@ -137,8 +137,8 @@ namespace WaveTap {
 				Debug.LogWarning("No level data available for level: " + LevelIndex);
 			}
 
-			// Head towards the first dude!
-			SetNextBarIndex(0);
+//			// Head towards the first dude!
+//			SetNextBarIndex(0);
 		}
 		private void MakeLevelFromString(string _str) {
 			try {
@@ -192,8 +192,8 @@ namespace WaveTap {
 			data.pos = TextUtils.GetVector2FromStringNoParens(properties[0]);
 			for (int i=1; i<properties.Length; i++) { // Note: Skip the first property, which must always be pos.
 				string s = properties[i].TrimStart();
-				if (s.StartsWith("numHitsReq=")) {
-					data.numHitsReq = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
+				if (s.StartsWith("numKnocksReq=")) {
+					data.numKnocksReq = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
 				}
 			}
 			// Add the dude!
@@ -207,25 +207,19 @@ namespace WaveTap {
 		public void OnMissedNextBar() {
 			gameController.OnMissedNextBar();
 		}
-		public void PlayerHitNextBar() {
-			Bar barHit = NextBar;
-			barHit.HitMe();
-			player.OnHitBar();
-
-			// Update nextBarIndex!
-			// TODO: This
-//			SetNextBarIndex(
-				
+		public void PlayerKnockBarsTouching() {
+			player.RapBarsTouching();
+			// Did we win?!
 			if (AreAllBarsDone()) {
-				gameController.OnHitLastBar();
+				gameController.OnKnockLastBar();
 			}
 		}
-		private void SetNextBarIndex(int _index) {
-			nextBarIndex = _index;
-			bool isNextBarInSameDir =
-				(player.DirMoving>0&&nextBarIndex== && nextBarIndex!=bars.Count-1; // the next Bar's in the same direction IF it's 
-			player.OnSetNextBar();
-		}
+//		private void SetNextBarIndex(int _index) {
+//			nextBarIndex = _index;
+//			bool isNextBarInSameDir =
+//				(player.DirMoving>0&&nextBarIndex== && nextBarIndex!=bars.Count-1; // the next Bar's in the same direction IF it's 
+//			player.OnSetNextBar();
+//		}
 
 
 

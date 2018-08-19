@@ -92,8 +92,8 @@ namespace WaveTap {
 			if (Time.timeScale == 0f) { return; } // Paused? Ignore input.
 			if (!IsGameStatePlaying) { return; } // Not playing? Ignore input.
 
-			if (level.IsPlayerTouchingNextBar()) {
-				level.PlayerHitNextBar();
+			if (level.IsPlayerTouchingABar()) {
+				level.PlayerKnockBarsTouching();
 			}
 			else {
 				OnTapEarly();
@@ -104,7 +104,7 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		public void OnHitLastBar() {
+		public void OnKnockLastBar() {
 			WinLevel();
 		}
 		private void OnTapEarly() {
