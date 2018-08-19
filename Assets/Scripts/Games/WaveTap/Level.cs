@@ -15,15 +15,15 @@ namespace WaveTap {
 		private Player player;
 		private List<Bar> bars;
 		// Properties
-		private int nextBarIndex;
+//		private int nextBarIndex;
 		private string description; // only for DEVELOPER. Makes debugging easier. It's what comes after "LEVEL" in the Level.txt string.
 		// References
 		private GameController gameController;
 
 
 		// Getters (Private)
-		public bool IsPlayerTouchingNextBar() {
-			return Mathf.Abs(player.PosY-NextBar.PosY) <= player.Radius;
+		public bool IsTouchingNextBar() {
+			return Mathf.Abs(PosY-NextBar.PosY) <= Radius;
 		}
 		private bool AreAllBarsDone() {
 			foreach (Bar bar in bars) {
@@ -35,11 +35,19 @@ namespace WaveTap {
 //		public Player Player { get { return player; } }
 //		public List<Bar> Bars { get { return bars; } }
 		public RectTransform rt_GameComponents { get { return rt_gameComponents; } }
-		public Bar NextBar {
-			get {
-				if (nextBarIndex<0 || nextBarIndex>=bars.Count) { return null; } // Index outta bounds? Return null.
-				return bars[nextBarIndex];
-			}
+//		public Bar NextBar {
+//			get {
+//				if (nextBarIndex<0 || nextBarIndex>=bars.Count) { return null; } // Index outta bounds? Return null.
+//				return bars[nextBarIndex];
+//			}
+		//		}
+		public bool IsPlayerTouchingNextBar() {
+			return player.IsTouchingNextBar();
+		}
+		public List<Bar> GetBarsInOrder(int dir) {
+			// TODO: Make sure the list of bars is in order by y position when we add all of them!
+			if (dir>0) { return new List<Bar>(bars); }
+			return new List<Bar>(bars).Reverse();
 		}
 
 
@@ -205,7 +213,7 @@ namespace WaveTap {
 			player.OnHitBar();
 
 			// Update nextBarIndex!
-
+			// TODO: This
 //			SetNextBarIndex(
 				
 			if (AreAllBarsDone()) {
@@ -214,9 +222,9 @@ namespace WaveTap {
 		}
 		private void SetNextBarIndex(int _index) {
 			nextBarIndex = _index;
-
-
-
+			bool isNextBarInSameDir =
+				(player.DirMoving>0&&nextBarIndex== && nextBarIndex!=bars.Count-1; // the next Bar's in the same direction IF it's 
+			player.OnSetNextBar();
 		}
 
 
