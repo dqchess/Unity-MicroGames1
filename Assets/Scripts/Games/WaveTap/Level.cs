@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace WaveTap {
 	public class Level : BaseLevel {
@@ -22,9 +21,6 @@ namespace WaveTap {
 
 
 		// Getters (Private)
-//		public bool IsTouchingNextBar() {
-//			return Mathf.Abs(PosY-NextBar.PosY) <= Radius;
-//		}
 		private bool AreAllBarsDone() {
 			foreach (Bar bar in bars) {
 				if (!bar.IsDone) { return false; }
@@ -32,23 +28,11 @@ namespace WaveTap {
 			return true;
 		}
 		// Getters (Public)
-//		public Player Player { get { return player; } }
-//		public List<Bar> Bars { get { return bars; } }
+		public Player Player { get { return player; } }
 		public RectTransform rt_GameComponents { get { return rt_gameComponents; } }
-//		public Bar NextBar {
-//			get {
-//				if (nextBarIndex<0 || nextBarIndex>=bars.Count) { return null; } // Index outta bounds? Return null.
-//				return bars[nextBarIndex];
-//			}
-		//		}
 		public bool IsPlayerTouchingABar() {
 			return player.IsTouchingABar();
 		}
-//		public List<Bar> GetBarsInOrder(int dir) {
-//			// TODO: Make sure the list of bars is in order by y position when we add all of them!
-//			if (dir>0) { return new List<Bar>(bars); }
-//			return new List<Bar>(bars).Reverse();
-//		}
 
 
 
@@ -153,12 +137,6 @@ namespace WaveTap {
 					else if (s.StartsWith("bar")) {
 						AddBarFromString(s);
 					}
-//					switch (s) {
-//					case "player":
-//						playerData = GetPlayerDataFromString(s); break;
-//					case "bar":
-//						AddBarFromString(s); break;
-//					}
 				}
 				// Finally, make Player from either our default, or what the Level string specified.
 				MakePlayer(playerData);
@@ -173,15 +151,14 @@ namespace WaveTap {
 			string[] properties = fullLine.Split(';');
 			for (int i=0; i<properties.Length; i++) {
 				string s = properties[i].TrimStart();
-				if (s.StartsWith("startingLoc=")) {
-					data.startingLoc = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
-				}
-				else if (s.StartsWith("posYStart=")) {
-					data.posYStart = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
-				}
-				else if (s.StartsWith("posYEnd=")) {
-					data.posYEnd = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
-				}
+				//if (s.StartsWith("startingLoc=")) {
+					//data.startingLoc = TextUtils.ParseInt(s.Substring(s.IndexOf('=')+1));
+                //} else
+                if (s.StartsWith("range=")) { // Note: Range is stored as a Vector2 for more readable levels. The vector's converted to the separate start/end pos values.
+                    Vector2 range = TextUtils.GetVector2FromStringNoParens(s.Substring(s.IndexOf('=')+1));
+                    data.posYMax = range.x;
+                    data.posYMin = range.y;
+                }
 			}
 			return data;
 		}
@@ -204,7 +181,7 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//	Game Flow Doers
 		// ----------------------------------------------------------------
-		public void OnMissedNextBar() {
+		public void OnMissedBar() {
 			gameController.OnMissedNextBar();
 		}
 		public void PlayerKnockBarsTouching() {

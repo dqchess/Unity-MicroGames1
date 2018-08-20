@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace WaveTap {
-	public enum GameStates { Playing, Lost, Won }
+	//public enum GameStates { Playing, Lost, Won }
 	public enum LoseReasons { Undefined, TapEarly, MissedTap }
 
 	public class GameController : BaseLevelGameController {
@@ -91,6 +91,7 @@ namespace WaveTap {
 		override protected void OnTapScreen() {
 			if (Time.timeScale == 0f) { return; } // Paused? Ignore input.
 			if (!IsGameStatePlaying) { return; } // Not playing? Ignore input.
+            if (level.Player.IsFrozen) { return; } // Player's frozen? Okay, ignore input.
 
 			if (level.IsPlayerTouchingABar()) {
 				level.PlayerKnockBarsTouching();

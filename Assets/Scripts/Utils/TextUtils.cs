@@ -113,8 +113,11 @@ public class TextUtils {
 		Rect returnRect = new Rect (TextUtils.ParseFloat (xString),TextUtils.ParseFloat (yString), TextUtils.ParseFloat (wString),TextUtils.ParseFloat (hString));
 		return returnRect;
 	}
-    /// This function parses a string AS FORMATTED by Vector2's ToString() function.
+    /// This function parses a string AS FORMATTED by Vector2's ToString() function (e.g. "(10.0, -22.0)").
     static public Vector2 GetVector2FromString (string str) {
+        //// Remove parenthesis.
+        //str = str.Remove(0, 1);
+        //str = str.Remove(str.Length-1, 1);
         int indexOfComma = str.IndexOf (',');
 		string xString = str.Substring (1, (-1) + (indexOfComma));
 		string yString = str.Substring (indexOfComma+1, -(indexOfComma+1) + (str.Length-1));

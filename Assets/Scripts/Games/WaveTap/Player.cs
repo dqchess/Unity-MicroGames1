@@ -5,30 +5,37 @@ using UnityEngine.UI;
 
 namespace WaveTap {
 	public class Player : Prop {
+        // Constants
+        private readonly Color bodyColorNeutral = new Color(0/255f, 214/255f, 190/255f);
 		// Components
 		[SerializeField] private CircleCollider2D myCollider=null;
 		[SerializeField] private Image i_body=null;
 		// Properties
-		private float loc; // from 0 (TOP of wave) to 1 (BOTTOM of wave).
-		private float baseLocSpeed; // always positive.
+        private bool isFrozen; // TRUE while we're flashing on/off before we start moving!
+		private float baseSpeed; // always positive.
 		private float radius;
-//		private const float rangeY = 200; // how high/low we can go from center!
-		private float posYStart; // TOP of my wave.
-		private float posYEnd; // BOTTOM of my wave.
+		private float posYMax; // TOP of my wave.
+		private float posYMin; // BOTTOM of my wave.
 		private float posYWhenPassBar; // nextBar's y pos +/- my radius.
 		private int dirMoving; // Direction moving. -1 or 1.
-//		private int dirWhenPassBar; // Direction moving. -1 or 1.
 		private List<Bar> barsTouching; // 99% of the time will have ZERO or ONE element. Added/removed from by OnTriggerEnter/Exit2D. We may only tap when we're touching a bar!
 		// References
 		[SerializeField] private Sprite s_bodyNormal=null;
 		[SerializeField] private Sprite s_bodyDashedOutline=null;
 
 
-		// Getters (Public)
-		public bool IsTouchingABar() { return barsTouching.Count > 0; }
-		public float Radius { get { return radius; } }
+        // Getters (Public)
+        public bool IsFrozen { get { return isFrozen; } }
+        public bool IsTouchingABar() { return barsTouching.Count > 0; }
+        public float PosYMax { get { return posYMax; } }
+        public float PosYMin { get { return posYMin; } }
+        public float Diameter { get { return radius*2; } }
+        public float Radius { get { return radius; } }
 		public int DirMoving { get { return dirMoving; } }
 		// Getters (Private)
+        static private float GetBaseSpeed(int _levelIndex) {
+            return 5f + _levelIndex*0.06f;
+        }
 		private Color bodyColor {
 			get { return i_body.color; }
 			set { i_body.color = value; }
@@ -48,23 +55,26 @@ namespace WaveTap {
 		public void Initialize(Level _level, Transform tf_parent, PlayerData _data) {
 			InitializeAsProp(_level, tf_parent, _data);
 
-			posYStart = _data.posYStart;
-			posYEnd = _data.posYEnd;
-			loc = _data.startingLoc;
+            posYMax = _data.posYMax;
+            posYMin = _data.posYMin;
 			i_body.sprite = s_bodyNormal;
-			bodyColor = new Color(0/255f, 214/255f, 190/255f);
+            bodyColor = bodyColorNeutral;
 			SetRadius(20);
-			SetDirMoving(1);
 			barsTouching = new List<Bar>();
+
+            // Start me at the top, moving down!
+            SetDirMoving(-1);
+            posY = posYMax;
 
 			// Let's goo!
 			StartCoroutine(Coroutine_StartMoving());
 		}
 
 		private IEnumerator Coroutine_StartMoving() {
-			// First, start me frozen.
-			baseLocSpeed = 0;
-			UpdatePosY();
+            // First, start me frozen.
+            isFrozen = true;
+            baseSpeed = GetBaseSpeed(LevelIndex);
+			//UpdatePosY();
 			// Flash me that I'm ready to roar!
 			for (int i=0; i<4; i++) {
 				bodyColorAlpha = 0.12f;
@@ -74,7 +84,7 @@ namespace WaveTap {
 			}
 
 			// Rooooar!
-			baseLocSpeed = 0.008f + LevelIndex*0.00012f;
+            isFrozen = false;
 		}
 
 
@@ -83,8 +93,7 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		private void SetRadius(float _radius) {
 			radius = _radius;
-			float diameter = radius*2;
-			i_body.rectTransform.sizeDelta = new Vector2(diameter, diameter);
+			i_body.rectTransform.sizeDelta = new Vector2(Diameter, Diameter);
 			myCollider.radius = radius;
 		}
 		private void TurnAround() {
@@ -94,13 +103,10 @@ namespace WaveTap {
 			dirMoving = _dirMoving;
 		}
 		public void RapBarsTouching() {
-			foreach (Bar bar in barsTouching) {
-				RapBar(bar);
-			}
+			foreach (Bar bar in barsTouching) { RapBar(bar); }
 		}
 		private void RapBar(Bar bar) {
 			bar.RapMe();
-
 		}
 
 
@@ -123,31 +129,27 @@ namespace WaveTap {
 			bar.DidRapDuringContact = false; // Set to false so we can set to true when we rap before we lose contact!
 		}
 		private void OnTriggerExitBar(Bar bar) {
-			// Snap, did we NOT rap it in time? Then lose!
+			// Snap, did we NOT rap it in time? Then we lose!
 			if (!bar.DidRapDuringContact) {
-				level.OnMissedNextBar();
-			}
-			bar.DidRapDuringContact = false; // Clear this out for cleanliness.
+                bar.OnMissMe();
+                level.OnMissedBar();
+            }
+            bar.DidRapDuringContact = false; // Clear this out for cleanliness.
 			barsTouching.Remove(bar);
 		}
 
 
 		public void OnWinLevel() {
 			// Stop moving and turn green!
-			baseLocSpeed = 0;
+            isFrozen = true;
 			bodyColor = Color.green;
 		}
 		public void OnLoseLevel() {
-			// Stop moving and turn red!
-			baseLocSpeed = 0;
+            // Stop moving and turn red!
+            isFrozen = true;
 			i_body.sprite = s_bodyDashedOutline;
 			bodyColor = new Color(1f, 0.1f, 0f);
 		}
-//		public void OnSetNextBar(bool isNextBarInSameDir) {
-////			bool  = NextBarIndex==0;
-//			dirWhenPassBar = dirMoving * (isNextBarInSameDir?1:-1);
-//			posYWhenPassBar = NextBarY - radius*dirWhenPassBar;
-//		}
 
 
 
@@ -157,31 +159,21 @@ namespace WaveTap {
 		private void Update() {
 			if (Time.timeScale == 0) { return; } // No time? No dice.
 
-			AdvanceLoc();
-			ApplyLocBounds();
-//			CheckIfPassedBar();
-			UpdatePosY();
+			AdvancePosY();
+            ApplyBounds();
 		}
-		private void AdvanceLoc() {
-			float locSpeed = baseLocSpeed * dirMoving;
-			loc += locSpeed * Time.timeScale;
+        private void AdvancePosY() {
+            if (isFrozen) { return; } // Frozen? Do nada.
+            float speed = baseSpeed * dirMoving;
+			posY += speed * Time.timeScale;
 		}
-		private void ApplyLocBounds() {
-			if (dirMoving>0 && loc>=1) { TurnAround(); }
-			else if (dirMoving<0 && loc<=0) { TurnAround(); }
+		private void ApplyBounds() {
+			if (dirMoving>0 && posY>=posYMax) { TurnAround(); }
+			else if (dirMoving<0 && posY<=posYMin) { TurnAround(); }
 		}
-//		private void CheckIfPassedBar() {
-////			if (didHitBar) { return; } // Don't check if we just hit it.
-//			if (!level.IsGameStatePlaying) { return; } // If we're not playing, do nothing.
-//
-//			if ((dirWhenPassBar>0 && dirMoving>0 && posY<posYWhenPassBar)
-//			|| (dirWhenPassBar<0 && dirMoving<0 && posY>posYWhenPassBar)) {
-//				OnMissedNextBar();
-//			}
-//		}
-		private void UpdatePosY() {
-			posY = Mathf.Lerp(posYStart, posYEnd, loc);
-		}
+		//private void UpdatePosY() {
+		//	posY = Mathf.Lerp(posYStart, posYEnd, loc);
+		//}
 
 
 

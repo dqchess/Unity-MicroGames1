@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 namespace WaveTap {
 	public class LevelUI : MonoBehaviour {
-		// Components
+        // Components
+        [SerializeField] private Image i_playerBounds=null; // the "backing" of the level, essentially.
 		[SerializeField] private TextMeshProUGUI t_levelName=null;
 		[SerializeField] public  TextMeshProUGUI t_moreLevelsComingSoon=null;
 		[SerializeField] private ParticleSystem ps_winLevelA=null;
@@ -25,6 +26,12 @@ namespace WaveTap {
 		public void Initialize() {
 			// LevelIndex
 			t_levelName.text = "LEVEL " + levelIndex.ToString();
+            // PlayerBounds image. Make top/bottom fit flush to where Player turns around!
+            Player player = myLevel.Player;
+            float top = player.PosYMax + player.Radius;
+            float bottom = player.PosYMin - player.Radius;
+            i_playerBounds.rectTransform.sizeDelta = new Vector2(600, top-bottom);
+            i_playerBounds.rectTransform.anchoredPosition = new Vector2(0, (top+bottom)*0.5f); // put its center at the midpoint between top and bottom bounds.
 		}
 
 

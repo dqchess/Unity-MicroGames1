@@ -1,14 +1,24 @@
 
 
 LEVEL - One
-player loc=0; range=300,-300
+player range=300,-300
 bar 0,0; numKnocksReq=1
 
 LEVEL - Knock one twice
-player loc=0; range=300,-300
+player range=300,-300
 bar 0,0; numKnocksReq=2
 
 LEVEL - Knock two once
+bar 0,-100; numKnocksReq=1
+bar 0, 100; numKnocksReq=1
+
+LEVEL - TEST
+player range=200,-500
+bar 0,-100; numKnocksReq=1
+bar 0, 100; numKnocksReq=1
+
+LEVEL - TEST
+player range=0,10
 bar 0,-100; numKnocksReq=1
 bar 0, 100; numKnocksReq=1
 

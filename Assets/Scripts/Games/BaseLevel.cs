@@ -5,7 +5,7 @@ using UnityEngine;
 /** All Level.cs classes should extend this. So we can have tons of level-based games without having to copy lots of code! */
 public abstract class BaseLevel : MonoBehaviour {
 	// Properties
-	public bool IsAnimating; // set this to true if we're animating in OR out.
+	[HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
 	private int levelIndex;
 	// Components
 	[SerializeField] protected RectTransform myRectTransform=null;
