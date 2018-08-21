@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class LevelGameUI : MonoBehaviour {
 	// Components
 	[SerializeField] private Button b_retry=null;
-	//[SerializeField] private Text t_levelName=null;
-	[SerializeField] private GameObject go_debugUI=null;
+    //[SerializeField] private Text t_levelName=null;
+    [SerializeField] private GameObject go_debugUI=null;
 	// Properties
 	private Vector2 retryButtonPosDefault;
 

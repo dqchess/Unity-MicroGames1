@@ -94,7 +94,7 @@ namespace CircleGrow {
 
             // DO animate!
             if (doAnimate) {
-                float duration = 1f;
+                float duration = 1.2f;
 
                 level.IsAnimating = true;
                 prevLevel.IsAnimating = true;

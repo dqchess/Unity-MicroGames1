@@ -12,6 +12,7 @@ namespace CircleGrow {
         [SerializeField] private Image i_barFillPossible=null;
         [SerializeField] private Image i_barFillSolidified=null;
         [SerializeField] private Image i_fullBacking=null; // the solid square image that's behind EVERYthing (gameplay AND UI)
+        [SerializeField] private LevelCompleteBanner levelCompleteBanner=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] public  TextMeshProUGUI t_moreLevelsComingSoon=null;
         [SerializeField] private TextMeshProUGUI t_score=null;
@@ -87,11 +88,12 @@ namespace CircleGrow {
                 t_score.color = new Color(244/255f, 23/255f, 80/255f);
             }
         }
-		public void OnWinLevel() {
+        public void OnWinLevel() {
+            levelCompleteBanner.AnimateIn();
 			// Emit winning burst!!
 			ps_winLevelA.Emit(40);
 			ps_winLevelB.Emit(8);
-		}
+        }
 
 
 
