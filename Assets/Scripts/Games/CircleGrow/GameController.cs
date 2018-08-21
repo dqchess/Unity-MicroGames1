@@ -9,7 +9,8 @@ namespace CircleGrow {
     public class GameController : BaseLevelGameController {
         // Overrideables
         override public string MyGameName() { return GameNames.CircleGrow; }
-		// Components
+        // Components
+        [SerializeField] private FUEController fueController=null;
 		private Level level; // MY game-specific Level class.
         // Properties
         private LoseReasons loseReason;
@@ -17,6 +18,8 @@ namespace CircleGrow {
         private int scoreSolidified; // ONLY includes Growers that've been solidified.
         
         // Getters (Public)
+        public bool IsFUEGameplayFrozen { get { return fueController.IsGameplayFrozen; } }
+        public int ScorePossible { get { return scorePossible; } }
         //public Rect r_LevelBounds { get { return r_levelBounds; } }
 
 
@@ -52,6 +55,7 @@ namespace CircleGrow {
             base.LoseLevel();
             // Tell people!
             level.OnLoseLevel(loseReason);
+            fueController.OnSetGameOver(loseReason);
         }
         override protected void WinLevel() {
             base.WinLevel();
@@ -113,6 +117,9 @@ namespace CircleGrow {
                 }
             }
 
+            // Tell things!
+            fueController.OnStartLevel(level);
+
             yield return null;
         }
 
@@ -137,9 +144,12 @@ namespace CircleGrow {
             // Paused? Ignore input.
             if (Time.timeScale == 0f) { return; }
 
-            if (IsGameStatePlaying) {
+            if (IsGameStatePlaying && !fueController.DoIgnoreTaps) {
 				level.OnTapScreen();
             }
+
+            // Tell FUE!
+            fueController.OnTapScreen();
         }
 
 

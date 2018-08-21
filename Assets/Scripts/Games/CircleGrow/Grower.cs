@@ -75,15 +75,12 @@ namespace CircleGrow {
         override public Prop SetSize(Vector2 _size) { // Override this (again) so we can update my collider sizes! :)
             base.SetSize(_size);
             // Update text!
-            t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
+            UpdateMyValueText();
             return this;
         }
-        //virtual protected void SetRadius(float _radius) { // Override this so we can update my collider sizes! :)
-        //    radius = _radius;
-        //    myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
-        //    // Update text!
-        //    t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
-        //}
+        private void UpdateMyValueText() {
+            t_scoreValue.text = TextUtils.AddCommas(ScoreValue());
+        }
 
 
         private void SetCurrentState(GrowerStates _state) {
@@ -105,8 +102,9 @@ namespace CircleGrow {
 		}
 		public void Solidify() {
 			bodyColor = color_solid;
-			SetCurrentState(GrowerStates.Solidified);
-		}
+            SetCurrentState(GrowerStates.Solidified);
+            UpdateMyValueText(); // Make sure my value is accurate when I'm solidified.
+        }
 
 
 		// ----------------------------------------------------------------
@@ -141,8 +139,10 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		override protected void Update() {
 			base.Update();
+
             if (Time.timeScale == 0) { return; } // No time? Do nothin'.
             if (myLevel.IsAnimating || !myLevel.IsGameStatePlaying) { return; } // Animating in? Don't move.
+            if (myLevel.IsFUEGameplayFrozen) { return; } // FUE's frozen gameplay? Don't move.
 
 			UpdatePreGrowingFlash();
 			UpdateGrowing();

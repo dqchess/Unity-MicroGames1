@@ -26,6 +26,7 @@ namespace CircleGrow {
 
 
         // Getters (Public)
+        public bool IsFUEGameplayFrozen { get { return gameController.IsFUEGameplayFrozen; } }
         public int ScoreRequired { get { return scoreRequired; } }
         public List<Grower> Growers { get { return growers; } }
 		public RectTransform rt_GameComponents { get { return rt_gameComponents; } }

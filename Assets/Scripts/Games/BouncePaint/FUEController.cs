@@ -15,10 +15,10 @@ namespace BouncePaint {
         private int currentStep;
         private int levelIndex;
         // References
-        [SerializeField] private GameController gameController;
-        [SerializeField] private TextMeshProUGUI t_instructions;
-        [SerializeField] private TextMeshProUGUI t_lossFeedback;
-        [SerializeField] private GameObject go_howToPlay;
+        [SerializeField] private GameController gameController=null;
+        [SerializeField] private TextMeshProUGUI t_instructions=null;
+        [SerializeField] private TextMeshProUGUI t_lossFeedback=null;
+        [SerializeField] private GameObject go_howToPlay=null;
         private Level level;
         private Player player; // only ever refers to the FIRST ball.
 
@@ -51,7 +51,7 @@ namespace BouncePaint {
             }
 
             // Whaddawe gonna do this level??
-            if (levelIndex == 1) {
+            if (levelIndex == LEVEL_1) {
                 isActive = true;
                 if (!didSeeHowToPlay) {
                     isPlayerFrozen = true;
