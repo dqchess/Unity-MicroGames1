@@ -1022,6 +1022,16 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnRetryButtonClick
       objectReference: {fileID: 0}
+    - target: {fileID: 114923549400396190, guid: 3f999a3705bd4934aa8461393805d8ac,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1724769481}
+    - target: {fileID: 114923549400396190, guid: 3f999a3705bd4934aa8461393805d8ac,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OpenScene_LevelSelect
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3f999a3705bd4934aa8461393805d8ac, type: 2}
   m_IsPrefabParent: 0
