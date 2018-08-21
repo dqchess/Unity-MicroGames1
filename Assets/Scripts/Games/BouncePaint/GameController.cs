@@ -36,48 +36,6 @@ namespace BouncePaint {
 
 
 		// ----------------------------------------------------------------
-		//  Awake
-		// ----------------------------------------------------------------
-		private void Awake() {
-			level = baseLevel as Level;
-		}
-
-
-		// ----------------------------------------------------------------
-		//  Game Events
-		// ----------------------------------------------------------------
-        public void OnPlayerBounceOnBlock(Player player, bool didPaintBlock) {
-            // Tell people!
-            sfxController.OnPlayerBounceOnBlock();
-            // We DID paint it!
-            if (didPaintBlock) {
-                // We're a champion?? Win!
-				if (IsGameStatePlaying && IsEveryBlockSatisfied()) {
-					WinningPlayer = player; // Assign the winning Player!
-                    WinLevel();
-                }
-                // Tell people!
-                fueController.OnPlayerPaintBlock();
-            }
-            //foreach (Block block in blocks) {
-            //    block.OnPlayerPaintedABlock();
-            //}
-		}
-		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
-			// When the Player knows who it's going to, tell all Blocks to update their visuals!
-			foreach (Block b in Blocks) {
-				b.SetIntentionVisuals(b == blockHeadingTo);
-			}
-		}
-        public void OnPlayerDie(LoseReasons reason) {
-			if (IsGameStatePlaying) {
-				loseReason = reason;
-				LoseLevel();
-            }
-		}
-
-
-		// ----------------------------------------------------------------
 		//  Game Flow Events
 		// ----------------------------------------------------------------
 		override public void LoseLevel() {
@@ -173,7 +131,41 @@ namespace BouncePaint {
                 yield return null;
             }
             Time.timeScale = 1f;
-        }
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Game Events
+		// ----------------------------------------------------------------
+		public void OnPlayerBounceOnBlock(Player player, bool didPaintBlock) {
+			// Tell people!
+			sfxController.OnPlayerBounceOnBlock();
+			// We DID paint it!
+			if (didPaintBlock) {
+				// We're a champion?? Win!
+				if (IsGameStatePlaying && IsEveryBlockSatisfied()) {
+					WinningPlayer = player; // Assign the winning Player!
+					WinLevel();
+				}
+				// Tell people!
+				fueController.OnPlayerPaintBlock();
+			}
+			//foreach (Block block in blocks) {
+			//    block.OnPlayerPaintedABlock();
+			//}
+		}
+		public void OnPlayerSetBlockHeadingTo(Block blockHeadingTo) {
+			// When the Player knows who it's going to, tell all Blocks to update their visuals!
+			foreach (Block b in Blocks) {
+				b.SetIntentionVisuals(b == blockHeadingTo);
+			}
+		}
+		public void OnPlayerDie(LoseReasons reason) {
+			if (IsGameStatePlaying) {
+				loseReason = reason;
+				LoseLevel();
+			}
+		}
 
 
 

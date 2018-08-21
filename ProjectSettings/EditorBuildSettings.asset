@@ -4,6 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
+<<<<<<< HEAD
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/BouncePaintMainMenu.unity
@@ -15,3 +16,6 @@ EditorBuildSettings:
     path: Assets/Scenes/BouncePaint.unity
     guid: 452d95e1dbd2f4892898aec23375ef1e
   m_configObjects: {}
+=======
+  m_Scenes: []
+>>>>>>> 7c3854f7066de87c44991ec10eba1ea717e20b75

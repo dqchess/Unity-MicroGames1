@@ -141,6 +141,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Making Level!
         // ----------------------------------------------------------------
+		// NOTE: THIS SHOULD BE moved into our own Levels.txt file for consistency!
 		override protected void AddLevelComponents() {
             DestroyLevelComponents(); // Just in case.
             blocks = new List<Block>();

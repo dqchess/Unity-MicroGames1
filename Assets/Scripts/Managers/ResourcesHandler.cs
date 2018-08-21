@@ -27,8 +27,12 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject extrudeMatch_boardController;
 	[SerializeField] public GameObject extrudeMatch_tileView;
 
-    [SerializeField] public GameObject letterClear_letterTile;
-    [SerializeField] public GameObject letterClear_wordTile;
+	[SerializeField] public GameObject letterClear_letterTile;
+	[SerializeField] public GameObject letterClear_wordTile;
+
+	[SerializeField] public GameObject waveTap_level;
+	[SerializeField] public GameObject waveTap_bar;
+	[SerializeField] public GameObject waveTap_player;
 
 
 	// Instance

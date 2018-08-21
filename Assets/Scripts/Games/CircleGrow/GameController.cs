@@ -9,37 +9,15 @@ namespace CircleGrow {
     public class GameController : BaseLevelGameController {
         // Overrideables
         override public string MyGameName() { return GameNames.CircleGrow; }
-        // Components
-        [SerializeField] private LevelLoader levelLoader;
-        private Level level;
+		// Components
+		private Level level; // MY game-specific Level class.
         // Properties
         private LoseReasons loseReason;
         private int scorePossible; // includes the Grower that's currently growing!
         private int scoreSolidified; // ONLY includes Growers that've been solidified.
         
-
-
         // Getters (Public)
-        public LevelLoader LevelLoader { get { return levelLoader; } }
         //public Rect r_LevelBounds { get { return r_levelBounds; } }
-
-
-        // ----------------------------------------------------------------
-        //  Start
-        // ----------------------------------------------------------------
-        override protected void Start () {
-            //levelBounds = new Rect(-300,-300, 600,600);
-            //i_levelBounds.anchoredPosition = levelBounds.position;
-            //i_levelBounds.sizeDelta = levelBounds.size;
-//          r_levelBounds = i_levelBounds.rectTransform.rect;
-
-            // Initialize LevelLoader!
-            levelLoader.ReloadLevelsFile();
-
-            base.Start();
-        }
-
-
 
 
         // ----------------------------------------------------------------
@@ -57,8 +35,6 @@ namespace CircleGrow {
             // Update the UI!
             level.UpdateScoreUI(scorePossible, scoreSolidified);
         }
-
-
 
 
 
@@ -180,18 +156,3 @@ namespace CircleGrow {
 
     }
 }
-
-/*
-        private void SolidifyOscillatingCircles() {
-            // Make 'em stop oscillating!
-            for (int i=circles.Count-1; i>=0; --i) {
-                if (circles[i].IsOscillating) {
-                    SolidifyCircle(circles[i]);
-                }
-            }
-            // If we didn't lose, add a new circle!
-            if (IsGameStatePlaying) {
-                AddNewCircle();
-            }
-        }
-        */

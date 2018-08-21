@@ -12,6 +12,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 	private float timeWhenLevelEnded;
 	// Components
 	protected BaseLevel baseLevel;
+	private LevelLoader levelLoader; // this is added in Start! :)
 	// References
 	[SerializeField] protected Canvas canvas=null;
 	[SerializeField] private LevelGameUI levelGameUI=null; // All BaseLevelGames come with a boilerplate LevelGameUI. Retry, Quit, and Debug buttons.
@@ -19,6 +20,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 	// Getters (Public)
 	public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
 	public Canvas Canvas { get { return canvas; } }
+	public LevelLoader LevelLoader { get { return levelLoader; } }
 	// Getters (Protected)
 	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
 	protected int LevelIndex { get { return baseLevel.LevelIndex; } }
@@ -39,6 +41,10 @@ abstract public class BaseLevelGameController : BaseGameController {
 	//  Start
 	// ----------------------------------------------------------------
 	override protected void Start () {
+		// Initialize LevelLoader!
+		levelLoader = gameObject.AddComponent<LevelLoader>();
+		levelLoader.ReloadLevelsFile(MyGameName());
+
 		base.Start();
 
 		SetCurrentLevel(SaveStorage.GetInt(SaveKeys.LastLevelPlayed(MyGameName()), 1));
