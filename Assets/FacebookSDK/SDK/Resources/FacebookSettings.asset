@@ -15,9 +15,9 @@ MonoBehaviour:
   clientTokens:
   - 
   appIds:
-  - 266534317437388
+  - 2167674946812951
   appLabels:
-  - App Name
+  - Circle Pop
   cookie: 1
   logging: 1
   status: 1
