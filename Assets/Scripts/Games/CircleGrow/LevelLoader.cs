@@ -12,7 +12,14 @@ public class LevelLoader : MonoBehaviour {
 
 	// ----------------------------------------------------------------
 	//  Getters
-	// ----------------------------------------------------------------
+    // ----------------------------------------------------------------
+    static public string LevelsFilePath(string gameName, bool useFullPath=false) {
+        string returnPath = "Games/" + gameName + "/Levels";
+        if (useFullPath) {
+            returnPath = Application.dataPath + "/Assets/Resources/" + returnPath;
+        }
+        return returnPath;
+    }
 	public string GetLevelString(int levelIndex) {
 		if (levelIndex<0 || levelIndex>=levelStrings.Length) {
 			Debug.LogError("LevelIndex out of range: " + levelIndex);
@@ -25,11 +32,42 @@ public class LevelLoader : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Loading
 	// ----------------------------------------------------------------
-	public void ReloadLevelsFile(string gameName) {
-        levelStrings = TextUtils.GetStringArrayFromStreamingAssetsTextFile(gameName + "/Levels.txt");
+    public void ReloadLevelsFile(string gameName) {
+        string localPath = LevelsFilePath(gameName);
+        TextAsset textAsset = Resources.Load<TextAsset>(localPath);
+
+        if (textAsset != null) {
+            string levelsFile = textAsset.text;
+            levelsFile = TextUtils.RemoveCommentedLines(levelsFile);
+            levelStrings = levelsFile.Split(levelHeader, System.StringSplitOptions.None);
+        }
+        else {
+            levelStrings = new string[0];
+            Debug.LogError("Levels TextAsset not found! Resources local path: \"" + localPath + "\"");
+        }
+
+        //string filePath = Application.streamingAssetsPath + "/" + gameName + "/Levels.txt";
+        //if (BetterStreamingAssets.FileExists(filePath)) {
+        //    string levelsFile = BetterStreamingAssets.ReadAllText(filePath);
+        //    levelsFile = TextUtils.RemoveCommentedLines(levelsFile);
+        //    levelStrings = levelsFile.Split(levelHeader, System.StringSplitOptions.None);
+        //}
+        //else {
+        //    levelStrings = new string[0];
+        //    Debug.LogError("Levels file not found! filePath: \"" + filePath + "\"");
+        //}
+
+        //yield return null;
+
+
+        //var www = new WWW(filePath);
+        //yield return www;
+        //if (!string.IsNullOrEmpty(www.error)) {
+        //    Debug.LogError ("Can't read file! Full path: \"" + filePath + "\"");
+        //}
+
 
 		//string filePath = Application.streamingAssetsPath + "/" + gameName + "/Levels.txt";
-
         //if (File.Exists(filePath)) {
         //    StreamReader file = File.OpenText(filePath);
         //    string levelsFile = file.ReadToEnd();

@@ -242,8 +242,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 1
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: /Users/simplemachine/Desktop/Keystore/circlepop.keystore
-  AndroidKeyaliasName: circle pop
+  AndroidKeystoreName: generic.keystore
+  AndroidKeyaliasName: password
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0

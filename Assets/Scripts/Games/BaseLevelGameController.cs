@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public enum GameStates { Playing, GameOver, PostLevel }
@@ -41,6 +42,11 @@ abstract public class BaseLevelGameController : BaseGameController {
 	//  Start
 	// ----------------------------------------------------------------
 	override protected void Start () {
+        // In the editor? Reload our levels file!
+        #if UNITY_EDITOR
+        AssetDatabase.ImportAsset(LevelLoader.LevelsFilePath(MyGameName(), true));
+        #endif
+
 		// Initialize LevelLoader!
 		levelLoader = gameObject.AddComponent<LevelLoader>();
 		levelLoader.ReloadLevelsFile(MyGameName());

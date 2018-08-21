@@ -53,19 +53,38 @@ public class TextUtils {
 	}
 
 
-	public static string[] GetStringArrayFromStreamingAssetsTextFile(string fileName) {
-		string filePath = System.IO.Path.Combine (Application.streamingAssetsPath, fileName);
-		if (System.IO.File.Exists(filePath)) {
-			StreamReader reader = new StreamReader(filePath);
-			string wholeFileString = reader.ReadToEnd();
-			reader.Close();
-			return GetStringArrayFromStringWithLineBreaks(wholeFileString);
-		}
-		else {
-			Debug.LogError("File doesn't exist! \"" + fileName + "\"");
-			return new string[0];
-		}
-	}
+
+    //public static string GetStringFromStreamingAssetsTextFile(string fileName) {
+        //return BetterStreamingAssets.ReadAllText(fileName);
+        //string filePath = Path.Combine (Application.streamingAssetsPath, fileName);
+        //// ANDROID.
+        //if (PlatformManager.IsAndroid()) {
+        //    using (WWW www = new WWW(filePath)) {
+        //        yield return www.text;
+        //    }
+
+        //    //WWW www = new WWW(filePath);
+        //    //while (!www.isDone) { }
+        //    //return www.text;
+        //}
+        //// NOT Android.
+        //else {
+        //    if (File.Exists(filePath)) {
+        //        StreamReader reader = new StreamReader(filePath);
+        //        string wholeFileString = reader.ReadToEnd();
+        //        reader.Close();
+        //        yield return wholeFileString;
+        //    }
+        //    else {
+        //        Debug.LogError("File doesn't exist! \"" + fileName + "\"");
+        //        yield return "";
+        //    }
+        //}
+    //}
+    //public static string[] GetStringArrayFromStreamingAssetsTextFile(string fileName) {
+    //    string wholeFileString = GetStringFromStreamingAssetsTextFile(fileName);
+    //    return GetStringArrayFromStringWithLineBreaks(wholeFileString);
+    //}
 	static public string[] GetStringArrayFromTextAsset (TextAsset textAsset) {
 		if (textAsset == null) { return null; } // If this file doesn't even exist, then return null.
 		return GetStringArrayFromStringWithLineBreaks (textAsset.text);
