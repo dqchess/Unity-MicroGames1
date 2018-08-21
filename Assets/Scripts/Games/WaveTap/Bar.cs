@@ -7,13 +7,13 @@ namespace WaveTap {
 	public class Bar : Prop {
         // Constants
         private const float Width = 700;
-        private const float Height = 4f;
-		// Components
-		[SerializeField] private BoxCollider2D myCollider=null;
-		[SerializeField] private Image i_body=null;
-		[SerializeField] private Text t_numKnocksLeft=null;
-		// Properties
-		private int numKnocksLeft;
+        // Components
+        [SerializeField] private BoxCollider2D myCollider=null;
+        [SerializeField] private Image i_body=null;
+        [SerializeField] private Text t_numKnocksLeft=null;
+        // Properties
+        private float height = 4f;
+        private int numKnocksLeft;
 
 		// Getters (Public)
 		public bool DidRapDuringContact { get; set; }
@@ -21,11 +21,11 @@ namespace WaveTap {
 		// Getters (Private)
 		private Color bodyColor {
 			get { return i_body.color; }
-			set { i_body.color = value; }
+            set { i_body.color = t_numKnocksLeft.color = value; }
 		}
         private static Color GetBodyColor(int _numKnocksLeft) {
             switch (_numKnocksLeft) {
-                case 0: return Color.clear;
+                case 0: return Color.green;//Color.clear;
                 case 1: return new Color(121/255f, 228/255f, 246/255f);
                 case 2: return new Color(154/255f, 212/255f, 90/255f);
                 case 3: return new Color(253/255f, 211/255f, 92/255f);
@@ -45,8 +45,8 @@ namespace WaveTap {
 
 			myRectTransform.offsetMin = myRectTransform.offsetMax = Vector2.zero;
 			myRectTransform.anchoredPosition = _data.pos;
-            i_body.rectTransform.sizeDelta = new Vector2(Width, Height);
-            myCollider.size = new Vector2(Width, Height);//myRectTransform.sizeDelta; // set my "hitbox"
+            SetBodyImageHeight(height);
+            myCollider.size = new Vector2(Width, height);//myRectTransform.sizeDelta; // set my "hitbox"
 
 			SetNumKnocksLeft(_data.numKnocksReq);
 		}
@@ -61,7 +61,13 @@ namespace WaveTap {
             bodyColor = GetBodyColor(numKnocksLeft);
             //float h = Random.Range(0f, 1f);
             //bodyColor = new ColorHSB(h, 0.8f, 1f).ToColor();
+            if (IsDone) {
+                height = 0; // When we get hit for the last time, we set our height to 0!
+            }
 		}
+        private void SetBodyImageHeight(float _imageHeight) {
+            i_body.rectTransform.sizeDelta = new Vector2(i_body.rectTransform.rect.width, _imageHeight);
+        }
 
 
 		// ----------------------------------------------------------------
@@ -70,6 +76,8 @@ namespace WaveTap {
 		public void RapMe() {
 			DidRapDuringContact = true;
 			SetNumKnocksLeft(numKnocksLeft - 1);
+            // Animate!
+            LeanTween.value(gameObject, SetBodyImageHeight, height+16, height, 0.3f);
 		}
 		public void OnMissMe() {
 			bodyColor = Color.red;
