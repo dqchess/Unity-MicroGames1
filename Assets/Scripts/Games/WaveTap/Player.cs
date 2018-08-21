@@ -76,7 +76,7 @@ namespace WaveTap {
             baseSpeed = GetBaseSpeed(LevelIndex);
 			//UpdatePosY();
 			// Flash me that I'm ready to roar!
-			for (int i=0; i<4; i++) {
+			for (int i=0; i<3; i++) {
 				bodyColorAlpha = 0.12f;
 				yield return new WaitForSeconds(0.12f);
 				bodyColorAlpha = 1f;

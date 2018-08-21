@@ -26,20 +26,22 @@ public class LevelLoader : MonoBehaviour {
 	//  Loading
 	// ----------------------------------------------------------------
 	public void ReloadLevelsFile(string gameName) {
-		string filePath = Application.streamingAssetsPath + "/" + gameName + "/Levels.txt";
+        levelStrings = TextUtils.GetStringArrayFromStreamingAssetsTextFile(gameName + "/Levels.txt");
 
-        if (File.Exists(filePath)) {
-            StreamReader file = File.OpenText(filePath);
-            string levelsFile = file.ReadToEnd();
-            file.Close();
-            levelsFile = TextUtils.RemoveCommentedLines(levelsFile);
-            levelStrings = levelsFile.Split(levelHeader, System.StringSplitOptions.None);
-        }
-        else {
-            levelStrings = new string[0];
-            Debug.LogError("Levels file not found! filePath: \"" + filePath + "\"");
-        }
-	}
+		//string filePath = Application.streamingAssetsPath + "/" + gameName + "/Levels.txt";
+
+        //if (File.Exists(filePath)) {
+        //    StreamReader file = File.OpenText(filePath);
+        //    string levelsFile = file.ReadToEnd();
+        //    file.Close();
+        //    levelsFile = TextUtils.RemoveCommentedLines(levelsFile);
+        //    levelStrings = levelsFile.Split(levelHeader, System.StringSplitOptions.None);
+        //}
+        //else {
+        //    levelStrings = new string[0];
+        //    Debug.LogError("Levels file not found! filePath: \"" + filePath + "\"");
+        //}
+    }
 
 
 
