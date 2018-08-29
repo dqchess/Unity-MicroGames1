@@ -11,15 +11,21 @@ public class EventManager {
 	public delegate void AudioClipAction (AudioClip _clip);
 
 	public event NoParamAction ScreenSizeChangedEvent;
+	public event NoParamAction RetryButtonClickEvent;
+	public event NoParamAction QuitGameplayButtonClickEvent;
 //	public event BoolAction SetIsLevelCompletedEvent;
 	public event AudioClipAction TriggerAudioClipEvent;
+	public event IntAction LevelJumpButtonClickEvent;
 
 
 	// Events
 	public void OnScreenSizeChanged () { if (ScreenSizeChangedEvent!=null) { ScreenSizeChangedEvent (); } }
 
-//	public void OnSetIsLevelCompleted (bool isLevelComplete) { if (SetIsLevelCompletedEvent!=null) { SetIsLevelCompletedEvent (isLevelComplete); } }
+	//	public void OnSetIsLevelCompleted (bool isLevelComplete) { if (SetIsLevelCompletedEvent!=null) { SetIsLevelCompletedEvent (isLevelComplete); } }
 
+	public void OnLevelJumpButtonClick(int levelIndexChange) { if (LevelJumpButtonClickEvent!=null) { LevelJumpButtonClickEvent (levelIndexChange); } }
+	public void OnRetryButtonClick() { if (RetryButtonClickEvent!=null) { RetryButtonClickEvent(); } }
+	public void OnQuitGameplayButtonClick() { if (QuitGameplayButtonClickEvent!=null) { QuitGameplayButtonClickEvent(); } }
 
 	public void TriggerAudioClip (AudioClip _clip) {if (TriggerAudioClipEvent != null) {TriggerAudioClipEvent (_clip);}}
 

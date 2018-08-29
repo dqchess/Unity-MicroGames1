@@ -14,12 +14,18 @@ namespace CircleGrow {
 		static private readonly Color color_pregrowingA = color_sleeping;
 		static private readonly Color color_pregrowingB = new Color(100/255f, 0/255f, 165/255f);
         static public  readonly Color color_growing = new Color(250/255f, 200/255f, 110/255f);
-		static public  readonly Color color_solid = new Color(37/255f, 166/255f, 170/255f);
 		static public  readonly Color color_illegal = new Color(255/255f, 132/255f, 118/255f);
+		static public Color color_solid(int levelIndex) {
+			if (levelIndex < 10) { return new Color(37/255f, 166/255f, 170/255f); }
+			else if (levelIndex < 20) { return new Color(37/255f, 170/255f, 121/255f); }
+			else if (levelIndex < 30) { return new Color(130/255f, 173/255f, 73/255f); }
+			else if (levelIndex < 40) { return new Color(138/255f, 86/255f, 168/255f); }
+			else { return new Color(37/255f, 166/255f, 170/255f); }
+		}
 		// Components
         [SerializeField] private Text t_scoreValue=null;
         // Properties
-		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
+//		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
         private bool doMoveWhenSolid=false; // MEH. Makes things inconsistent. Though we can have cooler layouts.
         private GrowerStates currentState;
         private float growSpeed;
@@ -101,7 +107,7 @@ namespace CircleGrow {
 			SetCurrentState(GrowerStates.Growing);
 		}
 		public void Solidify() {
-			bodyColor = color_solid;
+			bodyColor = color_solid(myLevel.LevelIndex);
             SetCurrentState(GrowerStates.Solidified);
             UpdateMyValueText(); // Make sure my value is accurate when I'm solidified.
         }
@@ -128,7 +134,7 @@ namespace CircleGrow {
 			}
 		}
 		override public void OnIllegalOverlap() {
-			didIllegalOverlap = true;
+//			didIllegalOverlap = true;
 			SetCurrentState(GrowerStates.Solidified);
 			bodyColor = color_illegal;
 		}

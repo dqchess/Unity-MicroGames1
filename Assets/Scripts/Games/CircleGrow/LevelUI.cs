@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace CircleGrow {
     public class LevelUI : MonoBehaviour {
+		// Constants
+		private readonly Color color_red = new Color(244/255f, 23/255f, 80/255f);
+		private readonly Color color_green = Color.green;
         // Components
         [SerializeField] private GameObject go_scoreBar=null;
         //[SerializeField] private Image i_barBorder=null;
@@ -43,7 +46,7 @@ namespace CircleGrow {
             //i_barFillPossible.color = barColor_possible;
             //i_barFillSolidified.color = barColor_solid;
             //t_scoreRequired.color = barColor_solid;
-            i_fullBacking.color = Grower.color_solid;
+			i_fullBacking.color = Grower.color_solid(myLevel.LevelIndex);
 			float canvasHeight = myLevel.Canvas.GetComponent<RectTransform>().rect.height;
 			i_fullBacking.rectTransform.sizeDelta = new Vector2(i_fullBacking.rectTransform.rect.width, canvasHeight); // Fit full-backing flush with the screen.
 
@@ -71,12 +74,18 @@ namespace CircleGrow {
             i_barFillSolidified.rectTransform.sizeDelta = new Vector2(fillSolidifiedWidth, scoreBarSize.y);
             // Update color!
             if (scorePossible >= scoreRequired) { // We've potentially won already!!
-                t_score.color = t_scoreRequired.color = Color.green;
+                t_score.color = t_scoreRequired.color = color_green;
+				SetBarFillColor(color_green);
             }
             else { // Haven't won yet...!
-                t_score.color = t_scoreRequired.color = Color.white;
+				t_score.color = t_scoreRequired.color = Color.white;
+				SetBarFillColor(Grower.color_growing);
             }
         }
+		/** NOTE! We are using ONE color for both bars!! Disabled multi-colors for now. */
+		private void SetBarFillColor(Color color) {
+			i_barFillPossible.color = i_barFillSolidified.color = color;
+		}
 
 
         // ----------------------------------------------------------------
@@ -85,7 +94,8 @@ namespace CircleGrow {
         public void OnLoseLevel(LoseReasons loseReason) {
             // Lost because not high enough score? Make score text red!
             if (loseReason == LoseReasons.InsufficientScore) {
-                t_score.color = new Color(244/255f, 23/255f, 80/255f);
+				t_score.color = color_red;
+				SetBarFillColor(Grower.color_illegal);
             }
         }
         public void OnWinLevel() {

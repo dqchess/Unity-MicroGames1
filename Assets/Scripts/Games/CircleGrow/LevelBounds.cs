@@ -23,7 +23,7 @@ namespace CircleGrow {
         //  Initialize
         // ----------------------------------------------------------------
         public void Initialize() {
-            i_border.color = Grower.color_solid;
+			i_border.color = Grower.color_solid(myLevel.LevelIndex);
             r_bounds = new Rect();
 			// Add walls!
 			GameObject prefabGO = ResourcesHandler.Instance.circleGrow_wallRect;

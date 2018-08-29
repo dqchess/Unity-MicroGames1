@@ -10,6 +10,7 @@ namespace CircleGrow {
         [SerializeField] protected RectTransform myRectTransform=null;
         protected ImageLine il_movePathLine; // for MOVING Props.
 		// Properties
+		private bool doHideMovePath=false; // for MOVING Props. Set to true if we DON'T want to show the path (useful if it's only partially on screen and looks weird if we do show it).
 		private float moveSpeed=1f; // for MOVING Props.
 		private float moveOscVal; // for MOVING Props.
 		private float rotateSpeed=0f; // for ROTATING Props.
@@ -59,6 +60,7 @@ namespace CircleGrow {
 
 			GameUtils.ParentAndReset(this.gameObject, tf_parent);
 
+			doHideMovePath = data.doHideMovePath;
             myShape = data.shape;
             SetPoses(data.pos.x, data.pos.y);
             SetMoveSpeed(data.moveSpeed, data.moveLocOffset);
@@ -121,7 +123,7 @@ namespace CircleGrow {
 
         private void UpdateMovePathLine() {
             // We SHOULD have a MovePathLine! Update (and/or add) it!
-            if (posA != posB) {
+			if (posA != posB && !doHideMovePath) {
                 if (il_movePathLine == null) { AddMovePathLine(); }
                 il_movePathLine.StartPos = posA;
                 il_movePathLine.EndPos = posB;

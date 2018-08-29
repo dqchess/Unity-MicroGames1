@@ -9,6 +9,7 @@ namespace CircleGrow {
         public float rotation=0;
         public float rotateSpeed=0;
         public Vector2 posB=Vector2.positiveInfinity; // default to unused.
+		public bool doHideMovePath=false; // only affects MOVING Props. Set to TRUE if we DON'T want to show the path (useful if it's only partially on screen and looks weird if we do show it).
         public float moveSpeed=1;
         public float moveLocOffset=0;
     }

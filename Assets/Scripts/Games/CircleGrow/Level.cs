@@ -45,10 +45,18 @@ namespace CircleGrow {
 		// ----------------------------------------------------------------
 		public void Initialize(GameController _gameController, Transform tf_parent, int _levelIndex) {
 			gameController = _gameController;
+			BaseInitialize(gameController, tf_parent, _levelIndex);
 
 			bounds.Initialize();
-			BaseInitialize(gameController, tf_parent, _levelIndex);
-            levelUI.Initialize();
+			AddLevelComponents();
+			levelUI.Initialize();
+
+			// Scale me DOWN if the screen is too short! A) I don't love that we're scaling the whole lvl, and B) This *could* be a shared property of ALL BaseLevels.
+			float gcHeight = rt_gameComponents.rect.height;
+			float canvasHeight = Canvas.GetComponent<RectTransform>().rect.height;
+			float availableHeight = canvasHeight + rt_gameComponents.anchoredPosition.y; // how much ACTUAL room we've got to work with (from gc's top to the bottom of the screen).
+			float gcScale = Mathf.Min(1, availableHeight/gcHeight);
+			rt_gameComponents.transform.localScale = Vector3.one*gcScale;
         }
 
 
@@ -306,10 +314,13 @@ namespace CircleGrow {
                 string s = properties[i].TrimStart();
                 if (s.StartsWith("posB=")) {
                     data.posB = TextUtils.GetVector2FromStringNoParens(s.Substring(s.IndexOf('=')+1));
-                }
-                else if (s.StartsWith("moveSpeed=")) {
-                    data.moveSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
-                }
+				}
+				else if (s.StartsWith("doHideMovePath")) {
+					data.doHideMovePath = true;
+				}
+				else if (s.StartsWith("moveSpeed=")) {
+					data.moveSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
                 else if (s.StartsWith("moveLocOffset=")) {
                     data.moveLocOffset = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
                 }

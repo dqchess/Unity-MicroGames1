@@ -43,6 +43,8 @@ namespace WaveTap {
 			gameController = _gameController;
 
 			BaseInitialize(gameController, tf_parent, _levelIndex);
+			AddLevelComponents();
+
 			levelUI.Initialize();
 		}
 

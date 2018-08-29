@@ -31,8 +31,6 @@ public abstract class BaseLevel : MonoBehaviour {
 		GameUtils.ParentAndReset(this.gameObject, tf_parent);
 		myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
 		myRectTransform.anchoredPosition = Vector2.zero;
-
-		AddLevelComponents();
 	}
 
 

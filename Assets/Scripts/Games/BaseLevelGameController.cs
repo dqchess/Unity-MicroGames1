@@ -56,13 +56,26 @@ abstract public class BaseLevelGameController : BaseGameController {
 		base.Start();
 
 		SetCurrentLevel(SaveStorage.GetInt(SaveKeys.LastLevelPlayed(MyGameName()), 1));
+
+		// Add event listeners!
+		GameManagers.Instance.EventManager.LevelJumpButtonClickEvent += OnLevelJumpButtonClick;
+		GameManagers.Instance.EventManager.RetryButtonClickEvent += OnRetryButtonClick;
+		GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent += OnQuitGameplayButtonClick;
+	}
+	override protected void OnDestroy() {
+		// Remove event listeners!
+		GameManagers.Instance.EventManager.LevelJumpButtonClickEvent -= OnLevelJumpButtonClick;
+		GameManagers.Instance.EventManager.RetryButtonClickEvent -= OnRetryButtonClick;
+		GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent -= OnQuitGameplayButtonClick;
+
+		base.OnDestroy();
 	}
 
 
 	// ----------------------------------------------------------------
 	//  Doers
 	// ----------------------------------------------------------------
-	public void OpenScene_LevelSelect() {
+	private void OpenScene_LevelSelect() {
 		OpenScene(SceneNames.LevelSelect(MyGameName()));
 	}
 	private void UpdateHighestLevelUnlocked(int _levelIndex) {
@@ -72,17 +85,33 @@ abstract public class BaseLevelGameController : BaseGameController {
 		}
 	}
 
+	// ----------------------------------------------------------------
+	//  Events
+	// ----------------------------------------------------------------
+	private void OnLevelJumpButtonClick(int levelIndexChange) {
+		ChangeLevel(levelIndexChange);
+	}
+	protected void OnRetryButtonClick() {
+		RestartLevel();
+	}
+	private void OnQuitGameplayButtonClick() {
+		OpenScene_LevelSelect();
+	}
+
 
 	// ----------------------------------------------------------------
 	//  Game Flow
 	// ----------------------------------------------------------------
 	private void RestartLevel() { SetCurrentLevel(LevelIndex); }
-	public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, LevelIndex-1)); }
-	public void StartNextLevel() { SetCurrentLevel(LevelIndex+1); }
-	/// Jumps *10* levels back.
-	public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, LevelIndex-10)); }
-	/// Jumps *10* levels forward.
-	public void StartNextLevel10() { SetCurrentLevel(LevelIndex+10); }
+	private void ChangeLevel(int levelIndexChange) {
+		SetCurrentLevel(Mathf.Max(1, LevelIndex+levelIndexChange));
+	}
+//	public void StartPrevLevel() { SetCurrentLevel(Mathf.Max(1, LevelIndex-1)); }
+//	public void StartNextLevel() { SetCurrentLevel(LevelIndex+1); }
+//	/// Jumps *10* levels back.
+//	public void StartPrevLevel10() { SetCurrentLevel(Mathf.Max(1, LevelIndex-10)); }
+//	/// Jumps *10* levels forward.
+//	public void StartNextLevel10() { SetCurrentLevel(LevelIndex+10); }
 
 	/** This function handles a bunch of random paperwork.
 	 * For consistency, call this within InitializeLevel. */
@@ -159,16 +188,13 @@ abstract public class BaseLevelGameController : BaseGameController {
 		if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
 
 		// DEBUG
-		if (Input.GetKeyDown(KeyCode.P))			{ StartPrevLevel10(); return; } // P = Back 10 levels.
-		if (Input.GetKeyDown(KeyCode.LeftBracket))	{ StartPrevLevel(); return; } // [ = Back 1 level.
-		if (Input.GetKeyDown(KeyCode.RightBracket))	{ StartNextLevel(); return; } // ] = Ahead 1 level.
-		if (Input.GetKeyDown(KeyCode.Backslash))	{ StartNextLevel10(); return; } // \ = Ahead 10 levels.
+		if (Input.GetKeyDown(KeyCode.P))			{ ChangeLevel(-10); return; } // P = Back 10 levels.
+		if (Input.GetKeyDown(KeyCode.LeftBracket))	{ ChangeLevel( -1); return; } // [ = Back 1 level.
+		if (Input.GetKeyDown(KeyCode.RightBracket))	{ ChangeLevel(  1); return; } // ] = Ahead 1 level.
+		if (Input.GetKeyDown(KeyCode.Backslash))	{ ChangeLevel( 10); return; } // \ = Ahead 10 levels.
 		if (Input.GetKeyDown(KeyCode.W)) { Debug_WinLevel(); }
 	}
 
-	public void OnRetryButtonClick() {
-		RestartLevel();
-	}
 
 
 
