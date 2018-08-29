@@ -53,7 +53,7 @@ abstract public class BaseLevelSelectController : MonoBehaviour {
 		levelTiles = new List<BaseLevelTile>();
 		for (int levelIndex=FirstLevelIndex(); levelIndex<=LastLevelIndex(); levelIndex++) {
 			BaseLevelTile newTile = Instantiate(go_prefab).GetComponent<BaseLevelTile>();
-			bool isLocked = levelIndex > highestLevelUnlocked;
+			bool isLocked = levelIndex > highestLevelUnlocked+1;
 			if (levelIndex==FirstLevelIndex()) { isLocked = false; } // Force the first level to be unlocked, of course.
 			newTile.Initialize (this, rt_scrollContent, levelIndex, isLocked);
 			levelTiles.Add (newTile);

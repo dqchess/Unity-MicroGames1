@@ -6,14 +6,14 @@ growerC 0,100
 
 LEVEL - One, with single WallCircle (horz)
 scoreReq=550
-growerC -30,30; growSpeed=0.8
-wallC 172,30; 92
+growerC -30,-60; growSpeed=0.8
+wallC 172,-60; 92
 
-LEVEL - Two, with center WallCircle
+LEVEL - Two, with center WallRect
 scoreReq=750
 growerC 0,-184; growSpeed=0.9
 growerC 0, 150; growSpeed=0.9
-wallC 0,13; 92
+wallR 0,13; 92
 
 LEVEL - One, with compressing walls!
 growerC 0,0; growSpeed=1.2

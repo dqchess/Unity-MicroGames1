@@ -86,7 +86,7 @@ namespace CircleGrow {
         private void SetCurrentState(GrowerStates _state) {
             currentState = _state;
             // Only show my text if I'm a healthy, non-overlapped solid!
-			t_scoreValue.enabled = _state==GrowerStates.Solidified && !didIllegalOverlap;
+			t_scoreValue.enabled = false;//DISABLED scoreValue text! _state==GrowerStates.Solidified && !didIllegalOverlap;
         }
 
 		public void SetAsPreGrowing() {

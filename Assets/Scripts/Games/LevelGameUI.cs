@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class LevelGameUI : MonoBehaviour {
 	// Components
 	[SerializeField] private Button b_retry=null;
-    //[SerializeField] private Text t_levelName=null;
     [SerializeField] private GameObject go_debugUI=null;
 	// Properties
+	[SerializeField] private bool DoShowRetryButton=true; // if this is FALSE, then we'll accept ANY tap to start the next level!
 	private Vector2 retryButtonPosDefault;
 
 
@@ -27,11 +27,12 @@ public class LevelGameUI : MonoBehaviour {
 	//  Events
 	// ----------------------------------------------------------------
 	public void OnStartLevel(int levelIndex) {
-		//t_levelName.text = levelIndex.ToString();
 		HideRetryButton();
 	}
 	public void OnGameOver() {
-		StartCoroutine(Coroutine_AnimateInRetryButton());
+		if (DoShowRetryButton) {
+			StartCoroutine(Coroutine_AnimateInRetryButton());
+		}
 	}
 	private IEnumerator Coroutine_AnimateInRetryButton() {
 		yield return new WaitForSecondsRealtime(0.09f); // wait a moment so we can first register the loss.

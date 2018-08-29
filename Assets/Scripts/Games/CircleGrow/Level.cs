@@ -127,7 +127,7 @@ namespace CircleGrow {
 			}
 		}
 		public void OnIllegalOverlap(Vector2 pos) {
-			AddIllegalOverlapIcon(pos); // Add the no-no icon!
+//			AddIllegalOverlapIcon(pos);//NOTE: Disabled. // Add the no-no icon!
 			gameController.OnIllegalOverlap(); // Tattle to GameController!!
 		}
 		/** Growers are responsible for telling me when they've changed their size, so we can update the score. */

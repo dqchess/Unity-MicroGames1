@@ -14,6 +14,7 @@ namespace CircleGrow {
 		private Level level; // MY game-specific Level class.
         // Properties
         private LoseReasons loseReason;
+		private float timeWhenLost; // in SECONDS. Time.time when LoseLevel was called.
         private int scorePossible; // includes the Grower that's currently growing!
         private int scoreSolidified; // ONLY includes Growers that've been solidified.
         
@@ -53,6 +54,7 @@ namespace CircleGrow {
 
         override public void LoseLevel() {
             base.LoseLevel();
+			timeWhenLost = Time.time;
             // Tell people!
             level.OnLoseLevel(loseReason);
             fueController.OnSetGameOver(loseReason);
@@ -147,6 +149,10 @@ namespace CircleGrow {
             if (IsGameStatePlaying && !fueController.DoIgnoreTaps) {
 				level.OnTapScreen();
             }
+			// Game over, man? Allow a tap anywhere to retry the level!
+			else if (GameState == GameStates.GameOver && Time.time>timeWhenLost+0.3f) { // Wait a moment before allowing restarting the level, so we can register what happened.
+				OnRetryButtonClick();
+			}
 
             // Tell FUE!
             fueController.OnTapScreen();

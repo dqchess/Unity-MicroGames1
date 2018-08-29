@@ -10,7 +10,8 @@ abstract public class BaseLevelGameController : BaseGameController {
 	abstract public string MyGameName();
 	// Properties
 	private GameStates gameState;
-	private float timeWhenLevelEnded;
+	private float timeWhenLevelStarted; // in UNSCALED SECONDS.
+	private float timeWhenLevelEnded; // in UNSCALED SECONDS.
 	// Components
 	protected BaseLevel baseLevel;
 	private LevelLoader levelLoader; // this is added in Start! :)
@@ -19,11 +20,12 @@ abstract public class BaseLevelGameController : BaseGameController {
 	[SerializeField] private LevelGameUI levelGameUI=null; // All BaseLevelGames come with a boilerplate LevelGameUI. Retry, Quit, and Debug buttons.
 
 	// Getters (Public)
+	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
 	public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
 	public Canvas Canvas { get { return canvas; } }
+	public GameStates GameState { get { return gameState; } }
 	public LevelLoader LevelLoader { get { return levelLoader; } }
 	// Getters (Protected)
-	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } }
 	protected int LevelIndex { get { return baseLevel.LevelIndex; } }
 
 
@@ -89,6 +91,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 		baseLevel = _baseLevel;
 		// Reset basic stuff
 		SetIsPaused(false);
+		timeWhenLevelStarted = Time.unscaledTime;
 		timeWhenLevelEnded = -1;
 		gameState = GameStates.Playing;
 		// Save values!
@@ -100,19 +103,36 @@ abstract public class BaseLevelGameController : BaseGameController {
 
 	virtual public void LoseLevel() {
 		gameState = GameStates.GameOver;
-		timeWhenLevelEnded = Time.time;
-		// Increment losses on this level.
-		string saveKey = SaveKeys.NumLosses(MyGameName(), LevelIndex);
-		int numLosses = SaveStorage.GetInt(saveKey,0);
-		SaveStorage.SetInt(saveKey, numLosses + 1);
+		timeWhenLevelEnded = Time.unscaledTime;
+		IncrementTimeSpentTotal();
+		IncrementNumLosses();
 		// Tell people!
+		FBAnalyticsController.Instance.OnLoseLevel(MyGameName(), LevelIndex, GetTimeSpentThisPlay());
 		levelGameUI.OnGameOver();
 	}
 	virtual protected void WinLevel() {
-		FBAnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex); // Analytics call!
-		UpdateHighestLevelUnlocked(LevelIndex);
 		gameState = GameStates.PostLevel;
-		timeWhenLevelEnded = Time.time;
+		timeWhenLevelEnded = Time.unscaledTime;
+		IncrementTimeSpentTotal();
+		UpdateHighestLevelUnlocked(LevelIndex);
+		// Tell people!
+		FBAnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex);
+	}
+	private void IncrementNumLosses() {
+		string saveKey = SaveKeys.NumLosses(MyGameName(), LevelIndex);
+		int numLosses = SaveStorage.GetInt(saveKey,0);
+		SaveStorage.SetInt(saveKey, numLosses + 1);
+	}
+	private void IncrementTimeSpentTotal() {
+		float timeSpentThisPlay = GetTimeSpentThisPlay();
+		string saveKey = SaveKeys.TimeSpentTotal(MyGameName(), LevelIndex);
+		float timeSpentTotal = SaveStorage.GetFloat(saveKey,0);
+		SaveStorage.SetFloat(saveKey, timeSpentTotal+timeSpentThisPlay);
+	}
+	/// in UNSCALED SECONDS. How long the player was playing this level.
+	private float GetTimeSpentThisPlay() {
+		if (gameState == GameStates.Playing) { Debug.LogWarning("Whoa! We can't ask for timeSpentThisPlay if we're still playing!"); }
+		return timeWhenLevelEnded - timeWhenLevelStarted;
 	}
 
 

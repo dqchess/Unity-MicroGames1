@@ -4,6 +4,8 @@ using UnityEngine;
 using Facebook.Unity;
 
 public class FBAnalyticsController : MonoBehaviour {
+	// Constants
+	private const string AppEventName_LevelLose = "LevelLose";
     // Instance
     static private FBAnalyticsController instance=null;
 
@@ -60,20 +62,33 @@ public class FBAnalyticsController : MonoBehaviour {
 
     // ----------------------------------------------------------------
     //  Gameplay Events!
-    // ----------------------------------------------------------------
-    public void OnWinLevel(string gameName, int levelIndex) {
-		int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
-
-        var parameters = new Dictionary<string, object>();
+	// ----------------------------------------------------------------
+	public void OnLoseLevel(string gameName, int levelIndex, float timeSpentThisPlay) {
+		var parameters = new Dictionary<string, object>();
 		parameters["Game"] = gameName;
-        parameters["numLosses"] = numLosses;
-        parameters[AppEventParameterName.Level] = levelIndex;
-        FB.LogAppEvent(
-            AppEventName.AchievedLevel,
-            null,
-            parameters
-        );
-    }
+		parameters[AppEventParameterName.Level] = levelIndex;
+		parameters["timeSpentThisPlay"] = timeSpentThisPlay;
+		FB.LogAppEvent(
+			AppEventName_LevelLose,
+			null,
+			parameters
+		);
+	}
+	public void OnWinLevel(string gameName, int levelIndex) {
+		int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
+		float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelIndex), 0);
+
+		var parameters = new Dictionary<string, object>();
+		parameters["Game"] = gameName;
+		parameters[AppEventParameterName.Level] = levelIndex;
+		parameters["numLosses"] = numLosses;
+		parameters["timeSpentTotal"] = timeSpentTotal;
+		FB.LogAppEvent(
+			AppEventName.AchievedLevel,
+			null,
+			parameters
+		);
+	}
 
 
 }

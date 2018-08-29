@@ -12,6 +12,7 @@ namespace CircleGrow {
         private bool doIgnoreTaps;
         private bool isActive; // only true for the first few levels
         private bool isGameplayFrozen;
+		private float timestamp; // in UNSCALED SECONDS. Set to Time.unscaledTime whenever you want! Use whenever you want. (Useful for setting delays or waiting for the next step.)
         private int currentStep;
         private int levelIndex;
         // Components
@@ -71,12 +72,19 @@ namespace CircleGrow {
                 // The Grower is growin'!
                 else if (currentStep==1) {
                     if (gameController.ScorePossible >= level.ScoreRequired) { // We've hit the target score!!
-                        doIgnoreTaps = false;
-                        isGameplayFrozen = true; // Freeze!
-                        cg_tap.gameObject.SetActive(true); // Show "Tap!"
+						isGameplayFrozen = true; // Freeze!
+						cg_tap.gameObject.SetActive(true); // Show "Tap!"
+						timestamp = Time.unscaledTime;
                         currentStep ++;
                     }
                 }
+				// We JUST froze time for the player-- allow taps in a moment!
+				else if (currentStep==2) {
+					if (Time.unscaledTime > timestamp+0.4f) {
+						doIgnoreTaps = false;
+						currentStep ++;
+					}
+				}
             }
         }
 
@@ -89,7 +97,7 @@ namespace CircleGrow {
                     isGameplayFrozen = false;
                     currentStep ++;
                 }
-                else if (currentStep == 2) {
+                else if (currentStep == 3) {
                     cg_tap.gameObject.SetActive(false);
                     isGameplayFrozen = false;
                     currentStep ++;
