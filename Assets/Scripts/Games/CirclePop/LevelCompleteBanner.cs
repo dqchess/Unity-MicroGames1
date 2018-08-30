@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CircleGrow {
+namespace CirclePop {
     public class LevelCompleteBanner : MonoBehaviour {
         // Components
-        [SerializeField] private CanvasGroup myCanvasGroup;
-        [SerializeField] private RectTransform myRectTransform;
-        [SerializeField] private ParticleSystem ps_up;
-        [SerializeField] private ParticleSystem ps_down;
+        [SerializeField] private CanvasGroup myCanvasGroup=null;
+        [SerializeField] private RectTransform myRectTransform=null;
+        [SerializeField] private ParticleSystem ps_up=null;
+        [SerializeField] private ParticleSystem ps_down=null;
 
 
         // ----------------------------------------------------------------

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CircleGrow {
+namespace CirclePop {
 	public class LevelTile : BaseLevelTile {
 	}
 }

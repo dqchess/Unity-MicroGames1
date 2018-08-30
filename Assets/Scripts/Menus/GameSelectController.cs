@@ -18,7 +18,7 @@ public class GameSelectController : MonoBehaviour {
 
 	public void OpenScene_BouncePaint() { OpenScene(SceneNames.MainMenu(GameNames.BouncePaint)); }
 
-	public void OpenScene_CircleGrow() { OpenScene(SceneNames.MainMenu(GameNames.CircleGrow)); }
+    public void OpenScene_CirclePop() { OpenScene(SceneNames.MainMenu(GameNames.CirclePop)); }
 
     public void OpenScene_ExtrudeMatch() { OpenScene(SceneNames.ExtrudeMatch); }
 

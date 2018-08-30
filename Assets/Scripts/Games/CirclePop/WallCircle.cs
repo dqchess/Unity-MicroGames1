@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CircleGrow {
+namespace CirclePop {
     public class WallCircle : Wall {
         // Components
         [SerializeField] private CircleCollider2D myCollider;

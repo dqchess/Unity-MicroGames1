@@ -14,13 +14,13 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject bouncePaint_level;
 	[SerializeField] public GameObject bouncePaint_player;
 
-	[SerializeField] public GameObject circleGrow_levelTile;
-	[SerializeField] public GameObject circleGrow_level;
-	[SerializeField] public GameObject circleGrow_collisionIcon;
-    [SerializeField] public GameObject circleGrow_growerCircle;
-    [SerializeField] public GameObject circleGrow_growerRect;
-    [SerializeField] public GameObject circleGrow_wallCircle;
-    [SerializeField] public GameObject circleGrow_wallRect;
+	[SerializeField] public GameObject circlePop_levelTile;
+	[SerializeField] public GameObject circlePop_level;
+	[SerializeField] public GameObject circlePop_collisionIcon;
+    [SerializeField] public GameObject circlePop_growerCircle;
+    [SerializeField] public GameObject circlePop_growerRect;
+    [SerializeField] public GameObject circlePop_wallCircle;
+    [SerializeField] public GameObject circlePop_wallRect;
 
 	[SerializeField] public GameObject extrudeMatch_boardSpaceView;
 	[SerializeField] public GameObject extrudeMatch_boardView;

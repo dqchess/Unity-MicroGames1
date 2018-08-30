@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
     public class LevelBounds : MonoBehaviour {
         // Components
 //        [SerializeField] private BoxCollider2D colL=null;
@@ -26,7 +26,7 @@ namespace CircleGrow {
 			i_border.color = Grower.color_solid(myLevel.LevelIndex);
             r_bounds = new Rect();
 			// Add walls!
-			GameObject prefabGO = ResourcesHandler.Instance.circleGrow_wallRect;
+			GameObject prefabGO = ResourcesHandler.Instance.circlePop_wallRect;
 			walls = new WallRect[4];
 			for (int i=0; i<walls.Length; i++) {
 				walls[i] = Instantiate(prefabGO).GetComponent<WallRect>();

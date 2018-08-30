@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-namespace CircleGrow {
+namespace CirclePop {
 	public class LevelSelectController : BaseLevelSelectController {
 		// Overrideables
-		override public    string MyGameName() { return GameNames.CircleGrow; }
-		override protected GameObject LevelTilePrefab() { return ResourcesHandler.Instance.circleGrow_levelTile; }
+		override public    string MyGameName() { return GameNames.CirclePop; }
+		override protected GameObject LevelTilePrefab() { return ResourcesHandler.Instance.circlePop_levelTile; }
 		override protected int FirstLevelIndex() { return Level.FirstLevelIndex; }
 		override protected int LastLevelIndex()  { return Level.LastLevelIndex;  }
 //		// Components

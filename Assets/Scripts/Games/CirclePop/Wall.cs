@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
     abstract public class Wall : Prop {
 
         // ----------------------------------------------------------------

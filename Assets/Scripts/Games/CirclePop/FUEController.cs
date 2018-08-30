@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-namespace CircleGrow {
+namespace CirclePop {
     public class FUEController : MonoBehaviour {
         // Constants
         private const int LEVEL_1 = 1;

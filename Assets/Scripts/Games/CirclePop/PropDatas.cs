@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CircleGrow {
+namespace CirclePop {
     
     public class PropData {
         public PropShapes shape=PropShapes.Circle;

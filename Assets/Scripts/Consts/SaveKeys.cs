@@ -30,17 +30,4 @@ public static class SaveKeys {
     public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
 
 
-//	// CircleGrow
-//	public const string CircleGrow_HighestLevelUnlocked = "CircleGrow_HighestLevelUnlocked";
-//	public const string CircleGrow_LastLevelPlayed = "CircleGrow_LastLevelPlayed";
-//	public static string CircleGrow_NumLosses(int levelIndex) {
-//		return "CircleGrow_NumLosses_Level" + levelIndex;
-//	}
-//	// WaveTap
-//	public const string WaveTap_HighestLevelUnlocked = "WaveTap_HighestLevelUnlocked";
-//	public const string WaveTap_LastLevelPlayed = "WaveTap_LastLevelPlayed";
-//	public static string WaveTap_NumLosses(int levelIndex) {
-//		return "WaveTap_NumLosses_Level" + levelIndex;
-//	}
-
 }

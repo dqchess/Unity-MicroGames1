@@ -1,3 +1,3 @@
-﻿namespace CircleGrow {
+﻿namespace CirclePop {
 	public enum PropShapes { Circle, Rect, Triangle }
 }

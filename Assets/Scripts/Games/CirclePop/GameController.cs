@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
     public enum LoseReasons { Undefined, IllegalOverlap, InsufficientScore }
 
     public class GameController : BaseLevelGameController {
         // Overrideables
-        override public string MyGameName() { return GameNames.CircleGrow; }
+        override public string MyGameName() { return GameNames.CirclePop; }
         // Components
         [SerializeField] private FUEController fueController=null;
 		private Level level; // MY game-specific Level class.
@@ -92,7 +92,7 @@ namespace CircleGrow {
             loseReason = LoseReasons.Undefined;
 
             // Make the new level!
-            InitializeLevel(Instantiate(resourcesHandler.circleGrow_level), _levelIndex);
+            InitializeLevel(Instantiate(resourcesHandler.circlePop_level), _levelIndex);
 
             // DO animate!
             if (doAnimate) {

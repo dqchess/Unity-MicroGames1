@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
     public class LevelUI : MonoBehaviour {
 		// Constants
 		private readonly Color color_red = new Color(244/255f, 23/255f, 80/255f);

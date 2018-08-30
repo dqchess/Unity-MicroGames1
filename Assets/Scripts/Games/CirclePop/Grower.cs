@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
     public enum GrowerStates { Sleeping, PreGrowing, Growing, Solidified }
 
 	abstract public class Grower : Prop {
@@ -230,7 +230,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
 	public class Circle : MonoBehaviour {
 		// Constants
 		static public readonly Color color_oscillating = new Color(250/255f, 200/255f, 110/255f);

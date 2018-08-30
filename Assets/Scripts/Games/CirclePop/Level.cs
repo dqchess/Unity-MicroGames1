@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CircleGrow {
+namespace CirclePop {
 	public class Level : BaseLevel {
 		// Constants
 		public static int FirstLevelIndex = 1;
@@ -67,7 +67,7 @@ namespace CircleGrow {
             levelUI.UpdateScoreUI(scorePossible, scoreSolidified);
 		}
 		private void AddIllegalOverlapIcon(Vector2 pos) {
-			Image iconImage = Instantiate(resourcesHandler.circleGrow_collisionIcon).GetComponent<Image>();
+			Image iconImage = Instantiate(resourcesHandler.circlePop_collisionIcon).GetComponent<Image>();
 			GameUtils.ParentAndReset(iconImage.gameObject, rt_gameComponents);
 			iconImage.rectTransform.anchoredPosition = pos;
 			i_collisionIcons.Add(iconImage);
@@ -196,8 +196,8 @@ namespace CircleGrow {
         private Grower AddGrower(GrowerData data) {
 			GameObject prefabGO = null;
             switch (data.shape) {
-			case PropShapes.Circle: prefabGO = resourcesHandler.circleGrow_growerCircle; break;
-			case PropShapes.Rect: prefabGO = resourcesHandler.circleGrow_growerRect; break;
+			case PropShapes.Circle: prefabGO = resourcesHandler.circlePop_growerCircle; break;
+			case PropShapes.Rect: prefabGO = resourcesHandler.circlePop_growerRect; break;
             default: Debug.LogError("Grower shape not yet supported. Time to write some more code! Shape: " + data.shape); break;
 			}
 			Grower newObj = Instantiate(prefabGO).GetComponent<Grower>();
@@ -208,8 +208,8 @@ namespace CircleGrow {
         private Wall AddWall(WallData data) {
 			GameObject prefabGO = null;
             switch (data.shape) {
-			case PropShapes.Circle: prefabGO = resourcesHandler.circleGrow_wallCircle; break;
-			case PropShapes.Rect: prefabGO = resourcesHandler.circleGrow_wallRect; break;
+			case PropShapes.Circle: prefabGO = resourcesHandler.circlePop_wallCircle; break;
+			case PropShapes.Rect: prefabGO = resourcesHandler.circlePop_wallRect; break;
 			default: Debug.LogError("Wall shape not yet supported. Time to write some more code! Shape: " + data.shape); break;
 			}
 			Wall newObj = Instantiate(prefabGO).GetComponent<Wall>();

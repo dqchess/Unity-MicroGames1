@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace CircleGrow {
+namespace CirclePop {
 //	public class Game {
-//		static public string Name = GameNames.CircleGrow;
+//		static public string Name = GameNames.CirclePop;
 //	}
 
 	public class MainMenuController : MonoBehaviour {
@@ -20,7 +20,7 @@ namespace CircleGrow {
 		}
 		public void OpenScene_LevelSelect() {
 //			OpenScene(SceneNames.LevelSelect(Game.Name));
-			OpenScene(SceneNames.LevelSelect(GameNames.CircleGrow));
+			OpenScene(SceneNames.LevelSelect(GameNames.CirclePop));
 		}
 
 
