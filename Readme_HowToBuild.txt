@@ -6,6 +6,6 @@ BuildSettings
 PlayerSettings
 * Set Product Name to game name.
 * Set Default Icon to icon in Assets/Textures/[GameName]/AppIcon.png
-* NOTE: Brett isn't sure about Bundle Identifier. We change that (and/or Version #) between games, right?
+* Set Bundle Identifier to com.simplemachine.gamename.
 
 

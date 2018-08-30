@@ -8,7 +8,7 @@ namespace CircleGrow {
 	public class Level : BaseLevel {
 		// Constants
 		public static int FirstLevelIndex = 1;
-		public static int LastLevelIndex = 37;
+		public static int LastLevelIndex = 39;
 		// Components
         [SerializeField] private LevelBounds bounds=null;
         [SerializeField] private LevelUI levelUI=null;
@@ -239,6 +239,9 @@ namespace CircleGrow {
                 DestroyLevelComponents();
                 levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
                 Debug.LogWarning("No level data available for level: " + LevelIndex);
+            }
+            if (LevelIndex > LastLevelIndex) {
+                levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
             }
 
             // Start growing the first dude!

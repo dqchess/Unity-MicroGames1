@@ -33,6 +33,9 @@ abstract public class BaseLevelTile : MonoBehaviour {
 		levelSelectController = _levelSelectController;
 		levelIndex = _levelIndex;
 		isLocked = _isLocked;
+        if (GameProperties.IsDebugFeatures) { // Debug enabled? Everyone's unlocked! :)
+            isLocked = false;
+        }
 
 		GameUtils.ParentAndReset(this.gameObject, tf_parent);
 		this.gameObject.name = "LevelTile " + levelIndex;
@@ -64,7 +67,7 @@ abstract public class BaseLevelTile : MonoBehaviour {
 	//  Events
 	// ----------------------------------------------------------------
 	public void OnClick() {
-		if (!isLocked) {
+        if (!isLocked) {
 			StartGameAtLevel();
 		}
 	}
