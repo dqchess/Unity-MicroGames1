@@ -89,7 +89,7 @@ namespace CirclePop {
         }
 
 
-        public void OnTapScreen() {
+        public void OnTapDown() {
             if (levelIndex == LEVEL_1) {
                 if (currentStep == 0) {
                     doIgnoreTaps = true; // ignore any taps until we've hit the target score.

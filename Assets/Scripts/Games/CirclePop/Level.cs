@@ -123,7 +123,7 @@ namespace CirclePop {
             SetAllPropCollidersEnabled(false);
 		}
 
-		public void OnTapScreen() {
+		public void OnTapDown() {
 			if (currentGrower == null) { return; } // No grower? Do nothin'.
 			// PreGrowing -> Growing!
 			if (currentGrower.CurrentState == GrowerStates.PreGrowing) {

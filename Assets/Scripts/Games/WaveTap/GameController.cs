@@ -87,8 +87,9 @@ namespace WaveTap {
 
 		// ----------------------------------------------------------------
 		//  Input
-		// ----------------------------------------------------------------
-		override protected void OnTapScreen() {
+        // ----------------------------------------------------------------
+        override protected void OnTapUp() { }
+		override protected void OnTapDown() {
 			if (Time.timeScale == 0f) { return; } // Paused? Ignore input.
 			if (!IsGameStatePlaying) { return; } // Not playing? Ignore input.
             if (level.Player.IsFrozen) { return; } // Player's frozen? Okay, ignore input.

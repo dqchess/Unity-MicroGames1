@@ -10,8 +10,8 @@ abstract public class BaseLevelGameController : BaseGameController {
 	abstract public string MyGameName();
 	// Properties
 	private GameStates gameState;
-	private float timeWhenLevelStarted; // in UNSCALED SECONDS.
-	private float timeWhenLevelEnded; // in UNSCALED SECONDS.
+	protected float timeWhenLevelStarted; // in UNSCALED SECONDS.
+	private   float timeWhenLevelEnded; // in UNSCALED SECONDS.
 	// Components
 	protected BaseLevel baseLevel;
 	private LevelLoader levelLoader; // this is added in Start! :)
@@ -35,8 +35,9 @@ abstract public class BaseLevelGameController : BaseGameController {
 	/** Initialize our game-specific Level class AND set baseLevel ref.
 	 * This is a required function to make SURE we set baseLevel for each extension of this class. */
 	abstract protected void InitializeLevel(GameObject _levelGO, int _levelIndex);
-	abstract protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false);
-	abstract protected void OnTapScreen();
+    abstract protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false);
+    abstract protected void OnTapDown();
+    abstract protected void OnTapUp();
 	abstract protected void Debug_WinLevel();
 
 
@@ -175,17 +176,21 @@ abstract public class BaseLevelGameController : BaseGameController {
 		RegisterMouseInput();
 	}
 
-	private void RegisterMouseInput() {
-		if (Input.GetMouseButtonDown(0)) {
-			OnTapScreen();
-		}
+    private void RegisterMouseInput() {
+        if (Input.GetMouseButtonDown(0)) {
+            OnTapDown();
+        }
+        else if (Input.GetMouseButtonUp(0)) {
+            OnTapUp();
+        }
 	}
 	override protected void RegisterButtonInput() {
 		base.RegisterButtonInput();
 
 //		bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
-		if (Input.GetKeyDown(KeyCode.Space)) { OnTapScreen(); }
+        if (Input.GetKeyDown(KeyCode.Space)) { OnTapDown(); }
+        else if (Input.GetKeyUp(KeyCode.Space)) { OnTapUp(); }
 
 		// DEBUG
 		if (Input.GetKeyDown(KeyCode.P))			{ ChangeLevel(-10); return; } // P = Back 10 levels.

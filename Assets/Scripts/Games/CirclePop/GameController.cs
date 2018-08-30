@@ -142,12 +142,13 @@ namespace CirclePop {
         // ----------------------------------------------------------------
         //  Input
         // ----------------------------------------------------------------
-        override protected void OnTapScreen() {
+        override protected void OnTapDown() {
             // Paused? Ignore input.
             if (Time.timeScale == 0f) { return; }
+            if (Time.unscaledTime < timeWhenLevelStarted+0.2f) { return; } // Ignore input for the first moment after the level's made (to avoid accidental taps).
 
             if (IsGameStatePlaying && !fueController.DoIgnoreTaps) {
-				level.OnTapScreen();
+				level.OnTapDown();
             }
 			// Game over, man? Allow a tap anywhere to retry the level!
 			else if (GameState == GameStates.GameOver && Time.time>timeWhenLost+0.3f) { // Wait a moment before allowing restarting the level, so we can register what happened.
@@ -155,7 +156,15 @@ namespace CirclePop {
 			}
 
             // Tell FUE!
-            fueController.OnTapScreen();
+            fueController.OnTapDown();
+        }
+        override protected void OnTapUp() {
+            if (Time.unscaledTime < timeWhenLevelStarted+0.2f) { return; } // Ignore input for the first moment after the level's made (to avoid accidental taps).
+
+            //// TEST! TEST! For HOLDING down to grow Growers.
+            //if (IsGameStatePlaying && !fueController.DoIgnoreTaps) {
+            //    level.OnTapDown();
+            //}
         }
 
 

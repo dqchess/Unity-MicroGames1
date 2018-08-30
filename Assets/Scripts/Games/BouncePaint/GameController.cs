@@ -173,7 +173,8 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Input
         // ----------------------------------------------------------------
-		override protected void OnTapScreen() {
+        override protected void OnTapUp() { }
+		override protected void OnTapDown() {
 			// Paused? Ignore input.
 			if (Time.timeScale == 0f) { return; }
 
@@ -182,7 +183,7 @@ namespace BouncePaint {
             }
 
             // Tell people!
-            fueController.OnTapScreen();
+            fueController.OnTapDown();
         }
 
 

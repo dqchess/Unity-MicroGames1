@@ -91,7 +91,7 @@ namespace BouncePaint {
         }
 
 
-        public void OnTapScreen() {
+        public void OnTapDown() {
             if (levelIndex == LEVEL_1) {
                 if (currentStep == 0) {
                     isPlayerFrozen = false;
