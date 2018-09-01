@@ -4,6 +4,13 @@ LEVEL - One
 scoreReq=2000
 growerC 0,100
 
+LEVEL - QQQ
+scoreReq=100
+growerC 0,100
+growerC -130, -130
+growerC  150, -250
+growerC    0,  258
+
 LEVEL - One, with single WallCircle (horz)
 scoreReq=550
 growerC -30,-60; growSpeed=0.8

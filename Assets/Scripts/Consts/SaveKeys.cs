@@ -19,6 +19,9 @@ public static class SaveKeys {
 	static public string NumLosses(string gameName, int levelIndex) {
 		return gameName + "_NumLosses_Level" + levelIndex;
 	}
+	static public string NumWins(string gameName, int levelIndex) {
+		return gameName + "_NumWins_Level" + levelIndex;
+	}
 	static public string TimeSpentTotal(string gameName, int levelIndex) { // The CUMULATIVE time a player's spent in THIS Level. 
 		return gameName + "_TimeSpentTotal_Level" + levelIndex;
 	}

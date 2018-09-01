@@ -19,7 +19,8 @@ namespace CirclePop {
         private int scoreSolidified; // ONLY includes Growers that've been solidified.
         
         // Getters (Public)
-        public bool IsFUEGameplayFrozen { get { return fueController.IsGameplayFrozen; } }
+		public bool IsFUEGameplayFrozen { get { return fueController.IsGameplayFrozen; } }
+		public bool DidGetScoreRequired { get { return scorePossible >= level.ScoreRequired; } }
         public int ScorePossible { get { return scorePossible; } }
         //public Rect r_LevelBounds { get { return r_levelBounds; } }
 
@@ -119,6 +120,9 @@ namespace CirclePop {
                 }
             }
 
+			// Set camera's bg color to match the UI.
+			Camera.main.backgroundColor = Grower.color_solid(LevelIndex);
+
             // Tell things!
             fueController.OnStartLevel(level);
 
@@ -161,10 +165,13 @@ namespace CirclePop {
         override protected void OnTapUp() {
             if (Time.unscaledTime < timeWhenLevelStarted+0.2f) { return; } // Ignore input for the first moment after the level's made (to avoid accidental taps).
 
-            //// TEST! TEST! For HOLDING down to grow Growers.
-            //if (IsGameStatePlaying && !fueController.DoIgnoreTaps) {
-            //    level.OnTapDown();
-            //}
+            // Are we obeying the debug-test tap-and-hold controls?
+			if (GameProperties.CirclePop_Debug_TapAndHold) {
+				// Obey tap-and-hold controls! (Note: This is the only extra code we need for tap-and-hold controls!)
+				if (IsGameStatePlaying && !fueController.DoIgnoreTaps && level.IsCurrentGrowerGrowing) {
+                	level.OnTapDown();
+				}
+            }
         }
 
 

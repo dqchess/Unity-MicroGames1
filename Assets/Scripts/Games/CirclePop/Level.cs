@@ -27,6 +27,8 @@ namespace CirclePop {
 
         // Getters (Public)
         public bool IsFUEGameplayFrozen { get { return gameController.IsFUEGameplayFrozen; } }
+		public bool DidGetScoreRequired { get { return gameController.DidGetScoreRequired; } }
+		public bool IsCurrentGrowerGrowing { get { return currentGrower!=null && currentGrower.CurrentState==GrowerStates.Growing; } }
         public int ScoreRequired { get { return scoreRequired; } }
         public List<Grower> Growers { get { return growers; } }
 		public RectTransform rt_GameComponents { get { return rt_gameComponents; } }
@@ -89,7 +91,14 @@ namespace CirclePop {
 
 			// There IS another Grower!
 			if (currentGrower != null) {
-				currentGrower.SetAsPreGrowing();
+				// Little nice edge case: Have we hit the target score?? Auto-solidify the next Grower (this'll keep going recursively until all are solidified)!
+				if (DidGetScoreRequired) {
+					SolidifyCurrentGrower();
+				}
+				// Otherwise, prep the next guy!
+				else {
+					currentGrower.SetAsPreGrowing();
+				}
 			}
             // There is NOT another Grower! End the level.
 			else {
@@ -103,7 +112,7 @@ namespace CirclePop {
 		}
 		private void SolidifyCurrentGrower() {
 			if (currentGrower == null) { return; } // Safety check.
-			if (currentGrower.CurrentState != GrowerStates.Growing) { return; } // Oh, if it's only pre-growing, DON'T do anything.
+//			if (currentGrower.CurrentState != GrowerStates.Growing) { return; } // Oh, if it's only pre-growing, DON'T do anything. NOTE: Disabled! Check is unnecessary, and messes up the auto-solidify-all-remaining-Growers edge-case.
 
 			// Solidify current, and move onto the next one!
 			currentGrower.Solidify();

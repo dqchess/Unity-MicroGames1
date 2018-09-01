@@ -100,8 +100,8 @@ namespace CirclePop {
 			SetCurrentState(GrowerStates.PreGrowing);
 		}
 		public void StartGrowing() {
-            // Shrink me down a little first! To make it a little easier.
-            SetSize(Size*0.5f);
+//            // Shrink me down a little first! To make it a little easier.
+//            SetSize(Size*0.5f); // NOTE: Disabled!
 			// Set my color, and we're off!
 			bodyColor = color_growing;
 			SetCurrentState(GrowerStates.Growing);

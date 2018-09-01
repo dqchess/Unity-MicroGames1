@@ -73,7 +73,7 @@ namespace CirclePop {
             i_barFillPossible.rectTransform.sizeDelta = new Vector2(fillPossibleWidth, scoreBarSize.y);
             i_barFillSolidified.rectTransform.sizeDelta = new Vector2(fillSolidifiedWidth, scoreBarSize.y);
             // Update color!
-            if (scorePossible >= scoreRequired) { // We've potentially won already!!
+			if (myLevel.DidGetScoreRequired) { // We've potentially won already!!
                 t_score.color = t_scoreRequired.color = color_green;
 				SetBarFillColor(color_green);
             }

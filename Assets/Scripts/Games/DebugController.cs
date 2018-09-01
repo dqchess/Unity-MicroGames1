@@ -22,7 +22,7 @@ public class DebugController : MonoBehaviour {
 	// Components
 	[SerializeField] private TMPro.TextMeshProUGUI t_buildDate;
 	// References
-	[SerializeField] private GameObject go_toggleDebugUI=null;
+	[SerializeField] private GameObject go_toggleDebugUI=null; // the BUTTON that does the visibility-toggling.
 
 
 	// ----------------------------------------------------------------

@@ -75,6 +75,10 @@ public class FBAnalyticsController : MonoBehaviour {
 		);
 	}
 	public void OnWinLevel(string gameName, int levelIndex) {
+		// If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
+		int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelIndex));
+		if (numWins > 1) { return; }
+
 		int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
 		float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelIndex), 0);
 

@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ToggleDebugUIButton : MonoBehaviour {
-	// References
-	[SerializeField] private GameObject go_debugUI;
+	// Properties
+	private bool isDebugUIVisible = false;
 
+	// ----------------------------------------------------------------
+	//  Events
+	// ----------------------------------------------------------------
 	public void OnClick() {
 		ToggleDebugUIVisible();
 	}
+
+	// ----------------------------------------------------------------
+	//  Doers
+	// ----------------------------------------------------------------
 	private void ToggleDebugUIVisible() {
-		go_debugUI.SetActive(!go_debugUI.activeSelf);
+		isDebugUIVisible = !isDebugUIVisible;
+		GameManagers.Instance.EventManager.OnSetDebugUIVisible(isDebugUIVisible);
 	}
 
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LevelGameUI : MonoBehaviour {
 	// Components
 	[SerializeField] private Button b_retry=null;
-    [SerializeField] private GameObject go_debugUI=null;
+//    [SerializeField] private GameObject go_debugUI=null;
 	// Properties
 	[SerializeField] private bool DoShowRetryButton=true; // if this is FALSE, then we'll accept ANY tap to start the next level!
 	private Vector2 retryButtonPosDefault;
@@ -18,7 +18,7 @@ public class LevelGameUI : MonoBehaviour {
 	private void Start () {
 		retryButtonPosDefault = b_retry.transform.localPosition;
 
-		HideDebugUI();
+//		HideDebugUI();
 		HideRetryButton();
 	}
 
@@ -68,9 +68,9 @@ public class LevelGameUI : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Doers
 	// ----------------------------------------------------------------
-	public void ToggleDebugUI() { go_debugUI.SetActive(!go_debugUI.activeSelf); }
-	private void HideDebugUI() { go_debugUI.SetActive(false); }
-	private void ShowDebugUI() { go_debugUI.SetActive(true); }
+//	public void ToggleDebugUI() { go_debugUI.SetActive(!go_debugUI.activeSelf); }
+//	private void HideDebugUI() { go_debugUI.SetActive(false); }
+//	private void ShowDebugUI() { go_debugUI.SetActive(true); }
 
 	private void HideRetryButton() { b_retry.gameObject.SetActive(false); }
 	private void ShowRetryButton() { b_retry.gameObject.SetActive(true); }

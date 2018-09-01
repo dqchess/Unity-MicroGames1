@@ -144,6 +144,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 		gameState = GameStates.PostLevel;
 		timeWhenLevelEnded = Time.unscaledTime;
 		IncrementTimeSpentTotal();
+		IncrementNumWins();
 		UpdateHighestLevelUnlocked(LevelIndex);
 		// Tell people!
 		FBAnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex);
@@ -152,6 +153,11 @@ abstract public class BaseLevelGameController : BaseGameController {
 		string saveKey = SaveKeys.NumLosses(MyGameName(), LevelIndex);
 		int numLosses = SaveStorage.GetInt(saveKey,0);
 		SaveStorage.SetInt(saveKey, numLosses + 1);
+	}
+	private void IncrementNumWins() {
+		string saveKey = SaveKeys.NumWins(MyGameName(), LevelIndex);
+		int numWins = SaveStorage.GetInt(saveKey,0);
+		SaveStorage.SetInt(saveKey, numWins + 1);
 	}
 	private void IncrementTimeSpentTotal() {
 		float timeSpentThisPlay = GetTimeSpentThisPlay();
