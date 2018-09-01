@@ -38,6 +38,22 @@ LEVEL - TEST
 scoreReq=2000
 growerP 0,0; part=10,10, 20; part=-10,-10, 20
 
+LEVEL - TEST
+scoreReq=2000
+growerC 0,0; growSpeedGravity=-0.06; growSpeedBounce=1.07
+
+LEVEL - TEST
+scoreReq=2000
+growerC 0,-100; posB=0,100; moveSpeed=3; growSpeedGravity=-0.06; growSpeedBounce=1.07
+
+LEVEL - TEST
+scoreReq=1900
+growerC 0,0; growSpeedGravity=-0.4; growSpeedBounce=1.005
+
+LEVEL - TEST
+scoreReq=1900
+growerC 0,0; growSpeedMin=-0.8; growSpeedMax=6; growSpeedOscFreq=1
+
 
 
 

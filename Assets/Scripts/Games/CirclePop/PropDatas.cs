@@ -17,7 +17,12 @@ namespace CirclePop {
 
     public class GrowerData : PropData {
         public bool doMoveWhenSolid=false;
-        public float growSpeed=1;
+		public float growSpeed=1;
+		public float growSpeedBounce=1; // for GRAVITY BOUNCE grow pattern.
+		public float growSpeedGravity=0; // for GRAVITY BOUNCE grow pattern.
+		public float growSpeedMin=0; // for special OSCILLATION grow pattern.
+		public float growSpeedMax=0; // for special OSCILLATION grow pattern.
+		public float growSpeedOscFreq=0; // for special OSCILLATION grow pattern.
 		public List<GrowerCompositePartData> parts=new List<GrowerCompositePartData>();
     }
 

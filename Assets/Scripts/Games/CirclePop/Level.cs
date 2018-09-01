@@ -302,10 +302,25 @@ namespace CirclePop {
                 if (s.StartsWith("doMoveWhenSolid")) {
                     data.doMoveWhenSolid = true;
 				}
-				if (s.StartsWith("growSpeed=")) {
+				else if (s.StartsWith("growSpeed=")) {
 					data.growSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
 				}
-				if (s.StartsWith("part=")) { // Parts can be either Circles or Rects; determined by number of params for the part.
+				else if (s.StartsWith("growSpeedBounce=")) {
+					data.growSpeedBounce = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				else if (s.StartsWith("growSpeedGravity=")) {
+					data.growSpeedGravity = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				else if (s.StartsWith("growSpeedMin=")) {
+					data.growSpeedMin = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				else if (s.StartsWith("growSpeedMax=")) {
+					data.growSpeedMax = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				else if (s.StartsWith("growSpeedOscFreq=")) {
+					data.growSpeedOscFreq = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				else if (s.StartsWith("part=")) { // Parts can be either Circles or Rects; determined by number of params for the part.
 					GrowerCompositePartData partData = new GrowerCompositePartData(s.Substring(s.IndexOf('=')+1));
 					data.parts.Add(partData);
 				}

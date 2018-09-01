@@ -28,7 +28,13 @@ namespace CirclePop {
 //		private bool didIllegalOverlap=false; // true if we touched, OR were touched by, another Grower.
         private bool doMoveWhenSolid=false; // MEH. Makes things inconsistent. Though we can have cooler layouts.
         private GrowerStates currentState;
-        private float growSpeed;
+		private float growSpeed;
+		private float growSpeedBounce; // for GRAVITY BOUNCE grow pattern.
+		private float growSpeedGravity; // for GRAVITY BOUNCE grow pattern.
+		private float growSpeedOscCount=0; // for OSCILLATION grow pattern.
+		private float growSpeedMin; // for OSCILLATION grow pattern.
+		private float growSpeedMax; // for OSCILLATION grow pattern.
+		private float growSpeedOscFreq; // for OSCILLATION grow pattern.
 
         // Getters (Public)
         public GrowerStates CurrentState { get { return currentState; } }
@@ -61,6 +67,11 @@ namespace CirclePop {
             BaseInitialize(_myLevel, tf_parent, data);
 
             doMoveWhenSolid = data.doMoveWhenSolid;
+			growSpeedBounce = data.growSpeedBounce;
+			growSpeedGravity = data.growSpeedGravity;
+			growSpeedMin = data.growSpeedMin;
+			growSpeedMax = data.growSpeedMax;
+			growSpeedOscFreq = data.growSpeedOscFreq;
             SetGrowSpeed(data.growSpeed);
 
 			SetBodyColor(color_sleeping);
@@ -170,6 +181,19 @@ namespace CirclePop {
 			}
 		}
 		private void GrowStep() {
+			// Am I a SPECIAL grow-speed type??
+			if (growSpeedGravity != 0) {
+				growSpeed = growSpeed + growSpeedGravity;
+				if (growSpeed<0 && Size.x<30) { // Too small??
+					SetGrowSpeed(growSpeed * -growSpeedBounce); // Bounce my speed!
+				}
+			}
+			// Oscillation!
+			if (growSpeedOscFreq != 0) {
+				growSpeedOscCount += Time.deltaTime;
+				growSpeed = MathUtils.SinRange(growSpeedMin,growSpeedMax, growSpeedOscCount*growSpeedOscFreq*10);
+			}
+
 			// Grow, and tell my Level I grew (so we can update score)!
             float growAmount = growSpeed*Time.timeScale;
             SetSize(Size.x+growAmount, Size.y+growAmount);
