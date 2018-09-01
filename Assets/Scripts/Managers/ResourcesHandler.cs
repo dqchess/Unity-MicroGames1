@@ -17,8 +17,9 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject circlePop_levelTile;
 	[SerializeField] public GameObject circlePop_level;
 	[SerializeField] public GameObject circlePop_collisionIcon;
-    [SerializeField] public GameObject circlePop_growerCircle;
-    [SerializeField] public GameObject circlePop_growerRect;
+	[SerializeField] public GameObject circlePop_growerCircle;
+	[SerializeField] public GameObject circlePop_growerRect;
+	[SerializeField] public GameObject circlePop_growerComposite;
     [SerializeField] public GameObject circlePop_wallCircle;
     [SerializeField] public GameObject circlePop_wallRect;
 

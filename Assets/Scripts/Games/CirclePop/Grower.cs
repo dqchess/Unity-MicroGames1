@@ -56,14 +56,14 @@ namespace CirclePop {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-        public void Initialize(Level _myLevel, Transform tf_parent, GrowerData data) {
+        virtual public void Initialize(Level _myLevel, Transform tf_parent, GrowerData data) {
             //Vector2 startingSize = new Vector2(30,30); // our default. We can say otherwise while adding these guys (tack on a ".SetStartingRadius(50f)" function).
             BaseInitialize(_myLevel, tf_parent, data);
 
             doMoveWhenSolid = data.doMoveWhenSolid;
             SetGrowSpeed(data.growSpeed);
 
-            bodyColor = color_sleeping;
+			SetBodyColor(color_sleeping);
             SetCurrentState(GrowerStates.Sleeping);
 		}
 
@@ -103,11 +103,11 @@ namespace CirclePop {
 //            // Shrink me down a little first! To make it a little easier.
 //            SetSize(Size*0.5f); // NOTE: Disabled!
 			// Set my color, and we're off!
-			bodyColor = color_growing;
+			SetBodyColor(color_growing);
 			SetCurrentState(GrowerStates.Growing);
 		}
 		public void Solidify() {
-			bodyColor = color_solid(myLevel.LevelIndex);
+			SetBodyColor(color_solid(myLevel.LevelIndex));
             SetCurrentState(GrowerStates.Solidified);
             UpdateMyValueText(); // Make sure my value is accurate when I'm solidified.
         }
@@ -136,7 +136,7 @@ namespace CirclePop {
 		override public void OnIllegalOverlap() {
 //			didIllegalOverlap = true;
 			SetCurrentState(GrowerStates.Solidified);
-			bodyColor = color_illegal;
+			SetBodyColor(color_illegal);
 		}
 
 
@@ -158,7 +158,7 @@ namespace CirclePop {
 			// Am I pre-growing? Then flash!
 			if (currentState==GrowerStates.PreGrowing) {
 				float colorLoc = MathUtils.SinRange(-0.3f, 1.3f, Time.time*14f);
-				bodyColor = Color.Lerp(color_pregrowingA, color_pregrowingB, colorLoc);
+				SetBodyColor(Color.Lerp(color_pregrowingA, color_pregrowingB, colorLoc));
 //				bodyColor = colorLoc<0.5f ? color_pregrowingA : color_pregrowingB;
 			}
 		}

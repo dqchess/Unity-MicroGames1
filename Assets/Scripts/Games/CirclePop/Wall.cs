@@ -13,7 +13,7 @@ namespace CirclePop {
 			BaseInitialize(_myLevel, tf_parent, data);
 
             // Color me impressed!
-			bodyColor = Grower.color_solid(myLevel.LevelIndex);
+			SetBodyColor(Grower.color_solid(myLevel.LevelIndex));
 		}
 
 		// ----------------------------------------------------------------

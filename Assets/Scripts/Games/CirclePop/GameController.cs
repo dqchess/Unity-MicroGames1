@@ -172,7 +172,13 @@ namespace CirclePop {
                 	level.OnTapDown();
 				}
             }
-        }
+		}
+
+		override protected void RegisterButtonInput() {
+			base.RegisterButtonInput();
+
+			if (Input.GetKeyDown(KeyCode.S)) { Debug.Log("Score: " + scorePossible); }
+		}
 
 
 

@@ -319,6 +319,8 @@ MonoBehaviour:
     type: 2}
   circlePop_growerRect: {fileID: 1762275864868292, guid: 6064797fc306824418ecb136fbaf69fd,
     type: 2}
+  circlePop_growerComposite: {fileID: 1361744742967390, guid: 0b51d35a3a8361840a3b4eb18b9cd506,
+    type: 2}
   circlePop_wallCircle: {fileID: 1581440064843480, guid: d588b50b1535342fc89c812bb8a15a4d,
     type: 2}
   circlePop_wallRect: {fileID: 1132836622112598, guid: 33e1c77c6ba7d478885fdd84a055dffa,

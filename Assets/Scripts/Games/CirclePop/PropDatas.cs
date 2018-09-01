@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace CirclePop {
     
@@ -17,9 +18,34 @@ namespace CirclePop {
     public class GrowerData : PropData {
         public bool doMoveWhenSolid=false;
         public float growSpeed=1;
+		public List<GrowerCompositePartData> parts=new List<GrowerCompositePartData>();
     }
 
     public class WallData : PropData {
     }
+
+
+	/** Only for GrowerComposites. */
+	public class GrowerCompositePartData {
+		public PropShapes shape;
+		public Vector2 pos;
+		public Vector2 size;
+
+		/// For circles, pass in "20,0, 30"; for rects, pass in "20,0, 30,30".
+		public GrowerCompositePartData(string propertiesString) {
+			string[] vals = propertiesString.Split(',');
+			if (vals.Length < 3) { Debug.LogError("GrowerComposite part properties string doesn't contain enough values."); return; } // Safety check.
+			pos = new Vector2(TextUtils.ParseFloat(vals[0]), TextUtils.ParseFloat(vals[1]));
+			// Circle?
+			if (vals.Length == 3) {
+				shape = PropShapes.Circle;
+				size = new Vector2(TextUtils.ParseFloat(vals[2]), TextUtils.ParseFloat(vals[2])); // radius,radius.
+			}
+			else {
+				shape = PropShapes.Rect;
+				size = new Vector2(TextUtils.ParseFloat(vals[2]), TextUtils.ParseFloat(vals[3])); // width,height.
+			}
+		}
+	}
 
 }

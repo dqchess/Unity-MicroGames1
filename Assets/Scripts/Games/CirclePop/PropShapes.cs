@@ -1,3 +1,3 @@
 ﻿namespace CirclePop {
-	public enum PropShapes { Circle, Rect, Triangle }
+	public enum PropShapes { Circle, Rect, Triangle, Composite }
 }

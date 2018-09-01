@@ -207,6 +207,7 @@ namespace CirclePop {
             switch (data.shape) {
 			case PropShapes.Circle: prefabGO = resourcesHandler.circlePop_growerCircle; break;
 			case PropShapes.Rect: prefabGO = resourcesHandler.circlePop_growerRect; break;
+			case PropShapes.Composite: prefabGO = resourcesHandler.circlePop_growerComposite; break;
             default: Debug.LogError("Grower shape not yet supported. Time to write some more code! Shape: " + data.shape); break;
 			}
 			Grower newObj = Instantiate(prefabGO).GetComponent<Grower>();
@@ -300,10 +301,14 @@ namespace CirclePop {
                 string s = properties[i].TrimStart();
                 if (s.StartsWith("doMoveWhenSolid")) {
                     data.doMoveWhenSolid = true;
-                }
-                if (s.StartsWith("growSpeed=")) {
-                    data.growSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
-                }
+				}
+				if (s.StartsWith("growSpeed=")) {
+					data.growSpeed = TextUtils.ParseFloat(s.Substring(s.IndexOf('=')+1));
+				}
+				if (s.StartsWith("part=")) { // Parts can be either Circles or Rects; determined by number of params for the part.
+					GrowerCompositePartData partData = new GrowerCompositePartData(s.Substring(s.IndexOf('=')+1));
+					data.parts.Add(partData);
+				}
             }
             // Add the dude!
             AddGrower(data);
@@ -349,8 +354,9 @@ namespace CirclePop {
         }
 
         private PropShapes GetGrowerShapeFromLine(string s) {
-            if (s.StartsWith("growerC")) { return PropShapes.Circle; }
-            else if (s.StartsWith("growerR")) { return PropShapes.Rect; }
+			if (s.StartsWith("growerC")) { return PropShapes.Circle; }
+			else if (s.StartsWith("growerR")) { return PropShapes.Rect; }
+			else if (s.StartsWith("growerP")) { return PropShapes.Composite; }
             Debug.LogError("Grower shape not recognized or specified! Line: \"" + s + "\".");
             return PropShapes.Circle;
         }

@@ -6,11 +6,12 @@ using UnityEngine.UI;
 namespace CirclePop {
 	abstract public class Prop : MonoBehaviour {
 		// Components
-        [SerializeField] protected Image i_body;
+		[SerializeField] protected Image i_body; // note: this is optional, and only for convenience (almost all Props only have one image).
         [SerializeField] protected RectTransform myRectTransform=null;
         protected ImageLine il_movePathLine; // for MOVING Props.
 		// Properties
 		private bool doHideMovePath=false; // for MOVING Props. Set to true if we DON'T want to show the path (useful if it's only partially on screen and looks weird if we do show it).
+		private Color bodyColor;
 		private float moveSpeed=1f; // for MOVING Props.
 		private float moveOscVal; // for MOVING Props.
 		private float rotateSpeed=0f; // for ROTATING Props.
@@ -33,9 +34,12 @@ namespace CirclePop {
             }
 		}
 		// Getters (Protected)
-		protected Color bodyColor {
-			get { return i_body.color; }
-			set { i_body.color = value; }
+		//		protected Color bodyColor {
+		//			get { return i_body.color; }
+		//			set { i_body.color = value; }
+		//        }
+		protected Color BodyColor {
+			get { return bodyColor; }
         }
         protected PropShapes MyShape { get { return myShape; } }
         protected Vector2 Size { get { return size; } }
@@ -167,6 +171,14 @@ namespace CirclePop {
 				Pos = posA;// + posDipOffset + posDanceOffset;
 			}
 		}
+		protected void SetBodyColor(Color _color) {
+			bodyColor = _color;
+			ApplyBodyColor();
+		}
+		virtual protected void ApplyBodyColor() {
+			if (i_body != null) { i_body.color = bodyColor; }
+		}
+
 
 		// ----------------------------------------------------------------
 		//  Events

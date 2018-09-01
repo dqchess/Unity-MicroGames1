@@ -1,15 +1,52 @@
 
 
+
+LEVEL - TEST
+scoreReq=2000
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 20,20
+
+LEVEL - TEST
+scoreReq=2000
+wallR 0,0;20,20
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 20
+
+LEVEL - TEST
+scoreReq=1700
+growerP 0,0; part=10.1,10.1, 20,20; part=-10.1,-10.1, 20,20; growSpeed=1.5
+wallR -150, 150; 296,296
+wallR  150,-150; 296,296
+
+LEVEL - TEST
+scoreReq=1600
+growerP 0,0; part=10,10, 20,20; part=-10,-10, 20,20; growSpeed=1.5; rotateSpeed=1
+
+LEVEL - TEST
+scoreReq=1600
+growerP 0,0; part=15,15, 30,30; part=-15,-15, 30,30; rotateSpeed=1
+
+LEVEL - Plus TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 10,40; part=0,0, 40,10; growSpeed=1.5
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=10,10, 20; part=-10,-10, 20
+
+
+
+
+
+
+
 LEVEL - One
 scoreReq=2000
 growerC 0,100
-
-LEVEL - QQQ
-scoreReq=100
-growerC 0,100
-growerC -130, -130
-growerC  150, -250
-growerC    0,  258
 
 LEVEL - One, with single WallCircle (horz)
 scoreReq=550

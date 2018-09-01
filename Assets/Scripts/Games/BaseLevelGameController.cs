@@ -27,6 +27,14 @@ abstract public class BaseLevelGameController : BaseGameController {
 	public LevelLoader LevelLoader { get { return levelLoader; } }
 	// Getters (Protected)
 	protected int LevelIndex { get { return baseLevel.LevelIndex; } }
+	// Getters (Private)
+	private Vector2 GetMousePosLevel() {
+		Vector2 mousePos = Input.mousePosition;
+		mousePos /= canvas.scaleFactor;
+//		mousePos -= new Vector2(baseLevel.transform.localPosition.x,baseLevel.transform.localPosition.y);
+		mousePos -= new Vector2(300,400); // HACK! This is hardcoded. I'm only using this function for debugging so nbd atm.
+		return mousePos;
+	}
 
 
 	// ----------------------------------------------------------------
@@ -189,6 +197,9 @@ abstract public class BaseLevelGameController : BaseGameController {
         else if (Input.GetMouseButtonUp(0)) {
             OnTapUp();
         }
+
+		// Debug print mouse position.
+		if (Input.GetMouseButtonDown(1)) { Debug.Log("Mouse pos in level: " + GetMousePosLevel()); }
 	}
 	override protected void RegisterButtonInput() {
 		base.RegisterButtonInput();
