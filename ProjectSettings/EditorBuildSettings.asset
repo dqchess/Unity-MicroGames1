@@ -6,11 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/CircleGrowMainMenu.unity
+    path: Assets/Scenes/CirclePopMainMenu.unity
     guid: 0bde556557e1b3a43a8321fb54f6cfd6
   - enabled: 1
-    path: Assets/Scenes/CircleGrowLevelSelect.unity
+    path: Assets/Scenes/CirclePopLevelSelect.unity
     guid: f519bd2bd405ba14aa463dbc9c988dec
   - enabled: 1
-    path: Assets/Scenes/CircleGrow.unity
+    path: Assets/Scenes/CirclePop.unity
     guid: a43ed2c4338ab4156a29f7d9ed72a6e1
+  m_configObjects: {}

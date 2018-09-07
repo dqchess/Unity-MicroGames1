@@ -1,61 +1,6 @@
 
 
 
-LEVEL - TEST
-scoreReq=2000
-
-LEVEL - TEST
-scoreReq=2000
-growerP 0,0; part=0,0, 20,20
-
-LEVEL - TEST
-scoreReq=2000
-wallR 0,0;20,20
-
-LEVEL - TEST
-scoreReq=2000
-growerP 0,0; part=0,0, 20
-
-LEVEL - TEST
-scoreReq=1700
-growerP 0,0; part=10.1,10.1, 20,20; part=-10.1,-10.1, 20,20; growSpeed=1.5
-wallR -150, 150; 296,296
-wallR  150,-150; 296,296
-
-LEVEL - TEST
-scoreReq=1600
-growerP 0,0; part=10,10, 20,20; part=-10,-10, 20,20; growSpeed=1.5; rotateSpeed=1
-
-LEVEL - TEST
-scoreReq=1600
-growerP 0,0; part=15,15, 30,30; part=-15,-15, 30,30; rotateSpeed=1
-
-LEVEL - Plus TEST
-scoreReq=2000
-growerP 0,0; part=0,0, 10,40; part=0,0, 40,10; growSpeed=1.5
-
-LEVEL - TEST
-scoreReq=2000
-growerP 0,0; part=10,10, 20; part=-10,-10, 20
-
-LEVEL - TEST
-scoreReq=2000
-growerC 0,0; growSpeedGravity=-0.06; growSpeedBounce=1.07
-
-LEVEL - TEST
-scoreReq=2000
-growerC 0,-100; posB=0,100; moveSpeed=3; growSpeedGravity=-0.06; growSpeedBounce=1.07
-
-LEVEL - TEST
-scoreReq=1900
-growerC 0,0; growSpeedGravity=-0.4; growSpeedBounce=1.005
-
-LEVEL - TEST
-scoreReq=1900
-growerC 0,0; growSpeedMin=-0.8; growSpeedMax=6; growSpeedOscFreq=1
-
-
-
 
 
 
@@ -387,6 +332,70 @@ scoreReq=2000
 growerC -100, 200
 growerC  100, 200
 growerC    0,-100
+
+
+
+
+
+
+
+
+
+LEVEL - TEST
+scoreReq=2000
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 20,20
+
+LEVEL - TEST
+scoreReq=2000
+wallR 0,0;20,20
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 20
+
+LEVEL - TEST
+scoreReq=1700
+growerP 0,0; part=10.1,10.1, 20,20; part=-10.1,-10.1, 20,20; growSpeed=1.5
+wallR -150, 150; 296,296
+wallR  150,-150; 296,296
+
+LEVEL - TEST
+scoreReq=1600
+growerP 0,0; part=10,10, 20,20; part=-10,-10, 20,20; growSpeed=1.5; rotateSpeed=1
+
+LEVEL - TEST
+scoreReq=1600
+growerP 0,0; part=15,15, 30,30; part=-15,-15, 30,30; rotateSpeed=1
+
+LEVEL - Plus TEST
+scoreReq=2000
+growerP 0,0; part=0,0, 10,40; part=0,0, 40,10; growSpeed=1.5
+
+LEVEL - TEST
+scoreReq=2000
+growerP 0,0; part=10,10, 20; part=-10,-10, 20
+
+LEVEL - TEST
+scoreReq=2000
+growerC 0,0; growSpeedGravity=-0.06; growSpeedBounce=1.07
+
+LEVEL - TEST
+scoreReq=2000
+growerC 0,-100; posB=0,100; moveSpeed=3; growSpeedGravity=-0.06; growSpeedBounce=1.07
+
+LEVEL - TEST
+scoreReq=1900
+growerC 0,0; growSpeedGravity=-0.4; growSpeedBounce=1.005
+
+LEVEL - TEST
+scoreReq=1900
+growerC 0,0; growSpeedMin=-0.8; growSpeedMax=6; growSpeedOscFreq=1
+
+
+
 
 
 
