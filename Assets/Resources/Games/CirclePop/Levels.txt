@@ -20,30 +20,6 @@ growerC 0,-184; growSpeed=0.9
 growerC 0, 150; growSpeed=0.9
 wallR 0,13; 92
 
-LEVEL - One, with compressing walls!
-growerC 0,0; growSpeed=1.2
-wallR -230,0; 400,800; posB=-450,0; moveSpeed=0.8; moveLocOffset=-1.5708; doHideMovePath
-wallR  230,0; 400,800; posB= 450,0; moveSpeed=0.8; moveLocOffset=-1.5708; doHideMovePath
-
-LEVEL - Two, in a field of landmines!
-scoreReq=900
-growerC -100,-160
-growerC   56, 132
-wallC -185, 265; 150
-wallC -175,  21; 190
-wallC   54, 333;  82
-wallC  169,-108; 206
-wallC -225,-250; 100
-wallC  216, 316; 166
-wallC   59,-277; 192
-
-
-LEVEL - One, with rotating center plank
-scoreReq=800
-growerC 0, 100
-wallR 0,-100; 30,300; posB=0,-220; moveSpeed=2.5; rotateSpeed=1; moveLocOffset=0.3
-
-
 LEVEL - Three, with center diamond wall
 scoreReq=900
 growerC -130, -130
@@ -57,6 +33,16 @@ wallC -500,0; 700
 wallC  500,0; 700
 growerC 0, 0
 
+LEVEL - One, with compressing walls!
+growerC 0,0; growSpeed=1.2
+wallR -230,0; 400,800; posB=-450,0; moveSpeed=0.8; moveLocOffset=-1.5708; doHideMovePath
+wallR  230,0; 400,800; posB= 450,0; moveSpeed=0.8; moveLocOffset=-1.5708; doHideMovePath
+
+LEVEL - One, with rotating center plank
+scoreReq=800
+growerC 0, 100
+wallR 0,-100; 30,300; posB=0,-220; moveSpeed=2.5; rotateSpeed=1; moveLocOffset=0.3
+
 
 LEVEL - Biig rotating squares you gotta wait for
 scoreReq=850
@@ -65,6 +51,24 @@ growerC  220, 0
 growerC 0, 0
 wallR 0,-520; 700,700; rotateSpeed= 0.2
 wallR 0, 520; 700,700; rotateSpeed= 0.2
+
+LEVEL - One patrolling Wall
+scoreReq=1300
+growerC -120,  220; growSpeed=1.2
+growerC  120, -220; growSpeed=1.2
+wallC 0,200; 60; posB=0,-200; moveSpeed=0.6
+
+LEVEL - Three-wall squish
+scoreReq=1400
+growerC 0,-250
+growerC 0,   0
+growerC 0, 250
+wallR -230,-280; 400,280; posB=-450,-280; moveSpeed=0.28; moveLocOffset=  0.8; doHideMovePath
+wallR  230,-280; 400,280; posB= 450,-280; moveSpeed=0.28; moveLocOffset=  0.8; doHideMovePath
+wallR -230,   0; 400,280; posB=-450,   0; moveSpeed=0.28; moveLocOffset= -0.3; doHideMovePath
+wallR  230,   0; 400,280; posB= 450,   0; moveSpeed=0.28; moveLocOffset= -0.3; doHideMovePath
+wallR -230, 280; 400,280; posB=-450, 280; moveSpeed=0.28; moveLocOffset= -1.5; doHideMovePath
+wallR  230, 280; 400,280; posB= 450, 280; moveSpeed=0.28; moveLocOffset= -1.5; doHideMovePath
 
 
 LEVEL - Moving Grower Limbo-esque activation (start early)
@@ -78,35 +82,25 @@ growerC -80,  100; posB=80, 100
 growerC -80,  300; posB=80, 300
 
 
-LEVEL - One patrolling Wall
-scoreReq=1300
-growerC -120,  220; growSpeed=1.2
-growerC  120, -220; growSpeed=1.2
-wallC 0,250; 60; posB=0,-250; moveSpeed=0.28
-
-
 //LEVEL - 3 diagonal fast movers
 //scoreReq=1200
 //growerC -150, 200; growSpeed=1.2; moveSpeed=2; posB=150, 200
 //growerC    0,   0; growSpeed=1.2
 //growerC -150,-200; growSpeed=1.2; moveSpeed=2; posB=150,-200; moveLocOffset=3.1416
 
-
-LEVEL - 3 square Wall gears! Flashy.
-scoreReq=600
-growerC -150, 250; growSpeed=0.7
-growerC  150,-250; growSpeed=0.7
-wallR    0,   0; 210,210; rotateSpeed=-0.9
-wallR -110,-210; 210,210; rotateSpeed= 0.9
-wallR  110, 210; 210,210; rotateSpeed= 0.9
-
 LEVEL - Buzzsaw collision course!
 scoreReq=1000
-growerC    0,  240; posB=0,0; moveSpeed=0.2
-growerC  240,    0; posB=0,0; moveSpeed=0.2
-growerC    0, -240; posB=0,0; moveSpeed=0.2
-growerC -240,    0; posB=0,0; moveSpeed=0.2
+growerC    0,  240; posB=0,0; moveSpeed=0.2; moveLocOffset=-0.2
+growerC  240,    0; posB=0,0; moveSpeed=0.2; moveLocOffset=-0.2
+//growerC    0, -240; posB=0,0; moveSpeed=0.2; moveLocOffset=-0.2
+growerC -240,    0; posB=0,0; moveSpeed=0.2; moveLocOffset=-0.2
 wallR 0,0; 50,50; rotateSpeed=-16
+
+LEVEL - Tight attic
+scoreReq=1000
+growerC    0,  240; posB=0,-200; moveSpeed=0.9; moveLocOffset=-1.5
+wallR -240,200; 300,800; rotation=-26
+wallR  240,200; 300,800; rotation= 26
 
 
 LEVEL - One moving, one static reversed
@@ -121,32 +115,18 @@ growerC    0,  260; posB=   0,-260; moveSpeed=0.7; moveLocOffset=0
 growerC  200,    0; posB=-200,   0; moveSpeed=0.7; moveLocOffset=1.5
 
 
-LEVEL - Surprise wall squish!
-scoreReq=2000
-growerC 0, 0
-//wallR -140,0; 80,800; posB=-2000,0; moveSpeed=0.8; moveLocOffset=3.14159
-//wallR  140,0; 80,800; posB= 2000,0; moveSpeed=0.8; moveLocOffset=3.14159
-wallR 0,-300; 600,500; posB=0,-4000; moveSpeed=0.85; moveLocOffset=0.15; doHideMovePath
-wallR 0, 300; 600,500; posB=0, 4000; moveSpeed=0.85; moveLocOffset=0.15; doHideMovePath
-
-LEVEL - Three-wall squish
-scoreReq=1400
-growerC 0,-250
-growerC 0,   0
-growerC 0, 250
-wallR -230,-280; 400,280; posB=-450,-280; moveSpeed=0.28; moveLocOffset=  0.8; doHideMovePath
-wallR  230,-280; 400,280; posB= 450,-280; moveSpeed=0.28; moveLocOffset=  0.8; doHideMovePath
-wallR -230,   0; 400,280; posB=-450,   0; moveSpeed=0.28; moveLocOffset= -0.3; doHideMovePath
-wallR  230,   0; 400,280; posB= 450,   0; moveSpeed=0.28; moveLocOffset= -0.3; doHideMovePath
-wallR -230, 280; 400,280; posB=-450, 280; moveSpeed=0.28; moveLocOffset= -1.5; doHideMovePath
-wallR  230, 280; 400,280; posB= 450, 280; moveSpeed=0.28; moveLocOffset= -1.5; doHideMovePath
-
 LEVEL - Stressful 4 near-hit neutrals
 scoreReq=1600
 growerC  150,  150; posB=0,0; moveSpeed=0.7; moveLocOffset=0
 growerC  150, -150; posB=0,0; moveSpeed=0.7; moveLocOffset=1.5
 growerC -150, -150; posB=0,0; moveSpeed=0.7; moveLocOffset=3
 growerC -150,  150; posB=0,0; moveSpeed=0.7; moveLocOffset=4.5
+
+LEVEL - Coming out hot!
+scoreReq=1100
+growerC    0,  300; posB=0,-200; moveSpeed=0.8; moveLocOffset=-1
+wallR -230,260; 300,400
+wallR  230,260; 300,400
 
 
 
@@ -166,18 +146,6 @@ scoreReq=1600
 growerR -120, 130; growSpeed=1.4
 growerR  100,-230; growSpeed=1.4; posB= 100, 140; moveSpeed=0.6
 
-
-LEVEL - Random, rotated squares
-scoreReq=1350
-growerR 149,252; rotation=-25
-growerR -167,-260; rotation=-40
-growerR -16,-12; rotation=-66
-//wallR -16,-12; 310,310; rotation=-66
-wallR -132,234; 200,200; rotation=40
-wallR 227,-118; 80,80; rotation=-12
-wallR 207,67; 120,120; rotation=7
-wallR 104,-263; 200,200; rotation=5
-
 LEVEL - Random, rotated squares... rotating!
 scoreReq=1000
 growerR  149, 252; rotation=-25; rotateSpeed=-0.8
@@ -189,6 +157,12 @@ wallR  227,-118;  80, 80; rotation=-12; rotateSpeed=0.8
 wallR  207,  67; 120,120; rotation=  7; rotateSpeed=0.8
 wallR  104,-263; 200,200; rotation=  5; rotateSpeed=0.8
 
+LEVEL - Rotating Tight attic
+scoreReq=1100
+growerC    0,  240; posB=0,-200; growSpeed=1.5; moveSpeed=1.4; moveLocOffset=0
+wallR -240,200; 300,1800; rotation=0; rotateSpeed=-0.1
+wallR  240,200; 300,1800; rotation=0; rotateSpeed= 0.1
+
 LEVEL - 4 asterisk shared commute collision risk
 scoreReq=1200
 growerC  130, -130; posB=-130, 130; moveSpeed=0.7; moveLocOffset=1
@@ -198,19 +172,12 @@ growerC    0,  180; posB=   0,-180; moveSpeed=0.7; moveLocOffset=0
 
 LEVEL - GrowerSquare fitting in with WallSquares
 scoreReq=600
-growerR 0,0; rotateSpeed=0.3
-wallR     0,-200; 120,120; rotateSpeed=-0.3
-wallR     0, 200; 120,120; rotateSpeed=-0.3
+growerR 0,0; rotateSpeed=0.3; rotation=-20
+wallR     0,-200; 120,120; rotateSpeed=-0.3; rotation=20
+wallR     0, 200; 120,120; rotateSpeed=-0.3; rotation=20
 
 // TODO: You're squares AND circles
 
-
-LEVEL - 2 close call
-scoreReq=1500
-growerC 0,  200
-growerC 0, -112
-wallC -138, 22; 100//; posB=-200,22; moveSpeed=0.9
-wallC  138, 22; 100//; posB= 200,22; moveSpeed=0.9
 
 LEVEL - 3 Competing square lanes
 scoreReq=1100
@@ -235,19 +202,6 @@ wallR -320,   0; 400,280; posB=-400,   0; moveSpeed=1; moveLocOffset=-1.2; doHid
 wallR  320,   0; 400,280; posB= 400,   0; moveSpeed=1; moveLocOffset=-4.34159; doHideMovePath
 wallR -320, 280; 400,280; posB=-400, 280; moveSpeed=1; moveLocOffset=-2.4; doHideMovePath
 wallR  320, 280; 400,280; posB= 400, 280; moveSpeed=1; moveLocOffset=-5.54159; doHideMovePath
-
-LEVEL - Fast circle and square
-scoreReq=2300
-growerR 0,-190; growSpeed=3.5
-growerC 0, 190; growSpeed=2
-
-
-LEVEL - Four-square Foursquare
-scoreReq=2000
-growerR -134,-134; growSpeed=1.8; rotateSpeed=0.5
-growerR -134, 134; growSpeed=1.8; rotateSpeed=0.5
-growerR  134,-134; growSpeed=1.8; rotateSpeed=0.5
-growerR  134, 134; growSpeed=1.8; rotateSpeed=0.5
 
 
 LEVEL - Be careful where you freeze, guys
@@ -398,8 +352,70 @@ growerC 0,0; growSpeedMin=-0.8; growSpeedMax=6; growSpeedOscFreq=1
 
 
 
+// CUT:
 
 
+
+
+LEVEL - Two, in a field of landmines!
+scoreReq=900
+growerC -100,-160
+growerC   56, 132
+wallC -185, 265; 150
+wallC -175,  21; 190
+wallC   54, 333;  82
+wallC  169,-108; 206
+wallC -225,-250; 100
+wallC  216, 316; 166
+wallC   59,-277; 192
+
+
+LEVEL - 2 close call
+scoreReq=1500
+growerC 0,  200
+growerC 0, -112
+wallC -138, 22; 100//; posB=-200,22; moveSpeed=0.9
+wallC  138, 22; 100//; posB= 200,22; moveSpeed=0.9
+
+LEVEL - 3 square Wall gears! Flashy.
+scoreReq=600
+growerC -150, 250; growSpeed=0.7
+growerC  150,-250; growSpeed=0.7
+wallR    0,   0; 210,210; rotateSpeed=-0.9
+wallR -110,-210; 210,210; rotateSpeed= 0.9
+wallR  110, 210; 210,210; rotateSpeed= 0.9
+
+LEVEL - Surprise wall squish!
+scoreReq=2000
+growerC 0, 0
+//wallR -140,0; 80,800; posB=-2000,0; moveSpeed=0.8; moveLocOffset=3.14159
+//wallR  140,0; 80,800; posB= 2000,0; moveSpeed=0.8; moveLocOffset=3.14159
+wallR 0,-300; 600,500; posB=0,-4000; moveSpeed=0.85; moveLocOffset=0.15; doHideMovePath
+wallR 0, 300; 600,500; posB=0, 4000; moveSpeed=0.85; moveLocOffset=0.15; doHideMovePath
+
+LEVEL - Random, rotated squares
+scoreReq=1350
+growerR 149,252; rotation=-25
+growerR -167,-260; rotation=-40
+growerR -16,-12; rotation=-66
+//wallR -16,-12; 310,310; rotation=-66
+wallR -132,234; 200,200; rotation=40
+wallR 227,-118; 80,80; rotation=-12
+wallR 207,67; 120,120; rotation=7
+wallR 104,-263; 200,200; rotation=5
+
+LEVEL - Fast circle and square
+scoreReq=2300
+growerR 0,-190; growSpeed=3.5
+growerC 0, 190; growSpeed=2
+
+
+LEVEL - Four-square Foursquare
+scoreReq=2000
+growerR -134,-134; growSpeed=1.8; rotateSpeed=0.5
+growerR -134, 134; growSpeed=1.8; rotateSpeed=0.5
+growerR  134,-134; growSpeed=1.8; rotateSpeed=0.5
+growerR  134, 134; growSpeed=1.8; rotateSpeed=0.5
 
 
 //            LEVEL - Two in chambers
