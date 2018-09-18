@@ -27,6 +27,33 @@ growerC  150, -250
 growerC    0,  258
 wallR 0,0; 200,200; rotation=45
 
+LEVEL - Two, in a field of landmines!
+scoreReq=900
+growerC -100,-160
+growerC   56, 132
+wallC -185, 265; 150
+wallC -175,  21; 190
+wallC   54, 333;  82
+wallC  169,-108; 206
+wallC -225,-250; 100
+wallC  216, 316; 166
+wallC   59,-277; 192
+
+LEVEL - 2 close call
+scoreReq=1500
+growerC 0,  200
+growerC 0, -112
+wallC -138, 22; 100//; posB=-200,22; moveSpeed=0.9
+wallC  138, 22; 100//; posB= 200,22; moveSpeed=0.9
+
+LEVEL - 3 square Wall gears! Flashy.
+scoreReq=600
+growerC -150, 250; growSpeed=0.7
+growerC  150,-250; growSpeed=0.7
+wallR    0,   0; 210,210; rotateSpeed=-0.9
+wallR -110,-210; 210,210; rotateSpeed= 0.9
+wallR  110, 210; 210,210; rotateSpeed= 0.9
+
 LEVEL - One, concave narrow squish
 scoreReq=650
 wallC -500,0; 700
@@ -45,9 +72,9 @@ wallR 0,-100; 30,300; posB=0,-220; moveSpeed=2.5; rotateSpeed=1; moveLocOffset=0
 
 
 LEVEL - Biig rotating squares you gotta wait for
-scoreReq=850
-growerC -220, 0
-growerC  220, 0
+scoreReq=810
+//growerC -220, 0
+//growerC  220, 0
 growerC 0, 0
 wallR 0,-520; 700,700; rotateSpeed= 0.2
 wallR 0, 520; 700,700; rotateSpeed= 0.2
@@ -357,33 +384,6 @@ growerC 0,0; growSpeedMin=-0.8; growSpeedMax=6; growSpeedOscFreq=1
 
 
 
-LEVEL - Two, in a field of landmines!
-scoreReq=900
-growerC -100,-160
-growerC   56, 132
-wallC -185, 265; 150
-wallC -175,  21; 190
-wallC   54, 333;  82
-wallC  169,-108; 206
-wallC -225,-250; 100
-wallC  216, 316; 166
-wallC   59,-277; 192
-
-
-LEVEL - 2 close call
-scoreReq=1500
-growerC 0,  200
-growerC 0, -112
-wallC -138, 22; 100//; posB=-200,22; moveSpeed=0.9
-wallC  138, 22; 100//; posB= 200,22; moveSpeed=0.9
-
-LEVEL - 3 square Wall gears! Flashy.
-scoreReq=600
-growerC -150, 250; growSpeed=0.7
-growerC  150,-250; growSpeed=0.7
-wallR    0,   0; 210,210; rotateSpeed=-0.9
-wallR -110,-210; 210,210; rotateSpeed= 0.9
-wallR  110, 210; 210,210; rotateSpeed= 0.9
 
 LEVEL - Surprise wall squish!
 scoreReq=2000
