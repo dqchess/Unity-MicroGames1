@@ -170,45 +170,45 @@ namespace BouncePaint {
             else if (li == i++) {
                 AddBlock(bs, 0,b+50);
             }
-            else if (li == i++) {
-                AddBlock(bs, -40,b+50);
-                AddBlock(bs,  40,b+50);
-            }
-            else if (li == i++) {
-                AddBlock(bs, -70,b+50);
-                AddBlock(bs,   0,b+50);
-                AddBlock(bs,  70,b+50);
-            }
-            else if (li == i++) {
-                AddBlock(bs, -90,b+50);
-                AddBlock(bs, -30,b+50);
-                AddBlock(bs,  30,b+50);
-                AddBlock(bs,  90,b+50);
-            }
+            //else if (li == i++) {
+            //    AddBlock(bs, -40,b+50);
+            //    AddBlock(bs,  40,b+50);
+            //}
+            //else if (li == i++) {
+            //    AddBlock(bs, -70,b+50);
+            //    AddBlock(bs,   0,b+50);
+            //    AddBlock(bs,  70,b+50);
+            //}
+            //else if (li == i++) {
+            //    AddBlock(bs, -90,b+50);
+            //    AddBlock(bs, -30,b+50);
+            //    AddBlock(bs,  30,b+50);
+            //    AddBlock(bs,  90,b+50);
+            //}
 
             // Larger X gaps.
             else if (li == i++) {
-                AddBlock(bs, -120,b);
-                AddBlock(bs,  120,b);
+                AddBlock(bs, -80,b);
+                AddBlock(bs,  80,b);
             }
-            else if (li == i++) {
-                AddBlock(bs, -220,b);
-                AddBlock(bs,  120,b);
-                AddBlock(bs,  220,b);
-            }
-            else if (li == i++) {
-                AddBlock(bs, -220,b);
-                AddBlock(bs, -140,b);
-                AddBlock(bs,  -80,b);
-                AddBlock(bs,  220,b);
-            }
-            else if (li == i++) {
-                AddBlock(bs, -200,b);
-                AddBlock(bs, -140,b);
-                AddBlock(bs,    0,b+50);
-                AddBlock(bs,  200,b);
-                AddBlock(bs,  140,b);
-            }
+            //else if (li == i++) {
+            //    AddBlock(bs, -200,b);
+            //    AddBlock(bs,  100,b);
+            //    AddBlock(bs,  200,b);
+            //}
+            //else if (li == i++) {
+            //    AddBlock(bs, -220,b);
+            //    AddBlock(bs, -140,b);
+            //    AddBlock(bs,  -80,b);
+            //    AddBlock(bs,  220,b);
+            //}
+            //else if (li == i++) {
+            //    AddBlock(bs, -200,b);
+            //    AddBlock(bs, -140,b);
+            //    AddBlock(bs,    0,b+50);
+            //    AddBlock(bs,  200,b);
+            //    AddBlock(bs,  140,b);
+            //}
 
             // Offset Y positions
             //          else if (levelIndex == i++) {
@@ -221,6 +221,20 @@ namespace BouncePaint {
             //              AddBlock(blockSize,  80,b+200);
             //              AddBlock(blockSize,  80,b);
             //          }
+            else if (li == i++) {
+                AddBlock(bs, -120,b+120);
+                AddBlock(bs,    0,b);
+                AddBlock(bs,  120,b);
+            }
+            else if (li == i++) {
+                AddBlock(bs, new Vector2(-100,b), new Vector2(100,b));
+            }
+            else if (li == i++) {
+                AddBlock(bs, new Vector2(-60,b), new Vector2(-160,b));
+                AddBlock(bs, new Vector2(60,b), new Vector2(160,b));
+                AddBlock(bs, 0,b);
+            }
+            /*
             else if (li == i++) {
                 AddBlock(bs, -180,b+160);
                 AddBlock(bs, -100,b);
@@ -242,47 +256,62 @@ namespace BouncePaint {
                 AddBlock(bs,  130,b);
                 AddBlock(bs,  180,b+80);
             }
+            //else if (li == i++) {
+            //    AddBlock(bs, -240,b+300);
+            //    AddBlock(bs, -120,b+200);
+            //    AddBlock(bs,  -60,b);
+            //    AddBlock(bs,    0,b+150);
+            //    AddBlock(bs,   60,b+200);
+            //    AddBlock(bs,  180,b);
+            //    AddBlock(bs,  240,b+100);
+            //}
+            */
             else if (li == i++) {
-                AddBlock(bs, -240,b+300);
-                AddBlock(bs, -120,b+200);
-                AddBlock(bs,  -60,b);
-                AddBlock(bs,    0,b+150);
-                AddBlock(bs,   60,b+200);
-                AddBlock(bs,  180,b);
-                AddBlock(bs,  240,b+100);
+                AddBlock(bs, new Vector2(-180,b+160), new Vector2(-140,b+160));
+                AddBlock(bs, -40,b);
+                AddBlock(bs,  40,b);
+                AddBlock(bs, new Vector2( 180,b+160), new Vector2( 140,b+160));
             }
-            else if (li == i++) {
-                AddBlock(bs, -210,b);
-                AddBlock(bs, -150,b+40);
-                AddBlock(bs,  -90,b+80);
-                AddBlock(bs,  -30,b+120);
-                AddBlock(bs,   30,b+160);
-                AddBlock(bs,   90,b+200);
-                AddBlock(bs,  150,b+240);
-                AddBlock(bs,  210,b+280);
-            }
+            //else if (li == i++) {
+            //    AddBlock(bs, -210,b);
+            //    AddBlock(bs, -150,b+40);
+            //    AddBlock(bs,  -90,b+80);
+            //    AddBlock(bs,  -30,b+120);
+            //    AddBlock(bs,   30,b+160);
+            //    AddBlock(bs,   90,b+200);
+            //    AddBlock(bs,  150,b+240);
+            //    AddBlock(bs,  210,b+280);
+            //}
+            //else if (li == i++) {
+            //    AddBlock(bs, -210,b);
+            //    AddBlock(bs,  new Vector2(-90,b+80), new Vector2(-150,b+80));
+            //    AddBlock(bs,  -30,b+120);
+            //    AddBlock(bs,   30,b+160);
+            //    AddBlock(bs,  new Vector2( 90,b+200), new Vector2( 150,b+200));
+            //    AddBlock(bs,  210,b+280);
+            //}
 
             // Vertical Stacks
-            else if (li == i++) {
-                AddBlock(bs, 0,b);
-                AddBlock(bs, 0,b+90);
-                AddBlock(bs, 0,b+180);
-                AddBlock(bs, 0,b+270);
-            }
+            //else if (li == i++) {
+            //    AddBlock(bs, 0,b);
+            //    AddBlock(bs, 0,b+90);
+            //    AddBlock(bs, 0,b+180);
+            //    //AddBlock(bs, 0,b+270);
+            //}
             else if (li == i++) {
                 AddBlock(bs, -150,b);
                 AddBlock(bs, -150,b+80);
                 AddBlock(bs,  150,b);
                 AddBlock(bs,  150,b+80);
             }
-            else if (li == i++) {
-                AddBlock(bs, -150,b);
-                AddBlock(bs,    0,b);
-                AddBlock(bs,  150,b);
-                AddBlock(bs, -150,b+180);
-                AddBlock(bs,    0,b+180);
-                AddBlock(bs,  150,b+180);
-            }
+            //else if (li == i++) {
+            //    AddBlock(bs, -150,b);
+            //    AddBlock(bs,    0,b);
+            //    AddBlock(bs,  150,b);
+            //    AddBlock(bs, -150,b+180);
+            //    AddBlock(bs,    0,b+180);
+            //    AddBlock(bs,  150,b+180);
+            //}
             //          else if (levelIndex == i++) {
             //              AddBlock(blockSize, -80,b);
             //              AddBlock(blockSize,   0,b);
@@ -291,28 +320,20 @@ namespace BouncePaint {
             //              AddBlock(blockSize,   0,b+240);
             //              AddBlock(blockSize,  80,b);
             //          }
-            else if (li == i++) { // 8 plus, no center
-                AddBlock(bs,    0,b);
-                AddBlock(bs,    0,b+80);
-                AddBlock(bs,    0,b+240);
-                AddBlock(bs,    0,b+380);
-                AddBlock(bs, -160,b+160);
-                AddBlock(bs,  -80,b+160);
-                AddBlock(bs,   80,b+160);
-                AddBlock(bs,  160,b+160);
-            }
+            //else if (li == i++) { // 8 plus, no center
+            //    AddBlock(bs,    0,b);
+            //    AddBlock(bs,    0,b+80);
+            //    AddBlock(bs,    0,b+240);
+            //    AddBlock(bs,    0,b+380);
+            //    AddBlock(bs, -160,b+160);
+            //    AddBlock(bs,  -80,b+160);
+            //    AddBlock(bs,   80,b+160);
+            //    AddBlock(bs,  160,b+160);
+            //}
 
 
 
             // Traveling Blocks
-            else if (li == i++) {
-                AddBlock(bs, new Vector2(-100,b), new Vector2(100,b));
-            }
-            else if (li == i++) {
-                AddBlock(bs, new Vector2(-60,b), new Vector2(-160,b));
-                AddBlock(bs, new Vector2(60,b), new Vector2(160,b));
-                AddBlock(bs, 0,b);
-            }
             else if (li == i++) {
                 AddBlock(bs, new Vector2(-100,b), new Vector2(-160,b));
                 AddBlock(bs, new Vector2(140,b), new Vector2(200,b));
@@ -364,6 +385,14 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2(   0,b), new Vector2(   0+w,b)).SetSpeed(1.4f, 0.8f);
                 AddBlock(bs, new Vector2(  60,b), new Vector2(  60+w,b)).SetSpeed(1.4f, 1.0f);
                 AddBlock(bs, new Vector2( 120,b), new Vector2( 120+w,b)).SetSpeed(1.4f, 1.2f);
+            }
+            else if (li == i++) {
+                AddBlock(bs, -200,b+40);
+                AddBlock(bs, -120,b+80);
+                AddBlock(bs,  -40,b+120);
+                AddBlock(bs,   40,b+160);
+                AddBlock(bs,  120,b+200);
+                AddBlock(bs,  200,b+240);
             }
             //else if (levelIndex == i++) {
             //    float w = 120;

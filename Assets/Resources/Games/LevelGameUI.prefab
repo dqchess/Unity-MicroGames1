@@ -256,7 +256,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1743967995320804
 GameObject:
   m_ObjectHideFlags: 1
@@ -630,7 +630,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   b_retry: {fileID: 114952041502174904}
-  go_debugUI: {fileID: 1729586801960438}
   DoShowRetryButton: 1
 --- !u!114 &114392068264266854
 MonoBehaviour:
@@ -873,7 +872,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 946f5038bdbb2f944a1fbac544c42a52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  go_debugUI: {fileID: 1729586801960438}
 --- !u!114 &114520555472167794
 MonoBehaviour:
   m_ObjectHideFlags: 1
