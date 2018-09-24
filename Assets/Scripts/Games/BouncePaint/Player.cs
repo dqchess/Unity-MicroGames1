@@ -35,6 +35,7 @@ namespace BouncePaint {
             float h = Random.Range(0f, 1f); // taste the whole rainbow!!
             return new ColorHSB(h, 0.9f, 1f).ToColor();
         }
+        public float YVel { get { return vel.y; } }
         public float BottomY { get { return bottomY; } }
         // Getters/Setters (Private)
         //private float fts { get { return TimeController.FrameTimeScale; } }
@@ -174,7 +175,7 @@ namespace BouncePaint {
             gravity = new Vector2(0, GetGravityY(levelIndex));
             // Start with a little toss-up, and an EXTRA toss-up for additional balls!
             float startFallHeight = fallHeightNeutral + (playerIndex*50);
-            float startLoc = 0.8f - playerIndex*0.5f;
+            float startLoc = 0.6f - playerIndex*0.5f;
             float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
             float yVel = Mathf.Sqrt(2*-gravity.y*distToApex); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
             vel = new Vector2(0, yVel);

@@ -168,7 +168,11 @@ namespace BouncePaint {
 
             // Simple, together.
             else if (li == i++) {
-                AddBlock(bs, 0,b+50);
+                gameController.PlayerDiameter = 110f;
+                gameController.PlayerGravityScale = 0.7f;
+                AddBlock(bs*2, -140,b+130);
+                AddBlock(bs*2,    0,b+130);
+                AddBlock(bs*2,  140,b+130);
             }
             //else if (li == i++) {
             //    AddBlock(bs, -40,b+50);

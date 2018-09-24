@@ -10,6 +10,7 @@ namespace BouncePaint {
         private const int LEVEL_2 = 2;
         // Properties
         private bool didSeeHowToPlay = false;
+        private bool isCantLose; // when TRUE, the user can't fail by tapping at the wrong time. ;)
         private bool isActive; // only true for the first few levels
         private bool isPlayerFrozen;
         private int currentStep;
@@ -23,6 +24,7 @@ namespace BouncePaint {
         private Player player; // only ever refers to the FIRST ball.
 
         // Getters (Public)
+        public bool IsCantLose { get { return isCantLose || isPlayerFrozen; } }
         public bool IsPlayerFrozen { get { return isPlayerFrozen; } }
         // Getters (Private)
         private bool IsLevelComplete { get { return gameController.IsLevelComplete; } }
@@ -37,6 +39,7 @@ namespace BouncePaint {
 
             // Reset values
             currentStep = 0;
+            isCantLose = false;
             isPlayerFrozen = false;
             t_instructions.enabled = false;
             t_lossFeedback.enabled = false;
@@ -53,8 +56,9 @@ namespace BouncePaint {
             // Whaddawe gonna do this level??
             if (levelIndex == LEVEL_1) {
                 isActive = true;
+                isCantLose = true;
                 if (!didSeeHowToPlay) {
-                    isPlayerFrozen = true;
+                    //isPlayerFrozen = true;
                     didSeeHowToPlay = true;
                     go_howToPlay.SetActive(true);
                 }
@@ -77,9 +81,9 @@ namespace BouncePaint {
             if (player == null) { return; } // Safety check.
 
             if (levelIndex == LEVEL_1) {
-                if (currentStep==1) {
+                if (!isPlayerFrozen && !gameController.IsLevelComplete) {
                     float yBounds = level.Blocks[0].HitBox.yMax - 5f;
-                    if (player.BottomY <= yBounds) {
+                    if (player.YVel<0 && player.BottomY <= yBounds) {
                         // Freeze!
                         isPlayerFrozen = true;
                         t_instructions.enabled = true;

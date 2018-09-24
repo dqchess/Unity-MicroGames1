@@ -23,6 +23,7 @@ namespace BouncePaint {
         public List<Block> Blocks { get { return level.Blocks; } }
         public List<Player> Players { get { return level.Players; } }
         // Getters (Private)
+        private bool IsFUECantLose { get { return fueController.IsCantLose; } }
         private bool IsEveryBlockSatisfied() {
             return NumBlocksSatisfied() >= Blocks.Count;
         }
@@ -203,7 +204,7 @@ namespace BouncePaint {
             }
 
             // Did NOBODY bounce? Oh, jeez. Explode some balls.
-            if (!didAnyPlayerBounce && !IsFUEPlayerFrozen) { // also, don't explode if we're frozen in the FUE.
+            if (!didAnyPlayerBounce && !IsFUECantLose) { // also, don't explode if the FUE won't let us fail.
                 foreach (Player player in Players) {
                     // Visually inform any don't-tap Blocks for user's mistake feedback.
                     LoseReasons reason = LoseReasons.TapEarly; // I'll say otherwise next.
