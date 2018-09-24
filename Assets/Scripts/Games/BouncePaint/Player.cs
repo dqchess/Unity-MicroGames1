@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace BouncePaint {
     public class Player : MonoBehaviour {
         // Constants
-        private const float minBounceHeight = 80f; // this prevents us rocketing down directly after a bounce (if we're going from a high to a very low block).
+        private const float minBounceHeight = 120f; // this prevents us rocketing down directly after a bounce (if we're going from a high to a very low block).
         // Components
         [SerializeField] private CircleCollider2D myCollider=null;
         [SerializeField] private Image i_body=null;
@@ -124,7 +124,7 @@ namespace BouncePaint {
         }
 
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.35f - levelIndex*0.002f;
+            float baseGravity = -0.19f - levelIndex*0.001f;
             //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.8f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
@@ -137,7 +137,7 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         //  Start
         // ----------------------------------------------------------------
-        public void Initialize(GameController _gameController, Level _myLevel, int _playerIndex) {
+        public void Initialize(GameController _gameController, Level _myLevel, int _playerIndex, float _radius) {
             gameController = _gameController;
             myLevel = _myLevel;
             playerIndex = _playerIndex;
@@ -146,6 +146,13 @@ namespace BouncePaint {
             myRectTransform.localPosition = Vector2.zero;
             myRectTransform.localScale = Vector2.one;
             myRectTransform.localEulerAngles = Vector2.zero;
+            
+            radius = _radius;//gameController.PlayerDiameter*0.5f;
+            myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
+
+            // Set myCollider offset/size!
+            myCollider.radius = 2f; // teeny tiny little bead...
+            myCollider.offset = new Vector2(0, radius-myCollider.radius); // ...at the bottom of my circle!
         }
         public void Reset(int levelIndex) {
             this.transform.SetAsLastSibling(); // Put me in front of all other props!
@@ -154,8 +161,6 @@ namespace BouncePaint {
             isDead = false;
             blocksTouching = new List<Block>();
             i_body.sprite = s_bodyNormal;
-            radius = gameController.PlayerDiameter*0.5f;
-            myRectTransform.sizeDelta = new Vector2(radius*2, radius*2);
             // If we have a color we know we wanna be, be that!
             if (startingPlayerColor != Color.clear) {
                 bodyColor = startingPlayerColor;
@@ -166,10 +171,6 @@ namespace BouncePaint {
                 bodyColor = GetRandomHappyColor();
             }
 
-            // Set myCollider offset/size!
-            myCollider.radius = 2f; // teeny tiny little bead...
-            myCollider.offset = new Vector2(0, radius-myCollider.radius); // ...at the bottom of my circle!
-
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
             SetBlockHeadingTo(GetRandomAvailableBlock(null));
             gravity = new Vector2(0, GetGravityY(levelIndex));
@@ -179,9 +180,11 @@ namespace BouncePaint {
             float distToApex = startFallHeight*(1-startLoc); // how far we're gonna travel up until our yVel hits 0.
             float yVel = Mathf.Sqrt(2*-gravity.y*distToApex); // 0 = y^2 + 2*g*dist  ->  y = sqrt(2*g*dist)
             vel = new Vector2(0, yVel);
-            float startY = blockHeadingTo.HitBox.center.y + startFallHeight*startLoc;
-			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
-            pos = new Vector2(startX, startY);
+            if (blockHeadingTo != null) {
+                float startY = blockHeadingTo.HitBox.center.y + startFallHeight*startLoc;
+    			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
+                pos = new Vector2(startX, startY);
+            }
         }
 
 
@@ -191,7 +194,9 @@ namespace BouncePaint {
         // ----------------------------------------------------------------
         private void SetBlockHeadingTo(Block _block) {
             blockHeadingTo = _block;
-            blockHeadingTo.BallTargetingMe = this;
+            if (blockHeadingTo != null) {
+                blockHeadingTo.BallTargetingMe = this;
+            }
             gameController.OnPlayerSetBlockHeadingTo(blockHeadingTo);
         }
 

@@ -18,12 +18,13 @@ namespace BouncePaint {
 
         // Getters (Public)
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
-        public float PlayerDiameter { get; set; }
+        //public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
         public List<Block> Blocks { get { return level.Blocks; } }
         public List<Player> Players { get { return level.Players; } }
         // Getters (Private)
-        private bool IsFUECantLose { get { return fueController.IsCantLose; } }
+        //private bool IsFUECantLose { get { return fueController.IsCantLose; } }
+        private bool DoAcceptInput { get { return fueController.DoAcceptInput; } }
         private bool IsEveryBlockSatisfied() {
             return NumBlocksSatisfied() >= Blocks.Count;
         }
@@ -86,7 +87,7 @@ namespace BouncePaint {
 
             // DO animate!
             if (doAnimate) {
-                float duration = 1f;
+                float duration = 1.3f;
 
                 level.IsAnimating = true;
                 float height = 1200;
@@ -192,6 +193,7 @@ namespace BouncePaint {
             // Ignore jumps if...
 			if (!IsGameStatePlaying) { return; }
             if (level!=null && level.IsAnimating) { return; }
+            if (!DoAcceptInput) { return; }
 
             bool didAnyPlayerBounce = false; // I'll say otherwise next.
             foreach (Player player in Players) {
@@ -204,7 +206,7 @@ namespace BouncePaint {
             }
 
             // Did NOBODY bounce? Oh, jeez. Explode some balls.
-            if (!didAnyPlayerBounce && !IsFUECantLose) { // also, don't explode if the FUE won't let us fail.
+            if (!didAnyPlayerBounce) {// && !IsFUECantLose) { // also, don't explode if the FUE won't let us fail.
                 foreach (Player player in Players) {
                     // Visually inform any don't-tap Blocks for user's mistake feedback.
                     LoseReasons reason = LoseReasons.TapEarly; // I'll say otherwise next.

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 abstract public class BaseLevelTile : MonoBehaviour {
 	// Components
 	[SerializeField] private   Button myButton=null;
 	[SerializeField] protected Image i_backing=null;
-	[SerializeField] protected Text t_levelNumber=null;
+	[SerializeField] protected TextMeshProUGUI t_levelNumber=null;
 	[SerializeField] private   RectTransform myRectTransform=null;
 	// Properties
 	private bool isLocked;
@@ -43,6 +44,8 @@ abstract public class BaseLevelTile : MonoBehaviour {
 		// Visuals!
 		UpdateLockedVisuals();
 		t_levelNumber.text = levelIndex.ToString();
+        // HACK workaround: prefab isn't retaining its text alignment!
+        t_levelNumber.alignment = TextAlignmentOptions.Center;
 	}
 	virtual protected void UpdateLockedVisuals() {
 		myButton.interactable = !isLocked;

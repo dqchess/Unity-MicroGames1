@@ -35,8 +35,8 @@ namespace BouncePaint {
         private Level myLevel;
         // Editor-Settable Properties
         [Header("Hitbox")]
-        public float hitboxYOffset;
-        public float hitboxHeight=38f;
+        public float hitboxYOffset=-40;
+        public float hitboxHeight=56;//38f;
         /// For when we make hitbox changes in the inspector! Updates us in real-time. :)
         void OnValidate() {
             UpdateHitBox();
@@ -135,6 +135,7 @@ namespace BouncePaint {
                 t_numHitsReq.rectTransform.localEulerAngles = Vector2.zero;
                 t_numHitsReq.rectTransform.offsetMin = t_numHitsReq.rectTransform.offsetMax = Vector2.zero;
                 t_numHitsReq.color = new Color(0,0,0, 0.5f);
+                t_numHitsReq.alignment = TextAlignmentOptions.Center; // hack: The alignment in the prefab isn't working...
             }
             UpdateNumHitsReqText();
             return this;
@@ -152,7 +153,7 @@ namespace BouncePaint {
             return this;
         }
         public Block SetSpeed(float _speed, float _startLocOffset=0) {
-            travelSpeed = _speed*0.03f; // awkward scaling down the speed here.
+            travelSpeed = _speed*0.02f; // awkward scaling down the speed here.
             doTravel = travelSpeed != 0;
             travelOscVal = _startLocOffset;
             ApplyPos();
@@ -228,12 +229,12 @@ namespace BouncePaint {
             }
             // Push me down AND horizontally (based on Player's x vel)!
             //posDipOffset += new Vector2(playerVel.x*1.2f, -24f);//-16
-            posDipOffsetVel += new Vector2(playerVel.x*0.6f, -10f);
+            posDipOffsetVel += new Vector2(playerVel.x*0.6f, -24f);
             ApplyPos(); // apply pos immediately, so Player knows where we actually are.
         }
         /// Player tells us we're the winning bounce, and to dip down extra.
         public void DipExtraFromWinningBounce(Vector2 playerVel) {
-            posDipOffsetVel += new Vector2(playerVel.x*1.2f, -20f);
+            posDipOffsetVel += new Vector2(playerVel.x*1.2f, -50f);
             ApplyPos();
         }
         private void PaintMe(Color playerColor) {

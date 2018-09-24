@@ -8,15 +8,17 @@ namespace BouncePaint {
     public class Level : BaseLevel {
         // Constants
         public static int FirstLevelIndex = 1;
-        public static int LastLevelIndex = 101;
+        public static int LastLevelIndex = 95;
+        private static float PlayerDefaultRadius = 50f;
         // Components
         [SerializeField] private ParticleSystem ps_finalBounceA=null; // small circles.
         [SerializeField] private ParticleSystem ps_finalBounceB=null; // big circles!
-        [SerializeField] private Text t_levelName=null;
+        [SerializeField] private TextMeshProUGUI t_levelName =null;
         [SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
         // Properties
+        private float propSizeScale; // for when we add Props! So we can easily change the size of all Props instead of each one by hand.
         private float screenShakeVolume;
         // References
         //[SerializeField] private RectTransform rt_blocks=null;
@@ -68,14 +70,14 @@ namespace BouncePaint {
         }
         private Block AddBlock(Vector2 blockSize, Vector2 posA,Vector2 posB) {
             Block newBlock = Instantiate(resourcesHandler.bouncePaint_block).GetComponent<Block>();
-            newBlock.Initialize(gameController,this, blockSize, posA,posB);
+            newBlock.Initialize(gameController,this, blockSize*propSizeScale, posA,posB);
             blocks.Add(newBlock);
             return newBlock;
         }
 
         private Player AddPlayer() {
             Player newPlayer = Instantiate(resourcesHandler.bouncePaint_player).GetComponent<Player>();
-            newPlayer.Initialize(gameController,this, players.Count);
+            newPlayer.Initialize(gameController,this, players.Count, PlayerDefaultRadius*propSizeScale);
             players.Add(newPlayer);
             return newPlayer;
         }
@@ -150,13 +152,11 @@ namespace BouncePaint {
             players = new List<Player>();
             if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
-            // Add at least one Player.
-            AddPlayer();
-
             // Default values
-            gameController.PlayerDiameter = 60f;
+            propSizeScale = 1;
+            //gameController.PlayerDiameter = 100f;
             gameController.PlayerGravityScale = 1f;
-            Vector2 bs = new Vector2(50,50); // block size
+            Vector2 bs = new Vector2(75,75); // block size
 
             // NOTE: All coordinates are based off of a 600x800 available playing space! :)
 
@@ -168,51 +168,63 @@ namespace BouncePaint {
 
             // Simple, together.
             else if (li == i++) {
-                gameController.PlayerDiameter = 110f;
-                gameController.PlayerGravityScale = 0.7f;
-                AddBlock(bs*2, -140,b+130);
-                AddBlock(bs*2,    0,b+130);
-                AddBlock(bs*2,  140,b+130);
+                propSizeScale = 1.5f;
+                gameController.PlayerGravityScale = 0.8f;
+                AddBlock(bs, -140,b+130);
+                AddBlock(bs,    0,b+130);
+                AddBlock(bs,  140,b+130);
             }
-            //else if (li == i++) {
-            //    AddBlock(bs, -40,b+50);
-            //    AddBlock(bs,  40,b+50);
-            //}
-            //else if (li == i++) {
-            //    AddBlock(bs, -70,b+50);
-            //    AddBlock(bs,   0,b+50);
-            //    AddBlock(bs,  70,b+50);
-            //}
-            //else if (li == i++) {
-            //    AddBlock(bs, -90,b+50);
-            //    AddBlock(bs, -30,b+50);
-            //    AddBlock(bs,  30,b+50);
-            //    AddBlock(bs,  90,b+50);
-            //}
+            else if (li == i++) {
+                propSizeScale = 1.5f;
+                gameController.PlayerGravityScale = 0.82f;
+                AddBlock(bs, -80,b+100);
+                AddBlock(bs,  80,b+100);
+            }
+            else if (li == i++) {
+                propSizeScale = 1.4f;
+                gameController.PlayerGravityScale = 0.84f;
+                AddBlock(bs, -130,b+70);
+                AddBlock(bs,    0,b+70);
+                AddBlock(bs,  130,b+70);
+            }
+            else if (li == i++) {
+                propSizeScale = 1.3f;
+                gameController.PlayerGravityScale = 0.86f;
+                AddBlock(bs, -200,b+60);
+                AddBlock(bs,  -65,b+60);
+                AddBlock(bs,   65,b+60);
+                AddBlock(bs,  200,b+60);
+            }
 
             // Larger X gaps.
             else if (li == i++) {
-                AddBlock(bs, -80,b);
-                AddBlock(bs,  80,b);
+                propSizeScale = 1.2f;
+                gameController.PlayerGravityScale = 0.88f;
+                AddBlock(bs, -200,b+40);
+                AddBlock(bs,  200,b+40);
             }
-            //else if (li == i++) {
-            //    AddBlock(bs, -200,b);
-            //    AddBlock(bs,  100,b);
-            //    AddBlock(bs,  200,b);
-            //}
-            //else if (li == i++) {
-            //    AddBlock(bs, -220,b);
-            //    AddBlock(bs, -140,b);
-            //    AddBlock(bs,  -80,b);
-            //    AddBlock(bs,  220,b);
-            //}
-            //else if (li == i++) {
-            //    AddBlock(bs, -200,b);
-            //    AddBlock(bs, -140,b);
-            //    AddBlock(bs,    0,b+50);
-            //    AddBlock(bs,  200,b);
-            //    AddBlock(bs,  140,b);
-            //}
+            else if (li == i++) {
+                propSizeScale = 1.1f;
+                gameController.PlayerGravityScale = 0.9f;
+                AddBlock(bs, -220,b+40);
+                AddBlock(bs,  120,b+40);
+                AddBlock(bs,  220,b+40);
+            }
+            else if (li == i++) {
+                gameController.PlayerGravityScale = 0.92f;
+                AddBlock(bs, -220,b);
+                AddBlock(bs, -130,b);
+                AddBlock(bs,  -40,b);
+                AddBlock(bs,  220,b);
+            }
+            else if (li == i++) {
+                gameController.PlayerGravityScale = 0.94f;
+                AddBlock(bs, -220,b);
+                AddBlock(bs, -130,b+20);
+                AddBlock(bs,    0,b+60);
+                AddBlock(bs,  130,b+20);
+                AddBlock(bs,  220,b);
+            }
 
             // Offset Y positions
             //          else if (levelIndex == i++) {
@@ -226,16 +238,18 @@ namespace BouncePaint {
             //              AddBlock(blockSize,  80,b);
             //          }
             else if (li == i++) {
+                gameController.PlayerGravityScale = 0.96f;
                 AddBlock(bs, -120,b+120);
                 AddBlock(bs,    0,b);
                 AddBlock(bs,  120,b);
             }
             else if (li == i++) {
+                gameController.PlayerGravityScale = 0.98f;
                 AddBlock(bs, new Vector2(-100,b), new Vector2(100,b));
             }
             else if (li == i++) {
-                AddBlock(bs, new Vector2(-60,b), new Vector2(-160,b));
-                AddBlock(bs, new Vector2(60,b), new Vector2(160,b));
+                AddBlock(bs, new Vector2(-80,b), new Vector2(-160,b));
+                AddBlock(bs, new Vector2(80,b), new Vector2(160,b));
                 AddBlock(bs, 0,b);
             }
             /*
@@ -272,8 +286,8 @@ namespace BouncePaint {
             */
             else if (li == i++) {
                 AddBlock(bs, new Vector2(-180,b+160), new Vector2(-140,b+160));
-                AddBlock(bs, -40,b);
-                AddBlock(bs,  40,b);
+                AddBlock(bs, -46,b);
+                AddBlock(bs,  46,b);
                 AddBlock(bs, new Vector2( 180,b+160), new Vector2( 140,b+160));
             }
             //else if (li == i++) {
@@ -304,9 +318,9 @@ namespace BouncePaint {
             //}
             else if (li == i++) {
                 AddBlock(bs, -150,b);
-                AddBlock(bs, -150,b+80);
+                AddBlock(bs, -150,b+90);
                 AddBlock(bs,  150,b);
-                AddBlock(bs,  150,b+80);
+                AddBlock(bs,  150,b+90);
             }
             //else if (li == i++) {
             //    AddBlock(bs, -150,b);
@@ -345,6 +359,7 @@ namespace BouncePaint {
                 AddBlock(bs, -200,b+140);
             }
             else if (li == i++) {
+                propSizeScale = 0.7f;
                 AddBlock(bs, new Vector2(-120,b), new Vector2(-240,b));
                 AddBlock(bs, new Vector2(-60,b), new Vector2(-120,b));
                 AddBlock(bs, 0,b);
@@ -352,10 +367,11 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2( 60,b), new Vector2(120,b));
             }
             else if (li == i++) {
+                propSizeScale = 0.7f;
+                AddBlock(bs, new Vector2(-200,b+250), new Vector2(200,b+250));
                 AddBlock(bs, new Vector2(-120,b), new Vector2(-240,b));
                 AddBlock(bs, new Vector2(-60,b), new Vector2(-120,b));
                 AddBlock(bs, 0,b);
-                AddBlock(bs, new Vector2(-200,b+250), new Vector2(200,b+250));
                 AddBlock(bs, new Vector2( 240,b), new Vector2(120,b));
                 AddBlock(bs, new Vector2( 120,b), new Vector2(60,b));
             }
@@ -372,23 +388,24 @@ namespace BouncePaint {
             //}
             else if (li == i++) {
                 float w = 160;
-                AddBlock(bs, -260,b+240);
-                AddBlock(bs, new Vector2(-200,b+160), new Vector2(-200+w,b+160)).SetSpeed(2f);
-                AddBlock(bs, new Vector2(-140,b+ 80), new Vector2(-140+w,b+ 80)).SetSpeed(2f);
-                AddBlock(bs, new Vector2( -80,b    ), new Vector2( -80+w,b    )).SetSpeed(2f);
-                AddBlock(bs, new Vector2( -20,b+ 80), new Vector2( -20+w,b+ 80)).SetSpeed(2f);
-                AddBlock(bs, new Vector2(  40,b+160), new Vector2(  40+w,b+160)).SetSpeed(2f);
-                AddBlock(bs,  260,b+240);
+                AddBlock(bs, -250,b+240);
+                AddBlock(bs, new Vector2(-240,b+160), new Vector2(-240+w,b+160)).SetSpeed(1.8f);
+                AddBlock(bs, new Vector2(-170,b+ 80), new Vector2(-170+w,b+ 80)).SetSpeed(1.8f);
+                AddBlock(bs, new Vector2(-100,b    ), new Vector2(-100+w,b    )).SetSpeed(1.8f);
+                AddBlock(bs, new Vector2( -30,b+ 80), new Vector2( -30+w,b+ 80)).SetSpeed(1.8f);
+                AddBlock(bs, new Vector2(  40,b+160), new Vector2(  40+w,b+160)).SetSpeed(1.8f);
+                AddBlock(bs,  250,b+240);
             }
             else if (li == i++) { // Solid, flat wave
+                propSizeScale = 0.6f;
                 float w = 120;
-                AddBlock(bs, new Vector2(-240,b), new Vector2(-240+w,b)).SetSpeed(1.4f, 0f);
-                AddBlock(bs, new Vector2(-180,b), new Vector2(-180+w,b)).SetSpeed(1.4f, 0.2f);
-                AddBlock(bs, new Vector2(-120,b), new Vector2(-120+w,b)).SetSpeed(1.4f, 0.4f);
-                AddBlock(bs, new Vector2( -60,b), new Vector2( -60+w,b)).SetSpeed(1.4f, 0.6f);
-                AddBlock(bs, new Vector2(   0,b), new Vector2(   0+w,b)).SetSpeed(1.4f, 0.8f);
-                AddBlock(bs, new Vector2(  60,b), new Vector2(  60+w,b)).SetSpeed(1.4f, 1.0f);
-                AddBlock(bs, new Vector2( 120,b), new Vector2( 120+w,b)).SetSpeed(1.4f, 1.2f);
+                AddBlock(bs, new Vector2(-240,b), new Vector2(-240+w,b)).SetSpeed(1.2f, 0f);
+                AddBlock(bs, new Vector2(-180,b), new Vector2(-180+w,b)).SetSpeed(1.2f, 0.2f);
+                AddBlock(bs, new Vector2(-120,b), new Vector2(-120+w,b)).SetSpeed(1.2f, 0.4f);
+                AddBlock(bs, new Vector2( -60,b), new Vector2( -60+w,b)).SetSpeed(1.2f, 0.6f);
+                AddBlock(bs, new Vector2(   0,b), new Vector2(   0+w,b)).SetSpeed(1.2f, 0.8f);
+                AddBlock(bs, new Vector2(  60,b), new Vector2(  60+w,b)).SetSpeed(1.2f, 1.0f);
+                AddBlock(bs, new Vector2( 120,b), new Vector2( 120+w,b)).SetSpeed(1.2f, 1.2f);
             }
             else if (li == i++) {
                 AddBlock(bs, -200,b+40);
@@ -413,7 +430,7 @@ namespace BouncePaint {
             // Varying-Speed Traveling Blocks
             else if (li == i++) { // Slightly faster top block
                 AddBlock(bs, new Vector2(-150,b), new Vector2(-240,b)).SetSpeed(1f);
-                AddBlock(bs, new Vector2(-100,b+50), new Vector2(100,b+50)).SetSpeed(2f);
+                AddBlock(bs, new Vector2(-100,b+90), new Vector2(100,b+90)).SetSpeed(2f);
                 AddBlock(bs, new Vector2( 150,b), new Vector2(240,b)).SetSpeed(1f);
             }
             else if (li == i++) { // Hello, abstract bowtie
@@ -461,21 +478,22 @@ namespace BouncePaint {
             //              AddBlock(blockSize,  120,b+240);
             //          }
             else if (li == i++) { // 3x3 tight grid
-                AddBlock(bs, -60,b);
+                AddBlock(bs, -80,b);
                 AddBlock(bs,   0,b);
-                AddBlock(bs,  60,b);
-                AddBlock(bs, -60,b+60);
-                AddBlock(bs,   0,b+60);
-                AddBlock(bs,  60,b+60);
-                AddBlock(bs, -60,b+120);
-                AddBlock(bs,   0,b+120);
-                AddBlock(bs,  60,b+120);
+                AddBlock(bs,  80,b);
+                AddBlock(bs, -80,b+80);
+                AddBlock(bs,   0,b+80);
+                AddBlock(bs,  80,b+80);
+                AddBlock(bs, -80,b+160);
+                AddBlock(bs,   0,b+160);
+                AddBlock(bs,  80,b+160);
             }
 
 
 
-            // Weird-Shapes Traveling Blocks
+            // Weird-Arrangement Traveling Blocks
             else if (li == i++) { // Lean forward; come back
+                propSizeScale = 0.7f;
                 AddBlock(bs, -220,b);
                 AddBlock(bs, new Vector2( -220,b+ 60), new Vector2(-140,b+60 )).SetSpeed(0.7f);
                 AddBlock(bs, new Vector2( -220,b+120), new Vector2( -60,b+120)).SetSpeed(0.7f);
@@ -485,6 +503,7 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2( -220,b+360), new Vector2( 260,b+360)).SetSpeed(0.7f);
             }
             else if (li == i++) { // Dangling string
+                propSizeScale = 0.7f;
                 AddBlock(bs, new Vector2( -100,b    ), new Vector2(100,b    )).SetSpeed(1f, 0f);
                 AddBlock(bs, new Vector2( -100,b+60 ), new Vector2(100,b+60 )).SetSpeed(1f, 0.5f);
                 AddBlock(bs, new Vector2( -100,b+120), new Vector2(100,b+120)).SetSpeed(1f, 1f);
@@ -494,6 +513,7 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2( -100,b+360), new Vector2(100,b+360)).SetSpeed(1f, 3f);
             }
             else if (li == i++) { // Dangling string, amplified
+                propSizeScale = 0.7f;
                 AddBlock(bs, new Vector2( -160,b    ), new Vector2( 160,b    )).SetSpeed(1f, 0f);
                 AddBlock(bs, new Vector2( -160,b+60 ), new Vector2( 160,b+60 )).SetSpeed(1f, -0.8f);
                 AddBlock(bs, new Vector2( -160,b+120), new Vector2( 160,b+120)).SetSpeed(1f, -1.6f);
@@ -503,6 +523,7 @@ namespace BouncePaint {
                 AddBlock(bs, new Vector2( -160,b+360), new Vector2( 160,b+360)).SetSpeed(1f, -4.8f);
             }
             else if (li == i++) { // Sea anemone
+                propSizeScale = 0.75f;
                 AddBlock(bs,  220,b);
                 AddBlock(bs, new Vector2(220,b+50 ), new Vector2( 140,b+50 )).SetSpeed(1f, -0.4f);
                 AddBlock(bs, new Vector2(220,b+100), new Vector2(  60,b+100)).SetSpeed(1f, -0.8f);
@@ -576,10 +597,10 @@ namespace BouncePaint {
                 AddBlock(bs*3,    0,b);
             }
             else if (li == i++) { // Four bigger blocks
-                AddBlock(bs*2, -200,b);
+                AddBlock(bs*2, -200,b+120);
                 AddBlock(bs*2,  -80,b);
                 AddBlock(bs*2,   80,b);
-                AddBlock(bs*2,  200,b);
+                AddBlock(bs*2,  200,b+120);
             }
             else if (li == i++) { // Tiny row
                 AddBlock(bs*0.5f, -150,b);
@@ -590,22 +611,22 @@ namespace BouncePaint {
                 AddBlock(bs*0.5f,  150,b);
             }
             else if (li == i++) { // Foreshortened posse
-                AddBlock(bs*0.4f, -260,b);
-                AddBlock(bs*0.8f, -200,b);
-                AddBlock(bs*1.3f, -130,b);
+                AddBlock(bs*0.3f, -260,b);
+                AddBlock(bs*0.5f, -200,b);
+                AddBlock(bs*1f, -130,b);
                 AddBlock(bs*3   ,    0,b);
-                AddBlock(bs*1.3f,  130,b);
-                AddBlock(bs*0.8f,  200,b);
-                AddBlock(bs*0.4f,  260,b);
+                AddBlock(bs*1f,  130,b);
+                AddBlock(bs*0.5f,  200,b);
+                AddBlock(bs*0.3f,  260,b);
             }
             else if (li == i++) { // Big base, sprinkles above
-                AddBlock(bs*5f  ,    0,b-100);
-                AddBlock(bs*0.4f, -100,b+120);
+                AddBlock(bs*4f  ,    0,b-100);
+                AddBlock(bs*0.3f, -100,b+120);
                 AddBlock(bs*0.5f,  -55,b+200);
-                AddBlock(bs*0.4f, -225,b+250);
+                AddBlock(bs*0.3f, -225,b+250);
                 AddBlock(bs*0.5f,  110,b+220);
                 AddBlock(bs*0.6f,  170,b+210);
-                AddBlock(bs*0.45f,  220,b+320);
+                AddBlock(bs*0.4f,  220,b+320);
                 AddBlock(bs*0.6f, -200,b+400);
             }
             // Rectangles
@@ -648,14 +669,15 @@ namespace BouncePaint {
                 AddBlock(bs,    0,b);
                 AddBlock(bs,  120,b).SetDontTap();
             }
+            //else if (li == i++) {
+            //    AddBlock(bs, -160,b);
+            //    AddBlock(bs,  -80,b).SetDontTap();
+            //    AddBlock(bs,    0,b);
+            //    AddBlock(bs,   80,b);
+            //    AddBlock(bs,  160,b);//.SetDontTap();
+            //}
             else if (li == i++) {
-                AddBlock(bs, -160,b);
-                AddBlock(bs,  -80,b).SetDontTap();
-                AddBlock(bs,    0,b);
-                AddBlock(bs,   80,b);
-                AddBlock(bs,  160,b);//.SetDontTap();
-            }
-            else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddBlock(bs, -150,b).SetDontTap();
                 AddBlock(bs,  -90,b);//.SetDontTap();
                 AddBlock(bs,  -30,b);
@@ -664,6 +686,7 @@ namespace BouncePaint {
                 AddBlock(bs,  150,b);
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddBlock(bs, -220,b);
                 AddBlock(bs,  -90,b);
                 AddBlock(bs,  -30,b);
@@ -672,6 +695,7 @@ namespace BouncePaint {
                 AddBlock(bs,  220,b);//.SetDontTap();
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddBlock(bs, -210,b+10);//.SetDontTap();
                 AddBlock(bs, -150,b+80);
                 AddBlock(bs,  -90,b+15).SetDontTap();
@@ -682,6 +706,7 @@ namespace BouncePaint {
                 AddBlock(bs,  210,b+45);
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddBlock(bs, -210,b+180);
                 AddBlock(bs, -150,b+120);
                 AddBlock(bs,  -90,b+100).SetDontTap();
@@ -692,6 +717,7 @@ namespace BouncePaint {
                 AddBlock(bs,  210,b+80);
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 //              AddBlock(blockSize, -240,b+160);
                 AddBlock(bs, -180,b+140);
                 AddBlock(bs, -120,b+80);
@@ -703,6 +729,7 @@ namespace BouncePaint {
                 //              AddBlock(blockSize,  240,b+160);
             }
             else if (li == i++) { // Staircase and refuge
+                propSizeScale = 0.75f;
                 //AddBlock(bs, -200,b+120).SetDontTap();
                 //AddBlock(bs, -200,b+180).SetDontTap();
                 AddBlock(bs, -200,b+120).SetDontTap();
@@ -720,14 +747,14 @@ namespace BouncePaint {
                 AddBlock(bs,  120,b+280).SetDontTap();
             }
             else if (li == i++) {
-                AddBlock(bs, -120,b);//.SetDontTap();
+                AddBlock(bs, -140,b);//.SetDontTap();
                 AddBlock(bs,  -60,b);
                 AddBlock(bs,   60,b).SetDontTap();
-                AddBlock(bs,  120,b);
-                AddBlock(bs, -120,b+250);
+                AddBlock(bs,  140,b);
+                AddBlock(bs, -140,b+250);
                 AddBlock(bs,  -60,b+250).SetDontTap();
                 AddBlock(bs,   60,b+250);
-                AddBlock(bs,  120,b+250);//.SetDontTap();
+                AddBlock(bs,  140,b+250);//.SetDontTap();
             }
             else if (li == i++) { // Large 3x3 with freckles
                 float g = 200;
@@ -790,6 +817,7 @@ namespace BouncePaint {
             }
 
             else if (li == i++) { // Large 3x3 drifter chaotic, inverted freckles, no center
+                propSizeScale = 0.75f;
                 float o = -1.8f;
                 AddBlock(bs, new Vector2(-200,b    ), new Vector2(-100,b    )).SetSpeed(0.6f, o*0);
                 AddBlock(bs, new Vector2( -50,b    ), new Vector2(  50,b    )).SetSpeed(0.6f, o*1).SetDontTap();
@@ -834,6 +862,7 @@ namespace BouncePaint {
                 AddBlock(bs,  160,b);
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs, -150,b);
                 AddBlock(bs,  -90,b);
@@ -877,6 +906,7 @@ namespace BouncePaint {
                 AddBlock(bs,  160,b+180);
             }
             else if (li == i++) {
+                propSizeScale = 0.8f;
                 AddPlayer();
                 AddBlock(bs, -240,b+100);
                 AddBlock(bs, -120,b+200);
@@ -890,6 +920,7 @@ namespace BouncePaint {
 
             // Two-Balls; Don't-Tap Blocks
             else if (li == i++) {
+                propSizeScale = 0.9f;
                 AddPlayer();
                 AddBlock(bs, -200,b);
                 AddBlock(bs, -125,b).SetDontTap();
@@ -899,6 +930,7 @@ namespace BouncePaint {
                 AddBlock(bs,  200,b);
             }
             else if (li == i++) {
+                propSizeScale = 0.7f;
                 AddPlayer();
                 AddBlock(bs, -210,b);
                 AddBlock(bs, -150,b).SetDontTap();
@@ -936,6 +968,7 @@ namespace BouncePaint {
                 AddBlock(bs,  210,b+  0);
             }
             else if (li == i++) { // Shallow V
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs, -240,b+160).SetDontTap();
                 AddBlock(bs, -180,b+120);
@@ -948,6 +981,7 @@ namespace BouncePaint {
                 AddBlock(bs,  240,b+160).SetDontTap();
             }
             else if (li == i++) { // Shotgun blast
+                propSizeScale = 0.8f;
                 AddPlayer();
                 AddBlock(bs, -210,b+20).SetDontTap();
                 AddBlock(bs, -210,b+200);
@@ -1073,13 +1107,14 @@ namespace BouncePaint {
             else if (li == i++) {
                 AddPlayer();
                 AddBlock(bs, -240,b).SetDontTap().SetUnpaintable();
-                AddBlock(bs, -180,b).SetDontTap().SetUnpaintable();
+                AddBlock(bs, -160,b).SetDontTap().SetUnpaintable();
                 AddBlock(new Vector2(70,70), -50,b).SetHitsReq(2);
                 AddBlock(new Vector2(70,70),  50,b).SetHitsReq(2);
-                AddBlock(bs,  180,b).SetDontTap().SetUnpaintable();
+                AddBlock(bs,  160,b).SetDontTap().SetUnpaintable();
                 AddBlock(bs,  240,b).SetDontTap().SetUnpaintable();
             }
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 gameController.PlayerGravityScale = 0.8f;
                 AddPlayer();
                 AddPlayer();
@@ -1123,6 +1158,7 @@ namespace BouncePaint {
             //}
             // Faster Traveling Blocks
             else if (li == i++) {
+                propSizeScale = 0.75f;
                 AddPlayer();
                 float w = 120;
                 AddBlock(bs, new Vector2(-240,b), new Vector2(-240+w,b)).SetSpeed(1.4f);
@@ -1149,7 +1185,7 @@ namespace BouncePaint {
             else if (li == i++) {
                 AddPlayer();
                 AddBlock(bs, new Vector2(-150,b), new Vector2(-240,b)).SetSpeed(2f);
-                AddBlock(bs, new Vector2(-100,b+50), new Vector2(100,b+50)).SetSpeed(1f);
+                AddBlock(bs, new Vector2(-100,b+80), new Vector2(100,b+80)).SetSpeed(1f);
                 AddBlock(bs, new Vector2( 150,b), new Vector2(240,b)).SetSpeed(2f);
             }
             else if (li == i++) { // Hello, abstract bowtie
@@ -1208,18 +1244,19 @@ namespace BouncePaint {
                 AddBlock(bs,  120,b+100).SetHitsReq(2);
             }
             else if (li == i++) { // 6 balls; 6 blocks.
+                propSizeScale = 0.86f;
                 gameController.PlayerGravityScale = 0.5f;
                 AddPlayer();
                 AddPlayer();
                 AddPlayer();
                 AddPlayer();
                 AddPlayer();
-                AddBlock(bs, -150,b);
-                AddBlock(bs,  -90,b);
-                AddBlock(bs,  -30,b);
-                AddBlock(bs,   30,b);
-                AddBlock(bs,   90,b);
-                AddBlock(bs,  150,b);
+                AddBlock(bs, -200,b);
+                AddBlock(bs, -120,b);
+                AddBlock(bs,  -40,b);
+                AddBlock(bs,   40,b);
+                AddBlock(bs,  120,b);
+                AddBlock(bs,  200,b);
             }
             else if (li == i++) { // 4 moving balls; 4 moving blocks
                 gameController.PlayerGravityScale = 0.5f;
@@ -1241,6 +1278,7 @@ namespace BouncePaint {
 
             // Two-Ball Don't-Taps
             else if (li == i++) { // Stiff flipped T
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs, -220,b);
                 AddBlock(bs, -160,b);
@@ -1256,6 +1294,7 @@ namespace BouncePaint {
                 AddBlock(bs,  220,b);
             }
             else if (li == i++) { // Two rows; don't-tap bottom
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs, -220,b).SetDontTap();
                 //AddBlock(bs, -120,b).SetDontTap();
@@ -1273,6 +1312,7 @@ namespace BouncePaint {
                 AddBlock(bs,  220,b+200);
             }
             else if (li == i++) { // Truncated clapperboard
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs,  160,b+60).SetDontTap();
                 AddBlock(bs,  160,b+120).SetDontTap();
@@ -1302,6 +1342,7 @@ namespace BouncePaint {
                 AddBlock(bs,  g*0.5f,b+g*1.5f).SetDontTap();
             }
             else if (li == i++) { // Two rows, scattered don't-taps
+                propSizeScale = 0.75f;
                 AddPlayer();
                 AddBlock(bs, -220,b).SetDontTap();
                 AddBlock(bs, -120,b);
@@ -1505,6 +1546,9 @@ namespace BouncePaint {
                 //AddBlock(new Vector2(200,200), 0,b);
                 Debug.LogWarning("No level data available for level: " + li);
             }
+
+            // Add at least one Player.
+            AddPlayer();
         }
 
     }

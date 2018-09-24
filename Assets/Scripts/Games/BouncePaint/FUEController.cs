@@ -10,7 +10,9 @@ namespace BouncePaint {
         private const int LEVEL_2 = 2;
         // Properties
         private bool didSeeHowToPlay = false;
-        private bool isCantLose; // when TRUE, the user can't fail by tapping at the wrong time. ;)
+        //private bool isCantLose; // when TRUE, the user can't fail by tapping at the wrong time. ;)
+        //private bool doAcceptInput;
+        private float timeWhenAcceptInput; // in UNSCALED time.
         private bool isActive; // only true for the first few levels
         private bool isPlayerFrozen;
         private int currentStep;
@@ -24,7 +26,8 @@ namespace BouncePaint {
         private Player player; // only ever refers to the FIRST ball.
 
         // Getters (Public)
-        public bool IsCantLose { get { return isCantLose || isPlayerFrozen; } }
+        //public bool IsCantLose { get { return isCantLose || isPlayerFrozen; } }
+        public bool DoAcceptInput { get { return !isActive || Time.unscaledTime>=timeWhenAcceptInput; } }
         public bool IsPlayerFrozen { get { return isPlayerFrozen; } }
         // Getters (Private)
         private bool IsLevelComplete { get { return gameController.IsLevelComplete; } }
@@ -39,7 +42,9 @@ namespace BouncePaint {
 
             // Reset values
             currentStep = 0;
-            isCantLose = false;
+            //isCantLose = false;
+            //doAcceptInput = true;
+            timeWhenAcceptInput = -1;
             isPlayerFrozen = false;
             t_instructions.enabled = false;
             t_lossFeedback.enabled = false;
@@ -56,9 +61,11 @@ namespace BouncePaint {
             // Whaddawe gonna do this level??
             if (levelIndex == LEVEL_1) {
                 isActive = true;
-                isCantLose = true;
+                //isCantLose = true;
+                //doAcceptInput = false;
+                timeWhenAcceptInput = Mathf.Infinity; // never accept input until further notice.
                 if (!didSeeHowToPlay) {
-                    //isPlayerFrozen = true;
+                    isPlayerFrozen = true;
                     didSeeHowToPlay = true;
                     go_howToPlay.SetActive(true);
                 }
@@ -82,9 +89,11 @@ namespace BouncePaint {
 
             if (levelIndex == LEVEL_1) {
                 if (!isPlayerFrozen && !gameController.IsLevelComplete) {
-                    float yBounds = level.Blocks[0].HitBox.yMax - 5f;
+                    float yBounds = level.Blocks[0].HitBox.yMax - 24f; // HARDCODED offset here. Nbd #fue.
                     if (player.YVel<0 && player.BottomY <= yBounds) {
                         // Freeze!
+                        //doAcceptInput = true;
+                        timeWhenAcceptInput = Time.unscaledTime + 0.2f; // accept input after a quick pause.
                         isPlayerFrozen = true;
                         t_instructions.enabled = true;
                         t_instructions.text = "tap now";
@@ -108,6 +117,8 @@ namespace BouncePaint {
         public void OnPlayerPaintBlock() {
             if (levelIndex == LEVEL_1) {
                 // Unfreeze!
+                //doAcceptInput = false;
+                timeWhenAcceptInput = Mathf.Infinity; // don't accept input until the Player lands on the next Blocko!
                 isPlayerFrozen = false;
                 t_instructions.enabled = false;
                 currentStep ++;
