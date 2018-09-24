@@ -16,7 +16,7 @@ public class LevelLoader : MonoBehaviour {
     static public string LevelsFilePath(string gameName, bool useFullPath=false) {
         string returnPath = "Games/" + gameName + "/Levels";
         if (useFullPath) {
-            returnPath = Application.dataPath + "/Assets/Resources/" + returnPath;
+            returnPath = Application.dataPath + "/Resources/" + returnPath;
         }
         return returnPath;
     }

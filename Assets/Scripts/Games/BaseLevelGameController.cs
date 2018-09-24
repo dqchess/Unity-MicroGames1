@@ -55,7 +55,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 	override protected void Start () {
         // In the editor? Reload our levels file!
         #if UNITY_EDITOR
-        AssetDatabase.ImportAsset(LevelLoader.LevelsFilePath(MyGameName(), true));
+        AssetDatabase.ImportAsset(LevelLoader.LevelsFilePath(MyGameName()));
         #endif
 
 		// Initialize LevelLoader!
