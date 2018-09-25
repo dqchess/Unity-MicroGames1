@@ -237,15 +237,15 @@ namespace BouncePaint {
             //              AddBlock(blockSize,  80,b+200);
             //              AddBlock(blockSize,  80,b);
             //          }
-            else if (li == i++) {
-                gameController.PlayerGravityScale = 0.96f;
-                AddBlock(bs, -120,b+120);
-                AddBlock(bs,    0,b);
-                AddBlock(bs,  120,b);
-            }
+            //else if (li == i++) {
+            //    gameController.PlayerGravityScale = 0.96f;
+            //    AddBlock(bs, -120,b+120);
+            //    AddBlock(bs,    0,b);
+            //    AddBlock(bs,  120,b);
+            //}
             else if (li == i++) {
                 gameController.PlayerGravityScale = 0.98f;
-                AddBlock(bs, new Vector2(-100,b), new Vector2(100,b));
+                AddBlock(bs, new Vector2(-100,b), new Vector2(100,b)).SetSpeed(1.5f);
             }
             else if (li == i++) {
                 AddBlock(bs, new Vector2(-80,b), new Vector2(-160,b));
