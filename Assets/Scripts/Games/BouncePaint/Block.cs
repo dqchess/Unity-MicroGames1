@@ -208,12 +208,27 @@ namespace BouncePaint {
 			}
 		}
 
+        private Color GetColorFromHitQuality(int hitQuality) {
+            switch (hitQuality) {
+                case 1: return Color.green;
+                case 2: return new Color(1,0.9f,0);
+                case 3: return new Color(1,0.4f,0);
+                default: return Color.red; // Oops.
+            }
+        }
 
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
         /// Paints me! :)
-        public void OnPlayerBounceOnMe(Color playerColor, Vector2 playerVel) {
+        public void OnPlayerBounceOnMe(Player player, Vector2 playerVel) {
+            // How GOOD was that hit, my man?
+            float dist = Mathf.Abs(BlockTop-player.BottomY);
+            int hitQuality=0;
+            if (dist < 9f) { hitQuality = 1; }
+            else if (dist < 20f) { hitQuality = 2; }
+            else { hitQuality = 3; }
+        
             // If I'm paintable AND not yet painted...!
             if (isPaintable && !isPainted) {
                 // Hit me, Paul!
@@ -221,7 +236,10 @@ namespace BouncePaint {
                 UpdateNumHitsReqText();
                 // That was the last straw, Cady?? Paint me!
                 if (numHitsReq <= 0) {
-                    PaintMe(playerColor);
+                    //PaintMe(playerColor);
+                    Color newColor = GetColorFromHitQuality(hitQuality);
+                    PaintMe(newColor);
+                    player.Temp_ColorMe(newColor);
                 }
                 // Particle burst!
                 GameUtils.SetParticleSystemColor(ps_hit, bodyColor);

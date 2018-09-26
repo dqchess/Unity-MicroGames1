@@ -199,6 +199,10 @@ namespace BouncePaint {
             }
             gameController.OnPlayerSetBlockHeadingTo(blockHeadingTo);
         }
+        
+        public void Temp_ColorMe(Color _color) {
+            bodyColor = _color;
+        }
 
         public void BounceOnBlock(Block block) {
             // FIRST, tell the Block I've targeted that I'm not interested in anymore (it could be a different Block, for the record)!
@@ -217,7 +221,7 @@ namespace BouncePaint {
             if (!wasBlockPainted) {
                 bodyColor = GetRandomHappyColor(); // Rando my colo!
             }
-            block.OnPlayerBounceOnMe(bodyColor, vel);
+            block.OnPlayerBounceOnMe(this, vel);
             bool didPaintBlock = !wasBlockPainted && block.IsPainted;
             gameController.OnPlayerBounceOnBlock(this, didPaintBlock);
 

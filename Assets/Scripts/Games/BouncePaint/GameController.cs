@@ -230,7 +230,7 @@ namespace BouncePaint {
             foreach (Block block in Blocks) {
                 for (int i=Mathf.Max(1,block.NumHitsReq); i>0; --i) {
                     if (i==1 && !block.IsAvailable) { continue; } // Test. Comment this out if you want to win right away.
-                    block.OnPlayerBounceOnMe(Player.GetRandomHappyColor(), Vector2.zero);
+                    block.OnPlayerBounceOnMe(null, Vector2.zero);//Player.GetRandomHappyColor()
                 }
             }
             OnPlayerBounceOnBlock(Players[0], true);

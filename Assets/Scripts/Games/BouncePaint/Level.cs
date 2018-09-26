@@ -318,9 +318,9 @@ namespace BouncePaint {
             //}
             else if (li == i++) {
                 AddBlock(bs, -150,b);
-                AddBlock(bs, -150,b+90);
+                AddBlock(bs, -150,b+150);
                 AddBlock(bs,  150,b);
-                AddBlock(bs,  150,b+90);
+                AddBlock(bs,  150,b+150);
             }
             //else if (li == i++) {
             //    AddBlock(bs, -150,b);
