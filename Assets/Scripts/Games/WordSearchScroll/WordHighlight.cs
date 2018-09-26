@@ -8,7 +8,7 @@ namespace WordSearchScroll {
 		// Components
 		[SerializeField] private Image i_body;
 		// Properties
-		private string wordSpelling; // updated when we change mySpaces.
+		private string wordSpelling=""; // updated when we change mySpaces.
 		// References
 		private Board board;
 		private List<BoardSpace> mySpaces;
@@ -31,7 +31,7 @@ namespace WordSearchScroll {
 
 			// Gimme a random color!
 			float h = Random.Range(0f,1f);
-			i_body.color = new ColorHSB(h, 0.4f, 1f, 0.4f).ToColor();
+			i_body.color = new ColorHSB(h, 0.4f, 1f, 0.3f).ToColor();
 
 			Hide();
 		}
@@ -100,7 +100,7 @@ namespace WordSearchScroll {
 
 		public void Solidify() {
 			// Temp: Make color darker.
-			i_body.color = Color.Lerp(i_body.color, Color.black, 0.2f);
+			i_body.color = Color.Lerp(i_body.color, new Color(0,0,0, i_body.color.a), 0.2f);
 		}
 
 		private void OnMySpacesChanged() {

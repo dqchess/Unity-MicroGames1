@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace WordSearchScroll {
 	public class Board : MonoBehaviour {
+		// Constants
+		private const int MinWordLength = 3; // don't pick or allow words smaller than this.
 		// Components
 		[SerializeField] private RectTransform myRectTransform=null;
 		[SerializeField] private Transform tf_boardSpaces=null;
@@ -12,7 +14,9 @@ namespace WordSearchScroll {
 		private List<WordHighlight> wordHighlights;
 		// Properties
 		private float unitSize; // how big each board space is in pixels
+		private float scrollAmount; // in board units.
 		private int numCols,numRows;
+//		private string[,] wordsPlanned; // TEMP, not infinite. For testing.
 		private Vector2 size;
 		private HashSet<string> wordsFound;
 		// References
@@ -65,7 +69,7 @@ namespace WordSearchScroll {
 			wordManager = new WordManager();
 
 			// TESTing
-			numCols = 10;
+			numCols = 100;
 			numRows = 10;
 
 			// Determine unitSize and other board-specific visual stuff
@@ -80,9 +84,13 @@ namespace WordSearchScroll {
 				}
 			}
 
+//			wordsPlanned = new string[1000,numRows];
+
 			// Add words to board!
-			string[] wordsToAdd = wordManager.GetRandomWords(1);
+			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 12f); // 1 word for every 12 spaces.
+			string[] wordsToAdd = wordManager.GetRandomWords(numWordsToAdd, MinWordLength);
 			AddWordsToBoard(wordsToAdd);
+			FillEmptySpacesWithRandLetters();
 
 			wordsFound = new HashSet<string>();
 			ResetAllWordHighlights();
@@ -90,18 +98,32 @@ namespace WordSearchScroll {
 
 		private void UpdatePosAndSize() {
 			Rect r_availableArea = myRectTransform.rect;
-			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
-//			unitSize *= 0.8f; //DEBUG
+//			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
+			unitSize = r_availableArea.size.y/(float)(numRows) * 0.7f; // TEMP TESTING
 
-			RectTransform rt_canvas = level.Canvas.GetComponent<RectTransform>();
-			Vector2 canvasSize = rt_canvas.rect.size;
 			size = new Vector2(unitSize*numCols, unitSize*numRows);
 			myRectTransform.sizeDelta = size;
-			float x = (canvasSize.x-size.x) * 0.5f;
+			scrollAmount = 0;
+			UpdatePos();
+		}
+		private void UpdatePos() {
+			RectTransform rt_canvas = level.Canvas.GetComponent<RectTransform>();
+			Vector2 canvasSize = rt_canvas.rect.size;
+			float x = -scrollAmount*unitSize;//canvasSize.x*0.5f 
 			float y = (-canvasSize.y+size.y) * 0.5f;
 			myRectTransform.anchoredPosition = new Vector2(x,y); // offset so I'm centered.
 		}
 
+		private void FillEmptySpacesWithRandLetters() {
+			for (int i=0; i<numCols; i++) {
+				for (int j=0; j<numRows; j++) {
+					BoardSpace space = spaces[i,j];
+					if (space.CanSetMyLetter()) {
+						space.SetMyLetter(WordManager.RandAlphabetChar());
+					}
+				}
+			}
+		}
 		private void AddWordsToBoard(string[] words) {
 			for (int i=0; i<words.Length; i++) {
 				TryAddWordToBoard(words[i]);
@@ -164,13 +186,19 @@ namespace WordSearchScroll {
 		public void OnTouchUp() {
 			// Is a word?!
 			string word = currentWordHighlight.WordSpelling;
-			if (!DidFindWord(word) && wordManager.IsRealWord(word)) {
+			if (CanSubmitWord(word)) {
 				OnCurrentHighlightFoundWord();
 			}
 			// Not a word.
 			else {
 				currentWordHighlight.Hide();
 			}
+		}
+		private bool CanSubmitWord(string word) {
+			if (DidFindWord(word)) { return false; }
+			if (word.Length < MinWordLength) { return false; }
+			if (!wordManager.IsRealWord(word)) { return false; }
+			return true;
 		}
 
 		private void OnCurrentHighlightFoundWord() {
@@ -180,6 +208,9 @@ namespace WordSearchScroll {
 			currentWordHighlight.Solidify();
 			// Add a new highlight to be my new currentWordHighlight! :D
 			AddWordHighlight();
+			// Scroll!!
+			scrollAmount += 0.3f;
+			UpdatePos();
 		}
 
 
