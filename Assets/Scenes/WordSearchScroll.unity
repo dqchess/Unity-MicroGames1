@@ -471,6 +471,16 @@ Prefab:
       propertyPath: m_isInputParsingRequired
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114711429280076350, guid: 65b0409a14291ae46a4d1da88ff039c2,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114711429280076350, guid: 65b0409a14291ae46a4d1da88ff039c2,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1698421855670244, guid: 65b0409a14291ae46a4d1da88ff039c2, type: 2}
       propertyPath: m_IsActive
       value: 0

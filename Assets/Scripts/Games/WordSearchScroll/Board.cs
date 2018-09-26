@@ -81,8 +81,8 @@ namespace WordSearchScroll {
 			wordManager = new WordManager();
 
 			// TESTing
-			numCols = 100;
-			numRows = 10;
+			numCols = 80;
+			numRows = 12;
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
@@ -100,7 +100,7 @@ namespace WordSearchScroll {
 
 			// Add words to board!
 			boardWords = new Dictionary<string,BoardWord>();
-			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 6f); // 1 word for every 6 spaces.
+			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 1f);//QQQ TEST 6f); // 1 word for every 6 spaces.
 			string[] wordsToAdd = wordManager.GetRandomWords(numWordsToAdd, MinWordLength);
 			AddWordsToBoard(wordsToAdd);
 			FillEmptySpacesWithRandLetters();
@@ -113,7 +113,7 @@ namespace WordSearchScroll {
 		private void UpdatePosAndSize() {
 			Rect r_availableArea = myRectTransform.rect;
 //			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
-			unitSize = r_availableArea.size.y/(float)(numRows) * 0.7f; // TEMP TESTING
+			unitSize = r_availableArea.size.y/(float)(numRows) * 0.9f; // TEMP TESTING
 
 			size = new Vector2(unitSize*numCols, unitSize*numRows);
 			myRectTransform.sizeDelta = size;
@@ -124,7 +124,9 @@ namespace WordSearchScroll {
 			float xFrom = myRectTransform.anchoredPosition.x;
 			Vector2 canvasSize = level.CanvasSize;
 			posTarget = new Vector2(-scrollAmount*unitSize,//canvasSize.x*0.5f 
-									(-canvasSize.y+size.y) * 0.5f); // offset so I'm centered.
+				//									(-canvasSize.y+size.y) * 0.5f); // offset so I'm centered.
+				-canvasSize.y + size.y + 50); // bottom-aligned
+
 //			myRectTransform.anchoredPosition = new Vector2(xFrom,posTarget.y);
 //			LeanTween.value(this.gameObject, SetXPos, xFrom,posTarget.x, 1.2f).setEaseInOutQuart();
 			UpdateWordsVisible();
