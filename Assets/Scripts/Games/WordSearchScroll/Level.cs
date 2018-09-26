@@ -7,8 +7,8 @@ namespace WordSearchScroll {
 		// Components
 		[SerializeField] private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		[SerializeField] private RectTransform myRectTransform;
-//		[SerializeField] private GameUI ui;
 		// Properties
+		private RectTransform rt_canvas;
 		private Vector2 mousePosRelative;
 		private Vector2Int mouseBoardPos;
 		// References
@@ -17,7 +17,8 @@ namespace WordSearchScroll {
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
 		// Getters (Public)
-		public Canvas Canvas { get { return gameController.Canvas; } }
+//		public LevelUI UI { get { return ui; } }
+		public Vector2 CanvasSize { get { return rt_canvas.rect.size; } }
 		public Vector2 MousePosRelative { get { return mousePosRelative; } }
 		public Vector2Int MouseBoardPos { get { return mouseBoardPos; } }
 
@@ -36,6 +37,8 @@ namespace WordSearchScroll {
 
 //			GameUtils.FlushRectTransform(myRectTransform);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
+
+			rt_canvas = gameController.Canvas.GetComponent<RectTransform>();
 
 			// Initialize Board!
 			board.Initialize();

@@ -17,10 +17,14 @@ namespace WordSearchScroll {
 		private float scrollAmount; // in board units.
 		private int numCols,numRows;
 //		private string[,] wordsPlanned; // TEMP, not infinite. For testing.
+		private Dictionary<string,BoardWord> boardWords; // ALL of the words we've added! Key is the word string.
+		private List<BoardWord> wordsVisible; // just the ones we can see, from the ones we've added.
+		private Vector2 posTarget;
 		private Vector2 size;
 		private HashSet<string> wordsFound;
 		// References
 		[SerializeField] private Level level;
+		[SerializeField] private LevelUI ui;
 
 		// Getters (Public)
 		public float UnitSize { get { return unitSize; } }
@@ -61,6 +65,14 @@ namespace WordSearchScroll {
 			return true; // Looks good!
 		}
 
+//		private void OnGUI() {
+//			if (wordsVisible==null) { return; }
+//			for (int i=0; i<wordsVisible.Count; i++) {
+//				GUI.contentColor = wordsVisible[i].didFindMe ? new Color(1,1,1, 0.3f) : Color.white;
+//				GUI.Label(new Rect(8,10+i*16, 800,40), wordsVisible[i].word);
+//			}
+//		}
+
 
 		// ----------------------------------------------------------------
 		//  Initialize
@@ -87,13 +99,15 @@ namespace WordSearchScroll {
 //			wordsPlanned = new string[1000,numRows];
 
 			// Add words to board!
-			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 12f); // 1 word for every 12 spaces.
+			boardWords = new Dictionary<string,BoardWord>();
+			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 6f); // 1 word for every 6 spaces.
 			string[] wordsToAdd = wordManager.GetRandomWords(numWordsToAdd, MinWordLength);
 			AddWordsToBoard(wordsToAdd);
 			FillEmptySpacesWithRandLetters();
 
 			wordsFound = new HashSet<string>();
 			ResetAllWordHighlights();
+			UpdateWordsVisible();
 		}
 
 		private void UpdatePosAndSize() {
@@ -104,14 +118,19 @@ namespace WordSearchScroll {
 			size = new Vector2(unitSize*numCols, unitSize*numRows);
 			myRectTransform.sizeDelta = size;
 			scrollAmount = 0;
-			UpdatePos();
+			UpdatePosTarget();
 		}
-		private void UpdatePos() {
-			RectTransform rt_canvas = level.Canvas.GetComponent<RectTransform>();
-			Vector2 canvasSize = rt_canvas.rect.size;
-			float x = -scrollAmount*unitSize;//canvasSize.x*0.5f 
-			float y = (-canvasSize.y+size.y) * 0.5f;
-			myRectTransform.anchoredPosition = new Vector2(x,y); // offset so I'm centered.
+		private void UpdatePosTarget() {
+			float xFrom = myRectTransform.anchoredPosition.x;
+			Vector2 canvasSize = level.CanvasSize;
+			posTarget = new Vector2(-scrollAmount*unitSize,//canvasSize.x*0.5f 
+									(-canvasSize.y+size.y) * 0.5f); // offset so I'm centered.
+//			myRectTransform.anchoredPosition = new Vector2(xFrom,posTarget.y);
+//			LeanTween.value(this.gameObject, SetXPos, xFrom,posTarget.x, 1.2f).setEaseInOutQuart();
+			UpdateWordsVisible();
+		}
+		private void SetXPos(float _x) {
+			myRectTransform.anchoredPosition = new Vector2(_x, myRectTransform.anchoredPosition.y);
 		}
 
 		private void FillEmptySpacesWithRandLetters() {
@@ -144,12 +163,16 @@ namespace WordSearchScroll {
 			}
 		}
 		private void AddWordToBoard(string word, WordBoardPos wordPos) {
+			// Pop it in da board.
 			char[] chars = word.ToCharArray();
 			for (int i=0; i<chars.Length; i++) {
 				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
 				BoardSpace space = GetSpace(letterPos);
 				space.SetMyLetter(chars[i]);
 			}
+			// Add it to boardWords!
+			BoardWord bw = new BoardWord(word, wordPos);
+			boardWords[word] = bw;
 		}
 
 		private void ResetAllWordHighlights() {
@@ -206,11 +229,15 @@ namespace WordSearchScroll {
 			// Add the word to the list!
 			wordsFound.Add(word);
 			currentWordHighlight.Solidify();
+			// Tell the BoardWord!
+			if (boardWords.ContainsKey(word)) {
+				boardWords[word].didFindMe = true;
+			}
 			// Add a new highlight to be my new currentWordHighlight! :D
 			AddWordHighlight();
 			// Scroll!!
 			scrollAmount += 0.3f;
-			UpdatePos();
+			UpdatePosTarget();
 		}
 
 
@@ -222,9 +249,62 @@ namespace WordSearchScroll {
 			if (currentWordHighlight.IsVisible) {
 				currentWordHighlight.OnMousePosChanged(mousePosRelative);
 			}
+
+			// TEST
+			if (myRectTransform.anchoredPosition != posTarget) {
+				myRectTransform.anchoredPosition += (posTarget-myRectTransform.anchoredPosition) / 12f;
+				if (Vector2.Distance(myRectTransform.anchoredPosition,posTarget) <= 0.1f) {
+					myRectTransform.anchoredPosition = posTarget;
+				}
+			}
+
+			// DEBUG TESTTT
+			if (Input.GetKey(KeyCode.LeftArrow)) {
+				scrollAmount -= 0.1f;
+				UpdatePosTarget();
+			}
+			if (Input.GetKey(KeyCode.RightArrow)) {
+				scrollAmount += 0.1f;
+				UpdatePosTarget();
+			}
 		}
 
 
+		private void UpdateWordsVisible() {
+			if (boardWords==null) { return; } // Safety check.
+			wordsVisible = new List<BoardWord>();
+			int colMin = Mathf.FloorToInt(-posTarget.x/unitSize);
+			int colMax = colMin + Mathf.FloorToInt(level.CanvasSize.x/unitSize);
+			foreach (BoardWord bw in boardWords.Values) {
+				if (bw.bpos.pos.x<colMin || bw.bpos.pos.x>colMax) { continue; } // Quick check: First pos is outta bounds.
+				bool isWordVisible = true; // I'll say otherwise next.
+				for (int l=0; l<bw.word.Length; l++) {
+					float thisCol = bw.bpos.pos.x + bw.bpos.dir.x*l;
+					if (thisCol<colMin || thisCol>colMax) {
+						isWordVisible = false; // ahh, it's only PARTIALLY visible. Nah.
+						break;
+					}
+				}
+				if (!isWordVisible) { continue; } // We found it not fully visible, so skip it.
+				// This girl is totally in the visible section!!
+				wordsVisible.Add(bw);
+			}
+			// Tell the UI!
+			ui.OnSetWordsVisible(wordsVisible);
+		}
+
+
+	}
+
+
+	public class BoardWord {
+		public bool didFindMe=false;
+		public string word;
+		public WordBoardPos bpos;
+		public BoardWord(string word, WordBoardPos bpos) {
+			this.word = word;
+			this.bpos = bpos;
+		}
 	}
 
 
