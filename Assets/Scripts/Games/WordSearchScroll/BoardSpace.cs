@@ -16,6 +16,7 @@ namespace WordSearchScroll {
 		private Vector2Int boardPos;
 		// References
 		private Board board;
+		private List<BoardWord> myWords; // a reference to all the words I'm a part of. For debug testing.
 
 		// Getters (Private)
 		private bool HasLetter() { return WordManager.IsCharInAlphabet(myLetter); }
@@ -28,6 +29,16 @@ namespace WordSearchScroll {
 		public bool CanSetMyLetter(char _char=' ') {
 			// We can set my letter if I DON'T have one yet, OR if it's the same as what we wanna set it to!
 			return !HasLetter() || myLetter==_char;
+		}
+
+		// Debug
+		public void Debug_PrintMyWords() {
+			if (myWords.Count==0) { print("No words at this space."); return; }
+			string str = "Words: ";
+			foreach (BoardWord word in myWords) {
+				str += word.word + ", ";
+			}
+			print(str);
 		}
 
 
@@ -46,19 +57,32 @@ namespace WordSearchScroll {
 			myRectTransform.anchoredPosition = board.BoardToPos(boardPos);
 			myRectTransform.sizeDelta = new Vector2(board.UnitSize,board.UnitSize);
 
-            float fillS = Random.Range(0.2f, 0.25f);
-            float fillB = Random.Range(0.9f, 0.98f);
+//            float fillS = Random.Range(0.04f, 0.06f);
+			float fillS = 0.04f;
+            float fillB = Random.Range(0.9f, 1f);
             //float fillB = Random.Range(0.01f, 0.06f);
 			fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
 			i_backing.color = fillColor;
 
+			myWords = new List<BoardWord>();
+
 			// Default my letter to a period for testing.
-			SetMyLetter('-');
+			SetMyLetter('-', null);
 		}
 
-		public void SetMyLetter(char _myLetter) {
+		public void SetMyLetter(char _myLetter, BoardWord wordFrom) {
 			myLetter = _myLetter;
 			t_letter.text = myLetter.ToString();
+			if (wordFrom != null) {
+				myWords.Add(wordFrom);
+			}
+
+//			if (myWords.Count == 0) {
+//				t_letter.color = new Color(0,0,0, 0.3f); // DEBUG TEST
+//			}
+//			else {
+			t_letter.color = new Color(0,0,0, 0.8f);
+//			}
 		}
 
 

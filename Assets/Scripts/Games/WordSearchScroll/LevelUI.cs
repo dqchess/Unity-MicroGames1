@@ -10,7 +10,7 @@ namespace WordSearchScroll {
 		[SerializeField] private TextMeshProUGUI t_wordsVisible1; // right column
 
 		public void OnSetWordsVisible(List<BoardWord> wordsVisible) {
-			const int numWordsPerCol = 12;
+			const int numWordsPerCol = 16;
 
 			t_wordsVisible0.text = "";
 			t_wordsVisible1.text = "";

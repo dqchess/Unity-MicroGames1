@@ -6,7 +6,8 @@ using UnityEngine.UI;
 namespace WordSearchScroll {
 	public class WordHighlight : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_body;
+		[SerializeField] private Image i_fill;
+		[SerializeField] private Image i_stroke;
 		// Properties
 		private string wordSpelling=""; // updated when we change mySpaces.
 		// References
@@ -14,7 +15,7 @@ namespace WordSearchScroll {
 		private List<BoardSpace> mySpaces;
 
 		// Getters (Public)
-		public bool IsVisible { get { return i_body.enabled; } }
+		public bool IsVisible { get { return i_fill.enabled; } }
 		public string WordSpelling { get { return wordSpelling; } }
 		// Getters (Private)
 		private BoardSpace startSpace { get { return mySpaces[0]; } }
@@ -31,19 +32,23 @@ namespace WordSearchScroll {
 
 			// Gimme a random color!
 			float h = Random.Range(0f,1f);
-			i_body.color = new ColorHSB(h, 0.4f, 1f, 0.3f).ToColor();
+			SetMyColor(new ColorHSB(h, 0.4f, 1f).ToColor());
 
 			Hide();
+		}
+		private void SetMyColor(Color c) {
+			i_fill.color = new Color(c.r,c.g,c.b, 0.28f);
+			i_stroke.color = new Color(c.r,c.g,c.b, 0.8f);
 		}
 
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
 		public void Hide() {
-			i_body.enabled = false;
+			i_fill.enabled = i_stroke.enabled = false;
 		}
 		public void Show(BoardSpace _startSpace) {
-			i_body.enabled = true;
+			i_fill.enabled = i_stroke.enabled = true;
 			mySpaces = new List<BoardSpace>();
 			mySpaces.Add(_startSpace);
 			UpdateEndSpace(_startSpace); // also start with the endSpace the same as the startSpace.
@@ -92,15 +97,19 @@ namespace WordSearchScroll {
 			Vector2 center = Vector2.Lerp(startPos,endPos, 0.5f);
 			float rotation = LineUtils.GetAngle_Degrees(startPos, endPos);
 			float dist = Vector2.Distance(startPos,endPos);//numSpaces*board.UnitSize;//
-			i_body.rectTransform.anchoredPosition = center;
-			i_body.rectTransform.localEulerAngles = new Vector3(0,0,rotation);
+			i_fill.rectTransform.anchoredPosition = center;
+			i_stroke.rectTransform.anchoredPosition = center;
+			i_fill.rectTransform.localEulerAngles = new Vector3(0,0,rotation);
+			i_stroke.rectTransform.localEulerAngles = new Vector3(0,0,rotation);
 			float lineLength = dist + board.UnitSize; // beef up the line length by a full board unit.
-			GameUtils.SizeUIGraphic(i_body, lineLength,board.UnitSize);
+			GameUtils.SizeUIGraphic(i_fill, lineLength,board.UnitSize);
+			GameUtils.SizeUIGraphic(i_stroke, lineLength,board.UnitSize);
 		}
 
 		public void Solidify() {
-			// Temp: Make color darker.
-			i_body.color = Color.Lerp(i_body.color, new Color(0,0,0, i_body.color.a), 0.2f);
+//			SetMyColor(
+//			// Temp: Make color darker.
+//			i_body.color = Color.Lerp(i_body.color, new Color(0,0,0, i_body.color.a), 0.2f);
 		}
 
 		private void OnMySpacesChanged() {

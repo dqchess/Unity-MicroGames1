@@ -121,7 +121,7 @@ namespace WordSearchScroll {
 			UpdatePosTarget();
 		}
 		private void UpdatePosTarget() {
-			float xFrom = myRectTransform.anchoredPosition.x;
+//			float xFrom = myRectTransform.anchoredPosition.x;
 			Vector2 canvasSize = level.CanvasSize;
 			posTarget = new Vector2(-scrollAmount*unitSize,//canvasSize.x*0.5f 
 				//									(-canvasSize.y+size.y) * 0.5f); // offset so I'm centered.
@@ -140,7 +140,7 @@ namespace WordSearchScroll {
 				for (int j=0; j<numRows; j++) {
 					BoardSpace space = spaces[i,j];
 					if (space.CanSetMyLetter()) {
-						space.SetMyLetter(WordManager.RandAlphabetChar());
+						space.SetMyLetter(WordManager.RandAlphabetChar(), null);
 					}
 				}
 			}
@@ -165,16 +165,16 @@ namespace WordSearchScroll {
 			}
 		}
 		private void AddWordToBoard(string word, WordBoardPos wordPos) {
+			// Add it to boardWords!
+			BoardWord bw = new BoardWord(word, wordPos);
+			boardWords[word] = bw;
 			// Pop it in da board.
 			char[] chars = word.ToCharArray();
 			for (int i=0; i<chars.Length; i++) {
 				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
 				BoardSpace space = GetSpace(letterPos);
-				space.SetMyLetter(chars[i]);
+				space.SetMyLetter(chars[i], bw);
 			}
-			// Add it to boardWords!
-			BoardWord bw = new BoardWord(word, wordPos);
-			boardWords[word] = bw;
 		}
 
 		private void ResetAllWordHighlights() {
@@ -206,6 +206,8 @@ namespace WordSearchScroll {
 			BoardSpace spaceOver = GetSpace(mouseBoardPos);
 			if (spaceOver != null) {
 				currentWordHighlight.Show(spaceOver);
+				// DEBUG
+				spaceOver.Debug_PrintMyWords();
 			}
 		}
 		public void OnTouchUp() {
@@ -238,7 +240,7 @@ namespace WordSearchScroll {
 			// Add a new highlight to be my new currentWordHighlight! :D
 			AddWordHighlight();
 			// Scroll!!
-			scrollAmount += 0.3f;
+			scrollAmount += 0.4f;
 			UpdatePosTarget();
 		}
 
