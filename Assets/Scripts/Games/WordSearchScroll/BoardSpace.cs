@@ -22,6 +22,9 @@ namespace WordSearchScroll {
 		// Getters (Public)
 		public int Col { get { return boardPos.x; } }
 		public int Row { get { return boardPos.y; } }
+		public char MyLetter { get { return myLetter; } }
+		public Vector2 Pos { get { return board.BoardToPos(BoardPos); } }
+		public Vector2Int BoardPos { get { return boardPos; } }
 		public bool CanSetMyLetter(char _char) {
 			// We can set my letter if I DON'T have one yet, OR if it's the same as what we wanna set it to!
 			return !HasLetter() || myLetter==_char;
@@ -40,7 +43,7 @@ namespace WordSearchScroll {
 			this.gameObject.name = "BoardSpace_" + Col + "," + Row;
 
 			// Size/position me right!
-			this.transform.localPosition = board.BoardToPos(boardPos);
+			myRectTransform.anchoredPosition = board.BoardToPos(boardPos);
 			myRectTransform.sizeDelta = new Vector2(board.UnitSize,board.UnitSize);
 
             float fillS = Random.Range(0.2f, 0.25f);

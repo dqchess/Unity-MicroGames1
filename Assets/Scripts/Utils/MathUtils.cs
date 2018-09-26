@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class MathUtils {
 
+	static public readonly float HalfPI = Mathf.PI*0.5f;
+
 	/// Maps Cos from (-1 to 1) to (0 to 1); also offsets so 0 returns 1.
 	static public float Cos01(float val) { return (1-Mathf.Sin(val)) * 0.5f; }
 	/// Maps Sin from (-1 to 1) to (0 to 1); also offsets so 0 returns 0.
@@ -67,7 +69,41 @@ public class MathUtils {
 	}
 
 
+	static public float SnapAngle(float angle, float snap) {
+		return Mathf.RoundToInt(angle/snap) * snap;
+	}
 
+	public static int ManhattanDistance(Vector2Int posA, Vector2Int posB) {
+		return ManhattanDistance(posA.x,posA.y, posB.x,posB.y);
+	}
+	public static int ManhattanDistance(int x1,int y1, int x2,int y2) {
+		return Mathf.Abs(x1-x2) + Mathf.Abs(y1-y2);
+	}
+	public static int ChebyshevDistance(Vector2Int posA, Vector2Int posB) {
+		return ChebyshevDistance(posA.x,posA.y, posB.x,posB.y);
+	}
+	/** Aka "chessboard distance": Min number of moves for king to go from space A to B. */
+	public static int ChebyshevDistance(int x1,int y1, int x2,int y2) {
+		return Mathf.Max(Mathf.Abs(x1-x2), Mathf.Abs(y1-y2));
+	}
+
+
+	public static Vector2Int GetDir(Vector2 posA, Vector2 posB) {
+		int degrees = Mathf.RoundToInt(LineUtils.GetAngle_Degrees(posA,posB));
+		degrees = Mathf.RoundToInt(SnapAngle(degrees, 45)); // snap to 45-degree increments, yo.
+		if (degrees < 0) { degrees += 360; } // keep it positive.
+		switch (degrees) {
+			case 0: return Vector2Int.R;
+			case 45: return Vector2Int.TR;
+			case 90: return Vector2Int.T;
+			case 135: return Vector2Int.TL;
+			case 180: return Vector2Int.L;
+			case 225: return Vector2Int.BL;
+			case 270: return Vector2Int.B;
+			case 315: return Vector2Int.BR;
+			default: return Vector2Int.none; // Hmm.
+		}
+	}
     public static Vector2Int GetDir (int side) {
 		switch (side) {
 			case Sides.L: return Vector2Int.L;

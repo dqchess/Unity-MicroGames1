@@ -6,13 +6,10 @@ namespace WordSearchScroll {
 	public class WordManager {
 		// Properties
 		private string[] words_common10000; // 10,000 common words.
+		private HashSet<string> allWords; // the official dictionary to check if a string is a word.
 
 		// Getters (Public)
-		static public bool IsCharInAlphabet(char c) {
-			if (c >= 'a' && c <= 'z') { return true; }
-			if (c >= 'A' && c <= 'Z') { return true; }
-			return false;
-		}
+		public bool IsRealWord(string word) { return allWords.Contains(word); }
 		public string[] GetRandomWords(int numWords) {
 			List<string> words = new List<string>();
 			int safetyCount=0;
@@ -33,6 +30,11 @@ namespace WordSearchScroll {
 			}
             return words.ToArray();
 		}
+		static public bool IsCharInAlphabet(char c) {
+			if (c >= 'a' && c <= 'z') { return true; }
+			if (c >= 'A' && c <= 'Z') { return true; }
+			return false;
+		}
 
 
 		// ----------------------------------------------------------------
@@ -40,6 +42,7 @@ namespace WordSearchScroll {
 		// ----------------------------------------------------------------
 		public WordManager() {
 			words_common10000 = TextUtils.GetStringArrayFromResourcesTextFile("Games/WordSearchScroll/words_common10000");
+			allWords = new HashSet<string>(TextUtils.GetStringArrayFromResourcesTextFile("Games/WordSearchScroll/words_scrabble"));
 		}
 
 

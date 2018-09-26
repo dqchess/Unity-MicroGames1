@@ -18,6 +18,10 @@ public struct Vector2Int {
 		x = _x;
 		y = _y;
 	}
+	public Vector2Int (float _x,float _y) {
+		x = Mathf.RoundToInt(_x);
+		y = Mathf.RoundToInt(_y);
+	}
 	public Vector2 ToVector2 () { return new Vector2 (x,y); }
 
 	public override string ToString() { return x+","+y; }

@@ -7,6 +7,9 @@ namespace WordSearchScroll {
 		// Components
 		[SerializeField] private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		[SerializeField] private RectTransform myRectTransform;
+		// Properties
+		private Vector2 mousePosRelative;
+		private Vector2Int mouseBoardPos;
 		// References
 		private GameController gameController;
 
@@ -14,6 +17,8 @@ namespace WordSearchScroll {
 		private InputController inputController { get { return InputController.Instance; } }
 		// Getters (Public)
 		public Canvas Canvas { get { return gameController.Canvas; } }
+		public Vector2 MousePosRelative { get { return mousePosRelative; } }
+		public Vector2Int MouseBoardPos { get { return mouseBoardPos; } }
 
 
 
@@ -42,40 +47,32 @@ namespace WordSearchScroll {
 		private void Update() {
 			if (board==null) { return; } // To prevent errors when compiling during runtime.
 
-	//		UpdateMousePos();
-	//		UpdateMousePosBoard();
+			UpdateMousePoses();
 			RegisterMouseInput();
-            //GetMousePosBoard();
 		}
 
-		private Vector2Int GetMousePosBoard() {
-			Vector2 mousePosScaled = Input.mousePosition/gameController.Canvas.scaleFactor;
+		private void UpdateMousePoses() {
+			// mousePosRelative!
+			mousePosRelative = Input.mousePosition/gameController.Canvas.scaleFactor;
 			float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
-			mousePosScaled = new Vector2(mousePosScaled.x, canvasHeight-mousePosScaled.y); // convert to top-left space.
-			mousePosScaled += new Vector2(-board.Pos.x, board.Pos.y); // Note: Idk why negative...
-			int col = Mathf.FloorToInt(mousePosScaled.x / (float)board.UnitSize);
-			int row = Mathf.FloorToInt(mousePosScaled.y / (float)board.UnitSize);
-			print("mousePosBoard: " + col+","+row + "   mousePosScaled: " + mousePosScaled);
-			return new Vector2Int(col,row);
+			mousePosRelative = new Vector2(mousePosRelative.x, canvasHeight-mousePosRelative.y); // convert to top-left space.
+			mousePosRelative += new Vector2(-board.Pos.x, board.Pos.y); // Note: Idk why negative...
+			// mousePosBoard!
+			int col = Mathf.FloorToInt(mousePosRelative.x / (float)board.UnitSize);
+			int row = Mathf.FloorToInt(mousePosRelative.y / (float)board.UnitSize);
+			mouseBoardPos = new Vector2Int(col,row);
 		}
 
 		private void RegisterMouseInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
 			// Mouse UP
 			if (inputController.IsTouchUp()) {
-				OnTouchUp();
+				board.OnTouchUp();
 			}
 			// Mouse DOWN
 			else if (inputController.IsTouchDown()) {
-				OnTouchDown();
+				board.OnTouchDown();
 			}
-		}
-		private void OnTouchDown() {
-			Vector2Int mousePosBoard = GetMousePosBoard();
-			// TODO: This
-		}
-		private void OnTouchUp() {
-
 		}
 
 

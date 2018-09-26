@@ -9,25 +9,53 @@ namespace WordSearchScroll {
 		[SerializeField] private Transform tf_boardSpaces=null;
 		private BoardSpace[,] spaces;
 		private WordManager wordManager;
+		private List<WordHighlight> wordHighlights;
 		// Properties
 		private float unitSize; // how big each board space is in pixels
 		private int numCols,numRows;
 		private Vector2 size;
+		private HashSet<string> wordsFound;
 		// References
 		[SerializeField] private Level level;
 
-		// Getters (Private)
-		private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
 		// Getters (Public)
 		public float UnitSize { get { return unitSize; } }
 		public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
-
-		public float BoardToX(float col) { return  (col+0.5f)*unitSize - size.x*0.5f; } // +0.5f to center.
-		public float BoardToY(float row) { return -(row+0.5f)*unitSize + size.y*0.5f; } // +0.5f to center.
+		public float BoardToX(float col) { return  (col+0.5f)*unitSize; } // +0.5f to center.
+		public float BoardToY(float row) { return -(row+0.5f)*unitSize; } // +0.5f to center.
 		public Vector2 BoardToPos(Vector2Int boardPos) { return new Vector2(BoardToX(boardPos.x), BoardToY(boardPos.y)); }
-		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
-		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
+		public BoardSpace GetSpace(Vector2Int boardPos) {
+			if (boardPos.x<0 || boardPos.y<0  ||  boardPos.x>=numCols || boardPos.y>=numRows) { return null; } // Outta bounds? Return null.
+			return spaces[boardPos.x,boardPos.y];
+		}
+
+		// Getters (Private)
+		private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
+		private WordHighlight currentWordHighlight { get { return wordHighlights[wordHighlights.Count-1]; } } // Current girl's always the last one.
+		private Vector2 mousePosRelative { get { return level.MousePosRelative; } }
+		private Vector2Int mouseBoardPos { get { return level.MouseBoardPos; } }
+		private bool DidFindWord(string _word) {
+			return wordsFound.Contains(_word);
+		}
+		private Vector2Int RandBoardPos() {
+			return new Vector2Int(Random.Range(0,numCols), Random.Range(0,numRows));
+		}
+		private Vector2Int RandDir() {
+			int side = Random.Range(0,8);
+			return MathUtils.GetDir(side);
+		}
+		private bool CanAddWord(string word, WordBoardPos wordPos) {
+			// Make sure all the spaces are ok with this.
+			char[] chars = word.ToCharArray();
+			for (int i=0; i<chars.Length; i++) {
+				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
+				BoardSpace space = GetSpace(letterPos);
+				if (space==null) { return false; } // Outta bounds? No way, Carmen.
+				if (!space.CanSetMyLetter(chars[i])) { return false; } // Space can't be this letter? Na-ah, Sebastian.
+			}
+			return true; // Looks good!
+		}
 
 
 		// ----------------------------------------------------------------
@@ -55,12 +83,15 @@ namespace WordSearchScroll {
 			// Add words to board!
 			string[] wordsToAdd = wordManager.GetRandomWords(1);
 			AddWordsToBoard(wordsToAdd);
+
+			wordsFound = new HashSet<string>();
+			ResetAllWordHighlights();
 		}
 
 		private void UpdatePosAndSize() {
 			Rect r_availableArea = myRectTransform.rect;
 			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
-//			unitSize *= 0.8f; //QQQ
+//			unitSize *= 0.8f; //DEBUG
 
 			RectTransform rt_canvas = level.Canvas.GetComponent<RectTransform>();
 			Vector2 canvasSize = rt_canvas.rect.size;
@@ -99,48 +130,70 @@ namespace WordSearchScroll {
 			}
 		}
 
-		private BoardSpace GetSpace(Vector2Int boardPos) {
-			if (boardPos.x<0 || boardPos.y<0  ||  boardPos.x>=numCols || boardPos.y>=numRows) { return null; } // Outta bounds? Return null.
-			return spaces[boardPos.x,boardPos.y];
-		}
-		private Vector2Int RandBoardPos() {
-			return new Vector2Int(Random.Range(0,numCols), Random.Range(0,numRows));
-		}
-		private Vector2Int RandDir() {
-			int side = Random.Range(0,8);
-			return MathUtils.GetDir(side);
-		}
-		private bool CanAddWord(string word, WordBoardPos wordPos) {
-			// Make sure all the spaces are ok with this.
-			char[] chars = word.ToCharArray();
-			for (int i=0; i<chars.Length; i++) {
-				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
-				BoardSpace space = GetSpace(letterPos);
-				if (space==null) { return false; } // Outta bounds? No way, Carmen.
-				if (!space.CanSetMyLetter(chars[i])) { return false; } // Space can't be this letter? Na-ah, Sebastian.
+		private void ResetAllWordHighlights() {
+			// Destroy 'em first.
+			if (wordHighlights != null) {
+				for (int i=0; i<wordHighlights.Count; i++) { Destroy(wordHighlights[i].gameObject); }
+				wordHighlights = null;
 			}
-			return true; // Looks good!
+			// Make a new list with our first item!
+			wordHighlights = new List<WordHighlight>();
+			AddWordHighlight();
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Gameplay Doers
+		// ----------------------------------------------------------------
+		private void AddWordHighlight() {
+			WordHighlight newObj = Instantiate(resourcesHandler.wordSearchScroll_wordHighlight).GetComponent<WordHighlight>();
+			newObj.Initialize(this);
+			wordHighlights.Add(newObj);
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Gameplay Events
+		// ----------------------------------------------------------------
+		public void OnTouchDown() {
+			BoardSpace spaceOver = GetSpace(mouseBoardPos);
+			if (spaceOver != null) {
+				currentWordHighlight.Show(spaceOver);
+			}
+		}
+		public void OnTouchUp() {
+			// Is a word?!
+			string word = currentWordHighlight.WordSpelling;
+			if (!DidFindWord(word) && wordManager.IsRealWord(word)) {
+				OnCurrentHighlightFoundWord();
+			}
+			// Not a word.
+			else {
+				currentWordHighlight.Hide();
+			}
+		}
+
+		private void OnCurrentHighlightFoundWord() {
+			string word = currentWordHighlight.WordSpelling;
+			// Add the word to the list!
+			wordsFound.Add(word);
+			currentWordHighlight.Solidify();
+			// Add a new highlight to be my new currentWordHighlight! :D
+			AddWordHighlight();
 		}
 
 
 
-
-
-
-
-	}
-
-	public struct WordBoardPos {
-		// Properties
-		public Vector2Int pos;
-		public Vector2Int dir;
-		public int length;
-
-		public WordBoardPos(Vector2Int pos, Vector2Int dir, int length) {
-			this.pos = pos;
-			this.dir = dir;
-			this.length = length;
+		// ----------------------------------------------------------------
+		//  Update
+		// ----------------------------------------------------------------
+		private void Update() {
+			if (currentWordHighlight.IsVisible) {
+				currentWordHighlight.OnMousePosChanged(mousePosRelative);
+			}
 		}
+
+
 	}
 
 

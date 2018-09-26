@@ -7,8 +7,11 @@ public class LineUtils {
 	// ----------------------------------------------------------------
 	//  Basic Getters
 	// ----------------------------------------------------------------
+	static public float GetAngle_Radians (Vector2 pointA, Vector2 pointB) {
+		return Mathf.Atan2(pointB.y-pointA.y, pointB.x-pointA.x);
+	}
 	static public float GetAngle_Degrees (Vector2 pointA, Vector2 pointB) {
-		return Mathf.Rad2Deg * Mathf.Atan2(pointB.x-pointA.x, pointB.y-pointA.y);
+		return Mathf.Rad2Deg * GetAngle_Radians(pointA,pointB);
 	}
 	public static float GetLength (Vector2 lineStart,Vector2 lineEnd) {
 		return Vector2.Distance(lineStart, lineEnd);

@@ -37,6 +37,7 @@ public class ResourcesHandler : MonoBehaviour {
 
 	[SerializeField] public GameObject wordSearchScroll_level;
 	[SerializeField] public GameObject wordSearchScroll_boardSpace;
+	[SerializeField] public GameObject wordSearchScroll_wordHighlight;
 
 
     // Instance

@@ -347,6 +347,8 @@ MonoBehaviour:
     type: 2}
   wordSearchScroll_boardSpace: {fileID: 1014280405406298, guid: 8f63da843f3d66640b11873802c9d3ab,
     type: 2}
+  wordSearchScroll_wordHighlight: {fileID: 1953684631660842, guid: 943e33476227b1d428e78abd1a52f014,
+    type: 2}
 --- !u!223 &223970956200102408
 Canvas:
   m_ObjectHideFlags: 1
