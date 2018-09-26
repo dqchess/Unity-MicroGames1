@@ -69,19 +69,27 @@ public class MathUtils {
 
 
     public static Vector2Int GetDir (int side) {
-        switch (side) {
-            case Sides.L: return Vector2Int.L;
-            case Sides.R: return Vector2Int.R;
-            case Sides.B: return Vector2Int.B;
-            case Sides.T: return Vector2Int.T;
+		switch (side) {
+			case Sides.L: return Vector2Int.L;
+			case Sides.R: return Vector2Int.R;
+			case Sides.B: return Vector2Int.B;
+			case Sides.T: return Vector2Int.T;
+			case Sides.TL: return Vector2Int.TL;
+			case Sides.TR: return Vector2Int.TR;
+			case Sides.BL: return Vector2Int.BL;
+			case Sides.BR: return Vector2Int.BR;
             default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0, 1, 2, or 3.");
         }
     }
-    public static int GetSide (Vector2Int dir) {
-        if (dir == Vector2Int.L) { return Sides.L; }
-        if (dir == Vector2Int.R) { return Sides.R; }
-        if (dir == Vector2Int.T) { return Sides.T; }
-        if (dir == Vector2Int.B) { return Sides.B; }
+	public static int GetSide (Vector2Int dir) {
+		if (dir == Vector2Int.L) { return Sides.L; }
+		if (dir == Vector2Int.R) { return Sides.R; }
+		if (dir == Vector2Int.T) { return Sides.T; }
+		if (dir == Vector2Int.B) { return Sides.B; }
+		if (dir == Vector2Int.TL) { return Sides.TL; }
+		if (dir == Vector2Int.TR) { return Sides.TR; }
+		if (dir == Vector2Int.BL) { return Sides.BL; }
+		if (dir == Vector2Int.BR) { return Sides.BR; }
         return -1; // Whoops.
     }
     //public static int GetOppositeSide (Vector2Int dir) { return GetOppositeSide(GetSide(dir)); }

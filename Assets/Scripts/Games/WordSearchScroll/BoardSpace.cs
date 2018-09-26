@@ -17,8 +17,15 @@ namespace WordSearchScroll {
 		// References
 		private Board board;
 
+		// Getters (Private)
+		private bool HasLetter() { return WordManager.IsCharInAlphabet(myLetter); }
+		// Getters (Public)
 		public int Col { get { return boardPos.x; } }
 		public int Row { get { return boardPos.y; } }
+		public bool CanSetMyLetter(char _char) {
+			// We can set my letter if I DON'T have one yet, OR if it's the same as what we wanna set it to!
+			return !HasLetter() || myLetter==_char;
+		}
 
 
 		// ----------------------------------------------------------------
@@ -43,7 +50,7 @@ namespace WordSearchScroll {
 			i_backing.color = fillColor;
 
 			// Default my letter to a period for testing.
-			SetMyLetter('.');
+			SetMyLetter('-');
 		}
 
 		public void SetMyLetter(char _myLetter) {

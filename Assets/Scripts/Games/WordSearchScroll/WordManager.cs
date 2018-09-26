@@ -8,6 +8,11 @@ namespace WordSearchScroll {
 		private string[] words_common10000; // 10,000 common words.
 
 		// Getters (Public)
+		static public bool IsCharInAlphabet(char c) {
+			if (c >= 'a' && c <= 'z') { return true; }
+			if (c >= 'A' && c <= 'Z') { return true; }
+			return false;
+		}
 		public string[] GetRandomWords(int numWords) {
 			List<string> words = new List<string>();
 			int safetyCount=0;
@@ -34,7 +39,7 @@ namespace WordSearchScroll {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public WordManager() {
-			words_common10000 = TextUtils.GetStringArrayFromResourcesTextFile("Games/WordSearchScroll/wordsCommon10000");
+			words_common10000 = TextUtils.GetStringArrayFromResourcesTextFile("Games/WordSearchScroll/words_common10000");
 		}
 
 

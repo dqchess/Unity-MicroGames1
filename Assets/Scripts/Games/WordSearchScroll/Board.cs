@@ -37,8 +37,8 @@ namespace WordSearchScroll {
 			wordManager = new WordManager();
 
 			// TESTing
-			numCols = 20;
-			numRows = 20;
+			numCols = 10;
+			numRows = 10;
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
@@ -53,14 +53,14 @@ namespace WordSearchScroll {
 			}
 
 			// Add words to board!
-			string[] wordsToAdd = wordManager.GetRandomWords(20);
+			string[] wordsToAdd = wordManager.GetRandomWords(1);
 			AddWordsToBoard(wordsToAdd);
 		}
 
 		private void UpdatePosAndSize() {
 			Rect r_availableArea = myRectTransform.rect;
 			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
-			unitSize *= 0.8f; //QQQ
+//			unitSize *= 0.8f; //QQQ
 
 			RectTransform rt_canvas = level.Canvas.GetComponent<RectTransform>();
 			Vector2 canvasSize = rt_canvas.rect.size;
@@ -73,11 +73,53 @@ namespace WordSearchScroll {
 
 		private void AddWordsToBoard(string[] words) {
 			for (int i=0; i<words.Length; i++) {
-				AddWordToBoard(words[i]);
+				TryAddWordToBoard(words[i]);
 			}
 		}
-		private void AddWordToBoard(string word) {
-			// TODO: This.
+		private void TryAddWordToBoard(string word) {
+			int count=0;
+			while (true) {
+				WordBoardPos randPos = new WordBoardPos(RandBoardPos(), RandDir(), word.Length);
+				if (CanAddWord(word, randPos)) { // This works! Put it in!
+					AddWordToBoard(word, randPos);
+					break;
+				}
+				if (count++ > 100) {
+					Debug.LogWarning("Oink! Can't find a place to add this word: " + word);
+					break;
+				}
+			}
+		}
+		private void AddWordToBoard(string word, WordBoardPos wordPos) {
+			char[] chars = word.ToCharArray();
+			for (int i=0; i<chars.Length; i++) {
+				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
+				BoardSpace space = GetSpace(letterPos);
+				space.SetMyLetter(chars[i]);
+			}
+		}
+
+		private BoardSpace GetSpace(Vector2Int boardPos) {
+			if (boardPos.x<0 || boardPos.y<0  ||  boardPos.x>=numCols || boardPos.y>=numRows) { return null; } // Outta bounds? Return null.
+			return spaces[boardPos.x,boardPos.y];
+		}
+		private Vector2Int RandBoardPos() {
+			return new Vector2Int(Random.Range(0,numCols), Random.Range(0,numRows));
+		}
+		private Vector2Int RandDir() {
+			int side = Random.Range(0,8);
+			return MathUtils.GetDir(side);
+		}
+		private bool CanAddWord(string word, WordBoardPos wordPos) {
+			// Make sure all the spaces are ok with this.
+			char[] chars = word.ToCharArray();
+			for (int i=0; i<chars.Length; i++) {
+				Vector2Int letterPos = wordPos.pos + new Vector2Int(wordPos.dir.x*i, wordPos.dir.y*i);
+				BoardSpace space = GetSpace(letterPos);
+				if (space==null) { return false; } // Outta bounds? No way, Carmen.
+				if (!space.CanSetMyLetter(chars[i])) { return false; } // Space can't be this letter? Na-ah, Sebastian.
+			}
+			return true; // Looks good!
 		}
 
 
@@ -87,4 +129,19 @@ namespace WordSearchScroll {
 
 
 	}
+
+	public struct WordBoardPos {
+		// Properties
+		public Vector2Int pos;
+		public Vector2Int dir;
+		public int length;
+
+		public WordBoardPos(Vector2Int pos, Vector2Int dir, int length) {
+			this.pos = pos;
+			this.dir = dir;
+			this.length = length;
+		}
+	}
+
+
 }
