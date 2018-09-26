@@ -35,9 +35,12 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject waveTap_bar;
 	[SerializeField] public GameObject waveTap_player;
 
+	[SerializeField] public GameObject wordSearchScroll_level;
+	[SerializeField] public GameObject wordSearchScroll_boardSpace;
 
-	// Instance
-	static private ResourcesHandler instance;
+
+    // Instance
+    static private ResourcesHandler instance;
 	static public ResourcesHandler Instance {
         get {
             // Safety check for runtime compile.

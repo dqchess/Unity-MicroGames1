@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace CirclePop {
 	public class GrowerComposite : Grower {
 		// Components
-		private Collider2D myCollider=null;
+//		private Collider2D myCollider=null;
 		// References
 		[SerializeField] private Sprite s_circle;
 		[SerializeField] private Sprite s_square;

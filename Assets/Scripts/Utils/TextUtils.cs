@@ -85,6 +85,17 @@ public class TextUtils {
     //    string wholeFileString = GetStringFromStreamingAssetsTextFile(fileName);
     //    return GetStringArrayFromStringWithLineBreaks(wholeFileString);
     //}
+
+	public static string[] GetStringArrayFromResourcesTextFile(string localPath) {
+		TextAsset textAsset = Resources.Load<TextAsset>(localPath);
+		if (textAsset != null) {
+			return GetStringArrayFromStringWithLineBreaks(textAsset.text);
+		}
+		else {
+			Debug.LogError("Levels TextAsset not found! Resources local path: \"" + localPath + "\"");
+			return new string[0];
+		}
+	}
 	static public string[] GetStringArrayFromTextAsset (TextAsset textAsset) {
 		if (textAsset == null) { return null; } // If this file doesn't even exist, then return null.
 		return GetStringArrayFromStringWithLineBreaks (textAsset.text);
