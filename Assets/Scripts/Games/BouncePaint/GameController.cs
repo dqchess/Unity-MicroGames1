@@ -20,6 +20,7 @@ namespace BouncePaint {
         public bool IsFUEPlayerFrozen { get { return fueController.IsPlayerFrozen; } }
         //public float PlayerDiameter { get; set; }
         public float PlayerGravityScale { get; set; } // Currently used for multi-ball levels! Slow down gravity to make it more reasonable.
+        public FUEController FUEController { get { return fueController; } }
         public List<Block> Blocks { get { return level.Blocks; } }
         public List<Player> Players { get { return level.Players; } }
         // Getters (Private)
@@ -56,7 +57,7 @@ namespace BouncePaint {
 		}
 
         private IEnumerator Coroutine_StartNextLevel() {
-            yield return new WaitForSecondsRealtime(2.6f);
+            yield return new WaitForSecondsRealtime(2.0f);
             SetCurrentLevel(LevelIndex+1, true);
         }
 
@@ -87,7 +88,7 @@ namespace BouncePaint {
 
             // DO animate!
             if (doAnimate) {
-                float duration = 1.3f;
+                float duration = 1.1f;
 
                 level.IsAnimating = true;
                 float height = 1200;
@@ -230,7 +231,7 @@ namespace BouncePaint {
             foreach (Block block in Blocks) {
                 for (int i=Mathf.Max(1,block.NumHitsReq); i>0; --i) {
                     if (i==1 && !block.IsAvailable) { continue; } // Test. Comment this out if you want to win right away.
-                    block.OnPlayerBounceOnMe(null, Vector2.zero);//Player.GetRandomHappyColor()
+                    block.OnPlayerBounceOnMe(Players[0], HitQuality.Great);//Player.GetRandomHappyColor()
                 }
             }
             OnPlayerBounceOnBlock(Players[0], true);

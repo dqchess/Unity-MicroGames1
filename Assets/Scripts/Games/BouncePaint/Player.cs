@@ -4,8 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace BouncePaint {
+    public enum HitQuality { Undefined, Poor, Okay, Great }
+        
     public class Player : MonoBehaviour {
         // Constants
+        static public readonly Color color_hitGreat = new Color(0.1f, 1, 0);
+        static public readonly Color color_hitOkay  = new Color(1, 0.9f, 0);
+        static public readonly Color color_hitPoor  = new Color(1, 0.4f, 0);
         private const float minBounceHeight = 120f; // this prevents us rocketing down directly after a bounce (if we're going from a high to a very low block).
         // Components
         [SerializeField] private CircleCollider2D myCollider=null;
@@ -30,13 +35,28 @@ namespace BouncePaint {
         private Level myLevel;
 
         // Getters (Public)
-        public static Color GetRandomHappyColor() {
-            //float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
-            float h = Random.Range(0f, 1f); // taste the whole rainbow!!
-            return new ColorHSB(h, 0.9f, 1f).ToColor();
+        static private HitQuality GetHitQuality(Player player, Block block) {
+            // How GOOD was that hit, my man?
+            float dist = Mathf.Abs(block.BlockTop-player.BottomY);
+            if (dist < 9f) { return HitQuality.Great; }
+            if (dist < 20f) { return HitQuality.Okay; }
+            return HitQuality.Poor;
         }
-        public float YVel { get { return vel.y; } }
+        static public Color GetColorFromHitQuality(HitQuality hitQuality) {
+            switch (hitQuality) {
+                case HitQuality.Great: return color_hitGreat;
+                case HitQuality.Okay:  return color_hitOkay;
+                case HitQuality.Poor:  return color_hitPoor;
+                default: return Color.red; // Hmm.
+            }
+        }
+        //static private Color GetRandomHappyColor() {
+        //    //float h = Random.Range(0.25f, 1.1f) % 1; // this avoids yellow, which is hard to see against the white bg.
+        //    float h = Random.Range(0f, 1f); // taste the whole rainbow!!
+        //    return new ColorHSB(h, 0.9f, 1f).ToColor();
+        //}
         public float BottomY { get { return bottomY; } }
+        public Vector2 Vel { get { return vel; } }
         // Getters/Setters (Private)
         //private float fts { get { return TimeController.FrameTimeScale; } }
         private float timeScale { get { return Time.timeScale; } }
@@ -107,14 +127,14 @@ namespace BouncePaint {
             }
             // Everyone's painted/taken. Return null.
             return null;
-		}
-		/** ONLY works for HORIZONTALLY moving Blocks. Returns the predicted x position of the block by the time we reach its y pos. */
-		private float GetBlockPosX(Block block, float startY, float yVel) {
-			float blockY = block.HitBox.center.y;
-			float displacementY = blockY - startY;
-			float g = gravity.y;
-			float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
-			return block.GetPredictedPos(timeOfFlight).x;
+        }
+        /** ONLY works for HORIZONTALLY moving Blocks. Returns the predicted x position of the block by the time we reach its y pos. */
+        private float GetBlockPosX(Block block, float startY, float yVel) {
+            float blockY = block.HitBox.center.y;
+            float displacementY = blockY - startY;
+            float g = gravity.y;
+            float timeOfFlight = (-yVel - Mathf.Sqrt(yVel*yVel + 2*g*displacementY)) / g; // note that this is in seconds DIVIDED by FixedUpdate FPS.
+            return block.GetPredictedPos(timeOfFlight).x;
         }
         //private Block GetBlockFromCollision(Collision2D collision) {
         //    return collision.otherCollider.GetComponent<Block>();
@@ -124,7 +144,7 @@ namespace BouncePaint {
         }
 
         private float GetGravityY(int levelIndex) {
-            float baseGravity = -0.19f - levelIndex*0.001f;
+            float baseGravity = -0.24f - levelIndex*0.0014f;
             //float baseGravity = (-0.35f - levelIndex*0.003f) * 0.8f; // TEMP TEST! We upped FixedUpdate iterations, so bringing down gravity to compensate.
             return baseGravity * gameController.PlayerGravityScale;
         }
@@ -166,9 +186,9 @@ namespace BouncePaint {
                 bodyColor = startingPlayerColor;
                 startingPlayerColor = Color.clear;
             }
-            // Otherwise, just be a random happy color. :)
+            // Otherwise, start nice and green!
             else {
-                bodyColor = GetRandomHappyColor();
+                bodyColor = color_hitGreat;
             }
 
             fallHeightNeutral = GetFallHeightNeutral(levelIndex);
@@ -182,7 +202,7 @@ namespace BouncePaint {
             vel = new Vector2(0, yVel);
             if (blockHeadingTo != null) {
                 float startY = blockHeadingTo.HitBox.center.y + startFallHeight*startLoc;
-    			float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
+                float startX = GetBlockPosX(blockHeadingTo, startY, vel.y); // calculate where the Block is gonna be when I reach its y pos.
                 pos = new Vector2(startX, startY);
             }
         }
@@ -208,9 +228,6 @@ namespace BouncePaint {
             // FIRST, tell the Block I've targeted that I'm not interested in anymore (it could be a different Block, for the record)!
             blockHeadingTo.BallTargetingMe = null;
 
-            // Wait a frame or two, THEN squish me! (Squashing right away makes the collision look a little off.)
-            Invoke("SquishFromBounce", 0.05f);
-
             // If the level's over, AND we haven't defined the startingPlayerColor (aka no one's bounced up yet)? Bounce all the way up off-screen instead!
             //bool doBounceUpOffscreen = gameController.IsLevelComplete && startingPlayerColor==Color.clear;
             // Decide NOW if we're gonna bounce up offscreen! Do it if we're the winning player.
@@ -218,17 +235,22 @@ namespace BouncePaint {
 
             // Bounce and paint!
             bool wasBlockPainted = block.IsPainted;
-            if (!wasBlockPainted) {
-                bodyColor = GetRandomHappyColor(); // Rando my colo!
-            }
-            block.OnPlayerBounceOnMe(this, vel);
+            //if (!wasBlockPainted) {
+            //    bodyColor = GetRandomHappyColor(); // Rando my colo!
+            //}
+            HitQuality hitQuality = GetHitQuality(this, block);
+            block.OnPlayerBounceOnMe(this, hitQuality);
             bool didPaintBlock = !wasBlockPainted && block.IsPainted;
             gameController.OnPlayerBounceOnBlock(this, didPaintBlock);
+            
+            // Wait a frame or two, THEN squish me! (Squashing right away makes the collision look a little off.)
+            StartCoroutine(Coroutine_SquishWithDelay(hitQuality));
 
             bool isWinningPaintHit = !wasBlockPainted && gameController.IsLevelComplete;
             // Winning hit??
             if (isWinningPaintHit) {
                 block.DipExtraFromWinningBounce(vel);
+                gravity = new Vector2(0, -1.4f); // same gravity every time for predictable animation.
                 stretch -= 0.75f;
             }
             // Regular, non-winning hit??
@@ -269,7 +291,7 @@ namespace BouncePaint {
                 gravity = new Vector2(0, -0.35f); // much less gravity!
                 block.OnPlayerBounceUpOffscreenFromMe(); // smack dat square.
                 startingPlayerColor = bodyColor; // set this now! I'M the color to emulate!
-                Invoke("DisableMyGameObject", 0.8f); // HARDCODED delay. Hide me once I'm off-screen so I don't show up again when this level animates down.
+                Invoke("DisableMyGameObject", 0.5f); // HARDCODED delay. Hide me once I'm off-screen so I don't show up again when this level animates down.
             }
             //// NOT bouncing offscreen?
             //else {
@@ -279,8 +301,17 @@ namespace BouncePaint {
             //}
         }
 
-        private void SquishFromBounce() {
-            stretch -= 0.25f; // Deform a lil'!
+        private IEnumerator Coroutine_SquishWithDelay(HitQuality hitQuality) {
+            yield return new WaitForSecondsRealtime(0.06f); // Wait a tick!
+            // Deform a lil', based on how good the hit was!
+            float s;
+            switch (hitQuality) {
+            case HitQuality.Great: s = 0.32f; break;
+            case HitQuality.Okay:  s = 0.2f; break;
+            case HitQuality.Poor:  s = 0.05f; break;
+            default: s = 0; break;
+            }
+            stretch -= s;
         }
         public void Explode(LoseReasons reason) {
             isDead = true;
@@ -330,20 +361,20 @@ namespace BouncePaint {
             // If I've passed too far into the block I'm heading towards, explode OR bounce me!
             if (vel.y<0 && bottomY<boundsY) {
                 bottomY = boundsY;
-				// Auto-bounce? Just happily bounce on the block's head. ;)
+                // Auto-bounce? Just happily bounce on the block's head. ;)
                 if (autoBounce) {
-					BounceOnBlock(blockHeadingTo);
+                    BounceOnBlock(blockHeadingTo);
                 }
-				// Do NOT auto-bounce?
-				else {
-					// It's a don't-tap block?? Do dat bounce!
-					if (!blockHeadingTo.DoTap) {
-						BounceOnBlock(blockHeadingTo);
-					}
-					// It's a NORMAL block. We've gone too far! Die.
-					else {
+                // Do NOT auto-bounce?
+                else {
+                    // It's a don't-tap block?? Do dat bounce!
+                    if (!blockHeadingTo.DoTap) {
+                        BounceOnBlock(blockHeadingTo);
+                    }
+                    // It's a NORMAL block. We've gone too far! Die.
+                    else {
                         Explode(LoseReasons.MissedTap);
-					}
+                    }
                 }
             }
         }
@@ -354,7 +385,7 @@ namespace BouncePaint {
             if (gameController.WinningPlayer==this) { // If I'm the winning player, freely deform me based on my y vel! :)
                 stretchTarget = Mathf.Abs(vel.y)*0.015f;//.Max(0, -vel.y)*0.01f;
             }
-            stretchVel += (stretchTarget-stretch) / 5f;
+            stretchVel += (stretchTarget-stretch) * (0.2f);//*timeScale);
             stretchVel *= 0.82f;
             ApplyStretch();
 

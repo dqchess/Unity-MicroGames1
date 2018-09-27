@@ -9,11 +9,11 @@ namespace BouncePaint {
         // Constants
         public static int FirstLevelIndex = 1;
         public static int LastLevelIndex = 95;
-        private static float PlayerDefaultRadius = 50f;
+        private static float PlayerDefaultRadius = 34f;
         // Components
         [SerializeField] private ParticleSystem ps_finalBounceA=null; // small circles.
         [SerializeField] private ParticleSystem ps_finalBounceB=null; // big circles!
-        [SerializeField] private TextMeshProUGUI t_levelName =null;
+        [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_moreLevelsComingSoon=null;
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
@@ -37,7 +37,12 @@ namespace BouncePaint {
             gameController = _gameController;
 			BaseInitialize(gameController, tf_parent, _levelIndex);
 			
-			t_levelName.text = "LEVEL " + LevelIndex.ToString();
+            if (gameController.FUEController.DoShowLevelName(LevelIndex)) {
+                t_levelName.text = "LEVEL " + LevelIndex.ToString();
+            }
+            else {
+                t_levelName.text = "TUTORIAL";
+            }
 
 			AddLevelComponents();
         }
@@ -156,7 +161,7 @@ namespace BouncePaint {
             propSizeScale = 1;
             //gameController.PlayerDiameter = 100f;
             gameController.PlayerGravityScale = 1f;
-            Vector2 bs = new Vector2(75,75); // block size
+            Vector2 bs = new Vector2(70,70); // block size
 
             // NOTE: All coordinates are based off of a 600x800 available playing space! :)
 
@@ -168,28 +173,20 @@ namespace BouncePaint {
 
             // Simple, together.
             else if (li == i++) {
-                propSizeScale = 1.5f;
-                gameController.PlayerGravityScale = 0.8f;
-                AddBlock(bs, -140,b+130);
-                AddBlock(bs,    0,b+130);
-                AddBlock(bs,  140,b+130);
+                AddBlock(bs, -140,b+200);
+                AddBlock(bs,    0,b+200);
+                AddBlock(bs,  140,b+200);
             }
             else if (li == i++) {
-                propSizeScale = 1.5f;
-                gameController.PlayerGravityScale = 0.82f;
                 AddBlock(bs, -80,b+100);
                 AddBlock(bs,  80,b+100);
             }
             else if (li == i++) {
-                propSizeScale = 1.4f;
-                gameController.PlayerGravityScale = 0.84f;
                 AddBlock(bs, -130,b+70);
                 AddBlock(bs,    0,b+70);
                 AddBlock(bs,  130,b+70);
             }
             else if (li == i++) {
-                propSizeScale = 1.3f;
-                gameController.PlayerGravityScale = 0.86f;
                 AddBlock(bs, -200,b+60);
                 AddBlock(bs,  -65,b+60);
                 AddBlock(bs,   65,b+60);
@@ -198,27 +195,21 @@ namespace BouncePaint {
 
             // Larger X gaps.
             else if (li == i++) {
-                propSizeScale = 1.2f;
-                gameController.PlayerGravityScale = 0.88f;
                 AddBlock(bs, -200,b+40);
                 AddBlock(bs,  200,b+40);
             }
             else if (li == i++) {
-                propSizeScale = 1.1f;
-                gameController.PlayerGravityScale = 0.9f;
                 AddBlock(bs, -220,b+40);
                 AddBlock(bs,  120,b+40);
                 AddBlock(bs,  220,b+40);
             }
             else if (li == i++) {
-                gameController.PlayerGravityScale = 0.92f;
                 AddBlock(bs, -220,b);
                 AddBlock(bs, -130,b);
                 AddBlock(bs,  -40,b);
                 AddBlock(bs,  220,b);
             }
             else if (li == i++) {
-                gameController.PlayerGravityScale = 0.94f;
                 AddBlock(bs, -220,b);
                 AddBlock(bs, -130,b+20);
                 AddBlock(bs,    0,b+60);
@@ -244,7 +235,6 @@ namespace BouncePaint {
             //    AddBlock(bs,  120,b);
             //}
             else if (li == i++) {
-                gameController.PlayerGravityScale = 0.98f;
                 AddBlock(bs, new Vector2(-100,b), new Vector2(100,b)).SetSpeed(1.5f);
             }
             else if (li == i++) {

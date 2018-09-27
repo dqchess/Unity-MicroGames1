@@ -208,26 +208,26 @@ namespace BouncePaint {
 			}
 		}
 
-        private Color GetColorFromHitQuality(int hitQuality) {
-            switch (hitQuality) {
-                case 1: return Color.green;
-                case 2: return new Color(1,0.9f,0);
-                case 3: return new Color(1,0.4f,0);
-                default: return Color.red; // Oops.
-            }
-        }
-
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
         /// Paints me! :)
-        public void OnPlayerBounceOnMe(Player player, Vector2 playerVel) {
-            // How GOOD was that hit, my man?
-            float dist = Mathf.Abs(BlockTop-player.BottomY);
-            int hitQuality=0;
-            if (dist < 9f) { hitQuality = 1; }
-            else if (dist < 20f) { hitQuality = 2; }
-            else { hitQuality = 3; }
+        public void OnPlayerBounceOnMe(Player player, HitQuality hitQuality) {
+            // Determine feedback properties based on hitQuality.
+            float yDip=0; // Dip MORE for better hits!
+            int numParticles = 0; // More particles for better hits!
+            if (hitQuality==HitQuality.Great) {
+                yDip = -40f;
+                numParticles = 30;
+            }
+            else if (hitQuality==HitQuality.Okay) {
+                yDip = -18f;
+                numParticles = 11;
+            }
+            else if (hitQuality==HitQuality.Poor) {
+                yDip = -6f;
+                numParticles = 7;
+            }
         
             // If I'm paintable AND not yet painted...!
             if (isPaintable && !isPainted) {
@@ -236,18 +236,18 @@ namespace BouncePaint {
                 UpdateNumHitsReqText();
                 // That was the last straw, Cady?? Paint me!
                 if (numHitsReq <= 0) {
-                    //PaintMe(playerColor);
-                    Color newColor = GetColorFromHitQuality(hitQuality);
+                    Color newColor = Player.GetColorFromHitQuality(hitQuality);
                     PaintMe(newColor);
                     player.Temp_ColorMe(newColor);
                 }
                 // Particle burst!
                 GameUtils.SetParticleSystemColor(ps_hit, bodyColor);
-                ps_hit.Emit(12);
+                ps_hit.Emit(numParticles);
             }
             // Push me down AND horizontally (based on Player's x vel)!
             //posDipOffset += new Vector2(playerVel.x*1.2f, -24f);//-16
-            posDipOffsetVel += new Vector2(playerVel.x*0.6f, -24f);
+            //posDipOffsetVel += new Vector2(playerVel.x*0.6f, -24f);
+            posDipOffsetVel += new Vector2(player.Vel.x*0.6f, yDip);
             ApplyPos(); // apply pos immediately, so Player knows where we actually are.
         }
         /// Player tells us we're the winning bounce, and to dip down extra.
@@ -255,11 +255,11 @@ namespace BouncePaint {
             posDipOffsetVel += new Vector2(playerVel.x*1.2f, -50f);
             ApplyPos();
         }
-        private void PaintMe(Color playerColor) {
+        private void PaintMe(Color color) {
             isPainted = true;
             // If I'm a DO-tap, then color me and do da burst!
             if (DoTap) {
-                bodyColor = playerColor;
+                bodyColor = color;
             }
         }
         public void OnPlayerBounceUpOffscreenFromMe() {
