@@ -31,6 +31,11 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject letterClear_letterTile;
 	[SerializeField] public GameObject letterClear_wordTile;
 
+    [SerializeField] public GameObject slideAndStick_boardSpaceView;
+    [SerializeField] public GameObject slideAndStick_boardView;
+    [SerializeField] public GameObject slideAndStick_boardController;
+    [SerializeField] public GameObject slideAndStick_tileView;
+
 	[SerializeField] public GameObject waveTap_level;
 	[SerializeField] public GameObject waveTap_bar;
 	[SerializeField] public GameObject waveTap_player;
