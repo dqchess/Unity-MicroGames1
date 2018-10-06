@@ -1,0 +1,26 @@
+
+
+
+
+
+
+
+LEVEL - Test
+.0.22
+10.22
+...1.
+10...
+.0..2
+
+LEVEL - One, with single WallCircle (horz)
+scoreReq=550
+growerC -30,-60; growSpeed=0.8
+wallC 172,-60; 92
+
+LEVEL - Two, with center WallRect
+scoreReq=750
+growerC 0,-184; growSpeed=0.9
+growerC 0, 150; growSpeed=0.9
+wallR 0,13; 92
+
+

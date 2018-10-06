@@ -1,11 +1,6 @@
-// Swap-Into-Order
+// Slide and Stick
 // started 10/5/2018
 
-/* Additional game ideas
-
-* "ShuntAndMerge". E.g. 4x4, 4 colors, 3 of each tile. They merge when touching.
-
-*/
 
 
 // Constants
