@@ -67,10 +67,11 @@ namespace SlideAndStick {
 
 
 
-		public static bool CanExecuteMove(Board originalBoard, BoardPos boToMovePos, Vector2Int dir) {
+		public static bool CanExecuteMove(Board originalBoard, BoardOccupant boToMove, Vector2Int dir) {
+			if (boToMove == null) { return false; } // No BoardOccupant to move? Can't execute.
 			// Clone the Board, execute the exact move, and return if it worked.
 			Board testBoard = originalBoard.Clone();
-			MoveResults moveResult = testBoard.ExecuteMove(boToMovePos, dir);
+			MoveResults moveResult = testBoard.ExecuteMove(boToMove.BoardPos, dir);
 			return moveResult != MoveResults.Fail;
 		}
 		public static bool CanOccupantMoveInDir(Board originalBoard, BoardOccupant originalBO, Vector2Int moveDir) {

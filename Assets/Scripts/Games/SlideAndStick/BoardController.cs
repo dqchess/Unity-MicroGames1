@@ -46,7 +46,12 @@ namespace SlideAndStick {
 
 			// Reset!
 			BoardData bd = new BoardData(5,5);
-			RemakeModelAndViewFromData (bd);
+
+			// TEMP TEST
+			bd.tileDatas.Add(new TileData(new BoardPos(1,1), 0));
+			bd.tileDatas.Add(new TileData(new BoardPos(2,1), 1));
+
+			RemakeModelAndViewFromData(bd);
 		}
 		public void DestroySelf () {
 			// Tell my boardView it's toast!
@@ -135,6 +140,7 @@ namespace SlideAndStick {
 			if (false) {}
 
 			// TEMP DEBUG
+			else if (Input.GetKeyDown(KeyCode.P)) { board.Debug_PrintBoardLayout(); }
 			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileAttempt(Vector2Int.T); }
 			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileAttempt(Vector2Int.B); }
 			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileAttempt(Vector2Int.L); }
@@ -148,7 +154,17 @@ namespace SlideAndStick {
 		private void TapTile(Tile tile) {
 			if (tile == null) { return; } // Safety check.
 
+		}
 
+		private void OnBoardMoveComplete () {
+			// Update BoardView visuals!!
+			boardView.UpdateAllViewsMoveStart ();
+//			// If our goals are satisfied AND the player's at the exit spot, advance to the next level!!
+//			if (board.AreGoalsSatisfied) {
+//				CompleteLevel ();
+//			}
+//			// Dispatch success/not-yet-success event!
+//			GameManagers.Instance.EventManager.OnSetIsLevelCompleted (isLevelComplete);
 		}
 
 
@@ -163,7 +179,7 @@ namespace SlideAndStick {
 		}
 		public void MoveTileAttempt(Tile tileToMove, Vector2Int dir) {
 			// If we can't make this specific move, also stop.
-			if (!BoardUtils.CanExecuteMove(board, tileToMove.BoardPos, dir)) {
+			if (!BoardUtils.CanExecuteMove(board, tileToMove, dir)) {
 				return;
 			}
 			// We CAN make this move!
@@ -175,8 +191,8 @@ namespace SlideAndStick {
 				board.ExecuteMove(tileToMove.BoardPos, dir); // This will always return success, because we already asked if this move was possible.
 //				// We make moves.
 //				NumMovesMade ++;
-//				// Complete this move!
-//				OnBoardMoveComplete ();
+				// Complete this move!
+				OnBoardMoveComplete ();
 			}
 		}
 

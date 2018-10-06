@@ -53,8 +53,6 @@ namespace SlideAndStick {
 			MakeEmptyPropLists ();
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
-			// TEMP TEST
-			Debug_AddRandomTiles(8);
 
 			// Start our groups out, goro!
 			CalculateTileGroups();
@@ -75,15 +73,6 @@ namespace SlideAndStick {
 		private void AddPropsFromBoardData (BoardData bd) {
 			// Add Props to the lists!
 			foreach (TileData data in bd.tileDatas) { AddTile (data); }
-		}
-		private void Debug_AddRandomTiles(int numToAdd) {
-			const int numColors = 4;
-			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
-				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-				int colorID = Random.Range(0, numColors);
-				AddTile(randPos, colorID);
-			}
 		}
 
 
@@ -204,6 +193,29 @@ namespace SlideAndStick {
 			return true;
 		}
 
+		// ----------------------------------------------------------------
+		//  Debug
+		// ----------------------------------------------------------------
+		private void Debug_AddRandomTiles(int numToAdd) {
+			const int numColors = 4;
+			for (int i=0; i<numToAdd; i++) {
+				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
+				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+				int colorID = Random.Range(0, numColors);
+				AddTile(randPos, colorID);
+			}
+		}
+		public void Debug_PrintBoardLayout() {
+			string boardString = "";
+			for (int row=0; row<NumRows; row++) {
+				for (int col=0; col<NumCols; col++) {
+					Tile tile = GetTile(col,row);
+					boardString += tile==null ? "." : tile.ColorID.ToString();
+				}
+				boardString += "\n";
+			}
+			Debug.Log (boardString);
+		}
 
 
 
