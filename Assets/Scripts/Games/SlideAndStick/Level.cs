@@ -95,13 +95,9 @@ namespace SlideAndStick {
 			try {
 				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
 				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
-				string[] boardLayout = lines.Skip(1).ToArray();
+				string[] boardLayout = lines.Skip(1).ToArray(); // skip the descrpition string. The rest is the board layout! :)
 				BoardData boardData = new BoardData(boardLayout);
 				RemakeModelAndViewFromData(boardData);
-
-//				// Reset!
-//				BoardData bd = new BoardData(5,5);
-//				RemakeModelAndViewFromData(bd);
 			}
 			catch (System.Exception e) {
 				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
