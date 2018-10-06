@@ -8,13 +8,14 @@ namespace SlideAndStick {
 		[SerializeField] private RectTransform myRectTransform=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
+		private TouchInputDetector touchInputDetector; // this guy handles all the mobile touch stuff.
 		// Properties
 //        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private bool isLevelComplete = false;
-		private int groupIDToMove; // which Tile group our mouse is over, and we're gonna move.
 		private Vector2Int mousePosBoard;
 		// References
 		private GameController gameController;
+		private Tile tileOver; // the Tile my mouse is over.
 
 		// Getters
 		public bool IsLevelComplete { get { return isLevelComplete; } }
@@ -43,6 +44,8 @@ namespace SlideAndStick {
 			this.transform.SetParent (tf_parent);
 			this.transform.localScale = Vector3.one;
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
+
+			touchInputDetector = new TouchInputDetector ();
 
 			// Reset!
 			BoardData bd = new BoardData(5,5);
@@ -86,8 +89,9 @@ namespace SlideAndStick {
 		private void Update() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 
+			touchInputDetector.Update();
 			UpdateMousePosBoard();
-			UpdateGroupIDToMove();
+			UpdateTileOver();
 			RegisterMouseInput();
 			RegisterButtonInput();
 		}
@@ -102,15 +106,14 @@ namespace SlideAndStick {
 			mousePosBoard = new Vector2Int(col,row);
 		}
 
-		private void UpdateGroupIDToMove() {
-			// If our finger isn't on the screen, update groupIDToMove!
+		private void UpdateTileOver() {
+			// If our finger isn't touching the screen, update tileOver!
 			if (!inputController.IsTouchHold()) {
-				int prevGroupIDToMove = groupIDToMove;
-				Tile tileOver = board.GetTile(mousePosBoard);
-				groupIDToMove = tileOver!=null ? tileOver.GroupID : -1;
-				if (groupIDToMove != prevGroupIDToMove) {
-					// Tell boardView!
-					boardView.OnGroupIDToMoveChanged(groupIDToMove);
+				Tile prevTileOver = tileOver;
+				tileOver = board.GetTile(mousePosBoard);
+				if (prevTileOver != tileOver) { // it's changed!
+//					if (prevTileOver != null) { prevTileOver.OnMouseOut(); }
+//					if (tileOver != null) { tileOver.OnMouseOver(); }
 				}
 			}
 		}
@@ -118,33 +121,41 @@ namespace SlideAndStick {
 
 		private void RegisterMouseInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
-			// Mouse UP
-			if (inputController.IsTouchUp()) {
-				//				OnTouchUp();
-			}
-			// Mouse DOWN
-			else if (inputController.IsTouchDown()) {
-				OnTouchDown();
-			}
-		}
-		private void OnTouchDown() {
-			if (!CanMakeAnyMove()) { return; } // If the Dark Lord says not to make a move, you musn't, Cissy!
+//			// Mouse UP
+//			if (inputController.IsTouchUp()) {
+////				OnTouchUp();
+//			}
+//			// Mouse DOWN
+//			else if (inputController.IsTouchDown()) {
+//				OnTouchDown();
+//			}
 
-			Tile tileOver = board.GetTile(mousePosBoard);
-			if (tileOver != null) {
-				TapTile(tileOver);
+			if (inputController != null) { // Safety check for runtime compile.
+				boardView.UpdateSimulatedMove(tileOver, touchInputDetector.SimulatedMoveDir, touchInputDetector.SimulatedMovePercent);
+				if 		(inputController.IsPlayerMove_L ())  { MoveTileOverAttempt(Vector2Int.L); }
+				else if (inputController.IsPlayerMove_R ())  { MoveTileOverAttempt(Vector2Int.R); }
+				else if (inputController.IsPlayerMove_D ())  { MoveTileOverAttempt(Vector2Int.B); }
+				else if (inputController.IsPlayerMove_U ())  { MoveTileOverAttempt(Vector2Int.T); }
 			}
 		}
+//		private void OnTouchDown() {
+//			if (!CanMakeAnyMove()) { return; } // If the Dark Lord says not to make a move, you musn't, Cissy!
+//
+//			Tile tileOver = board.GetTile(mousePosBoard);
+//			if (tileOver != null) {
+//				TapTile(tileOver);
+//			}
+//		}
 
 		private void RegisterButtonInput() {
 			if (false) {}
 
 			// TEMP DEBUG
 			else if (Input.GetKeyDown(KeyCode.P)) { board.Debug_PrintBoardLayout(); }
-			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileAttempt(Vector2Int.T); }
-			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileAttempt(Vector2Int.B); }
-			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileAttempt(Vector2Int.L); }
-			else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { MoveTileAttempt(Vector2Int.R); }
+			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileOverAttempt(Vector2Int.T); }
+			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileOverAttempt(Vector2Int.B); }
+			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileOverAttempt(Vector2Int.L); }
+			else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { MoveTileOverAttempt(Vector2Int.R); }
 		}
 
 
@@ -173,7 +184,7 @@ namespace SlideAndStick {
 		//  Game Doers
 		// ----------------------------------------------------------------
 		// TEMP!! For testing.
-		private void MoveTileAttempt(Vector2Int dir) {
+		private void MoveTileOverAttempt(Vector2Int dir) {
 			Tile tileToMove = board.GetTile(mousePosBoard);
 			MoveTileAttempt(tileToMove, dir);
 		}

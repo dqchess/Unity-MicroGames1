@@ -6,7 +6,7 @@ namespace SlideAndStick {
 	public class Tile : BoardOccupant {
         // Properties
         private int colorID;
-		public int GroupID=-1; // which cluster I'm a part of! (CURRENTLY, code is simple-- all tiles are still 1x1, and just in clusters.)
+//		public int GroupID=-1; // which cluster I'm a part of! (CURRENTLY, code is simple-- all tiles are still 1x1, and just in clusters.)
 
         // Getters
         public int ColorID { get { return colorID; } }

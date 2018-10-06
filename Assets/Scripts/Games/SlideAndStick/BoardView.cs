@@ -105,12 +105,6 @@ namespace SlideAndStick {
 			// Remove it from the list of views!
 			allOccupantViews.Remove (bo);
 		}
-		public void OnGroupIDToMoveChanged(int _groupIDToMove) {
-//			// Tell tileViews!
-//			for (int i=0; i<tileViews.Count; i++) {
-//				tileViews[i].OnGroupIDToMoveChanged(_groupIDToMove);
-//			}
-		}
 
 
 
@@ -151,15 +145,15 @@ namespace SlideAndStick {
 			}
 		}
 
-		public void UpdateSimulatedMove(BoardPos boToMovePos, Vector2Int _simulatedMoveDir, float _simulatedMovePercent) {
+		public void UpdateSimulatedMove(BoardOccupant boToMove, Vector2Int _simulatedMoveDir, float _simulatedMovePercent) {
 			if (simulatedMoveDir != _simulatedMoveDir) { // If the proposed simulated moveDir is *different* from the current one...!
-				SetSimulatedMoveDirAndBoard(boToMovePos, _simulatedMoveDir);
+				SetSimulatedMoveDirAndBoard(boToMove, _simulatedMoveDir);
 			}
 			else if (simulatedMoveDir != Vector2Int.zero) {
 				UpdateViewsTowardsSimulatedMove(_simulatedMovePercent);
 			}
 		}
-		private void UpdateViewsTowardsSimulatedMove (float _simulatedMovePercent) {
+		private void UpdateViewsTowardsSimulatedMove(float _simulatedMovePercent) {
 			objectsAnimationLocTarget = _simulatedMovePercent;
 			objectsAnimationLocTarget *= 0.9f; // don't go all the way to 1.
 			// Keep the value locked to the target value.
@@ -174,12 +168,11 @@ namespace SlideAndStick {
 			objectsAnimationLocTarget = 0;
 		}
 		/** Clones our current Board, and applies the move to it! */
-		private void SetSimulatedMoveDirAndBoard(BoardPos boToMovePos, Vector2Int _simulatedMoveDir) {
+		private void SetSimulatedMoveDirAndBoard(BoardOccupant boToMove, Vector2Int _simulatedMoveDir) {
 			// If we accidentally used this function incorrectly, simply do the correct function instead.
-			if (_simulatedMoveDir == Vector2Int.zero) {
-				ClearSimulatedMoveDirAndBoard ();
-				return;
-			}
+			if (_simulatedMoveDir == Vector2Int.zero) { ClearSimulatedMoveDirAndBoard (); return; }
+			// Oh, NO boToMove? Ok, no simulated move.
+			if (boToMove == null) { ClearSimulatedMoveDirAndBoard(); return; }
 
 			simulatedMoveDir = _simulatedMoveDir;
 			// Clone our current Board.
@@ -190,7 +183,7 @@ namespace SlideAndStick {
 				bov.SetMySimulatedMoveObject(thisSimulatedMoveBO);
 			}
 			// Now actually simulate the move!
-			simulatedMoveBoard.ExecuteMove(boToMovePos, simulatedMoveDir);
+			simulatedMoveBoard.ExecuteMove(boToMove.BoardPos, simulatedMoveDir);
 			// Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.SetValues_To_ByMySimulatedMoveBoardObject();

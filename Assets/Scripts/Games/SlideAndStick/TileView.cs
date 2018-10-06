@@ -38,9 +38,9 @@ namespace SlideAndStick {
 		}
 
 
-		public void OnGroupIDToMoveChanged(int _groupIDToMove) {
-			i_highlight.enabled = myTile.GroupID == _groupIDToMove;
-		}
+//		public void OnGroupIDToMoveChanged(int _groupIDToMove) {
+//			i_highlight.enabled = myTile.GroupID == _groupIDToMove;
+//		}
 
 
         // ----------------------------------------------------------------
