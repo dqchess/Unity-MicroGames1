@@ -5,8 +5,6 @@ using UnityEngine;
 namespace SlideAndStick {
 	[System.Serializable]
 	public class Board {
-        // Constants
-        private const int MIN_GROUP_SIZE = 3;
 		// Properties
 		private int numCols,numRows;
         private int numMovesMade;
@@ -14,8 +12,8 @@ namespace SlideAndStick {
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
         // Reference Lists
-        public List<Tile> tilesRecentlyAdded; // so the view knows what TileViews to add.
-        private List<List<Tile>> tileGroups; // for finding congruent groups of tiles
+		private List<List<Tile>> tileGroups; // for finding congruent groups of tiles
+		public List<BoardObject> objectsAddedThisMove;
 
 		// Getters
 		public int NumCols { get { return numCols; } }
@@ -41,36 +39,6 @@ namespace SlideAndStick {
 			return bd;
 		}
 
-        public bool AreAllSpacesFilled() {
-            for (int col=0; col<numCols; col++) {
-                for (int row=0; row<numRows; row++) {
-                    if (spaces[col,row].IsOpen()) { return false; }
-                }
-            }
-            return true;
-        }
-
-		private int RandomTileColorID() {
-            if (numMovesMade <= 3) { return Random.Range(0, 3); }
-            else if (numMovesMade <= 8) { return Random.Range(0, 4); }
-            else if (numMovesMade <= 18) { return Random.Range(0, 5); }
-            //// Now, *usually* prefer one of 5 colors. (Aka red will appear as an infrequent obstacle.)
-            //if (Random.Range(0f,1f) < 0.5f) {
-            //    return Random.Range(0, 5);
-            //}
-            return Random.Range(0, 6);
-		}
-		public bool CanExtrudeTile(Tile tile) {
-			return CanExtrudeTileInDir(tile, Vector2Int.T)
-				|| CanExtrudeTileInDir(tile, Vector2Int.R)
-				|| CanExtrudeTileInDir(tile, Vector2Int.B)
-				|| CanExtrudeTileInDir(tile, Vector2Int.L);
-		}
-		private bool CanExtrudeTileInDir(Tile tile, Vector2Int dir) {
-			BoardPos newTilePos = new BoardPos(tile.Col+dir.x,tile.Row+dir.y);
-			return BoardUtils.IsSpaceOpen(this, newTilePos);
-		}
-
 
 
 		// ----------------------------------------------------------------
@@ -85,6 +53,11 @@ namespace SlideAndStick {
 			MakeEmptyPropLists ();
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
+			// TEMP TEST
+			Debug_AddRandomTiles(8);
+
+			// Start our groups out, goro!
+			CalculateTileGroups();
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
@@ -95,27 +68,34 @@ namespace SlideAndStick {
 				}
 			}
 		}
-		private void MakeEmptyPropLists () {
-			tilesRecentlyAdded = new List<Tile>();
-
+		private void MakeEmptyPropLists() {
 			tiles = new List<Tile>();
+			objectsAddedThisMove = new List<BoardObject>();
 		}
 		private void AddPropsFromBoardData (BoardData bd) {
 			// Add Props to the lists!
 			foreach (TileData data in bd.tileDatas) { AddTile (data); }
+		}
+		private void Debug_AddRandomTiles(int numToAdd) {
+			const int numColors = 4;
+			for (int i=0; i<numToAdd; i++) {
+				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
+				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+				int colorID = Random.Range(0, numColors);
+				AddTile(randPos, colorID);
+			}
 		}
 
 
 		// ----------------------------------------------------------------
 		//  Adding / Removing
 		// ----------------------------------------------------------------
-		private Tile AddTile(BoardPos pos, int colorID, int value) {
-            return AddTile(new TileData(pos, colorID, value));
+		private Tile AddTile(BoardPos pos, int colorID) {
+            return AddTile(new TileData(pos, colorID));
 		}
 		private Tile AddTile (TileData data) {
 			Tile prop = new Tile (this, data);
 			tiles.Add (prop);
-			tilesRecentlyAdded.Add(prop);
 			return prop;
 		}
 
@@ -129,78 +109,100 @@ namespace SlideAndStick {
 		}
 
 
-		// ----------------------------------------------------------------
-		//  Doers
-		// ----------------------------------------------------------------
-		public void AddRandomTiles(int numToAdd) {
-			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
-				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-				int colorID = RandomTileColorID();
-				AddTile(randPos, colorID, 1);
-			}
-		}
-		public void ExtrudeTile(Tile tile) {
-			// Try to add 4 Tiles around the source Tile!
-			AddTileInDirAttempt(tile, Vector2Int.T);
-			AddTileInDirAttempt(tile, Vector2Int.R);
-			AddTileInDirAttempt(tile, Vector2Int.B);
-			AddTileInDirAttempt(tile, Vector2Int.L);
-			// Remove the source Tile.
-			tile.RemoveFromPlay();
-            // We made a move!
-            numMovesMade ++;
-		}
-		private void AddTileInDirAttempt(Tile tile, Vector2Int dir) {
-			if (CanExtrudeTileInDir(tile, dir)) {
-				BoardPos newTilePos = new BoardPos(tile.Col+dir.x,tile.Row+dir.y);
-                AddTile(newTilePos, tile.ColorID, tile.Value+1);
-			}
-        }
-        public int ClearCongruentTiles() {
-            CalculateTileGroups();
-            int numTilesCleared = 0;
-            for (int i=0; i<tileGroups.Count; i++) {
-                if (tileGroups[i].Count >= MIN_GROUP_SIZE) {
-                    ClearTilesInGroup(tileGroups[i]);
-                    numTilesCleared += tileGroups[i].Count;
-                }
-            }
-            return numTilesCleared;
-        }
-
 
         // ----------------------------------------------------------------
         //  Tile Group-Finding
         // ----------------------------------------------------------------
         private void CalculateTileGroups() {
-            // FIRST, tell all tiles they're not used in the search algorithm
+            // FIRST, tell all Tiles they're not used in the search algorithm
             for (int i=0; i<tiles.Count; i++) {
-                tiles[i].WasUsedInSearchAlgorithm = false;
+                tiles[i].GroupID = -1;
             }
             tileGroups = new List<List<Tile>>();
-            for (int i=tiles.Count-1; i>=0; --i) {
+			for (int i=tiles.Count-1; i>=0; --i) {
+				if (tiles[i].GroupID != -1) { continue; }
                 tileGroups.Add(new List<Tile>());
                 RecursiveTileFinding(tiles[i].Col,tiles[i].Row, tiles[i].ColorID);
             }
         }
         private void RecursiveTileFinding(int col,int row, int colorID) {
             Tile tileHere = GetTile(col,row);
-            if (tileHere==null || tileHere.WasUsedInSearchAlgorithm) { return; } // No unused tile here? Stop.
+            if (tileHere==null || tileHere.GroupID!=-1) { return; } // No unused tile here? Stop.
             if (tileHere.ColorID != colorID) { return; } // Not a match? Stop.
-            //if (tileGroups[tileGroups.Count-1].Count >= 2) return; // if this group is BIGGER THAN 2, then return. This is a shoehorn to change the mechanic without changing this algorithm.
-            tileHere.WasUsedInSearchAlgorithm = true;
-            tileGroups[tileGroups.Count-1].Add(tileHere);
-            if (col>0) { RecursiveTileFinding(col-1,row, colorID); }
-            if (row>0) { RecursiveTileFinding(col,row-1, colorID); }
-            if (col<numCols-1) { RecursiveTileFinding(col+1,row, colorID); }
-            if (row<numRows-1) { RecursiveTileFinding(col,row+1, colorID); }
+			// Add it to the group!
+			int groupID = tileGroups.Count-1;
+			tileHere.GroupID = groupID;
+			tileGroups[groupID].Add(tileHere);
+			// Keep lookin'!
+            RecursiveTileFinding(col-1,row, colorID);
+            RecursiveTileFinding(col,row-1, colorID);
+            RecursiveTileFinding(col+1,row, colorID);
+            RecursiveTileFinding(col,row+1, colorID);
         }
-        private void ClearTilesInGroup(List<Tile> tilesInGroup) {
-            for (int i=0; i<tilesInGroup.Count; i++) {
-                tilesInGroup[i].RemoveFromPlay();
-            }
-        }
+
+
+		// ----------------------------------------------------------------
+		//  Doers
+		// ----------------------------------------------------------------
+		/** Moves requested Tile, and the Occupants it'll also push.
+			Returns TRUE if we made a successful, legal move, and false if we couldn't move anything. */
+		public MoveResults ExecuteMove (BoardPos boToMovePos, Vector2Int dir) {
+			// Clear out the Objects-added list just before the move.
+			objectsAddedThisMove.Clear ();
+
+			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
+			MoveResults result = BoardUtils.MoveOccupant (this, boToMove, dir);
+			OnMoveComplete ();
+			return result;
+		}
+		private void OnMoveComplete () {
+//			areGoalsSatisfied = CheckAreGoalsSatisfied ();
+		}
+
+		public void MoveGroupAttempt(int groupID, Vector2Int dir) {
+			if (CanMoveGroup(groupID, dir)) {
+				MoveGroup(groupID, dir);
+			}
+		}
+		private void MoveGroup(int groupID, Vector2Int dir) {
+			// VERTICAL
+			if (dir.y != 0) {
+				int startingRow = dir.y<0 ? 0 : NumRows-1;
+				for (int col=0; col<NumCols; col++) {
+					for (int row=startingRow; row>=0 && row<NumRows; row-=dir.y) {
+						Tile tileHere = GetTile(col,row);
+						if (tileHere!=null && tileHere.GroupID==groupID) {
+							MoveTile(tileHere, dir);
+						}
+					}
+				}
+			}
+			// HORIZONTAL
+			else {
+				int startingCol = dir.x<0 ? 0 : NumCols-1;
+				for (int row=0; row<NumRows; row++) {
+					for (int col=startingCol; col>=0 && col<NumCols; col-=dir.x) {
+						Tile tileHere = GetTile(col,row);
+						if (tileHere!=null && tileHere.GroupID==groupID) {
+							MoveTile(tileHere, dir);
+						}
+					}
+				}
+			}
+		}
+		private void MoveTile(Tile tile, Vector2Int dir) {
+			BoardSpace space = tile.MySpace;
+			tile.RemoveMyFootprint();
+			tile.SetColRow(tile.BoardPos.col+dir.x, tile.BoardPos.row+dir.y);
+			tile.AddMyFootprint();
+		}
+
+		private bool CanMoveGroup(int groupID, Vector2Int dir) {
+			if (groupID == -1) { return false; } // No group? No move.
+
+			// TODO: Make boardData, execute move, and see if it works
+			return true;
+		}
 
 
 

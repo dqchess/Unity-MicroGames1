@@ -9,9 +9,6 @@ namespace SlideAndStick {
 
     public class BoardObjectData : PropData {
     	public BoardPos boardPos;
-    //	public BoardObjectData (BoardPos _boardPos) {
-    //		boardPos = _boardPos;
-    //	}
     }
     public class BoardOccupantData : BoardObjectData {
     }
@@ -25,11 +22,9 @@ namespace SlideAndStick {
 
     public class TileData : BoardOccupantData {
     	public int colorID;
-        public int value;
-        public TileData (BoardPos _boardPos, int _colorID, int _value) {
+        public TileData (BoardPos _boardPos, int _colorID) {
     		boardPos = _boardPos;
     		colorID = _colorID;
-            value = _value;
     	}
     }
 }

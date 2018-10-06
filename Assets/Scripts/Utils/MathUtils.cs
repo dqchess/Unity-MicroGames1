@@ -114,7 +114,7 @@ public class MathUtils {
 			case Sides.TR: return Vector2Int.TR;
 			case Sides.BL: return Vector2Int.BL;
 			case Sides.BR: return Vector2Int.BR;
-            default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0, 1, 2, or 3.");
+			default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0 through 7.");
         }
     }
 	public static int GetSide (Vector2Int dir) {
@@ -128,6 +128,11 @@ public class MathUtils {
 		if (dir == Vector2Int.BR) { return Sides.BR; }
         return -1; // Whoops.
     }
+	public static int GetOppositeSide (Vector2Int dir) { return GetOppositeSide(GetSide(dir)); }
+	public static int GetOppositeSide (int side) { return Sides.GetOpposite(side); }
+	public static Vector2Int GetOppositeDir (int side) { return GetDir(GetOppositeSide(side)); }
+	/** Useful for flipping dirEntering to dirExiting, for example. Just returns the original value * -1. */
+	public static Vector2Int GetOppositeDir (Vector2Int dir) { return new Vector2Int(-dir.x, -dir.y); }
     //public static int GetOppositeSide (Vector2Int dir) { return GetOppositeSide(GetSide(dir)); }
     //public static int GetOppositeSide (int side) {
     //    switch (side) {

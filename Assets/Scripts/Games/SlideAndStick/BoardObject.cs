@@ -27,7 +27,7 @@ namespace SlideAndStick {
 			boardRef = _boardRef;
 			boardPos = _boardPos;
 
-			// Call my "official" set-property functions so the accompanying stuff happens too. (Note: In WordMaze as is, there's no accompanying stuff.)
+			// Call my "official" set-property functions so the accompanying stuff happens too. (Note: In SlideAndStick as is, there's no accompanying stuff.)
 			SetColRow (boardPos.col,boardPos.row);
 			SetSideFacing (boardPos.sideFacing);
 			// Automatically add me to the board!

@@ -21,6 +21,7 @@ namespace SlideAndStick {
 			if (col<0 || row<0  ||  col>=b.NumCols || row>=b.NumRows) return null;
 			return b.Spaces[col,row];
 		}
+		public static BoardOccupant GetOccupant(Board b, BoardPos boardPos) { return GetOccupant(b, boardPos.col,boardPos.row); }
 		public static BoardOccupant GetOccupant(Board b, int col,int row) {
 			BoardSpace space = GetSpace (b, col,row);
 			if (space==null) { return null; }
@@ -36,39 +37,10 @@ namespace SlideAndStick {
 			BoardSpace bs = GetSpace (b, col,row);
 			return bs!=null && bs.IsPlayable;
 		}
+		public static BoardOccupant GetOccupantInClonedBoard(BoardOccupant sourceBO, Board newBoard) {
+			return GetOccupant(newBoard, sourceBO.Col,sourceBO.Row);
+		}
 
-
-		public static Vector2Int GetDir (int side) {
-			switch (side) {
-			case Sides.L: return Vector2Int.L;
-			case Sides.R: return Vector2Int.R;
-			case Sides.B: return Vector2Int.B;
-			case Sides.T: return Vector2Int.T;
-			case Sides.TL: return Vector2Int.TL;
-			case Sides.TR: return Vector2Int.TR;
-			case Sides.BL: return Vector2Int.BL;
-			case Sides.BR: return Vector2Int.BR;
-			default: throw new UnityException ("Whoa, " + side + " is not a valid side. Try 0 through 7.");
-			}
-		}
-		public static int GetSide (Vector2Int dir) {
-			if (dir == Vector2Int.L) { return Sides.L; }
-			if (dir == Vector2Int.R) { return Sides.R; }
-			if (dir == Vector2Int.B) { return Sides.B; }
-			if (dir == Vector2Int.T) { return Sides.T; }
-			if (dir == Vector2Int.TL) { return Sides.TL; }
-			if (dir == Vector2Int.TR) { return Sides.TR; }
-			if (dir == Vector2Int.BL) { return Sides.BL; }
-			if (dir == Vector2Int.BR) { return Sides.BR; }
-			return Sides.Undefined; // Whoops.
-		}
-		public static int GetOppositeSide (Vector2Int dir) { return GetOppositeSide(GetSide(dir)); }
-		public static int GetOppositeSide (int side) {
-			return Sides.GetOpposite(side);
-		}
-		public static Vector2Int GetOppositeDir (int side) { return GetDir(GetOppositeSide(side)); }
-		/** Useful for flipping dirEntering to dirExiting, for example. Just returns the original value * -1. */
-		public static Vector2Int GetOppositeDir (Vector2Int dir) { return new Vector2Int(-dir.x, -dir.y); }
 
 
 		public static BoardPos GetRandOpenPos(Board b) {
@@ -91,6 +63,63 @@ namespace SlideAndStick {
 				}
 			}
 			return total;
+		}
+
+
+
+		public static bool CanExecuteMove(Board originalBoard, BoardPos boToMovePos, Vector2Int dir) {
+			// Clone the Board, execute the exact move, and return if it worked.
+			Board testBoard = originalBoard.Clone();
+			MoveResults moveResult = testBoard.ExecuteMove(boToMovePos, dir);
+			return moveResult != MoveResults.Fail;
+		}
+		public static bool CanOccupantMoveInDir(Board originalBoard, BoardOccupant originalBO, Vector2Int moveDir) {
+			Board testBoard = originalBoard.Clone();
+			BoardOccupant testBO = GetOccupant(testBoard, originalBO.BoardPos.col,originalBO.BoardPos.row);
+			MoveResults moveResult = MoveOccupant(testBoard, testBO, moveDir);
+			return moveResult == MoveResults.Success;
+		}
+
+
+		public static MoveResults MoveOccupant (Board b, BoardOccupant bo, Vector2Int dir) {
+			if (bo == null) {
+				Debug.LogError ("Oops! We're trying to move a null Occupant! dir: " + dir.ToString());
+				return MoveResults.Fail;
+			}
+
+			int newCol = bo.Col+dir.x;
+			int newRow = bo.Row+dir.y;
+
+			// Is this outside the board? Oops! Return Fail.
+			if (!IsSpacePlayable(b, newCol,newRow)) {
+				return MoveResults.Fail;
+			}
+			// Are we trying to pass through a Wall? Return Fail.
+//			if (bo.MySpace!=null && !bo.MySpace.CanOccupantEverExit(GetSide(dir))) {
+//				return MoveResults.Fail;
+//			}
+
+			// Always remove its footprint first. We're about to move it!
+			bo.RemoveMyFootprint ();
+
+			bo.SetColRow (newCol,newRow);
+
+			// Is there another Occupant in this next space that we might displace??
+			BoardOccupant nextBO_touching = GetOccupant(b, newCol,newRow);
+			if (nextBO_touching != null) {
+				// PUSH the next guy! Interrupt this function with a recursive call! (And we'll add everyone back to the board at the end.)
+				MoveResults nextResult = MoveOccupant(b, nextBO_touching, dir);
+				// Whoa, if the recursive move we just made DIDN'T work, then stop here and return that info.
+				if (nextResult != MoveResults.Success) {
+					return nextResult;
+				}
+			}
+
+			// Add its footprint back now.
+			bo.AddMyFootprint ();
+
+			// Success!
+			return MoveResults.Success;
 		}
 
 

@@ -9,7 +9,7 @@ namespace BouncePaint {
         private const int LEVEL_1 = 1;
         private const int LossFeedbackLastLevelIndex = 10; // We show the "almost! tap sooner" etc. text until this level.
         // Properties
-        private bool didSeeHowToPlay = false;
+//        private bool didSeeHowToPlay = false;
         //private bool isCantLose; // when TRUE, the user can't fail by tapping at the wrong time. ;)
         //private bool doAcceptInput;
         private float timeWhenAcceptInput; // in UNSCALED time.
