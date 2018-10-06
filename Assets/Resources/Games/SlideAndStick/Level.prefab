@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224753618728664278}
   - component: {fileID: 114442891133599414}
   m_Layer: 5
-  m_Name: BoardController
+  m_Name: Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35,9 +35,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1698266709426448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bd1f4f6f9bf94e97a025951bd77ac36, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ccaf9072e55be043abe7293090e0f47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsAnimating: 0
   myRectTransform: {fileID: 224753618728664278}
 --- !u!224 &224753618728664278
 RectTransform:

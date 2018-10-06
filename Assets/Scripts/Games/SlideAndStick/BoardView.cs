@@ -15,7 +15,7 @@ namespace SlideAndStick {
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
 		private Board simulatedMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
-		private BoardController levelRef;
+		private Level levelRef;
 		// Variable Properties
 		private bool areObjectsAnimating;
 		private float objectsAnimationLoc; // eases to 0 or 1 while we're animating!
@@ -24,7 +24,7 @@ namespace SlideAndStick {
 
 		// Getters (Public)
 		public Board MyBoard { get { return myBoard; } }
-		public BoardController MyLevel { get { return levelRef; } }
+		public Level MyLevel { get { return levelRef; } }
 		public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
 		public float UnitSize { get { return unitSize; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
@@ -48,7 +48,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize (BoardController _levelRef, Board _myBoard) {
+		public void Initialize (Level _levelRef, Board _myBoard) {
 			levelRef = _levelRef;
 			myBoard = _myBoard;
 			this.transform.SetParent (levelRef.transform);

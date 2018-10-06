@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SlideAndStick {
-	public class BoardController : MonoBehaviour {
+	public class Level : BaseLevel {
 		// Components
-		[SerializeField] private RectTransform myRectTransform=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
 		private TouchInputDetector touchInputDetector; // this guy handles all the mobile touch stuff.
 		// Properties
 //        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private bool isLevelComplete = false;
+		private string description; // dev's description of the level (set in Levels.txt).
 		private Vector2Int mousePosBoard;
 		// References
 		private GameController gameController;
@@ -39,33 +40,14 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
-		public void Initialize (GameController _gameController, Transform tf_parent) {
+		public void Initialize (GameController _gameController, Transform tf_parent, int _levelIndex) {
 			gameController = _gameController;
-			this.transform.SetParent (tf_parent);
-			this.transform.localScale = Vector3.one;
+			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
 
 			touchInputDetector = new TouchInputDetector ();
 
-			// Reset!
-			BoardData bd = new BoardData(5,5);
-
-			// TEMP TEST
-			bd.tileDatas.Add(new TileData(new BoardPos(2,2), 1));
-
-			bd.tileDatas.Add(new TileData(new BoardPos(1,1), 0));
-//			bd.tileDatas.Add(new TileData(new BoardPos(2,1), 0));
-			bd.tileDatas.Add(new TileData(new BoardPos(3,1), 0));
-//			bd.tileDatas.Add(new TileData(new BoardPos(3,2), 0));
-			bd.tileDatas.Add(new TileData(new BoardPos(3,3), 0));
-//			bd.tileDatas.Add(new TileData(new BoardPos(2,3), 0));
-			bd.tileDatas.Add(new TileData(new BoardPos(1,3), 0));
-//			bd.tileDatas.Add(new TileData(new BoardPos(1,2), 0));
-//			bd.tileDatas.Add(new TileData(new BoardPos(3,1), 3));
-//			bd.tileDatas.Add(new TileData(new BoardPos(4,1), 3));
-//			bd.tileDatas.Add(new TileData(new BoardPos(4,2), 3));
-
-			RemakeModelAndViewFromData(bd);
+			AddLevelComponents();
 		}
 		public void DestroySelf () {
 			// Tell my boardView it's toast!
@@ -90,6 +72,39 @@ namespace SlideAndStick {
 			if (boardView != null) {
 				boardView.DestroySelf ();
 				boardView = null;
+			}
+		}
+		override protected void AddLevelComponents() {
+			DestroyBoardModelAndView(); // Just in case.
+			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
+
+			string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
+			if (!string.IsNullOrEmpty(levelString)) {
+				MakeLevelFromString(levelString);
+			}
+			else {
+//				DestroyLevelComponents();
+//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
+				Debug.LogWarning("No level data available for level: " + LevelIndex);
+			}
+//			if (LevelIndex > LastLevelIndex) {
+//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
+//			}
+		}
+		private void MakeLevelFromString(string _str) {
+			try {
+				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
+				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
+				string[] boardLayout = lines.Skip(1).ToArray();
+				BoardData boardData = new BoardData(boardLayout);
+				RemakeModelAndViewFromData(boardData);
+
+//				// Reset!
+//				BoardData bd = new BoardData(5,5);
+//				RemakeModelAndViewFromData(bd);
+			}
+			catch (System.Exception e) {
+				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
 			}
 		}
 
