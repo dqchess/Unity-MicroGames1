@@ -51,8 +51,19 @@ namespace SlideAndStick {
 			BoardData bd = new BoardData(5,5);
 
 			// TEMP TEST
+			bd.tileDatas.Add(new TileData(new BoardPos(2,2), 1));
+
 			bd.tileDatas.Add(new TileData(new BoardPos(1,1), 0));
-			bd.tileDatas.Add(new TileData(new BoardPos(2,1), 1));
+//			bd.tileDatas.Add(new TileData(new BoardPos(2,1), 0));
+			bd.tileDatas.Add(new TileData(new BoardPos(3,1), 0));
+//			bd.tileDatas.Add(new TileData(new BoardPos(3,2), 0));
+			bd.tileDatas.Add(new TileData(new BoardPos(3,3), 0));
+//			bd.tileDatas.Add(new TileData(new BoardPos(2,3), 0));
+			bd.tileDatas.Add(new TileData(new BoardPos(1,3), 0));
+//			bd.tileDatas.Add(new TileData(new BoardPos(1,2), 0));
+//			bd.tileDatas.Add(new TileData(new BoardPos(3,1), 3));
+//			bd.tileDatas.Add(new TileData(new BoardPos(4,1), 3));
+//			bd.tileDatas.Add(new TileData(new BoardPos(4,2), 3));
 
 			RemakeModelAndViewFromData(bd);
 		}
@@ -152,10 +163,10 @@ namespace SlideAndStick {
 
 			// TEMP DEBUG
 			else if (Input.GetKeyDown(KeyCode.P)) { board.Debug_PrintBoardLayout(); }
-			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileOverAttempt(Vector2Int.T); }
-			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileOverAttempt(Vector2Int.B); }
-			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileOverAttempt(Vector2Int.L); }
-			else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { MoveTileOverAttempt(Vector2Int.R); }
+//			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileOverAttempt(Vector2Int.T); }
+//			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileOverAttempt(Vector2Int.B); }
+//			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileOverAttempt(Vector2Int.L); }
+//			else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { MoveTileOverAttempt(Vector2Int.R); }
 		}
 
 

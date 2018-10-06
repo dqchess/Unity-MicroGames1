@@ -100,7 +100,7 @@ namespace WordSearchScroll {
 
 			// Add words to board!
 			boardWords = new Dictionary<string,BoardWord>();
-			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 1f);//QQQ TEST 6f); // 1 word for every 6 spaces.
+			int numWordsToAdd = Mathf.CeilToInt(numCols*numRows / 1f);//hacky TEST 6f); // 1 word for every 6 spaces.
 			string[] wordsToAdd = wordManager.GetRandomWords(numWordsToAdd, MinWordLength);
 			AddWordsToBoard(wordsToAdd);
 			FillEmptySpacesWithRandLetters();

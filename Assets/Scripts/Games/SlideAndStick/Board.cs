@@ -92,7 +92,7 @@ namespace SlideAndStick {
 			//		if (bo is BoardOccupant) { // Is it an Occupant? Remove it from allOccupants list!
 			//			allOccupants.Remove (bo as BoardOccupant);
 			//		}
-			if (bo is Tile) { tiles.Remove (bo as Tile); }
+			if (bo is Tile) { tiles.Remove(bo as Tile); }
 			else { Debug.LogError ("Trying to RemoveFromPlay an Object of type " + bo.GetType().ToString() + ", but our OnObjectRemovedFromPlay function doesn't recognize this type!"); }
 		}
 
@@ -102,6 +102,36 @@ namespace SlideAndStick {
         //  Tile Group-Finding
         // ----------------------------------------------------------------
 		private void MergeAdjacentTiles() {
+			for (int i=tiles.Count-1; i>=0; --i) {
+				if (i >= tiles.Count) { continue; } // Oh, if this tile was removed, skip it.
+				Tile t = tiles[i];
+				MergeTilesAttempt(t, GetTile(t.Col-1, t.Row));
+				MergeTilesAttempt(t, GetTile(t.Col+1, t.Row));
+				MergeTilesAttempt(t, GetTile(t.Col, t.Row-1));
+				MergeTilesAttempt(t, GetTile(t.Col, t.Row+1));
+            }
+		}
+
+		private bool CanMergeTiles(Tile tileA, Tile tileB) {
+			if (tileA==null || tileB==null) { return false; } // Check the obvious.
+			if (tileA.ColorID != tileB.ColorID) { return false; } // Different colors? Nah.
+			if (!tileA.IsInPlay || !tileB.IsInPlay) { return false; } // One's not in play anymore ('cause it was just merged)? Nah.
+			if (tileA == tileB) { return false; } // Oh, we just merged and now it's looking at itself? Nah.
+			return true; // Sure!
+		}
+		private void MergeTilesAttempt(Tile tileA, Tile tileB) {
+			if (CanMergeTiles(tileA,tileB)) {
+				MergeTiles(tileA,tileB);
+			}
+		}
+		private void MergeTiles(Tile tileA, Tile tileB) {
+			List<Vector2Int> tileBFootprintGlobal = tileB.GetFootprintGlobal();
+			// Remove tileB from the board!
+			tileB.RemoveFromPlay();
+			// Append tileA's footprint, yo.
+			tileA.AppendMyFootprint(tileBFootprintGlobal);
+		}
+
 //            // FIRST, tell all Tiles they're not used in the search algorithm
 //            for (int i=0; i<tiles.Count; i++) {
 //                tiles[i].GroupID = -1;
@@ -126,7 +156,6 @@ namespace SlideAndStick {
 //            RecursiveTileFinding(col,row-1, colorID);
 //            RecursiveTileFinding(col+1,row, colorID);
 //            RecursiveTileFinding(col,row+1, colorID);
-        }
 
 
 		// ----------------------------------------------------------------
@@ -144,6 +173,7 @@ namespace SlideAndStick {
 			return result;
 		}
 		private void OnMoveComplete () {
+			MergeAdjacentTiles();
 //			areGoalsSatisfied = CheckAreGoalsSatisfied ();
 		}
 

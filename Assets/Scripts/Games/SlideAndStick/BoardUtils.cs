@@ -33,6 +33,7 @@ namespace SlideAndStick {
 			BoardSpace bs = GetSpace (b, col,row);
 			return bs!=null && bs.IsOpen();
 		}
+		public static bool IsSpacePlayable(Board b, Vector2Int pos) { return IsSpacePlayable(b, pos.x,pos.y); }
 		public static bool IsSpacePlayable(Board b, int col,int row) {
 			BoardSpace bs = GetSpace (b, col,row);
 			return bs!=null && bs.IsPlayable;
@@ -81,6 +82,12 @@ namespace SlideAndStick {
 			return moveResult == MoveResults.Success;
 		}
 
+		private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal, Vector2Int posOffset) {
+			for (int i=0; i<footprintGlobal.Count; i++) {
+				if (!IsSpacePlayable(b, footprintGlobal[i]+posOffset)) { return false; }
+			}
+			return true;
+		}
 
 		public static MoveResults MoveOccupant (Board b, BoardOccupant bo, Vector2Int dir) {
 			if (bo == null) {
@@ -88,11 +95,8 @@ namespace SlideAndStick {
 				return MoveResults.Fail;
 			}
 
-			int newCol = bo.Col+dir.x;
-			int newRow = bo.Row+dir.y;
-
 			// Is this outside the board? Oops! Return Fail.
-			if (!IsSpacePlayable(b, newCol,newRow)) {
+			if (!AreSpacesPlayable(b, bo.GetFootprintGlobal(),dir)) {
 				return MoveResults.Fail;
 			}
 			// Are we trying to pass through a Wall? Return Fail.
@@ -103,16 +107,19 @@ namespace SlideAndStick {
 			// Always remove its footprint first. We're about to move it!
 			bo.RemoveMyFootprint ();
 
-			bo.SetColRow (newCol,newRow);
+			bo.SetColRow(bo.Col+dir.x, bo.Row+dir.y);
 
-			// Is there another Occupant in this next space that we might displace??
-			BoardOccupant nextBO_touching = GetOccupant(b, newCol,newRow);
-			if (nextBO_touching != null) {
-				// PUSH the next guy! Interrupt this function with a recursive call! (And we'll add everyone back to the board at the end.)
-				MoveResults nextResult = MoveOccupant(b, nextBO_touching, dir);
-				// Whoa, if the recursive move we just made DIDN'T work, then stop here and return that info.
-				if (nextResult != MoveResults.Success) {
-					return nextResult;
+			// What Occupants shall we be displacing?
+			for (int i=0; i<bo.FootprintLocal.Count; i++) {
+				Vector2Int footPosGlobal = new Vector2Int(bo.FootprintLocal[i].x+bo.Col, bo.FootprintLocal[i].y+bo.Row);
+				BoardOccupant nextBO_touching = GetOccupant(b, footPosGlobal.x,footPosGlobal.y);
+				if (nextBO_touching != null) {
+					// PUSH the next guy! Interrupt this function with a recursive call! (And we'll add everyone back to the board at the end.)
+					MoveResults nextResult = MoveOccupant(b, nextBO_touching, dir);
+					// Whoa, if the recursive move we just made DIDN'T work, then stop here and return that info.
+					if (nextResult != MoveResults.Success) {
+						return nextResult;
+					}
 				}
 			}
 

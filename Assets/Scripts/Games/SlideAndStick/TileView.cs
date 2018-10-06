@@ -7,8 +7,11 @@ namespace SlideAndStick {
 	public class TileView : BoardOccupantView {
 		// Components
 		[SerializeField] private Image i_highlight;
+		private List<Image> bodyImages;
 		// References
 		private Tile myTile;
+		// Properties
+		private Color bodyColor;
 
 		// Getters
 		public static Color GetBodyColor(int _colorID) {
@@ -29,18 +32,44 @@ namespace SlideAndStick {
 		public void Initialize (BoardView _myBoardView, Tile _myObj) {
 			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
 			myTile = _myObj;
+			bodyColor = GetBodyColor(myTile.ColorID);
 
 			// Set size!
 			myRectTransform.sizeDelta = new Vector2(_myBoardView.UnitSize*0.92f, _myBoardView.UnitSize*0.92f);
 
-			// Color me impressed!
-			i_body.color = GetBodyColor(_myObj.ColorID);
+			bodyImages = new List<Image>();
+
+//			// Color me impressed!
+//			ApplyBodyColor();
+		}
+		private void ApplyBodyColor() {
+			for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = bodyColor; }
+		}
+
+		private void AddBodyImage(Vector2Int footPos) {
+			float unitSize = MyBoardView.UnitSize;
+			Image newImage = new GameObject().AddComponent<Image>();
+			GameUtils.ParentAndReset(newImage.gameObject, this.transform);
+			GameUtils.SizeUIGraphic(newImage, unitSize,unitSize);
+			newImage.color = bodyColor;
+			newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*unitSize, -footPos.y*unitSize);
+			bodyImages.Add(newImage);
 		}
 
 
 //		public void OnGroupIDToMoveChanged(int _groupIDToMove) {
 //			i_highlight.enabled = myTile.GroupID == _groupIDToMove;
 //		}
+
+		override public void UpdateVisualsPostMove() {
+			base.UpdateVisualsPostMove();
+			// Add images to fit my footprint!
+			if (bodyImages.Count != myTile.FootprintLocal.Count) {
+				for (int i=bodyImages.Count; i<myTile.FootprintLocal.Count; i++) {
+					AddBodyImage(myTile.FootprintLocal[i]);
+				}
+			}
+		}
 
 
         // ----------------------------------------------------------------

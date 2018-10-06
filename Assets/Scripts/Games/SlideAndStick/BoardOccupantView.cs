@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
 	public class BoardOccupantView : BoardObjectView {
-		// Components
-		[SerializeField] protected Image i_body; // everyone has a primary body sprite for simplicity! Less code.
 		// References
 		protected BoardOccupant myOccupant; // a direct reference to my model. Doesn't change.
 
