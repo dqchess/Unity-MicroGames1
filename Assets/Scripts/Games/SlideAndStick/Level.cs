@@ -11,7 +11,6 @@ namespace SlideAndStick {
 		private TouchInputDetector touchInputDetector; // this guy handles all the mobile touch stuff.
 		// Properties
 //        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
-		private bool isLevelComplete = false;
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
 		private string description; // dev's description of the level (set in Levels.txt).
 		private Vector2Int mousePosBoard;
@@ -22,7 +21,6 @@ namespace SlideAndStick {
 		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
 
 		// Getters (Public)
-		public bool IsLevelComplete { get { return isLevelComplete; } }
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
 		// Getters (Private)
@@ -33,7 +31,7 @@ namespace SlideAndStick {
 		private bool IsPlayerMove_U () { return Input.GetButtonDown ("MoveU") || touchInputDetector.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
 //            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
-			if (isLevelComplete) { return false; } // If the level's over, don't allow further movement. :)
+			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {
@@ -214,16 +212,12 @@ namespace SlideAndStick {
 		private void OnBoardMoveComplete () {
 			// Update BoardView visuals!!
 			boardView.UpdateAllViewsMoveStart ();
-//			// If our goals are satisfied AND the player's at the exit spot, advance to the next level!!
-//			if (board.AreGoalsSatisfied) {
-//				CompleteLevel ();
-//			}
+			// If our goals are satisfied, win!!
+			if (board.AreGoalsSatisfied) {
+				gameController.OnBoardGoalsSatisfied();
+			}
 //			// Dispatch success/not-yet-success event!
 //			GameManagers.Instance.EventManager.OnSetIsLevelCompleted (isLevelComplete);
-		}
-
-		public void SetIsLevelOver(bool isLevelOver) {
-			this.isLevelComplete = isLevelOver;
 		}
 
 
@@ -255,13 +249,11 @@ namespace SlideAndStick {
 			// Get the snapshot to restore to, restore, and decrement moves made!
 			BoardData boardSnapshotData = boardSnapshots[boardSnapshots.Count-1];
 			// Remake my model and view from scratch!
-			RemakeModelAndViewFromData (boardSnapshotData);
-			boardSnapshots.Remove (boardSnapshotData);
+			RemakeModelAndViewFromData(boardSnapshotData);
+			boardSnapshots.Remove(boardSnapshotData);
 			NumMovesMade --; // decrement this here!
-			// No, the level is definitely not complete anymore.
-			isLevelComplete = false;
 			// Tie up loose ends by "completing" this move!
-			OnBoardMoveComplete ();
+			OnBoardMoveComplete();
 		}
 
 

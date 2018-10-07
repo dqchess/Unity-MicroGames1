@@ -6,15 +6,23 @@ namespace SlideAndStick {
 	[System.Serializable]
 	public class Board {
 		// Properties
+		private bool areGoalsSatisfied;
 		private int numCols,numRows;
         private int numMovesMade;
+		private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
         // Reference Lists
 		public List<BoardObject> objectsAddedThisMove;
 
-		// Getters
+		// Getters (Private)
+		private bool GetAreGoalsSatisfied() {
+			return tiles.Count <= numTilesToWin;
+		}
+
+		// Getters (Public)
+		public bool AreGoalsSatisfied { get { return areGoalsSatisfied; } }
 		public int NumCols { get { return numCols; } }
 		public int NumRows { get { return numRows; } }
 
@@ -55,6 +63,8 @@ namespace SlideAndStick {
 
 			// Start our solo bubbas out merged, goro!
 			MergeAdjacentTiles();
+
+			CalculateNumTilesToWin();
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
@@ -72,6 +82,17 @@ namespace SlideAndStick {
 		private void AddPropsFromBoardData (BoardData bd) {
 			// Add Props to the lists!
 			foreach (TileData data in bd.tileDatas) { AddTile (data); }
+		}
+		private void CalculateNumTilesToWin() {
+			numTilesToWin = 0; // We increment next.
+			HashSet<int> colorIDsInBoard = new HashSet<int>();
+			for (int i=0; i<tiles.Count; i++) {
+				if (!colorIDsInBoard.Contains(tiles[i].ColorID)) {
+					colorIDsInBoard.Add(tiles[i].ColorID);
+					numTilesToWin ++;
+				}
+			}
+			Debug.Log("numTilesToWin: " + numTilesToWin);//QQQ
 		}
 
 
@@ -149,7 +170,7 @@ namespace SlideAndStick {
 		}
 		private void OnMoveComplete () {
 			MergeAdjacentTiles();
-//			areGoalsSatisfied = CheckAreGoalsSatisfied ();
+			areGoalsSatisfied = GetAreGoalsSatisfied();
 		}
 
 

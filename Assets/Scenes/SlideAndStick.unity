@@ -253,6 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   b_retry: {fileID: 1126546215}
+  retryButtonPosDefault: {x: 0, y: 0}
 --- !u!1 &318567234
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,6 +969,16 @@ Prefab:
         type: 2}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114739822531401484, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114739822531401484, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4, type: 2}
       propertyPath: m_IsActive

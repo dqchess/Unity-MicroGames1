@@ -39,7 +39,7 @@ namespace SlideAndStick {
 		override protected void WinLevel() {
 			base.WinLevel();
 			StartCoroutine(Coroutine_StartNextLevel());
-			// Tell people!
+//			// Tell people!
 //			level.OnWinLevel();
 //			// Update best score!
 //			int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
@@ -49,7 +49,7 @@ namespace SlideAndStick {
 		}
 
 		private IEnumerator Coroutine_StartNextLevel() {
-			yield return new WaitForSecondsRealtime(1.2f);
+			yield return new WaitForSecondsRealtime(0.5f);//1.2f);
 			SetCurrentLevel(LevelIndex+1, true);
 		}
 
@@ -96,22 +96,17 @@ namespace SlideAndStick {
 			yield return null;
 		}
 
+		// game events
+		public void OnBoardGoalsSatisfied() {
+			WinLevel();
+		}
+
 
 		// ----------------------------------------------------------------
 		//  Input
 		// ----------------------------------------------------------------
 		override protected void OnTapDown() { }
 		override protected void OnTapUp() { }
-
-
-		// ----------------------------------------------------------------
-		//  Doers
-		// ----------------------------------------------------------------
-//		public void UndoMoveAttempt() {
-//			if (level != null) {
-//				level.UndoMoveAttempt();
-//			}
-//		}
 
 
 		// ----------------------------------------------------------------
