@@ -41,6 +41,7 @@ namespace SlideAndStick {
 					// PROPS
 					char c = layoutArray[actualRow][col];
 					switch (c) {
+						case '#': spaceDatas[col,row].isPlayable = false; break;
 						case '0': AddTileData(col,row, 0); break;
 						case '1': AddTileData(col,row, 1); break;
 						case '2': AddTileData(col,row, 2); break;

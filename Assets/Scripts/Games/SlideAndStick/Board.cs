@@ -61,6 +61,9 @@ namespace SlideAndStick {
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
 
+			// TEMP TESTING
+			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(numCols*numRows*0.65f), Random.Range(3,5)); }
+
 			// Start our solo bubbas out merged, goro!
 			MergeAdjacentTiles();
 
@@ -177,8 +180,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Debug
 		// ----------------------------------------------------------------
-		private void Debug_AddRandomTiles(int numToAdd) {
-			const int numColors = 4;
+		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
 			for (int i=0; i<numToAdd; i++) {
 				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
 				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
