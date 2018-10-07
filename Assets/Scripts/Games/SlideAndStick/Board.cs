@@ -132,31 +132,6 @@ namespace SlideAndStick {
 			tileA.AppendMyFootprint(tileBFootGlobal);
 		}
 
-//            // FIRST, tell all Tiles they're not used in the search algorithm
-//            for (int i=0; i<tiles.Count; i++) {
-//                tiles[i].GroupID = -1;
-//            }
-//            tileGroups = new List<List<Tile>>();
-//			for (int i=tiles.Count-1; i>=0; --i) {
-//				if (tiles[i].GroupID != -1) { continue; }
-//                tileGroups.Add(new List<Tile>());
-//                RecursiveTileFinding(tiles[i].Col,tiles[i].Row, tiles[i].ColorID);
-//            }
-//        }
-//        private void RecursiveTileFinding(int col,int row, int colorID) {
-//            Tile tileHere = GetTile(col,row);
-//            if (tileHere==null || tileHere.GroupID!=-1) { return; } // No unused tile here? Stop.
-//            if (tileHere.ColorID != colorID) { return; } // Not a match? Stop.
-//			// Add it to the group!
-//			int groupID = tileGroups.Count-1;
-//			tileHere.GroupID = groupID;
-//			tileGroups[groupID].Add(tileHere);
-//			// Keep lookin'!
-//            RecursiveTileFinding(col-1,row, colorID);
-//            RecursiveTileFinding(col,row-1, colorID);
-//            RecursiveTileFinding(col+1,row, colorID);
-//            RecursiveTileFinding(col,row+1, colorID);
-
 
 		// ----------------------------------------------------------------
 		//  Doers
@@ -177,50 +152,6 @@ namespace SlideAndStick {
 //			areGoalsSatisfied = CheckAreGoalsSatisfied ();
 		}
 
-//		public void MoveGroupAttempt(int groupID, Vector2Int dir) {
-//			if (CanMoveGroup(groupID, dir)) {
-//				MoveGroup(groupID, dir);
-//			}
-//		}
-//		private void MoveGroup(int groupID, Vector2Int dir) {
-//			// VERTICAL
-//			if (dir.y != 0) {
-//				int startingRow = dir.y<0 ? 0 : NumRows-1;
-//				for (int col=0; col<NumCols; col++) {
-//					for (int row=startingRow; row>=0 && row<NumRows; row-=dir.y) {
-//						Tile tileHere = GetTile(col,row);
-//						if (tileHere!=null && tileHere.GroupID==groupID) {
-//							MoveTile(tileHere, dir);
-//						}
-//					}
-//				}
-//			}
-//			// HORIZONTAL
-//			else {
-//				int startingCol = dir.x<0 ? 0 : NumCols-1;
-//				for (int row=0; row<NumRows; row++) {
-//					for (int col=startingCol; col>=0 && col<NumCols; col-=dir.x) {
-//						Tile tileHere = GetTile(col,row);
-//						if (tileHere!=null && tileHere.GroupID==groupID) {
-//							MoveTile(tileHere, dir);
-//						}
-//					}
-//				}
-//			}
-//		}
-//		private void MoveTile(Tile tile, Vector2Int dir) {
-//			BoardSpace space = tile.MySpace;
-//			tile.RemoveMyFootprint();
-//			tile.SetColRow(tile.BoardPos.col+dir.x, tile.BoardPos.row+dir.y);
-//			tile.AddMyFootprint();
-//		}
-//
-//		private bool CanMoveGroup(int groupID, Vector2Int dir) {
-//			if (groupID == -1) { return false; } // No group? No move.
-//
-//			// TO DO: Make boardData, execute move, and see if it works
-//			return true;
-//		}
 
 		// ----------------------------------------------------------------
 		//  Debug
