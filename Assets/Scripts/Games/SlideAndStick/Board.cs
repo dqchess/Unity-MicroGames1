@@ -125,11 +125,11 @@ namespace SlideAndStick {
 			}
 		}
 		private void MergeTiles(Tile tileA, Tile tileB) {
-			List<Vector2Int> tileBFootprintGlobal = tileB.GetFootprintGlobal();
+			List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it for safety.
 			// Remove tileB from the board!
 			tileB.RemoveFromPlay();
 			// Append tileA's footprint, yo.
-			tileA.AppendMyFootprint(tileBFootprintGlobal);
+			tileA.AppendMyFootprint(tileBFootGlobal);
 		}
 
 //            // FIRST, tell all Tiles they're not used in the search algorithm

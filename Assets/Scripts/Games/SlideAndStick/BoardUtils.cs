@@ -96,7 +96,7 @@ namespace SlideAndStick {
 			}
 
 			// Is this outside the board? Oops! Return Fail.
-			if (!AreSpacesPlayable(b, bo.GetFootprintGlobal(),dir)) {
+			if (!AreSpacesPlayable(b, bo.FootprintGlobal,dir)) {
 				return MoveResults.Fail;
 			}
 			// Are we trying to pass through a Wall? Return Fail.
@@ -110,9 +110,9 @@ namespace SlideAndStick {
 			bo.SetColRow(bo.Col+dir.x, bo.Row+dir.y);
 
 			// What Occupants shall we be displacing?
-			for (int i=0; i<bo.FootprintLocal.Count; i++) {
-				Vector2Int footPosGlobal = new Vector2Int(bo.FootprintLocal[i].x+bo.Col, bo.FootprintLocal[i].y+bo.Row);
-				BoardOccupant nextBO_touching = GetOccupant(b, footPosGlobal.x,footPosGlobal.y);
+			for (int i=0; i<bo.FootprintGlobal.Count; i++) {
+				Vector2Int footGlobal = bo.FootprintGlobal[i];
+				BoardOccupant nextBO_touching = GetOccupant(b, footGlobal.x,footGlobal.y);
 				if (nextBO_touching != null) {
 					// PUSH the next guy! Interrupt this function with a recursive call! (And we'll add everyone back to the board at the end.)
 					MoveResults nextResult = MoveOccupant(b, nextBO_touching, dir);

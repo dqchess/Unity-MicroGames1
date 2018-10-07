@@ -18,7 +18,7 @@ namespace SlideAndStick {
 			colorID = _data.colorID;
 		}
 		public TileData SerializeAsData() {
-			TileData data = new TileData(BoardPos, colorID, new List<Vector2Int>(FootprintLocal)); // note: COPY the Vector2Int list. Def don't want a reference.
+			TileData data = new TileData(BoardPos, colorID, new List<Vector2Int>(FootprintLocal)); // note: COPY the Vector2Int list. DEF don't want a reference.
 			return data;
 		}
 
