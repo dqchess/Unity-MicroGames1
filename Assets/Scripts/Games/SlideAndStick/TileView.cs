@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class TileView : BoardOccupantView {
 		// Components
-		[SerializeField] private Image i_highlight;
+//		[SerializeField] private Image i_highlight;
 		private List<Image> bodyImages;
 		// References
 		private Tile myTile;
@@ -37,13 +37,10 @@ namespace SlideAndStick {
 			// Set size!
 			myRectTransform.sizeDelta = new Vector2(_myBoardView.UnitSize*0.92f, _myBoardView.UnitSize*0.92f);
 
-			bodyImages = new List<Image>();
-
-//			// Color me impressed!
-//			ApplyBodyColor();
+			bodyImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
 		}
-		private void ApplyBodyColor() {
-			for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = bodyColor; }
+		private void ApplyColor(Color color) {
+			for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = color; }
 		}
 
 		private void AddBodyImage(Vector2Int footPos) {
@@ -53,6 +50,8 @@ namespace SlideAndStick {
 			GameUtils.SizeUIGraphic(newImage, unitSize,unitSize);
 			newImage.color = bodyColor;
 			newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*unitSize, -footPos.y*unitSize);
+			newImage.transform.SetAsFirstSibling(); // put behind everything else.
+			newImage.name = "i_FootprintUnit";
 			bodyImages.Add(newImage);
 		}
 
@@ -69,6 +68,25 @@ namespace SlideAndStick {
 					AddBodyImage(myTile.FootprintLocal[i]);
 				}
 			}
+		}
+
+
+
+		public void OnMouseOut() {
+			SetHighlightAlpha(0);
+		}
+		public void OnMouseOver() {
+			SetHighlightAlpha(0.15f);
+		}
+		public void OnStopGrabbing() {
+			SetHighlightAlpha(0);
+		}
+		public void OnStartGrabbing() {
+			SetHighlightAlpha(0.3f);
+		}
+		private void SetHighlightAlpha(float alpha) {
+			// FOR NOW, just color my body sprites instead of showing separate image(s).
+			ApplyColor(Color.Lerp(bodyColor, Color.white, alpha));
 		}
 
 

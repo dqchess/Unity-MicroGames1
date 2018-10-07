@@ -11,7 +11,7 @@ namespace SlideAndStick {
 		[SerializeField] private Transform tf_boardSpaces=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
-		private List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
+		public List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
 		private Board simulatedMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
@@ -20,6 +20,7 @@ namespace SlideAndStick {
 		private bool areObjectsAnimating;
 		private float objectsAnimationLoc; // eases to 0 or 1 while we're animating!
 		private float objectsAnimationLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
+		private MoveResults simulatedMoveResult;
 		private Vector2Int simulatedMoveDir;
 
 		// Getters (Public)
@@ -156,6 +157,9 @@ namespace SlideAndStick {
 		private void UpdateViewsTowardsSimulatedMove(float _simulatedMovePercent) {
 			objectsAnimationLocTarget = _simulatedMovePercent;
 			objectsAnimationLocTarget *= 0.9f; // don't go all the way to 1.
+			if (simulatedMoveResult == MoveResults.Fail) {
+				objectsAnimationLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
+			}
 			// Keep the value locked to the target value.
 			objectsAnimationLoc = objectsAnimationLocTarget;
 			areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
@@ -183,12 +187,11 @@ namespace SlideAndStick {
 				bov.SetMySimulatedMoveObject(thisSimulatedMoveBO);
 			}
 			// Now actually simulate the move!
-			simulatedMoveBoard.ExecuteMove(boToMove.BoardPos, simulatedMoveDir);
+			simulatedMoveResult = simulatedMoveBoard.ExecuteMove(boToMove.BoardPos, simulatedMoveDir);
 			// Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.SetValues_To_ByMySimulatedMoveBoardObject();
 			}
-			// TODO: Different feedback for illegal moves?
 		}
 
 

@@ -4,8 +4,6 @@ using System.Collections;
 public class InputController : MonoBehaviour {
 	// Instance
 	static private InputController instance;
-	// Components
-	private TouchInputDetector touchInputDetector; // this guy will handle all the mobile stuff so I don't gotta.
 	// Properties
 	private Vector2 player0AxisInput;
 	private Vector2 player0AxisInputRaw; // this ISN'T rotated to match the camera. It's raw, baby. Raw.
@@ -17,10 +15,6 @@ public class InputController : MonoBehaviour {
 			return instance;
 		}
 	}
-	public bool IsPlayerMove_L () { return Input.GetButtonDown ("MoveL") || touchInputDetector.PushRequestSide==3; }
-	public bool IsPlayerMove_R () { return Input.GetButtonDown ("MoveR") || touchInputDetector.PushRequestSide==1; }
-	public bool IsPlayerMove_D () { return Input.GetButtonDown ("MoveD") || touchInputDetector.PushRequestSide==2; }
-	public bool IsPlayerMove_U () { return Input.GetButtonDown ("MoveU") || touchInputDetector.PushRequestSide==0; }
 	public bool IsTouchHold() { return Input.GetMouseButton(0); }
 	public bool IsTouchDown() { return Input.GetMouseButtonDown(0); }
 	public bool IsTouchUp() { return Input.GetMouseButtonUp(0); }
@@ -39,18 +33,12 @@ public class InputController : MonoBehaviour {
 		}
 		instance = this;
 	}
-	private void Start () {
-		touchInputDetector = new TouchInputDetector ();
-	}
 
 
 	// ----------------------------------------------------------------
 	//  Update
 	// ----------------------------------------------------------------
 	private void Update () {
-		if (touchInputDetector!=null) {
-			touchInputDetector.Update ();
-		}
 		RegisterButtonInputs ();
 	}
 

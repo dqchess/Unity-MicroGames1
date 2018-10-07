@@ -11,28 +11,6 @@ namespace SlideAndStick {
 		// References
 //		[SerializeField] private GameUI ui=null;
 
-		// Getters
-		public Canvas Canvas { get { return canvas; } }
-
-
-		// ----------------------------------------------------------------
-		//  Start / Destroy
-		// ----------------------------------------------------------------
-//		override protected void Start () {
-//			base.Start();
-//
-//			// Let's a-play!
-//			ResetLevel();
-//		}
-
-
-        // ----------------------------------------------------------------
-        //  Game Events
-        // ----------------------------------------------------------------
-//        public void GameOver() {
-//            ui.OnGameOver();
-//        }
-
 
 
 		// ----------------------------------------------------------------
@@ -56,13 +34,6 @@ namespace SlideAndStick {
 ////			GameManagers.Instance.EventManager.OnStartGameAtLevel (currentLevel);
 //
 //			yield return null;
-//		}
-//
-//		private void DestroyCurrentLevel () {
-//			if (boardController != null) {
-//				boardController.DestroySelf ();
-//				boardController = null;
-//			}
 //		}
 
 		override protected void WinLevel() {

@@ -17,22 +17,30 @@ namespace SlideAndStick {
 		// References
 		private GameController gameController;
 		private Tile tileOver; // the Tile my mouse is over.
+		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
 
-		// Getters
+		// Getters (Public)
 		public bool IsLevelComplete { get { return isLevelComplete; } }
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
+		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
-
-
+		private bool IsPlayerMove_L () { return Input.GetButtonDown ("MoveL") || touchInputDetector.IsSwipe_L; }
+		private bool IsPlayerMove_R () { return Input.GetButtonDown ("MoveR") || touchInputDetector.IsSwipe_R; }
+		private bool IsPlayerMove_D () { return Input.GetButtonDown ("MoveD") || touchInputDetector.IsSwipe_D; }
+		private bool IsPlayerMove_U () { return Input.GetButtonDown ("MoveU") || touchInputDetector.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
 //            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
 			if (isLevelComplete) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
 		}
-
-		public void SetIsLevelOver(bool isLevelOver) {
-			this.isLevelComplete = isLevelOver;
+		private TileView Temp_GetTileView(Tile _tile) {
+			foreach (BoardOccupantView bov in boardView.allOccupantViews) {
+				if (bov.MyBoardOccupant == _tile) {
+					return bov as TileView;
+				}
+			}
+			return null;
 		}
 
 
@@ -44,16 +52,9 @@ namespace SlideAndStick {
 			gameController = _gameController;
 			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
-
 			touchInputDetector = new TouchInputDetector ();
 
 			AddLevelComponents();
-		}
-		public void DestroySelf () {
-			// Tell my boardView it's toast!
-			DestroyBoardModelAndView ();
-			// Destroy my whole GO.
-			Destroy (this.gameObject);
 		}
 
 
@@ -75,7 +76,6 @@ namespace SlideAndStick {
 			}
 		}
 		override protected void AddLevelComponents() {
-			DestroyBoardModelAndView(); // Just in case.
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
 			string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
@@ -105,6 +105,7 @@ namespace SlideAndStick {
 		}
 
 
+
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
@@ -129,66 +130,60 @@ namespace SlideAndStick {
 		}
 
 		private void UpdateTileOver() {
-			// If our finger isn't touching the screen, update tileOver!
-			if (!inputController.IsTouchHold()) {
-				Tile prevTileOver = tileOver;
-				tileOver = board.GetTile(mousePosBoard);
-				if (prevTileOver != tileOver) { // it's changed!
-//					if (prevTileOver != null) { prevTileOver.OnMouseOut(); }
-//					if (tileOver != null) { tileOver.OnMouseOver(); }
-				}
+			Tile prevTileOver = tileOver;
+			// A) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
+			if (tileGrabbing != null) { tileOver = tileGrabbing; }
+			// B) Otherwise, use the one the mouse is over.
+			else { tileOver = board.GetTile(mousePosBoard); }
+			// It's changed!
+			if (prevTileOver != tileOver) {
+				if (prevTileOver != null) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
+				if (tileOver != null) { Temp_GetTileView(tileOver).OnMouseOver(); }
 			}
 		}
 
+		private void RegisterButtonInput() {
+			// DEBUG
+			if (Input.GetKeyDown(KeyCode.P)) { board.Debug_PrintBoardLayout(); }
+		}
 
 		private void RegisterMouseInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
-//			// Mouse UP
-//			if (inputController.IsTouchUp()) {
-////				OnTouchUp();
-//			}
-//			// Mouse DOWN
-//			else if (inputController.IsTouchDown()) {
-//				OnTouchDown();
-//			}
 
-			if (inputController != null) { // Safety check for runtime compile.
-				boardView.UpdateSimulatedMove(tileOver, touchInputDetector.SimulatedMoveDir, touchInputDetector.SimulatedMovePercent);
-				if 		(inputController.IsPlayerMove_L ())  { MoveTileOverAttempt(Vector2Int.L); }
-				else if (inputController.IsPlayerMove_R ())  { MoveTileOverAttempt(Vector2Int.R); }
-				else if (inputController.IsPlayerMove_D ())  { MoveTileOverAttempt(Vector2Int.B); }
-				else if (inputController.IsPlayerMove_U ())  { MoveTileOverAttempt(Vector2Int.T); }
+			boardView.UpdateSimulatedMove(tileGrabbing, touchInputDetector.SimulatedMoveDir, touchInputDetector.SimulatedMovePercent);
+			if 		(IsPlayerMove_L ())  { MoveTileAttempt(tileGrabbing, Vector2Int.L); }
+			else if (IsPlayerMove_R ())  { MoveTileAttempt(tileGrabbing, Vector2Int.R); }
+			else if (IsPlayerMove_D ())  { MoveTileAttempt(tileGrabbing, Vector2Int.B); }
+			else if (IsPlayerMove_U ())  { MoveTileAttempt(tileGrabbing, Vector2Int.T); }
+
+			if (inputController.IsTouchUp()) { OnTouchUp(); }
+			else if (inputController.IsTouchDown()) { OnTouchDown(); }
+		}
+
+		private void OnTouchDown() {
+			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no move.
+			if (tileOver != null) {
+				SetTileGrabbing(tileOver);
 			}
 		}
-//		private void OnTouchDown() {
-//			if (!CanMakeAnyMove()) { return; } // If the Dark Lord says not to make a move, you musn't, Cissy!
-//
-//			Tile tileOver = board.GetTile(mousePosBoard);
-//			if (tileOver != null) {
-//				TapTile(tileOver);
-//			}
-//		}
-
-		private void RegisterButtonInput() {
-			if (false) {}
-
-			// TEMP DEBUG
-			else if (Input.GetKeyDown(KeyCode.P)) { board.Debug_PrintBoardLayout(); }
-//			else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))    { MoveTileOverAttempt(Vector2Int.T); }
-//			else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))  { MoveTileOverAttempt(Vector2Int.B); }
-//			else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))  { MoveTileOverAttempt(Vector2Int.L); }
-//			else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { MoveTileOverAttempt(Vector2Int.R); }
+		private void OnTouchUp() {
+			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no move.
+			SetTileGrabbing(null);
+		}
+		private void SetTileGrabbing(Tile _tile) {
+			if (tileGrabbing != _tile) { // If it's changed...!
+				Tile prevTileGrabbing = tileGrabbing;
+				tileGrabbing = _tile;
+				// Tell the dudes!
+				if (prevTileGrabbing != null) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
+				if (tileGrabbing != null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
+			}
 		}
 
 
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		private void TapTile(Tile tile) {
-			if (tile == null) { return; } // Safety check.
-
-		}
-
 		private void OnBoardMoveComplete () {
 			// Update BoardView visuals!!
 			boardView.UpdateAllViewsMoveStart ();
@@ -200,16 +195,15 @@ namespace SlideAndStick {
 //			GameManagers.Instance.EventManager.OnSetIsLevelCompleted (isLevelComplete);
 		}
 
+		public void SetIsLevelOver(bool isLevelOver) {
+			this.isLevelComplete = isLevelOver;
+		}
+
 
 
 		// ----------------------------------------------------------------
 		//  Game Doers
 		// ----------------------------------------------------------------
-		// TEMP!! For testing.
-		private void MoveTileOverAttempt(Vector2Int dir) {
-			Tile tileToMove = board.GetTile(mousePosBoard);
-			MoveTileAttempt(tileToMove, dir);
-		}
 		public void MoveTileAttempt(Tile tileToMove, Vector2Int dir) {
 			// If we can't make this specific move, also stop.
 			if (!BoardUtils.CanExecuteMove(board, tileToMove, dir)) {
