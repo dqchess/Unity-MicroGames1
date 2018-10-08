@@ -80,7 +80,7 @@ namespace AbacusToy {
         
 
         private void AddBodyImage(Vector2Int footPos) {
-            float diameter = UnitSize*0.9f;
+            float diameter = UnitSize*1;//0.9f;
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             newImage.sprite = s_bodyUnitRound;
@@ -92,7 +92,7 @@ namespace AbacusToy {
             bodyImages.Add(newImage);
         }
         private void AddBetweenImage(Vector2 bwPos) {
-            float diameter = UnitSize*0.9f;
+            float diameter = UnitSize*1;//0.9f;
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             //newImage.sprite = s_bodyUnitRound;

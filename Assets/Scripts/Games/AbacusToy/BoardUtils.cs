@@ -44,11 +44,11 @@ namespace AbacusToy {
 
 
 
-		public static BoardPos GetRandOpenPos(Board b) {
+        public static BoardPos GetRandOpenPos(Board b, int distFromEdges=0) {
 			int safetyCount = 0;
 			while(safetyCount++ < 99) {
-				int randCol = Random.Range(0, b.NumCols);
-				int randRow = Random.Range(0, b.NumRows);
+				int randCol = Random.Range(distFromEdges, b.NumCols-distFromEdges);
+				int randRow = Random.Range(distFromEdges, b.NumRows-distFromEdges);
 				if (b.GetSpace(randCol,randRow).IsOpen()) {
 					return new BoardPos(randCol, randRow);
 				}

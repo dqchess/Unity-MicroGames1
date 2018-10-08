@@ -10,7 +10,6 @@ namespace AbacusToy {
 		private BoardView boardView;
 		private TouchInputDetector inputDetector; // this guy handles all the mobile touch stuff.
 		// Properties
-//        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
 		private string description; // dev's description of the level (set in Levels.txt).
 		private Vector2Int mousePosBoard;
@@ -30,7 +29,6 @@ namespace AbacusToy {
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || inputDetector.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || inputDetector.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
-//            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
 			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
 		}
@@ -227,8 +225,6 @@ namespace AbacusToy {
 			if (board.AreGoalsSatisfied) {
 				gameController.OnBoardGoalsSatisfied();
 			}
-//			// Dispatch success/not-yet-success event!
-//			GameManagers.Instance.EventManager.OnSetIsLevelCompleted (isLevelComplete);
 		}
 
 

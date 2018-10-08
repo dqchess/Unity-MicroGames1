@@ -54,12 +54,12 @@ namespace AbacusToy {
 			myBoard = _myBoard;
 			this.transform.SetParent (levelRef.transform);
 			this.transform.localScale = Vector3.one;
-            // Position me nice and horz centered!
-            float parentWidth = levelRef.GetComponent<RectTransform>().rect.width;
-            myRectTransform.anchoredPosition = new Vector2((parentWidth-myRectTransform.rect.width)*0.5f,-200);
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
+            float parentWidth = levelRef.GetComponent<RectTransform>().rect.width;
+            myRectTransform.sizeDelta = new Vector2(numCols,numRows) * UnitSize;
+            myRectTransform.anchoredPosition = new Vector2((parentWidth-myRectTransform.rect.width)*0.5f,-200);
 
 			// Make spaces!
 			spaceViews = new BoardSpaceView[numCols,numRows];
