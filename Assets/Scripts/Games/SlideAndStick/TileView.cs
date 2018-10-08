@@ -16,12 +16,18 @@ namespace SlideAndStick {
 		// Getters
 		public static Color GetBodyColor(int _colorID) {
 			switch (_colorID) {
-			case 0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
-			case 1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
-			case 2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();
-            case 3: return new ColorHSB(180/255f,250/255f,200/255f).ToColor();
-            case 4: return new ColorHSB(220/255f,150/255f,245/255f).ToColor();
-            case 5: return new ColorHSB(  5/255f,250/255f,245/255f).ToColor();
+            case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
+            case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
+            case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
+            case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
+            case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
+            case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
+            //case 0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
+            //case 1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
+            //case 2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();
+            //case 3: return new ColorHSB(180/255f,250/255f,200/255f).ToColor();
+            //case 4: return new ColorHSB(220/255f,150/255f,245/255f).ToColor();
+            //case 5: return new ColorHSB(  5/255f,250/255f,245/255f).ToColor();
 			default: return Color.red; // Oops! Too many colors.
 			}
 		}
@@ -76,13 +82,13 @@ namespace SlideAndStick {
 			SetHighlightAlpha(0);
 		}
 		public void OnMouseOver() {
-			SetHighlightAlpha(0.15f);
+			SetHighlightAlpha(0.25f);
 		}
 		public void OnStopGrabbing() {
 			SetHighlightAlpha(0);
 		}
 		public void OnStartGrabbing() {
-			SetHighlightAlpha(0.3f);
+			SetHighlightAlpha(0.35f);
 		}
 		private void SetHighlightAlpha(float alpha) {
 			// FOR NOW, just color my body sprites instead of showing separate image(s).

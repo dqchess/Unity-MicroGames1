@@ -8,7 +8,6 @@ namespace SlideAndStick {
 		// Properties
 		private bool areGoalsSatisfied;
 		private int numCols,numRows;
-        private int numMovesMade;
 		private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		// Objects
 		public BoardSpace[,] spaces;
@@ -54,7 +53,6 @@ namespace SlideAndStick {
 		public Board (BoardData bd) {
 			numCols = bd.numCols;
 			numRows = bd.numRows;
-            numMovesMade = 0;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -95,7 +93,6 @@ namespace SlideAndStick {
 					numTilesToWin ++;
 				}
 			}
-			Debug.Log("numTilesToWin: " + numTilesToWin);//QQQ
 		}
 
 
@@ -129,10 +126,13 @@ namespace SlideAndStick {
 			for (int i=tiles.Count-1; i>=0; --i) {
 				if (i >= tiles.Count) { continue; } // Oh, if this tile was removed, skip it.
 				Tile t = tiles[i];
-				MergeTilesAttempt(t, GetTile(t.Col-1, t.Row));
-				MergeTilesAttempt(t, GetTile(t.Col+1, t.Row));
-				MergeTilesAttempt(t, GetTile(t.Col, t.Row-1));
-				MergeTilesAttempt(t, GetTile(t.Col, t.Row+1));
+                for (int j=0; j<t.FootprintGlobal.Count; j++) {
+                    Vector2Int fpPos = t.FootprintGlobal[j];
+    				MergeTilesAttempt(t, GetTile(fpPos.x-1, fpPos.y));
+    				MergeTilesAttempt(t, GetTile(fpPos.x+1, fpPos.y));
+    				MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y-1));
+    				MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y+1));
+                }
             }
 		}
 
@@ -168,7 +168,10 @@ namespace SlideAndStick {
 
 			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
 			MoveResults result = BoardUtils.MoveOccupant (this, boToMove, dir);
-			OnMoveComplete ();
+            // ONLY if this move was a success, do the OnMoveComplete paperwork!
+            if (result == MoveResults.Success) {
+			    OnMoveComplete ();
+            }
 			return result;
 		}
 		private void OnMoveComplete () {
