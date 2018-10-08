@@ -1,5 +1,6 @@
-// Shunt and Stick
+// Slide and Stick
 // started 10/5/2018
+
 
 
 // Constants

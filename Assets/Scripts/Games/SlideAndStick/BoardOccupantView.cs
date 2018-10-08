@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
 	public class BoardOccupantView : BoardObjectView {
-		// Components
-		[SerializeField] protected Image i_body; // everyone has a primary body sprite for simplicity! Less code.
 		// References
 		protected BoardOccupant myOccupant; // a direct reference to my model. Doesn't change.
+
+		// Getters (Public)
+		public BoardOccupant MyBoardOccupant { get { return myOccupant; } }
+
 
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
@@ -18,6 +20,18 @@ namespace SlideAndStick {
 			myOccupant = _myOccupant;
 		}
 
+		/** This is called once all the animation is finished! */
+		override public void UpdateVisualsPostMove () {
+			base.UpdateVisualsPostMove();
+			if (!myOccupant.IsInPlay) {
+				DestroySelf ();
+			}
+		}
+		private void DestroySelf () {
+			MyBoardView.OnOccupantViewDestroyedSelf(this);
+			// Legit destroy me, yo!
+			GameObject.Destroy(this.gameObject);
+		}
 
 
 	}
