@@ -36,6 +36,7 @@ class Tile {
     SetColorID(ColorID);
     SetNumberID(NumberID);
     setTargetXY();
+    GoToTargetPos();
   }
   void setTargetXY() {
     targetX = getGridPosX(col);
@@ -77,7 +78,7 @@ class Tile {
 //  }
   
   
-  private void onReachTargetPosition() {
+  private void GoToTargetPos() {
     isAtTargetPosition = true;
     x = targetX;
     y = targetY;
@@ -98,7 +99,7 @@ class Tile {
       x += (targetX-x) / 3;
       y += (targetY-y) / 3;
       if (abs(x-targetX)<1 && abs(y-targetY)<1) {
-        onReachTargetPosition();
+        GoToTargetPos();
       }
     }
     

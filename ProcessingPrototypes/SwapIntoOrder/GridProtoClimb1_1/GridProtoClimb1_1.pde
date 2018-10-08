@@ -1,4 +1,4 @@
-// Shunt and Stick
+// Swap-Into-Order
 // started 10/5/2018
 
 
@@ -12,22 +12,23 @@ PVector gridSize;
 PVector tileSize;
 PVector unitSize;
 float rectRoundRadius;
+int numColors;
 
 // Variables
-BoardData[] boardSnapshots;
+//color[] BODY_COLORS;
+//color[] SIDE_COLORS;
 boolean[] didMoveInCol;
 boolean[] didMoveInRow;
-int mouseCol,mouseRow;
-int groupIDToMove;
+int[] valuesInQueue; // determines what tiles come in next
 int previewDirX,previewDirY; // when I slide in a direction to preview what the move will result in
 float previewAmount; // from 0 to 1.
+int mouseCol,mouseRow;
 float mouseDownX,mouseDownY;
 float previewMoveOffsetX,previewMoveOffsetY;
 
 // Objects
 GridSpace[][] gridSpaces;
 ArrayList tiles;
-Tile[][] tileGroups;
 
 // Assorted stuff
 PFont myFont;
@@ -55,8 +56,6 @@ void draw() {
   previewMoveOffsetX = previewDirX * previewAmount * unitSize.x;
   previewMoveOffsetY = previewDirY * previewAmount * unitSize.y;
   
-  UpdateGroupIDToMove();
-  
   // Grid back
   fill(128,28,220);
   noStroke();
@@ -72,10 +71,10 @@ void draw() {
   // Tiles!
   for (int i=tiles.size()-1; i>=0; --i) {
     Tile tempTile = (Tile) tiles.get(i);
-    tempTile.Update();
-    tempTile.Draw();
+    tempTile.draw();
   }
 }
+
 
 
 
@@ -117,22 +116,6 @@ void mouseDraggingMath() {
       else {
         previewAmount = max(0, min(0.95, previewDirY * (mouseY-mouseDownY) / unitSize.x));
       }
-      // TEST: If we've previewed far enough, count the move!
-      if (previewAmount > 0.94) {
-        mouseReleased();
-        mousePressed();
-      }
-    }
-  }
-}
-void UpdateGroupIDToMove() {
-  if (!mousePressed) { // If the mouse is UP, then update the value!
-    Tile tileMouseOver = GetTile(mouseCol,mouseRow);
-    if (tileMouseOver != null) {
-      groupIDToMove = tileMouseOver.groupID;
-    }
-    else {
-      groupIDToMove = -1;
     }
   }
 }
@@ -143,6 +126,9 @@ void mousePressed() {
   resetPreviewDrag();
   mouseDownX = mouseX;
   mouseDownY = mouseY;
+  if (mouseButton == 39) { // RIGHT-click
+    RemoveTile(mouseCol,mouseRow);
+  }
 }
 void mouseReleased() {
   // Did we drag the preview far enough to count it as a move?!
@@ -156,23 +142,24 @@ void mouseReleased() {
       }
     }
     // Move the tiles!!
-    MoveTiles(previewDirX,previewDirY, groupIDToMove, false);
+    MoveTiles(previewDirX, previewDirY, true);
   }
   resetPreviewDrag();
 }
 
 void keyPressed() {
   if (keyCode == ENTER) resetGame();
+  //QQQ MAJOR HACK
+  if (keyCode == UP) {MoveTiles(0, -1,true);MoveTiles(0, -1,true);MoveTiles(0, -1,true);MoveTiles(0, -1);}
+  else if (keyCode == DOWN) {MoveTiles(0, 1,true);MoveTiles(0, 1,true);MoveTiles(0, 1,true);MoveTiles(0, 1);}
+  else if (keyCode == LEFT) {MoveTiles(-1, 0,true);MoveTiles(-1, 0,true);MoveTiles(-1, 0,true);MoveTiles(-1, 0);}
+  else if (keyCode == RIGHT) {MoveTiles(1, 0,true);MoveTiles(1, 0,true);MoveTiles(1, 0,true);MoveTiles(1, 0);}
   
-  if (keyCode == UP) MoveTiles(0, -1, groupIDToMove, false);
-  else if (keyCode == DOWN) MoveTiles(0, 1, groupIDToMove, false);
-  else if (keyCode == LEFT) MoveTiles(-1, 0, groupIDToMove, false);
-  else if (keyCode == RIGHT) MoveTiles(1, 0, groupIDToMove, false);
+  else if (key == 'a') {
+    AddTilesInTopRow(3);
+  }
   
-  else if (key == 'z') UndoMove();
-  else if (key == 'x') RedoMove();
-  
-  else if (key == 'p') printGridSpaces();
+  if (key == 'p') printGridSpaces();
 }
 
 

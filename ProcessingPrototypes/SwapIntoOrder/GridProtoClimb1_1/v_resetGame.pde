@@ -2,8 +2,8 @@
 
 
 void resetGame() {
-  cols = 4;
-  rows = 4;
+  cols = 5;
+  rows = 5;
   
   float unitDiameter = min((width-MIN_HORZ_GAP*2)/cols, (height-MIN_VERT_GAP*2)/rows);
   unitSize = new PVector(unitDiameter,unitDiameter);
@@ -29,7 +29,7 @@ void resetGame() {
   }
   
   // Set space numbers and stuff!
-  int numColors = 3;
+  numColors = 5;
   int numNumbers = 3;
   for (int c=0; c<numColors; c++) {
     for (int n=0; n<numNumbers; n++) {

@@ -8,7 +8,9 @@ class Tile {
   float x,y;
   float targetX,targetY;
   float textSize;
-  float cardThickness; // higher value cards look thicker
+  boolean isHighlighted;
+  private float highlightLoc;
+//  float cardThickness; // higher value cards look thicker
   color bodyColor;
   color sideColor;
   color textColor;
@@ -25,6 +27,7 @@ class Tile {
     cloneTile.bodyColor = bodyColor;
     cloneTile.sideColor = sideColor;
     cloneTile.textColor = textColor;
+    cloneTile.highlightLoc = highlightLoc;
     cloneTile.canMoveInPreview = canMoveInPreview;
     cloneTile.isAtTargetPosition = isAtTargetPosition;
     return cloneTile;
@@ -36,6 +39,7 @@ class Tile {
     SetColorID(ColorID);
     SetNumberID(NumberID);
     setTargetXY();
+    GoToTargetPos(); // go to target pos!
   }
   void setTargetXY() {
     targetX = getGridPosX(col);
@@ -46,9 +50,7 @@ class Tile {
     this.colorID = colorID;
     bodyColor = GetFillColor(colorID);
     sideColor = GetStrokeColor(colorID);
-//    bodyColor = BODY_COLORS[min(2,value-1)];
-//    sideColor = SIDE_COLORS[min(2,value-1)];
-    cardThickness = GetCardThicknessFromColorID(colorID);
+//    cardThickness = GetCardThicknessFromColorID(colorID);
     textColor = color(0, 200);
     textSize = unitSize.x*0.5;
   }
@@ -77,7 +79,7 @@ class Tile {
 //  }
   
   
-  private void onReachTargetPosition() {
+  private void GoToTargetPos() {
     isAtTargetPosition = true;
     x = targetX;
     y = targetY;
@@ -91,21 +93,31 @@ class Tile {
   }
   
   
-  
-  void draw() {
-    // Update
+  void Update() {
+    UpdatePos();
+    UpdateHighlightValues();
+  }
+  private void UpdatePos() {
     if (!isAtTargetPosition) {
       x += (targetX-x) / 3;
       y += (targetY-y) / 3;
       if (abs(x-targetX)<1 && abs(y-targetY)<1) {
-        onReachTargetPosition();
+        GoToTargetPos();
       }
     }
-    
-    
-    // Draw
+  }
+  private void UpdateHighlightValues() {
+    isHighlighted = colorIDToMove == colorID;
+    float highlightLocTarget = isHighlighted ? 1 : 0;
+    if (highlightLoc != highlightLocTarget) {
+      highlightLoc += (highlightLocTarget-highlightLoc) * 0.4;
+    }
+  }
+  
+  void Draw() {
     pushMatrix();
     //canMoveInPreview = true;
+    float cardThickness = 12 - (highlightLoc*10);
     
     float xDisplay = x;
     float yDisplay = y;
@@ -129,7 +141,13 @@ class Tile {
 //    fill(textColor);
 //    textAlign(CENTER, CENTER);
 //    textSize(textSize);
-//    text(numberID, 0,-cardThickness);
+//    text(numberID, 0,-cardThickness);QQQ
+    
+    // Highlight
+    if (isHighlighted) {
+      fill(255, highlightLoc*30);
+      rect(0,-cardThickness*0.5, tileSize.x,tileSize.y+cardThickness, rectRoundRadius);
+    }
     
     popMatrix();
   }

@@ -33,7 +33,7 @@ void ResetLevel() {
   dancers = new Dancer[numDancers];
   for (int i=0; i<numDancers; i++) {
     float posX = (i+0.5)*colWidth + stageX;
-    float bounceApexY = random(300,360);
+    float bounceApexY = 300;//random(300,360);
     dancers[i] = new Dancer(i, posX, bounceApexY);
   }
 }

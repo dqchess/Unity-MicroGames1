@@ -1,4 +1,4 @@
-// Shunt and Stick
+// Swap-Into-Order
 // started 10/5/2018
 
 
@@ -12,13 +12,14 @@ PVector gridSize;
 PVector tileSize;
 PVector unitSize;
 float rectRoundRadius;
+int numColors;
 
 // Variables
-BoardData[] boardSnapshots;
 boolean[] didMoveInCol;
 boolean[] didMoveInRow;
 int mouseCol,mouseRow;
-int groupIDToMove;
+int numMovesMade;
+int colorIDToMove;
 int previewDirX,previewDirY; // when I slide in a direction to preview what the move will result in
 float previewAmount; // from 0 to 1.
 float mouseDownX,mouseDownY;
@@ -27,7 +28,6 @@ float previewMoveOffsetX,previewMoveOffsetY;
 // Objects
 GridSpace[][] gridSpaces;
 ArrayList tiles;
-Tile[][] tileGroups;
 
 // Assorted stuff
 PFont myFont;
@@ -55,7 +55,7 @@ void draw() {
   previewMoveOffsetX = previewDirX * previewAmount * unitSize.x;
   previewMoveOffsetY = previewDirY * previewAmount * unitSize.y;
   
-  UpdateGroupIDToMove();
+  UpdateColorIDToMove();
   
   // Grid back
   fill(128,28,220);
@@ -117,22 +117,17 @@ void mouseDraggingMath() {
       else {
         previewAmount = max(0, min(0.95, previewDirY * (mouseY-mouseDownY) / unitSize.x));
       }
-      // TEST: If we've previewed far enough, count the move!
-      if (previewAmount > 0.94) {
-        mouseReleased();
-        mousePressed();
-      }
     }
   }
 }
-void UpdateGroupIDToMove() {
+void UpdateColorIDToMove() {
   if (!mousePressed) { // If the mouse is UP, then update the value!
     Tile tileMouseOver = GetTile(mouseCol,mouseRow);
     if (tileMouseOver != null) {
-      groupIDToMove = tileMouseOver.groupID;
+      colorIDToMove = tileMouseOver.colorID;
     }
     else {
-      groupIDToMove = -1;
+      colorIDToMove = -1;
     }
   }
 }
@@ -156,7 +151,7 @@ void mouseReleased() {
       }
     }
     // Move the tiles!!
-    MoveTiles(previewDirX,previewDirY, groupIDToMove, false);
+    MoveTiles(previewDirX,previewDirY, colorIDToMove);
   }
   resetPreviewDrag();
 }
@@ -164,15 +159,12 @@ void mouseReleased() {
 void keyPressed() {
   if (keyCode == ENTER) resetGame();
   
-  if (keyCode == UP) MoveTiles(0, -1, groupIDToMove, false);
-  else if (keyCode == DOWN) MoveTiles(0, 1, groupIDToMove, false);
-  else if (keyCode == LEFT) MoveTiles(-1, 0, groupIDToMove, false);
-  else if (keyCode == RIGHT) MoveTiles(1, 0, groupIDToMove, false);
+  if (keyCode == UP) MoveTiles(0, -1, colorIDToMove);
+  else if (keyCode == DOWN) MoveTiles(0, 1, colorIDToMove);
+  else if (keyCode == LEFT) MoveTiles(-1, 0, colorIDToMove);
+  else if (keyCode == RIGHT) MoveTiles(1, 0, colorIDToMove);
   
-  else if (key == 'z') UndoMove();
-  else if (key == 'x') RedoMove();
-  
-  else if (key == 'p') printGridSpaces();
+  if (key == 'p') printGridSpaces();
 }
 
 

@@ -2,8 +2,8 @@
 
 
 void resetGame() {
-  cols = 4;
-  rows = 4;
+  cols = 5;
+  rows = 5;
   
   float unitDiameter = min((width-MIN_HORZ_GAP*2)/cols, (height-MIN_VERT_GAP*2)/rows);
   unitSize = new PVector(unitDiameter,unitDiameter);
@@ -16,6 +16,7 @@ void resetGame() {
   
   didMoveInCol = new boolean[cols];
   didMoveInRow = new boolean[rows];
+  numMovesMade = 0;
   
   
   gridSpaces = new GridSpace[cols][rows];
@@ -29,17 +30,15 @@ void resetGame() {
   }
   
   // Set space numbers and stuff!
-  int numColors = 3;
-  int numNumbers = 3;
+  numColors = 3;
+  int numNumbers = 5;
   for (int c=0; c<numColors; c++) {
     for (int n=0; n<numNumbers; n++) {
-      // TEST leave one space blank!
-      if (c==numColors-1 && n==numNumbers-1) { break; }
       int count=0;
       while (true) {
         GridSpace randSpace = GetRandSpace();
         if (randSpace.getTile() == null) { // This space is vacant!
-          addTile(randSpace.col,randSpace.row, c,0);//n+1); // start numberID at 1.
+          addTile(randSpace.col,randSpace.row, c,n+1); // start numberID at 1.
           break;
         }
         
