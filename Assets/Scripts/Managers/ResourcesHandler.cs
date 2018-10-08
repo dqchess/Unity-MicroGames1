@@ -6,6 +6,11 @@ public class ResourcesHandler : MonoBehaviour {
     // References!
     [SerializeField] public GameObject imageLine;
 
+    [SerializeField] public GameObject abacusToy_boardSpaceView;
+    [SerializeField] public GameObject abacusToy_boardView;
+    [SerializeField] public GameObject abacusToy_level;
+    [SerializeField] public GameObject abacusToy_tileView;
+
     [SerializeField] public GameObject alphaTapOrder_tapSpace;
 
     [SerializeField] public GameObject bouncePaint_levelTile;

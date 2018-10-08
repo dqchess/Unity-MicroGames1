@@ -297,6 +297,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageLine: {fileID: 1551218063471392, guid: de3622acacb6d4addaff526139e77f7b, type: 2}
+  abacusToy_boardSpaceView: {fileID: 1372780191091626, guid: 660ee981b1fa24bcc802a112ad3da72d,
+    type: 2}
+  abacusToy_boardView: {fileID: 1509143095400638, guid: 69b8909957be8428cbc3c57b46d216c7,
+    type: 2}
+  abacusToy_boardController: {fileID: 0}
+  abacusToy_level: {fileID: 1698266709426448, guid: c1edc1d35ef1e44e28649341fb4a744a,
+    type: 2}
+  abacusToy_tileView: {fileID: 1647619775195882, guid: 541fdce12feff43ea80d7bcb0ad5aafa,
+    type: 2}
   alphaTapOrder_tapSpace: {fileID: 1108421674652232, guid: 765d3bb2025a9244fb8204ddc28e0d83,
     type: 2}
   bouncePaint_levelTile: {fileID: 1834149489998284, guid: 4d079a1809bab4a099b817311ae8310c,
