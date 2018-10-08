@@ -8,7 +8,7 @@ namespace SlideAndStick {
 		// Components
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
-		private TouchInputDetector touchInputDetector; // this guy handles all the mobile touch stuff.
+		private TouchInputDetector inputDetector; // this guy handles all the mobile touch stuff.
 		// Properties
 //        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
@@ -25,10 +25,10 @@ namespace SlideAndStick {
 		public BoardView BoardView { get { return boardView; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
-		private bool IsPlayerMove_L () { return Input.GetButtonDown ("MoveL") || touchInputDetector.IsSwipe_L; }
-		private bool IsPlayerMove_R () { return Input.GetButtonDown ("MoveR") || touchInputDetector.IsSwipe_R; }
-		private bool IsPlayerMove_D () { return Input.GetButtonDown ("MoveD") || touchInputDetector.IsSwipe_D; }
-		private bool IsPlayerMove_U () { return Input.GetButtonDown ("MoveU") || touchInputDetector.IsSwipe_U; }
+		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || inputDetector.IsSwipe_L; }
+		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || inputDetector.IsSwipe_R; }
+		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || inputDetector.IsSwipe_D; }
+		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || inputDetector.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
 //            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
 			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
@@ -65,7 +65,7 @@ namespace SlideAndStick {
 			gameController = _gameController;
 			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
-			touchInputDetector = new TouchInputDetector ();
+			inputDetector = new TouchInputDetector ();
 
 			// Reset easy stuff
 			boardSnapshots = new List<BoardData>();
@@ -133,12 +133,12 @@ namespace SlideAndStick {
 		private void Update() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 
-			touchInputDetector.Update();
+			inputDetector.Update();
 
 			UpdateMousePosBoard();
 			UpdateTileOver();
 
-			boardView.UpdateSimulatedMove(tileGrabbing, touchInputDetector.SimulatedMoveDir, touchInputDetector.SimulatedMovePercent);
+			boardView.UpdateSimulatedMove(tileGrabbing, inputDetector.SimulatedMoveDir, inputDetector.SimulatedMovePercent);
 
 			RegisterTouchInput();
 			RegisterButtonInput();
@@ -162,7 +162,7 @@ namespace SlideAndStick {
 			else { tileOver = board.GetTile(mousePosBoard); }
 			// It's changed!
 			if (prevTileOver != tileOver) {
-				if (prevTileOver != null) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
+				if (prevTileOver!=null && prevTileOver.IsInPlay) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
 				if (tileOver != null) { Temp_GetTileView(tileOver).OnMouseOver(); }
 			}
 		}
@@ -174,24 +174,35 @@ namespace SlideAndStick {
 
 		private void RegisterTouchInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
-
-			if 		(IsPlayerMove_L ())  { MoveTileAttempt(tileGrabbing, Vector2Int.L); }
-			else if (IsPlayerMove_R ())  { MoveTileAttempt(tileGrabbing, Vector2Int.R); }
-			else if (IsPlayerMove_D ())  { MoveTileAttempt(tileGrabbing, Vector2Int.B); }
-			else if (IsPlayerMove_U ())  { MoveTileAttempt(tileGrabbing, Vector2Int.T); }
+            
+			if 		(IsPlayerMove_L())  { MoveTileAttempt(tileGrabbing, Vector2Int.L); }
+			else if (IsPlayerMove_R())  { MoveTileAttempt(tileGrabbing, Vector2Int.R); }
+			else if (IsPlayerMove_D())  { MoveTileAttempt(tileGrabbing, Vector2Int.B); }
+			else if (IsPlayerMove_U())  { MoveTileAttempt(tileGrabbing, Vector2Int.T); }
 
 			if (inputController.IsTouchUp()) { OnTouchUp(); }
 			else if (inputController.IsTouchDown()) { OnTouchDown(); }
-		}
+            
+            //if (inputDetector.isAutoSwipeTestHack) {
+            //    AutoSwipeTestHack();
+            //}
+        }
+        
+  //      private void AutoSwipeTestHack() {
+  //          if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
+  //          Tile tileToContinueGrabbing = board.GetTile(tileGrabbing.BoardPos);
+  //          OnTouchUp();
+  //          SetTileGrabbing(tileToContinueGrabbing);
+		//}
 
 		private void OnTouchDown() {
-			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no move.
+			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			if (tileOver != null) {
 				SetTileGrabbing(tileOver);
 			}
 		}
 		private void OnTouchUp() {
-			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no move.
+			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			SetTileGrabbing(null);
 		}
 
@@ -200,8 +211,8 @@ namespace SlideAndStick {
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
 				// Tell the dudes!
-				if (prevTileGrabbing != null) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
-				if (tileGrabbing != null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
+				if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
+				if (tileGrabbing!=null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
 			}
 		}
 

@@ -71,9 +71,11 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
+        public bool isAutoSwipeTestHack { get; private set; }
 		public void Update () {
 			// Reset swipe truthiness!
 			isSwipe_L = isSwipe_R = isSwipe_D = isSwipe_U = false;
+            isAutoSwipeTestHack = false;
 
 			// Touch-down/-up/-hold!
 			isTouch = IsTouch();
@@ -90,9 +92,35 @@ namespace SlideAndStick {
 		private void OnTouchHeld () {
 			Debug_TouchUpPos = GetTouchPos(); // For debugging!
 			// Update the VirtualJoystick's values!
-			UpdateVJValues ();
+			UpdateVJValues();
 			// Update simulated move, yo!
-			UpdateSimulatedMove ();
+			UpdateSimulatedMove();
+            
+            //// HACK TEST TEMP
+            //if (simulatedMovePercent >= 1f) {
+            //    //if (simulatedMoveDir==Vector2Int.B) isSwipe_D = true;
+            //    //if (simulatedMoveDir==Vector2Int.T) isSwipe_U = true;
+            //    //if (simulatedMoveDir==Vector2Int.L) isSwipe_L = true;
+            //    //if (simulatedMoveDir==Vector2Int.R) isSwipe_R = true;
+            //    isAutoSwipeTestHack = true;
+            //    OnTouchUp();
+            //    OnTouchDown();
+            //}
+            
+            //Vector2 touchPos = GetTouchPos();
+            //const float SWIPE_THRESHOLD = 15f; // how many pixels we gotta move a finger to count a swipe.
+            //if (touchPos.x-touchDownPos.x > SWIPE_THRESHOLD) {
+            //    isSwipe_R = true;
+            //}
+            //else if (touchDownPos.x-touchPos.x > SWIPE_THRESHOLD) {
+            //    isSwipe_L = true;
+            //}
+            //else if (touchPos.y-touchDownPos.y > SWIPE_THRESHOLD) {
+            //    isSwipe_U = true;
+            //}
+            //else if (touchDownPos.y-touchPos.y > SWIPE_THRESHOLD) {
+            //    isSwipe_D = true;
+            //}
 		}
 		private void OnTouchDown () {
 			touchDownPos = GetTouchPos();
@@ -172,7 +200,11 @@ private Vector2 touchDownPos;
 //	private Vector2Int simulatedMoveDir;
 
 // Getters
-public int PushRequestSide { get { return pushRequestSide; } }
+//public int PushRequestSide { get { return pushRequestSide; } }
+        public bool IsSwipe_L { get { return pushRequestSide==Sides.L; } }
+        public bool IsSwipe_R { get { return pushRequestSide==Sides.R; } }
+        public bool IsSwipe_D { get { return pushRequestSide==Sides.B; } }
+        public bool IsSwipe_U { get { return pushRequestSide==Sides.T; } }
 public float SimulatedMovePercent { get { return 0;}}//simulatedMovePercent; } }
 public Vector2Int SimulatedMoveDir { get { return Vector2Int.zero;}}//simulatedMoveDir; } }
 

@@ -27,6 +27,7 @@ namespace SlideAndStick {
 
 		public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
 		public BoardSpace[,] Spaces { get { return spaces; } }
+        public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
         public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
         public Tile GetTile(int col,int row) { return BoardUtils.GetOccupant(this, col,row) as Tile; }
 
@@ -191,7 +192,7 @@ namespace SlideAndStick {
 				AddTile(randPos, colorID);
 			}
 		}
-		public void Debug_PrintBoardLayout() {
+		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
 			string boardString = "";
 			for (int row=0; row<NumRows; row++) {
 				for (int col=0; col<NumCols; col++) {
@@ -201,6 +202,7 @@ namespace SlideAndStick {
 				boardString += "\n";
 			}
 			Debug.Log (boardString);
+            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = boardString; }
 		}
 
 

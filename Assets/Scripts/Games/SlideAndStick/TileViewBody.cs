@@ -15,6 +15,7 @@ namespace SlideAndStick {
         [SerializeField] internal bool isShadow=false; // a little weird how we handle the shadow here. Not a huge deal tho.
         private Color bodyColor;
         private HashSet<Vector2> bwPoses = new HashSet<Vector2>(); // one of each of the poses BETWEEN footprint spaces.
+        private float highlightAlpha=0;
         
         // Getters (Static)
         private static Color GetBodyColor(int _colorID) {
@@ -35,6 +36,7 @@ namespace SlideAndStick {
             }
         }
         // Getters (Private)
+        private Color GetAppliedBodyColor() { return Color.Lerp(bodyColor, Color.white, highlightAlpha); }
         private float UnitSize { get { return myTileView.MyBoardView.UnitSize; } }
         private Tile MyTile { get { return myTileView.MyTile; } }
         private List<Vector2Int> footprintLocal { get { return MyTile.FootprintLocal; } }
@@ -89,7 +91,7 @@ namespace SlideAndStick {
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             newImage.sprite = s_bodyUnitRound;
             GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            newImage.color = bodyColor;
+            newImage.color = GetAppliedBodyColor();
             newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*UnitSize, -footPos.y*UnitSize);
             newImage.transform.SetAsFirstSibling(); // put behind everything else.
             newImage.name = "i_FootprintUnit";
@@ -101,7 +103,7 @@ namespace SlideAndStick {
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             //newImage.sprite = s_bodyUnitRound;
             GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            newImage.color = bodyColor;
+            newImage.color = GetAppliedBodyColor();
             newImage.rectTransform.anchoredPosition = new Vector2(bwPos.x*UnitSize, -bwPos.y*UnitSize);
             newImage.transform.SetAsFirstSibling(); // put behind everything else.
             newImage.name = "i_FootprintBetween";
@@ -112,13 +114,16 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-        private void ApplyColor(Color color) {
+        private void ApplyBodyColor() {
+            // FOR NOW, just color my body sprites instead of showing separate image(s).
+            Color color = GetAppliedBodyColor();
+            
             for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = color; }
             for (int i=0; i<betweenImages.Count; i++) { betweenImages[i].color = color; }
         }
         public void SetHighlightAlpha(float alpha) {
-            // FOR NOW, just color my body sprites instead of showing separate image(s).
-            ApplyColor(Color.Lerp(bodyColor, Color.white, alpha));
+            highlightAlpha = alpha;
+            ApplyBodyColor();
         }
         
         public void UpdateVisualsPostMove() {
