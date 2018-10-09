@@ -63,7 +63,7 @@ namespace AbacusToy {
 			gameController = _gameController;
 			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
-			inputDetector = new TouchInputDetector ();
+			inputDetector = new TouchInputDetector();
 
 			// Reset easy stuff
 			boardSnapshots = new List<BoardData>();
@@ -136,10 +136,12 @@ namespace AbacusToy {
 			UpdateMousePosBoard();
 			UpdateTileOver();
 
-			boardView.UpdateSimulatedMove(tileGrabbing, inputDetector.SimulatedMoveDir, inputDetector.SimulatedMovePercent);
+            boardView.UpdateSimMove(tileGrabbing, inputDetector.SimMoveDir, inputDetector.SimMovePercent);
 
 			RegisterTouchInput();
 			RegisterButtonInput();
+            
+            //print("SimMovePercent: " + inputDetector.SimMovePercent + "    Dir: " + inputDetector.SimMoveDir.ToString());
 		}
 
 		private void UpdateMousePosBoard() {
@@ -180,18 +182,7 @@ namespace AbacusToy {
 
 			if (inputController.IsTouchUp()) { OnTouchUp(); }
 			else if (inputController.IsTouchDown()) { OnTouchDown(); }
-            
-            //if (inputDetector.isAutoSwipeTestHack) {
-            //    AutoSwipeTestHack();
-            //}
         }
-        
-  //      private void AutoSwipeTestHack() {
-  //          if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
-  //          Tile tileToContinueGrabbing = board.GetTile(tileGrabbing.BoardPos);
-  //          OnTouchUp();
-  //          SetTileGrabbing(tileToContinueGrabbing);
-		//}
 
 		private void OnTouchDown() {
 			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
@@ -220,7 +211,9 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		private void OnBoardMoveComplete () {
 			// Update BoardView visuals!!
-			boardView.UpdateAllViewsMoveStart ();
+            boardView.ClearSimMoveDirAndBoard();
+			boardView.UpdateAllViewsMoveStart();
+            print(Time.frameCount + "  OnBoardMoveComplete.");
 			// If our goals are satisfied, win!!
 			if (board.AreGoalsSatisfied) {
 				gameController.OnBoardGoalsSatisfied();

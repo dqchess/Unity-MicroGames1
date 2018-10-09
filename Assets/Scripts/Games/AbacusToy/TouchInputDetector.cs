@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace AbacusToy {
-	/** Owned and managed by BoardController, this class translates mobile touch input into gameplay input (SIMULATING and MAKING moves!). */
+	/** Owned and managed by Level.cs, this class translates mobile touch input into gameplay input (SIMULATING and MAKING moves!). */
 	public class TouchInputDetector {
 		// Constants
 		private const float minVirtualJoystickThreshold = 0.05f; // in percent (from 0 to 1). anything movement than this will be ignored.
@@ -16,11 +16,11 @@ namespace AbacusToy {
 		private bool isSwipe_R; // these are true only for one frame, and then set back to false.
 		private bool isSwipe_D; // these are true only for one frame, and then set back to false.
 		private bool isSwipe_U; // these are true only for one frame, and then set back to false.
-		private float simulatedMovePercent; // from 0 to 1. BoardView uses this value.
-		private Vector2 touchDownPos;
-		private Vector2 vjAxes; // From -1 to 1.
-		private Vector2 vjCenter; // starts at touchDownPos, but will be dragged along towards the current touchPos.
-		private Vector2Int simulatedMoveDir;
+		private float simMovePercent; // from 0 to 1. BoardView uses this value.
+        private int simMoveSide; // just matches simMoveDir. For optimization.
+        private Vector2 vjAxes; // From -1 to 1.
+        private Vector2 vjCenter; // set (to mouse pos) on touch down, and whenever we execute a move.
+		private Vector2Int simMoveDir;
 
 		// Getters
 		//	public bool IsTouchDown { get { return isTouchDown; } }
@@ -28,26 +28,24 @@ namespace AbacusToy {
 		public bool IsSwipe_R { get { return isSwipe_R; } }
 		public bool IsSwipe_D { get { return isSwipe_D; } }
 		public bool IsSwipe_U { get { return isSwipe_U; } }
-		public float SimulatedMovePercent { get { return simulatedMovePercent; } }
-		public Vector2Int SimulatedMoveDir { get { return simulatedMoveDir; } }
+		public float SimMovePercent { get { return simMovePercent; } }
+		public Vector2Int SimMoveDir { get { return simMoveDir; } }
 
 		private bool IsTouch() { return (Input.touchSupported && Input.touchCount>0) || Input.GetMouseButton(0); }
 		private Vector2 GetTouchPos() {
 			if (Input.touchSupported && Input.touchCount>0) { return Input.touches[0].position; }
 			return Input.mousePosition;
 		}
-		public Vector2 Debug_TouchUpPos { get; set; }
-		public Vector2 Debug_TouchDownPos { get { return touchDownPos; } }
+		//public Vector2 Debug_TouchUpPos { get; set; }
+		//public Vector2 Debug_TouchDownPos { get { return touchDownPos; } }
 
-		private Vector2 GetVirtualJoystickAxes (Vector2 _touchPos, Vector2 _touchDownPos) {
+		private Vector2 GetVirtualJoystickAxes(Vector2 _touchPos, Vector2 _touchDownPos) {
 			Vector2 returnVector = new Vector2 ((_touchPos.x-_touchDownPos.x)/VJ_RADIUS, (_touchPos.y-_touchDownPos.y)/VJ_RADIUS);
 			returnVector = Vector2.ClampMagnitude (returnVector, 1);
 			return returnVector;
 		}
 
-
-
-		private Vector2Int GetSimulatedMoveDir (Vector2 virtualJoystickAxes) {
+		private Vector2Int GetSimMoveDir (Vector2 virtualJoystickAxes) {
 			if (virtualJoystickAxes.magnitude > minVirtualJoystickThreshold) {
 				if (Mathf.Abs(virtualJoystickAxes.x) > Mathf.Abs(virtualJoystickAxes.y)) {
 					if (virtualJoystickAxes.x<0) { return new Vector2Int (-1,0); }
@@ -62,8 +60,15 @@ namespace AbacusToy {
 				return Vector2Int.zero;
 			}
 		}
-		private float GetSimulatedMovePercent (Vector2 _virtualJoystickAxes) {
-			return _virtualJoystickAxes.magnitude;
+		private float GetSimMovePercent(Vector2 _virtualJoystickAxes) {
+            switch (simMoveSide) {
+                case Sides.L: return Mathf.Max(0, -_virtualJoystickAxes.x);
+                case Sides.R: return Mathf.Max(0,  _virtualJoystickAxes.x);
+                case Sides.B: return Mathf.Max(0, -_virtualJoystickAxes.y);
+                case Sides.T: return Mathf.Max(0,  _virtualJoystickAxes.y);
+                default: Debug.LogError("Whoa, side not recognized: " + simMoveSide); return 0;
+            }
+			//return _virtualJoystickAxes.magnitude;
 		}
 
 
@@ -71,11 +76,9 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-        public bool isAutoSwipeTestHack { get; private set; }
 		public void Update () {
 			// Reset swipe truthiness!
 			isSwipe_L = isSwipe_R = isSwipe_D = isSwipe_U = false;
-            isAutoSwipeTestHack = false;
 
 			// Touch-down/-up/-hold!
 			isTouch = IsTouch();
@@ -90,96 +93,73 @@ namespace AbacusToy {
 		}
 
 		private void OnTouchHeld () {
-			Debug_TouchUpPos = GetTouchPos(); // For debugging!
 			// Update the VirtualJoystick's values!
 			UpdateVJValues();
 			// Update simulated move, yo!
-			UpdateSimulatedMove();
-            
-            //// HACK TEST TEMP
-            //if (simulatedMovePercent >= 1f) {
-            //    //if (simulatedMoveDir==Vector2Int.B) isSwipe_D = true;
-            //    //if (simulatedMoveDir==Vector2Int.T) isSwipe_U = true;
-            //    //if (simulatedMoveDir==Vector2Int.L) isSwipe_L = true;
-            //    //if (simulatedMoveDir==Vector2Int.R) isSwipe_R = true;
-            //    isAutoSwipeTestHack = true;
-            //    OnTouchUp();
-            //    OnTouchDown();
-            //}
-            
-            //Vector2 touchPos = GetTouchPos();
-            //const float SWIPE_THRESHOLD = 15f; // how many pixels we gotta move a finger to count a swipe.
-            //if (touchPos.x-touchDownPos.x > SWIPE_THRESHOLD) {
-            //    isSwipe_R = true;
-            //}
-            //else if (touchDownPos.x-touchPos.x > SWIPE_THRESHOLD) {
-            //    isSwipe_L = true;
-            //}
-            //else if (touchPos.y-touchDownPos.y > SWIPE_THRESHOLD) {
-            //    isSwipe_U = true;
-            //}
-            //else if (touchDownPos.y-touchPos.y > SWIPE_THRESHOLD) {
-            //    isSwipe_D = true;
-            //}
+			UpdateSimMove();
 		}
-		private void OnTouchDown () {
-			touchDownPos = GetTouchPos();
-			vjCenter = touchDownPos;
+		private void OnTouchDown() {
+			vjCenter = GetTouchPos();
 		}
-		private void OnTouchUp () {
+		private void OnTouchUp() {
 			// Update the VirtualJoystick's values!
 			UpdateVJValues ();
-			// Maybe register a swipe!!
-			if (vjAxes.magnitude > VJ_MAGNITUDE_SWIPE_THRESHOLD) {
-				RegisterVJSwipe ();
+			// Far enough into simulated move? Execute it!
+			if (simMovePercent > 0.5f) {
+				ExecuteSimMove();
 			}
-			// Nix any simulated move.
-			SetSimulatedMoveDir (Vector2Int.zero);
+			// Nix any sim move.
+			SetSimMoveDir(Vector2Int.zero);
 		}
 
-		private void UpdateVJValues () {
+		private void UpdateVJValues() {
 			Vector2 touchPos = GetTouchPos();
-			UpdateVJCenterPos (touchPos);
-			vjAxes = GetVirtualJoystickAxes (touchPos, vjCenter);
+			//UpdateVJCenterPos (touchPos);
+			vjAxes = GetVirtualJoystickAxes(touchPos, vjCenter);
 		}
-		/** Drags/"tethers" the center to be at least X close to our finger. */
-		private void UpdateVJCenterPos (Vector2 touchPos) {
-			float distTouchToCenter = Vector2.Distance (touchPos, vjCenter);
-			// If our finger's moved too far from the center, bring the center TO us!
-			if (distTouchToCenter > VJ_RADIUS) {
-				float angle = Mathf.Atan2 (touchPos.y-vjCenter.y, touchPos.x-vjCenter.x);
-				vjCenter = touchPos - new Vector2 (Mathf.Cos (angle)*VJ_RADIUS, Mathf.Sin (angle)*VJ_RADIUS);
-			}
-		}
+		///** Drags/"tethers" the center to be at least X close to our finger. */
+		//private void UpdateVJCenterPos(Vector2 touchPos) {
+		//	float distTouchToCenter = Vector2.Distance (touchPos, vjCenter);
+		//	// If our finger's moved too far from the center, bring the center TO us!
+		//	if (distTouchToCenter > VJ_RADIUS) {
+		//		float angle = Mathf.Atan2 (touchPos.y-vjCenter.y, touchPos.x-vjCenter.x);
+		//		vjCenter = touchPos - new Vector2 (Mathf.Cos (angle)*VJ_RADIUS, Mathf.Sin (angle)*VJ_RADIUS);
+		//	}
+		//}
 
-		private void UpdateSimulatedMove () {
-			Vector2Int thisSimulatedMoveDir = GetSimulatedMoveDir (vjAxes);
-			if (thisSimulatedMoveDir != simulatedMoveDir) { // If the proposed simulated moveDir is *different* from the current one...!
-				SetSimulatedMoveDir (thisSimulatedMoveDir);
+		private void UpdateSimMove() {
+			Vector2Int thisSimMoveDir = GetSimMoveDir(vjAxes);
+            // This simMoveDir is *different* from the current one, AND our simMovePercent is low (enough to switch sim-move directions)?...
+			if (thisSimMoveDir != simMoveDir && simMovePercent<0.1f) {
+				SetSimMoveDir(thisSimMoveDir);
 			}
-			else if (simulatedMoveDir != Vector2Int.zero) {
-				simulatedMovePercent = GetSimulatedMovePercent (vjAxes);
+            // We have a simMoveDir?? Update simMovePercent!
+			if (simMoveDir != Vector2Int.zero) {
+				simMovePercent = GetSimMovePercent(vjAxes);
+                // We've gone all the way with the simulated move? Commit to it!!
+                if (simMovePercent >= 1) {
+                    ExecuteSimMove();
+                }
 			}
 		}
+        private void ExecuteSimMove() {
+            // Say we're swipin'.
+            if (simMoveDir==Vector2Int.B) isSwipe_D = true;
+            else if (simMoveDir==Vector2Int.T) isSwipe_U = true;
+            else if (simMoveDir==Vector2Int.L) isSwipe_L = true;
+            else if (simMoveDir==Vector2Int.R) isSwipe_R = true;
+            // Reset VJ center!
+            vjCenter = GetTouchPos();
+        }
 
 
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		private void RegisterVJSwipe () {
-			Vector2 swipeAxes = vjAxes;
-			// Which direction did we swipe, Chez??
-			if (Mathf.Abs(swipeAxes.x) > Mathf.Abs(swipeAxes.y)) { // more horizontal than vertical!
-				if (swipeAxes.x < 0) { isSwipe_L = true; }
-				else { isSwipe_R = true; }
-			}
-			else { // more vertical than horizontal!
-				if (swipeAxes.y < 0) { isSwipe_D = true; }
-				else { isSwipe_U = true; }
-			}
-		}
-		private void SetSimulatedMoveDir (Vector2Int _simulatedMoveDir) {
-			simulatedMoveDir = _simulatedMoveDir;
+		private void SetSimMoveDir (Vector2Int _dir) {
+			simMoveDir = _dir;
+            simMoveSide = MathUtils.GetSide(simMoveDir);
+            simMovePercent = 0; // reset this here.
 		}
 
 	}

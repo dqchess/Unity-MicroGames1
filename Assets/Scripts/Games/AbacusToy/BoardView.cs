@@ -14,14 +14,14 @@ namespace AbacusToy {
 		public List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
-		private Board simulatedMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
+		private Board simMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
 		private Level levelRef;
 		// Variable Properties
 		private bool areObjectsAnimating;
 		private float objectsAnimationLoc; // eases to 0 or 1 while we're animating!
 		private float objectsAnimationLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
-		private MoveResults simulatedMoveResult;
-		private Vector2Int simulatedMoveDir;
+		private MoveResults simMoveResult;
+		private Vector2Int simMoveDir;
 
 		// Getters (Public)
 		public Board MyBoard { get { return myBoard; } }
@@ -102,7 +102,7 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		public void OnOccupantViewDestroyedSelf (BoardOccupantView bo) {
+		public void OnOccupantViewDestroyedSelf(BoardOccupantView bo) {
 			// Remove it from the list of views!
 			allOccupantViews.Remove (bo);
 		}
@@ -112,8 +112,8 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		public void UpdateAllViewsMoveStart () {
-			AddViewsForAddedObjects ();
+		public void UpdateAllViewsMoveStart() {
+			AddViewsForAddedObjects();
 			UpdateBoardOccupantViewVisualsMoveStart ();
 			// Note that destroyed Objects' views will be removed by the view in the UpdateVisualsMoveEnd.
 			// Reset our BoardOccupantView' "from" values to where they *currently* are! Animate from there.
@@ -127,37 +127,37 @@ namespace AbacusToy {
 			//		areAnyOccupantsAnimating = true;
 			//		doCheckIfOccupantsFinishedAnimating = true;
 		}
-		private void UpdateAllViewsMoveEnd () {
+		private void UpdateAllViewsMoveEnd() {
 			areObjectsAnimating = false;
 			objectsAnimationLoc = 0; // reset this back to 0, no matter what the target value is.
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove ();
 			}
 		}
-		private void UpdateBoardOccupantViewVisualsMoveStart () {
+		private void UpdateBoardOccupantViewVisualsMoveStart() {
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove ();
 			}
 		}
 
-		private void AddViewsForAddedObjects () {
+		private void AddViewsForAddedObjects() {
 			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
 				AddObjectView (bo);
 			}
 		}
 
-		public void UpdateSimulatedMove(BoardOccupant boToMove, Vector2Int _simulatedMoveDir, float _simulatedMovePercent) {
-			if (simulatedMoveDir != _simulatedMoveDir) { // If the proposed simulated moveDir is *different* from the current one...!
-				SetSimulatedMoveDirAndBoard(boToMove, _simulatedMoveDir);
+		public void UpdateSimMove(BoardOccupant boToMove, Vector2Int _simMoveDir, float _simMovePercent) {
+			if (simMoveDir != _simMoveDir) { // If the proposed simulated moveDir is *different* from the current one...!
+				SetSimMoveDirAndBoard(boToMove, _simMoveDir);
 			}
-			else if (simulatedMoveDir != Vector2Int.zero) {
-				UpdateViewsTowardsSimulatedMove(_simulatedMovePercent);
+			else if (simMoveDir != Vector2Int.zero) {
+				UpdateViewsTowardsSimMove(_simMovePercent);
 			}
 		}
-		private void UpdateViewsTowardsSimulatedMove(float _simulatedMovePercent) {
-			objectsAnimationLocTarget = _simulatedMovePercent;
-			objectsAnimationLocTarget *= 0.9f; // don't go all the way to 1.
-			if (simulatedMoveResult == MoveResults.Fail) {
+		private void UpdateViewsTowardsSimMove(float _simMovePercent) {
+			objectsAnimationLocTarget = _simMovePercent;
+			//objectsAnimationLocTarget *= 0.9f; // don't go all the way to 1.
+			if (simMoveResult == MoveResults.Fail) {
 				objectsAnimationLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
 			}
 			// Keep the value locked to the target value.
@@ -165,29 +165,32 @@ namespace AbacusToy {
 			areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
 			ApplyObjectsAnimationLoc ();
 		}
-		private void ClearSimulatedMoveDirAndBoard () {
-			simulatedMoveDir = Vector2Int.zero;
+		public void ClearSimMoveDirAndBoard() {
+			simMoveDir = Vector2Int.zero;
+            simMoveBoard = null;
 			// Animate all views back to their original positions.
 			areObjectsAnimating = true;
 			objectsAnimationLocTarget = 0;
 		}
 		/** Clones our current Board, and applies the move to it! */
-		private void SetSimulatedMoveDirAndBoard(BoardOccupant boToMove, Vector2Int _simulatedMoveDir) {
+		private void SetSimMoveDirAndBoard(BoardOccupant boToMove, Vector2Int _simMoveDir) {
 			// If we accidentally used this function incorrectly, simply do the correct function instead.
-			if (_simulatedMoveDir == Vector2Int.zero) { ClearSimulatedMoveDirAndBoard (); return; }
+			if (_simMoveDir == Vector2Int.zero) { ClearSimMoveDirAndBoard (); return; }
 			// Oh, NO boToMove? Ok, no simulated move.
-			if (boToMove == null) { ClearSimulatedMoveDirAndBoard(); return; }
+			if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
+            
+            print(Time.frameCount + " SetSimMoveDirAndBoard. boToMove pos: " + boToMove.BoardPos.ToString() + "   _simMoveDir: " + _simMoveDir.ToString());//QQQ
 
-			simulatedMoveDir = _simulatedMoveDir;
+			simMoveDir = _simMoveDir;
 			// Clone our current Board.
-			simulatedMoveBoard = myBoard.Clone();
+			simMoveBoard = myBoard.Clone();
 			// Set BoardOCCUPANTs' references within the new, simulated Board! NOTE: We DON'T set any references for BoardObjects. Those don't move (plus, there's currently no way to find the matching references, as BoardObjects aren't added to spaces).
 			foreach (BoardOccupantView bov in allOccupantViews) {
-				BoardObject thisSimulatedMoveBO = BoardUtils.GetOccupantInClonedBoard(bov.MyBoardOccupant, simulatedMoveBoard);
+				BoardObject thisSimulatedMoveBO = BoardUtils.GetOccupantInClonedBoard(bov.MyBoardOccupant, simMoveBoard);
 				bov.SetMySimulatedMoveObject(thisSimulatedMoveBO);
 			}
 			// Now actually simulate the move!
-			simulatedMoveResult = simulatedMoveBoard.ExecuteMove(boToMove.BoardPos, simulatedMoveDir);
+			simMoveResult = simMoveBoard.ExecuteMove(boToMove.BoardPos, simMoveDir);
 			// Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.SetValues_To_ByMySimulatedMoveBoardObject();
@@ -203,13 +206,13 @@ namespace AbacusToy {
 		private void FixedUpdate () {
 			if (areObjectsAnimating) {
 				objectsAnimationLoc += (objectsAnimationLocTarget-objectsAnimationLoc) / 2f;
-				ApplyObjectsAnimationLoc ();
+				ApplyObjectsAnimationLoc();
 				if (Mathf.Abs (objectsAnimationLocTarget-objectsAnimationLoc) < 0.01f) {
-					UpdateAllViewsMoveEnd ();
+					UpdateAllViewsMoveEnd();
 				}
 			}
 		}
-		private void ApplyObjectsAnimationLoc () {
+		private void ApplyObjectsAnimationLoc() {
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.GoToValues(objectsAnimationLoc);
 			}

@@ -33,7 +33,8 @@
 
 	public Vector2Int ToVector2Int() { return new Vector2Int(col,row); }
 
-	public override bool Equals(object o) { return base.Equals (o); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
+    public override string ToString() { return col + "," + row; }
+    public override bool Equals(object o) { return base.Equals (o); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 	public override int GetHashCode() { return base.GetHashCode(); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 
 	public static bool operator == (BoardPos b1, BoardPos b2) {
