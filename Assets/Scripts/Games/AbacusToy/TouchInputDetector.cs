@@ -6,9 +6,7 @@ namespace AbacusToy {
 	/** Owned and managed by Level.cs, this class translates mobile touch input into gameplay input (SIMULATING and MAKING moves!). */
 	public class TouchInputDetector {
 		// Constants
-		private const float minVirtualJoystickThreshold = 0.05f; // in percent (from 0 to 1). anything movement than this will be ignored.
-		private const float VJ_RADIUS = 50f;
-		private const float VJ_MAGNITUDE_SWIPE_THRESHOLD = 0.5f; // if our VJ's magnitude is greater than this on a TouchUp, we'll register a swipe!
+		private float minDragOffset; // In screen space. Any drag less than this will be ignored.
 		// Properties
 		private bool isTouch, isTouchDown, isTouchUp; // updated at the beginning of every frame.
 		private bool pisTouch; // isTouch for the previous frame. Used to detect touch-downs/ups.
@@ -18,9 +16,10 @@ namespace AbacusToy {
 		private bool isSwipe_U; // these are true only for one frame, and then set back to false.
 		private float simMovePercent; // from 0 to 1. BoardView uses this value.
         private int simMoveSide; // just matches simMoveDir. For optimization.
-        private Vector2 vjAxes; // From -1 to 1.
-        private Vector2 vjCenter; // set (to mouse pos) on touch down, and whenever we execute a move.
+        private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
+        private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
 		private Vector2Int simMoveDir;
+        private float unitSize; // TODO: Set this! BoardView's unitSize.
 
 		// Getters
 		//	public bool IsTouchDown { get { return isTouchDown; } }
@@ -36,23 +35,15 @@ namespace AbacusToy {
 			if (Input.touchSupported && Input.touchCount>0) { return Input.touches[0].position; }
 			return Input.mousePosition;
 		}
-		//public Vector2 Debug_TouchUpPos { get; set; }
-		//public Vector2 Debug_TouchDownPos { get { return touchDownPos; } }
 
-		private Vector2 GetVirtualJoystickAxes(Vector2 _touchPos, Vector2 _touchDownPos) {
-			Vector2 returnVector = new Vector2 ((_touchPos.x-_touchDownPos.x)/VJ_RADIUS, (_touchPos.y-_touchDownPos.y)/VJ_RADIUS);
-			returnVector = Vector2.ClampMagnitude (returnVector, 1);
-			return returnVector;
-		}
-
-		private Vector2Int GetSimMoveDir (Vector2 virtualJoystickAxes) {
-			if (virtualJoystickAxes.magnitude > minVirtualJoystickThreshold) {
-				if (Mathf.Abs(virtualJoystickAxes.x) > Mathf.Abs(virtualJoystickAxes.y)) {
-					if (virtualJoystickAxes.x<0) { return new Vector2Int (-1,0); }
+		private Vector2Int GetSimMoveDir() {
+			if (dragAxes.magnitude > minDragOffset) {
+				if (Mathf.Abs(dragAxes.x) > Mathf.Abs(dragAxes.y)) {
+					if (dragAxes.x<0) { return new Vector2Int (-1,0); }
 					return new Vector2Int ( 1,0);
 				}
 				else {
-					if (virtualJoystickAxes.y<0) { return new Vector2Int (0, 1); }
+					if (dragAxes.y<0) { return new Vector2Int (0, 1); }
 					return new Vector2Int (0,-1);
 				}
 			}
@@ -60,23 +51,32 @@ namespace AbacusToy {
 				return Vector2Int.zero;
 			}
 		}
-		private float GetSimMovePercent(Vector2 _virtualJoystickAxes) {
+		private float GetSimMovePercent() {
             switch (simMoveSide) {
-                case Sides.L: return Mathf.Max(0, -_virtualJoystickAxes.x);
-                case Sides.R: return Mathf.Max(0,  _virtualJoystickAxes.x);
-                case Sides.B: return Mathf.Max(0, -_virtualJoystickAxes.y);
-                case Sides.T: return Mathf.Max(0,  _virtualJoystickAxes.y);
+                case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize);
+                case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize);
+                case Sides.B: return Mathf.Max(0, -dragAxes.y/unitSize);
+                case Sides.T: return Mathf.Max(0,  dragAxes.y/unitSize);
                 default: Debug.LogError("Whoa, side not recognized: " + simMoveSide); return 0;
             }
-			//return _virtualJoystickAxes.magnitude;
 		}
 
 
 
-		// ----------------------------------------------------------------
-		//  Update
-		// ----------------------------------------------------------------
-		public void Update () {
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public TouchInputDetector(float _unitSize) {
+            this.unitSize = _unitSize;
+            this.minDragOffset = _unitSize * 0.1f;
+        }
+
+
+
+        // ----------------------------------------------------------------
+        //  Update
+        // ----------------------------------------------------------------
+		public void Update() {
 			// Reset swipe truthiness!
 			isSwipe_L = isSwipe_R = isSwipe_D = isSwipe_U = false;
 
@@ -92,18 +92,15 @@ namespace AbacusToy {
 			pisTouch = isTouch;
 		}
 
-		private void OnTouchHeld () {
-			// Update the VirtualJoystick's values!
-			UpdateVJValues();
-			// Update simulated move, yo!
+		private void OnTouchHeld() {
+			UpdateDragAxes();
 			UpdateSimMove();
 		}
 		private void OnTouchDown() {
-			vjCenter = GetTouchPos();
+			dragAnchorPos = GetTouchPos();
 		}
 		private void OnTouchUp() {
-			// Update the VirtualJoystick's values!
-			UpdateVJValues ();
+			UpdateDragAxes();
 			// Far enough into simulated move? Execute it!
 			if (simMovePercent > 0.5f) {
 				ExecuteSimMove();
@@ -112,30 +109,19 @@ namespace AbacusToy {
 			SetSimMoveDir(Vector2Int.zero);
 		}
 
-		private void UpdateVJValues() {
-			Vector2 touchPos = GetTouchPos();
-			//UpdateVJCenterPos (touchPos);
-			vjAxes = GetVirtualJoystickAxes(touchPos, vjCenter);
+		private void UpdateDragAxes() {
+			dragAxes = GetTouchPos() - dragAnchorPos;
 		}
-		///** Drags/"tethers" the center to be at least X close to our finger. */
-		//private void UpdateVJCenterPos(Vector2 touchPos) {
-		//	float distTouchToCenter = Vector2.Distance (touchPos, vjCenter);
-		//	// If our finger's moved too far from the center, bring the center TO us!
-		//	if (distTouchToCenter > VJ_RADIUS) {
-		//		float angle = Mathf.Atan2 (touchPos.y-vjCenter.y, touchPos.x-vjCenter.x);
-		//		vjCenter = touchPos - new Vector2 (Mathf.Cos (angle)*VJ_RADIUS, Mathf.Sin (angle)*VJ_RADIUS);
-		//	}
-		//}
 
 		private void UpdateSimMove() {
-			Vector2Int thisSimMoveDir = GetSimMoveDir(vjAxes);
+			Vector2Int thisSimMoveDir = GetSimMoveDir();
             // This simMoveDir is *different* from the current one, AND our simMovePercent is low (enough to switch sim-move directions)?...
 			if (thisSimMoveDir != simMoveDir && simMovePercent<0.1f) {
 				SetSimMoveDir(thisSimMoveDir);
 			}
             // We have a simMoveDir?? Update simMovePercent!
 			if (simMoveDir != Vector2Int.zero) {
-				simMovePercent = GetSimMovePercent(vjAxes);
+				simMovePercent = GetSimMovePercent();
                 // We've gone all the way with the simulated move? Commit to it!!
                 if (simMovePercent >= 1) {
                     ExecuteSimMove();
@@ -148,18 +134,22 @@ namespace AbacusToy {
             else if (simMoveDir==Vector2Int.T) isSwipe_U = true;
             else if (simMoveDir==Vector2Int.L) isSwipe_L = true;
             else if (simMoveDir==Vector2Int.R) isSwipe_R = true;
-            // Reset VJ center!
-            vjCenter = GetTouchPos();
+            // Reset dragAnchorPos!
+            dragAnchorPos = GetTouchPos();
         }
 
 
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		private void SetSimMoveDir (Vector2Int _dir) {
+		private void SetSimMoveDir(Vector2Int _dir) {
 			simMoveDir = _dir;
             simMoveSide = MathUtils.GetSide(simMoveDir);
-            simMovePercent = 0; // reset this here.
+            // Reset our dragAnchorPos right next to finger! As if we juust touched down and dragged just enough.
+            dragAnchorPos = GetTouchPos();
+            dragAnchorPos += new Vector2(-_dir.x, _dir.y) * (minDragOffset+1); // hacky flipping y?
+            UpdateDragAxes(); // update this for safety.
+            simMovePercent = 0; // reset this for safety.
 		}
 
 	}

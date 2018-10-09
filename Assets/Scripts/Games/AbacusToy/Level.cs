@@ -63,7 +63,6 @@ namespace AbacusToy {
 			gameController = _gameController;
 			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
-			inputDetector = new TouchInputDetector();
 
 			// Reset easy stuff
 			boardSnapshots = new List<BoardData>();
@@ -71,6 +70,7 @@ namespace AbacusToy {
 
 			// Send in the clowns!
 			AddLevelComponents();
+            inputDetector = new TouchInputDetector(boardView.UnitSize);
 		}
 
 
@@ -136,10 +136,10 @@ namespace AbacusToy {
 			UpdateMousePosBoard();
 			UpdateTileOver();
 
-            boardView.UpdateSimMove(tileGrabbing, inputDetector.SimMoveDir, inputDetector.SimMovePercent);
-
 			RegisterTouchInput();
 			RegisterButtonInput();
+
+            boardView.UpdateSimMove(tileGrabbing, inputDetector.SimMoveDir, inputDetector.SimMovePercent);
             
             //print("SimMovePercent: " + inputDetector.SimMovePercent + "    Dir: " + inputDetector.SimMoveDir.ToString());
 		}
