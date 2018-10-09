@@ -5,10 +5,7 @@ using UnityEngine;
 namespace SlideAndStick {
 	[System.Serializable]
 	public class Board {
-		// Properties
-		private bool areGoalsSatisfied;
-		private int numCols,numRows;
-		private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
+        private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
@@ -20,12 +17,12 @@ namespace SlideAndStick {
 			return tiles.Count <= numTilesToWin;
 		}
 
-		// Getters (Public)
-		public bool AreGoalsSatisfied { get { return areGoalsSatisfied; } }
-		public int NumCols { get { return numCols; } }
-		public int NumRows { get { return numRows; } }
+        // Getters (Public)
+        public bool AreGoalsSatisfied { get; private set; }
+        public int NumCols { get; private set; }
+        public int NumRows { get; private set; }
 
-		public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
+        public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
 		public BoardSpace[,] Spaces { get { return spaces; } }
         public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
         public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
@@ -36,10 +33,10 @@ namespace SlideAndStick {
 			return new Board(data);
 		}
 		public BoardData SerializeAsData() {
-			BoardData bd = new BoardData(numCols,numRows);
+			BoardData bd = new BoardData(NumCols,NumRows);
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
-			for (int col=0; col<numCols; col++) {
-				for (int row=0; row<numRows; row++) {
+			for (int col=0; col<NumCols; col++) {
+				for (int row=0; row<NumRows; row++) {
 					bd.spaceDatas[col,row] = GetSpace(col,row).SerializeAsData();
 				}
 			}
@@ -52,8 +49,8 @@ namespace SlideAndStick {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public Board (BoardData bd) {
-			numCols = bd.numCols;
-			numRows = bd.numRows;
+			NumCols = bd.numCols;
+			NumRows = bd.numRows;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -61,7 +58,8 @@ namespace SlideAndStick {
 			AddPropsFromBoardData (bd);
 
 			// TEMP TESTING
-			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(numCols*numRows*0.65f), Random.Range(3,5)); }
+            int numColors = 3;//Random.Range(3,5);
+			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
 
 			// Start our solo bubbas out merged, goro!
 			MergeAdjacentTiles();
@@ -70,9 +68,9 @@ namespace SlideAndStick {
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
-			spaces = new BoardSpace[numCols,numRows];
-			for (int i=0; i<numCols; i++) {
-				for (int j=0; j<numRows; j++) {
+			spaces = new BoardSpace[NumCols,NumRows];
+			for (int i=0; i<NumCols; i++) {
+				for (int j=0; j<NumRows; j++) {
 					spaces[i,j] = new BoardSpace (this, bd.spaceDatas[i,j]);
 				}
 			}
@@ -177,7 +175,7 @@ namespace SlideAndStick {
 		}
 		private void OnMoveComplete () {
 			MergeAdjacentTiles();
-			areGoalsSatisfied = GetAreGoalsSatisfied();
+			AreGoalsSatisfied = GetAreGoalsSatisfied();
 		}
 
 
