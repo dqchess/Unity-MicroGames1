@@ -27,6 +27,8 @@ namespace AbacusToy {
 			if (space==null) { return null; }
 			return space.MyOccupant;
 		}
+        private static Tile GetTile(Board b, BoardPos pos) { return b.GetTile(pos); }
+        private static Tile GetTile(Board b, Vector2Int pos) { return b.GetTile(pos); }
 
 		public static bool IsSpaceOpen(Board b, BoardPos pos) { return IsSpaceOpen(b, pos.col,pos.row); }
 		public static bool IsSpaceOpen(Board b, int col,int row) {
@@ -89,20 +91,16 @@ namespace AbacusToy {
 			return true;
 		}
 
-		public static MoveResults MoveOccupant (Board b, BoardOccupant bo, Vector2Int dir) {
+		public static MoveResults MoveOccupant(Board b, BoardOccupant bo, Vector2Int dir) {
 			if (bo == null) {
 				Debug.LogError ("Oops! We're trying to move a null Occupant! dir: " + dir.ToString());
 				return MoveResults.Fail;
 			}
 
 			// Is this outside the board? Oops! Return Fail.
-			if (!AreSpacesPlayable(b, bo.FootprintGlobal,dir)) {
-				return MoveResults.Fail;
-			}
+			if (!AreSpacesPlayable(b, bo.FootprintGlobal,dir)) { return MoveResults.Fail; }
 			// Are we trying to pass through a Wall? Return Fail.
-//			if (bo.MySpace!=null && !bo.MySpace.CanOccupantEverExit(GetSide(dir))) {
-//				return MoveResults.Fail;
-//			}
+//			if (bo.MySpace!=null && !bo.MySpace.CanOccupantEverExit(GetSide(dir))) { return MoveResults.Fail; }
 
 			// Always remove its footprint first. We're about to move it!
 			bo.RemoveMyFootprint ();
@@ -125,10 +123,73 @@ namespace AbacusToy {
 
 			// Add its footprint back now.
 			bo.AddMyFootprint ();
+            
+            // Are ALL TILES on the Board? Ok! We can check for and tow along any islands!
+            if (b.NumFootprintsDown >= b.tiles.Count) {
+                CalculateAndTowIslandGroups(b, bo, dir);
+            }
 
 			// Success!
 			return MoveResults.Success;
 		}
+        
+        public static List<string> stepSnapshots; // TEMP DEBUG
+        
+        /// NOTE: This function doesn't account for bigger footprints! (No need to support that right now.)
+        private static void CalculateAndTowIslandGroups(Board b, BoardOccupant boJustMoved, Vector2Int dir) {
+            if (stepSnapshots!=null) { stepSnapshots.Add(b.LayoutString()); }
+            
+            List<List<Tile>> groups;
+            Vector2Int newlyVacantPos = boJustMoved.BoardPos.ToVector2Int() - dir; // The pos that was just vacated before this function was called.
+            
+            // Try to tow the next tile; Priority order: 1) Tile *behind* one just moved, 2) Tile beside one just moved that's in a DIFFERENT Group.
+            
+            // Recalculate groups.
+            groups = CalculateTileGroups(b);
+            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            Tile tileBehind = GetTile(b, newlyVacantPos-dir);
+            MaybeTowTile(b, tileBehind, dir, boJustMoved.GroupID);
+            
+            // Recalculate groups.
+            groups = CalculateTileGroups(b);
+            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            Tile tileBesideA = GetTile(b, newlyVacantPos-dir.RotatedClockwise());
+            MaybeTowTile(b, tileBesideA, dir, boJustMoved.GroupID);
+            
+            // Recalculate groups.
+            groups = CalculateTileGroups(b);
+            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            Tile tileBesideB = GetTile(b, newlyVacantPos-dir.RotatedCounterClockwise());
+            MaybeTowTile(b, tileBesideB, dir, boJustMoved.GroupID);
+        }
+        private static void MaybeTowTile(Board b, Tile t, Vector2Int dir, int groupID) {
+            if (t!=null && t.GroupID!=groupID) {
+                MoveOccupant(b, t, dir);
+            }
+        }
+        private static List<List<Tile>> CalculateTileGroups(Board b) {
+            // Reset GroupIDs.
+            for (int i=0; i<b.tiles.Count; i++) { b.tiles[i].GroupID = -1; }
+            // Find dem groupz!
+            List<List<Tile>> groups = new List<List<Tile>>();
+            for (int i=b.tiles.Count-1; i>=0; --i) {
+                Tile t = b.tiles[i];
+                if (t.GroupID != -1) { continue; } // Skip ones that've been set already.
+                groups.Add(new List<Tile>()); // Add a new group!
+                RecursiveTileFinding(b, groups, t);
+            }
+            // Return.
+            return groups;
+        }
+        private static void RecursiveTileFinding(Board b, List<List<Tile>> groups, Tile t) {
+            if (t==null || t.GroupID!=-1) { return; } // No unused tile here? Stop.
+            t.GroupID = groups.Count-1;
+            groups[groups.Count-1].Add(t);
+            RecursiveTileFinding(b,groups, b.GetTile(t.Col-1, t.Row));
+            RecursiveTileFinding(b,groups, b.GetTile(t.Col+1, t.Row));
+            RecursiveTileFinding(b,groups, b.GetTile(t.Col,   t.Row-1));
+            RecursiveTileFinding(b,groups, b.GetTile(t.Col,   t.Row+1));
+        }
 
 
 	}

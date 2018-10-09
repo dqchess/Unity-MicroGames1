@@ -6,8 +6,9 @@ using UnityEngine.UI;
 namespace AbacusToy {
 	public class TileView : BoardOccupantView {
 		// Components
-        [SerializeField] private TileViewBody body;
-        [SerializeField] private TileViewBody bodyShadow;
+        [SerializeField] private TileViewBody body=null;
+        [SerializeField] private TileViewBody bodyShadow=null;
+        [SerializeField] private Text t_debugText=null;
 		// References
 		private Tile myTile;
 
@@ -35,6 +36,8 @@ namespace AbacusToy {
             
             body.UpdateVisualsPostMove();
             bodyShadow.UpdateVisualsPostMove();
+            
+            t_debugText.text = MyTile.GroupID.ToString();
 		}
 
 

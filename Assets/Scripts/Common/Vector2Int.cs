@@ -28,13 +28,33 @@ public struct Vector2Int {
 	public override bool Equals(object o) { return base.Equals (o); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 	public override int GetHashCode() { return base.GetHashCode(); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 
-	public static Vector2Int operator + (Vector2Int a, Vector2Int b) {
-		return new Vector2Int(a.x+b.x, a.y+b.y);
-	}
+    public static Vector2Int operator + (Vector2Int a, Vector2Int b) {
+        return new Vector2Int(a.x+b.x, a.y+b.y);
+    }
+    public static Vector2Int operator - (Vector2Int a, Vector2Int b) {
+        return new Vector2Int(a.x-b.x, a.y-b.y);
+    }
 	public static bool operator == (Vector2Int a, Vector2Int b) {
 		return a.Equals(b);
 	}
 	public static bool operator != (Vector2Int a, Vector2Int b) {
 		return !a.Equals(b);
 	}
+    
+    public Vector2Int RotatedClockwise() {
+        if (this == Vector2Int.T) { return Vector2Int.R; }
+        if (this == Vector2Int.R) { return Vector2Int.B; }
+        if (this == Vector2Int.B) { return Vector2Int.L; }
+        if (this == Vector2Int.L) { return Vector2Int.T; }
+        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TODO: Use sin/cos to rotate these properly.");
+        return this;
+    }
+    public Vector2Int RotatedCounterClockwise() {
+        if (this == Vector2Int.T) { return Vector2Int.L; }
+        if (this == Vector2Int.R) { return Vector2Int.T; }
+        if (this == Vector2Int.B) { return Vector2Int.R; }
+        if (this == Vector2Int.L) { return Vector2Int.B; }
+        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TODO: Use sin/cos to rotate these properly.");
+        return this;
+    }
 }

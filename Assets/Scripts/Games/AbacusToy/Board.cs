@@ -8,6 +8,7 @@ namespace AbacusToy {
 		// Properties
 		private bool areGoalsSatisfied;
 		private int numCols,numRows;
+        public int NumFootprintsDown { get; set; } // For in-progress moves. We don't wanna do groupfinding/islandtugging unless all footprints are down.
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
@@ -53,6 +54,7 @@ namespace AbacusToy {
 		public Board (BoardData bd) {
 			numCols = bd.numCols;
 			numRows = bd.numRows;
+            NumFootprintsDown = 0;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -113,9 +115,14 @@ namespace AbacusToy {
 			objectsAddedThisMove.Clear ();
 
 			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
-			MoveResults result = BoardUtils.MoveOccupant (this, boToMove, dir);
-            // TEMP HACK: If there are any islands, don't allow this move.
             
+            BoardUtils.stepSnapshots = new List<string>(); // TEMP DEBUG
+			MoveResults result = BoardUtils.MoveOccupant(this, boToMove, dir);
+            
+            Debug.Log("Move Snapshots:");
+            foreach (string snapshot in BoardUtils.stepSnapshots) {
+                Debug.Log(snapshot);
+            }
             
             // ONLY if this move was a success, do the OnMoveComplete paperwork!
             if (result == MoveResults.Success) {
@@ -140,17 +147,21 @@ namespace AbacusToy {
 			}
 		}
 		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
-			string boardString = "";
-			for (int row=0; row<NumRows; row++) {
-				for (int col=0; col<NumCols; col++) {
-					Tile tile = GetTile(col,row);
-					boardString += tile==null ? "." : tile.ColorID.ToString();
-				}
-				boardString += "\n";
-			}
-			Debug.Log (boardString);
-            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = boardString; }
+            string layoutString = LayoutString();
+			Debug.Log (layoutString);
+            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = layoutString; }
 		}
+        public string LayoutString() {
+            string layoutString = "";
+            for (int row=0; row<NumRows; row++) {
+                for (int col=0; col<NumCols; col++) {
+                    Tile tile = GetTile(col,row);
+                    layoutString += tile==null ? "." : tile.ColorID.ToString();
+                }
+                layoutString += "\n";
+            }
+            return layoutString;
+        }
 
 
 

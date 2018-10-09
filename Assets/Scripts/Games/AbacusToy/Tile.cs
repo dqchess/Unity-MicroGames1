@@ -5,20 +5,18 @@ using UnityEngine;
 namespace AbacusToy {
 	public class Tile : BoardOccupant {
         // Properties
-        private int colorID;
+        public int ColorID { get; private set; }
 
-        // Getters
-        public int ColorID { get { return colorID; } }
 
-		// ----------------------------------------------------------------
-		//  Initialize
-		// ----------------------------------------------------------------
-		public Tile (Board _boardRef, TileData _data) {
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public Tile (Board _boardRef, TileData _data) {
 			base.InitializeAsBoardOccupant(_boardRef, _data);
-			colorID = _data.colorID;
+			ColorID = _data.colorID;
 		}
 		public TileData SerializeAsData() {
-			TileData data = new TileData(BoardPos, colorID, new List<Vector2Int>(FootprintLocal)); // note: COPY the Vector2Int list. DEF don't want a reference.
+			TileData data = new TileData(BoardPos, ColorID, new List<Vector2Int>(FootprintLocal)); // note: COPY the Vector2Int list. DEF don't want a reference.
 			return data;
 		}
 

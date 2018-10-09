@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace ExtrudeMatch {
-	public class BoardUtils {
+	public static class BoardUtils {
 		
 		// ----------------------------------------------------------------
 		//  Basic Getters

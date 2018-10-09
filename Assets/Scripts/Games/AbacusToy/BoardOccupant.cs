@@ -6,6 +6,7 @@ namespace AbacusToy {
 	[System.Serializable]
 	abstract public class BoardOccupant : BoardObject {
 		// Properties
+        public int GroupID { get; set; } // For finding "islands" of BoardOccupants.
 		private List<Vector2Int> footprintLocal; // at least contains Vector2Int.zero.
 		private List<Vector2Int> footprintGlobal; // just footprintLocal, plus my boardPos. Updated when A) boardPos changes, and B) footprintLocal changes.
 
@@ -30,11 +31,13 @@ namespace AbacusToy {
 			for (int i=0; i<FootprintGlobal.Count; i++) {
 				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).SetMyOccupant(this);
 			}
+            boardRef.NumFootprintsDown ++;
 		}
 		override public void RemoveMyFootprint () {
 			for (int i=0; i<FootprintGlobal.Count; i++) {
 				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).RemoveMyOccupant(this);
 			}
+            boardRef.NumFootprintsDown --;
 		}
 		override public void SetColRow (int _col, int _row) {
 			base.SetColRow(_col,_row);
