@@ -179,8 +179,6 @@ namespace AbacusToy {
 			// Oh, NO boToMove? Ok, no simulated move.
 			if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
             
-            //print(Time.frameCount + " SetSimMoveDirAndBoard. boToMove pos: " + boToMove.BoardPos.ToString() + "   _simMoveDir: " + _simMoveDir.ToString());
-
 			simMoveDir = _simMoveDir;
 			// Clone our current Board.
 			simMoveBoard = myBoard.Clone();

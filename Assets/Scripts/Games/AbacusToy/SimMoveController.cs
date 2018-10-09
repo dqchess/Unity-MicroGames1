@@ -4,54 +4,47 @@ using UnityEngine;
 
 namespace AbacusToy {
 	/** Owned and managed by Level.cs, this class translates mobile touch input into gameplay input (SIMULATING and MAKING moves!). */
-	public class TouchInputDetector {
-		// Constants
-		private float minDragOffset; // In screen space. Any drag less than this will be ignored.
-		// Properties
-		private bool isTouch, isTouchDown, isTouchUp; // updated at the beginning of every frame.
-		private bool pisTouch; // isTouch for the previous frame. Used to detect touch-downs/ups.
-		private bool isSwipe_L; // these are true only for one frame, and then set back to false.
-		private bool isSwipe_R; // these are true only for one frame, and then set back to false.
-		private bool isSwipe_D; // these are true only for one frame, and then set back to false.
-		private bool isSwipe_U; // these are true only for one frame, and then set back to false.
-		private float simMovePercent; // from 0 to 1. BoardView uses this value.
+	public class SimMoveController {
+        // Constants
+        private float minDragOffset; // In screen space. Any drag less than this will be ignored.
+        // Properties
+        private bool isTouch, isTouchDown, isTouchUp; // updated at the beginning of every frame.
+        private bool pisTouch; // isTouch for the previous frame. Used to detect touch-downs/ups.
+        public bool IsSwipe_L { get; private set; } // these are true only for one frame, and then set back to false.
+        public bool IsSwipe_R { get; private set; } // these are true only for one frame, and then set back to false.
+        public bool IsSwipe_D { get; private set; } // these are true only for one frame, and then set back to false.
+        public bool IsSwipe_U { get; private set; } // these are true only for one frame, and then set back to false.
+        private float unitSize;
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
         private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
-		private Vector2Int simMoveDir;
-        private float unitSize; // TODO: Set this! BoardView's unitSize.
 
-		// Getters
-		//	public bool IsTouchDown { get { return isTouchDown; } }
-		public bool IsSwipe_L { get { return isSwipe_L; } }
-		public bool IsSwipe_R { get { return isSwipe_R; } }
-		public bool IsSwipe_D { get { return isSwipe_D; } }
-		public bool IsSwipe_U { get { return isSwipe_U; } }
-		public float SimMovePercent { get { return simMovePercent; } }
-		public Vector2Int SimMoveDir { get { return simMoveDir; } }
+        // Getters
+        public float SimMovePercent { get; private set; } // from 0 to 1. BoardView uses this value.
+        public Vector2Int SimMoveDir { get; private set; }
 
-		private bool IsTouch() { return (Input.touchSupported && Input.touchCount>0) || Input.GetMouseButton(0); }
-		private Vector2 GetTouchPos() {
-			if (Input.touchSupported && Input.touchCount>0) { return Input.touches[0].position; }
-			return Input.mousePosition;
-		}
+        private bool IsTouch() { return (Input.touchSupported && Input.touchCount>0) || Input.GetMouseButton(0); }
+        private Vector2 GetTouchPos() {
+            if (Input.touchSupported && Input.touchCount>0) { return Input.touches[0].position; }
+            return Input.mousePosition;
+        }
 
-		private Vector2Int GetSimMoveDir() {
-			if (dragAxes.magnitude > minDragOffset) {
-				if (Mathf.Abs(dragAxes.x) > Mathf.Abs(dragAxes.y)) {
-					if (dragAxes.x<0) { return new Vector2Int (-1,0); }
-					return new Vector2Int ( 1,0);
-				}
-				else {
-					if (dragAxes.y<0) { return new Vector2Int (0, 1); }
-					return new Vector2Int (0,-1);
-				}
-			}
-			else {
-				return Vector2Int.zero;
-			}
-		}
-		private float GetSimMovePercent() {
+        private Vector2Int GetSimMoveDir() {
+            if (dragAxes.magnitude > minDragOffset) {
+                if (Mathf.Abs(dragAxes.x) > Mathf.Abs(dragAxes.y)) {
+                    if (dragAxes.x<0) { return new Vector2Int (-1,0); }
+                    return new Vector2Int ( 1,0);
+                }
+                else {
+                    if (dragAxes.y<0) { return new Vector2Int (0, 1); }
+                    return new Vector2Int (0,-1);
+                }
+            }
+            else {
+                return Vector2Int.zero;
+            }
+        }
+        private float GetSimMovePercent() {
             switch (simMoveSide) {
                 case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize);
                 case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize);
@@ -59,100 +52,98 @@ namespace AbacusToy {
                 case Sides.T: return Mathf.Max(0,  dragAxes.y/unitSize);
                 default: Debug.LogError("Whoa, side not recognized: " + simMoveSide); return 0;
             }
-		}
-
+        }
 
 
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-        public TouchInputDetector(float _unitSize) {
+        public SimMoveController(float _unitSize) {
             this.unitSize = _unitSize;
             this.minDragOffset = _unitSize * 0.1f;
         }
 
 
-
         // ----------------------------------------------------------------
         //  Update
         // ----------------------------------------------------------------
-		public void Update() {
-			// Reset swipe truthiness!
-			isSwipe_L = isSwipe_R = isSwipe_D = isSwipe_U = false;
+        public void Update() {
+            // Reset swipe truthiness!
+            IsSwipe_L = IsSwipe_R = IsSwipe_D = IsSwipe_U = false;
 
-			// Touch-down/-up/-hold!
-			isTouch = IsTouch();
-			isTouchUp = !isTouch && pisTouch;
-			isTouchDown = isTouch && !pisTouch;
+            // Touch-down/-up/-hold!
+            isTouch = IsTouch();
+            isTouchUp = !isTouch && pisTouch;
+            isTouchDown = isTouch && !pisTouch;
 
-			if (isTouchDown) { OnTouchDown (); }
-			if (isTouchUp) { OnTouchUp (); }
-			if (isTouch) { OnTouchHeld (); }
+            if (isTouchDown) { OnTouchDown (); }
+            if (isTouchUp) { OnTouchUp (); }
+            if (isTouch) { OnTouchHeld (); }
 
-			pisTouch = isTouch;
-		}
+            pisTouch = isTouch;
+        }
 
-		private void OnTouchHeld() {
-			UpdateDragAxes();
-			UpdateSimMove();
-		}
-		private void OnTouchDown() {
-			dragAnchorPos = GetTouchPos();
-		}
-		private void OnTouchUp() {
-			UpdateDragAxes();
-			// Far enough into simulated move? Execute it!
-			if (simMovePercent > 0.5f) {
-				ExecuteSimMove();
-			}
-			// Nix any sim move.
-			SetSimMoveDir(Vector2Int.zero);
-		}
+        private void OnTouchHeld() {
+            UpdateDragAxes();
+            UpdateSimMove();
+        }
+        private void OnTouchDown() {
+            dragAnchorPos = GetTouchPos();
+        }
+        private void OnTouchUp() {
+            UpdateDragAxes();
+            // Far enough into simulated move? Execute it!
+            if (SimMovePercent > 0.5f) {
+                ExecuteSimMove();
+            }
+            // Nix any sim move.
+            SetSimMoveDir(Vector2Int.zero);
+        }
 
-		private void UpdateDragAxes() {
-			dragAxes = GetTouchPos() - dragAnchorPos;
-		}
+        private void UpdateDragAxes() {
+            dragAxes = GetTouchPos() - dragAnchorPos;
+        }
 
-		private void UpdateSimMove() {
-			Vector2Int thisSimMoveDir = GetSimMoveDir();
+        private void UpdateSimMove() {
+            Vector2Int thisSimMoveDir = GetSimMoveDir();
             // This simMoveDir is *different* from the current one, AND our simMovePercent is low (enough to switch sim-move directions)?...
-			if (thisSimMoveDir != simMoveDir && simMovePercent<0.1f) {
-				SetSimMoveDir(thisSimMoveDir);
-			}
+            if (thisSimMoveDir != SimMoveDir && SimMovePercent<0.1f) {
+                SetSimMoveDir(thisSimMoveDir);
+            }
             // We have a simMoveDir?? Update simMovePercent!
-			if (simMoveDir != Vector2Int.zero) {
-				simMovePercent = GetSimMovePercent();
+            if (SimMoveDir != Vector2Int.zero) {
+                SimMovePercent = GetSimMovePercent();
                 // We've gone all the way with the simulated move? Commit to it!!
-                if (simMovePercent >= 1) {
+                if (SimMovePercent >= 1) {
                     ExecuteSimMove();
                 }
-			}
-		}
+            }
+        }
         private void ExecuteSimMove() {
             // Say we're swipin'.
-            if (simMoveDir==Vector2Int.B) isSwipe_D = true;
-            else if (simMoveDir==Vector2Int.T) isSwipe_U = true;
-            else if (simMoveDir==Vector2Int.L) isSwipe_L = true;
-            else if (simMoveDir==Vector2Int.R) isSwipe_R = true;
+            if (SimMoveDir==Vector2Int.B) IsSwipe_D = true;
+            else if (SimMoveDir==Vector2Int.T) IsSwipe_U = true;
+            else if (SimMoveDir==Vector2Int.L) IsSwipe_L = true;
+            else if (SimMoveDir==Vector2Int.R) IsSwipe_R = true;
             // Reset dragAnchorPos!
             dragAnchorPos = GetTouchPos();
         }
 
 
-		// ----------------------------------------------------------------
-		//  Doers
-		// ----------------------------------------------------------------
-		private void SetSimMoveDir(Vector2Int _dir) {
-			simMoveDir = _dir;
-            simMoveSide = MathUtils.GetSide(simMoveDir);
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        private void SetSimMoveDir(Vector2Int _dir) {
+            SimMoveDir = _dir;
+            simMoveSide = MathUtils.GetSide(SimMoveDir);
             // Reset our dragAnchorPos right next to finger! As if we juust touched down and dragged just enough.
             dragAnchorPos = GetTouchPos();
             dragAnchorPos += new Vector2(-_dir.x, _dir.y) * (minDragOffset+1); // hacky flipping y?
             UpdateDragAxes(); // update this for safety.
-            simMovePercent = 0; // reset this for safety.
-		}
+            SimMovePercent = 0; // reset this for safety.
+        }
 
-	}
+    }
 }
 
 /*

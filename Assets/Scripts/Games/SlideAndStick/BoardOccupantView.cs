@@ -30,7 +30,7 @@ namespace SlideAndStick {
 		private void DestroySelf () {
 			MyBoardView.OnOccupantViewDestroyedSelf(this);
 			// Legit destroy me, yo!
-			GameObject.Destroy(this.gameObject);
+			Destroy(this.gameObject);
 		}
 
 

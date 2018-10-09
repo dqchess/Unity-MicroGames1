@@ -19,15 +19,20 @@ namespace AbacusToy {
         
         // Getters (Static)
         private static Color GetBodyColor(int _colorID) {
-            switch (_colorID) {
-            case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
-            case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
-            case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
-            case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
-            case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
-            case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
-            default: return Color.red; // Oops! Too many colors.
-            }
+            return new Color(.8f,0.8f,0.8f);
+            //switch (_colorID) {QQQ
+            //case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
+            //case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
+            //case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
+            //case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
+            //case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
+            //case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
+            //case 6: return new ColorHSB(200/255f,250/255f,220/255f).ToColor();
+            //case 7: return new ColorHSB( 80/255f,250/255f,220/255f).ToColor();
+            //case 8: return new ColorHSB(100/255f,250/255f,220/255f).ToColor();
+            //case 9: return new ColorHSB( 15/255f,180/255f,220/255f).ToColor();
+            //default: return Color.red; // Oops! Too many colors.
+            //}
         }
         // Getters (Private)
         private Color GetAppliedBodyColor() { return Color.Lerp(bodyColor, Color.white, highlightAlpha); }

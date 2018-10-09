@@ -38,6 +38,7 @@ namespace AbacusToy {
             bodyShadow.UpdateVisualsPostMove();
             
             t_debugText.text = "";//MyTile.GroupID.ToString();
+            t_debugText.text = myTile.ColorID.ToString();
 		}
 
 

@@ -8,9 +8,8 @@ namespace SlideAndStick {
 		// Components
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
-		private TouchInputDetector inputDetector; // this guy handles all the mobile touch stuff.
+        private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
 		// Properties
-//        private bool isAnimatingTiles = false; // when true, we can't make any moves, ok?
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
 		private string description; // dev's description of the level (set in Levels.txt).
 		private Vector2Int mousePosBoard;
@@ -25,12 +24,11 @@ namespace SlideAndStick {
 		public BoardView BoardView { get { return boardView; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
-		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || inputDetector.IsSwipe_L; }
-		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || inputDetector.IsSwipe_R; }
-		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || inputDetector.IsSwipe_D; }
-		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || inputDetector.IsSwipe_U; }
+		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
+		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
+		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
+		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
-//            if (isAnimatingTiles) { return false; } // No moves allowed while animating, ok?
 			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
 		}
@@ -65,7 +63,6 @@ namespace SlideAndStick {
 			gameController = _gameController;
 			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
-			inputDetector = new TouchInputDetector ();
 
 			// Reset easy stuff
 			boardSnapshots = new List<BoardData>();
@@ -73,6 +70,7 @@ namespace SlideAndStick {
 
 			// Send in the clowns!
 			AddLevelComponents();
+            simMoveController = new SimMoveController(boardView.UnitSize);
 		}
 
 
@@ -133,15 +131,15 @@ namespace SlideAndStick {
 		private void Update() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 
-			inputDetector.Update();
+            simMoveController.Update();
 
-			UpdateMousePosBoard();
-			UpdateTileOver();
+            UpdateMousePosBoard();
+            UpdateTileOver();
 
-			boardView.UpdateSimulatedMove(tileGrabbing, inputDetector.SimulatedMoveDir, inputDetector.SimulatedMovePercent);
+            RegisterTouchInput();
+            RegisterButtonInput();
 
-			RegisterTouchInput();
-			RegisterButtonInput();
+            boardView.UpdateSimMove(tileGrabbing, simMoveController.SimMoveDir, simMoveController.SimMovePercent);
 		}
 
 		private void UpdateMousePosBoard() {
@@ -217,19 +215,19 @@ namespace SlideAndStick {
 		}
 
 
-		// ----------------------------------------------------------------
-		//  Events
-		// ----------------------------------------------------------------
-		private void OnBoardMoveComplete () {
-			// Update BoardView visuals!!
-			boardView.UpdateAllViewsMoveStart ();
-			// If our goals are satisfied, win!!
-			if (board.AreGoalsSatisfied) {
-				gameController.OnBoardGoalsSatisfied();
-			}
-//			// Dispatch success/not-yet-success event!
-//			GameManagers.Instance.EventManager.OnSetIsLevelCompleted (isLevelComplete);
-		}
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        private void OnBoardMoveComplete () {
+            // Update BoardView visuals!!
+            boardView.ClearSimMoveDirAndBoard();
+            boardView.UpdateAllViewsMoveStart();
+            
+            // If our goals are satisfied, win!!
+            if (board.AreGoalsSatisfied) {
+                gameController.OnBoardGoalsSatisfied();
+            }
+        }
 
 
 

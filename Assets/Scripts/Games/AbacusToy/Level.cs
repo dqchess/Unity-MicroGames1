@@ -8,7 +8,7 @@ namespace AbacusToy {
 		// Components
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
-		private TouchInputDetector inputDetector; // this guy handles all the mobile touch stuff.
+		private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
 		// Properties
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
 		private string description; // dev's description of the level (set in Levels.txt).
@@ -25,10 +25,10 @@ namespace AbacusToy {
 		public BoardView BoardView { get { return boardView; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
-		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || inputDetector.IsSwipe_L; }
-		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || inputDetector.IsSwipe_R; }
-		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || inputDetector.IsSwipe_D; }
-		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || inputDetector.IsSwipe_U; }
+		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
+		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
+		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
+		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
 			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
 			return true;
@@ -71,7 +71,7 @@ namespace AbacusToy {
 
 			// Send in the clowns!
 			AddLevelComponents();
-            inputDetector = new TouchInputDetector(boardView.UnitSize);
+            simMoveController = new SimMoveController(boardView.UnitSize);
 		}
 
 
@@ -132,7 +132,7 @@ namespace AbacusToy {
 		private void Update() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 
-			inputDetector.Update();
+			simMoveController.Update();
 
 			UpdateMousePosBoard();
 			UpdateTileOver();
@@ -140,7 +140,7 @@ namespace AbacusToy {
 			RegisterTouchInput();
 			RegisterButtonInput();
 
-            boardView.UpdateSimMove(tileGrabbing, inputDetector.SimMoveDir, inputDetector.SimMovePercent);
+            boardView.UpdateSimMove(tileGrabbing, simMoveController.SimMoveDir, simMoveController.SimMovePercent);
             
             //print("SimMovePercent: " + inputDetector.SimMovePercent + "    Dir: " + inputDetector.SimMoveDir.ToString());
 		}
@@ -214,7 +214,7 @@ namespace AbacusToy {
 			// Update BoardView visuals!!
             boardView.ClearSimMoveDirAndBoard();
 			boardView.UpdateAllViewsMoveStart();
-            print(Time.frameCount + "  OnBoardMoveComplete.");
+            
 			// If our goals are satisfied, win!!
 			if (board.AreGoalsSatisfied) {
 				gameController.OnBoardGoalsSatisfied();
