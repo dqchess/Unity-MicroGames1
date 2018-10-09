@@ -6,11 +6,41 @@
 
 // ANY-SHAPE levels
 
+LEVEL - Untitled
+...
+0.0
+0..
+
+LEVEL - Untitled
+1.1
+0.0
+0..
+
+LEVEL - Intro to Undo
+.1.
+0.0
+010
 
 LEVEL - ANY shape (easy)
 0.0
-101
-0.0
+1.1
+000
+
+LEVEL - untitled
+2.3
+2.2
+.3.
+
+// TODO: a few more 3x3s
+// then, 4x4s
+
+LEVEL - ANY shape (easy)
+...
+...
+...
+
+
+
 
 LEVEL - ANY shape (easy)
 123

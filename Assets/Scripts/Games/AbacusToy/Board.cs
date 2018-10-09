@@ -8,6 +8,7 @@ namespace AbacusToy {
 		// Properties
 		private bool areGoalsSatisfied;
 		private int numCols,numRows;
+        public int ParMoves { get; private set; }
         public int NumFootprintsDown { get; set; } // For in-progress moves. We don't wanna do groupfinding/islandtugging unless all footprints are down.
 		// Objects
 		public BoardSpace[,] spaces;
@@ -37,6 +38,7 @@ namespace AbacusToy {
 		}
 		public BoardData SerializeAsData() {
 			BoardData bd = new BoardData(numCols,numRows);
+            bd.parMoves = ParMoves;
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<numCols; col++) {
 				for (int row=0; row<numRows; row++) {
@@ -54,6 +56,7 @@ namespace AbacusToy {
 		public Board (BoardData bd) {
 			numCols = bd.numCols;
 			numRows = bd.numRows;
+            ParMoves = bd.parMoves;
             NumFootprintsDown = 0;
 
 			// Add all gameplay objects!
@@ -133,9 +136,10 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
 			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 2);
+				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 1);
                 if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-				int colorID = Random.Range(0, numColors);
+				//int colorID = Random.Range(0, numColors);
+                int colorID = Mathf.FloorToInt(i/2f);
 				AddTile(randPos, colorID);
 			}
 		}
@@ -149,7 +153,8 @@ namespace AbacusToy {
             for (int row=0; row<NumRows; row++) {
                 for (int col=0; col<NumCols; col++) {
                     Tile tile = GetTile(col,row);
-                    layoutString += tile==null ? "." : tile.ColorID.ToString();
+                    if (tile!=null) { layoutString += tile.ColorID.ToString(); }
+                    else { layoutString += GetSpace(col,row).IsPlayable ? "." : "#"; }
                 }
                 layoutString += "\n";
             }

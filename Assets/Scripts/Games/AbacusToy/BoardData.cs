@@ -6,12 +6,20 @@ namespace AbacusToy {
 	public class BoardData {
 		// Properties
 		public int numCols,numRows;
+        public int parMoves;
 		// BoardObjects
 		public BoardSpaceData[,] spaceDatas;
 		public List<TileData> tileDatas;
 
 		// Getters (Private)
 		private BoardSpaceData GetSpaceData (int col,int row) { return spaceDatas[col,row]; }
+        static private int GetParMovesFromDescription(string description) {
+            int parIndex = description.IndexOf("par=", System.StringComparison.Ordinal);
+            if (parIndex >= 0) {
+                return TextUtils.ParseInt(description.Substring(parIndex+4, 1));//TODO: Use properties string instead. So we can have double-digit par. :P
+            }
+            return 99999; // not defined.
+        }
 
 
 		/** Initializes a totally empty BoardData. */
@@ -20,10 +28,11 @@ namespace AbacusToy {
 			numRows = _numRows;
 			MakeEmptyLists ();
 		}
-		public BoardData(string[] layoutArray) {
+		public BoardData(string description, string[] layoutArray) {
 			// Set numCols and numRows!
 			numCols = layoutArray[0].Length;
 			numRows = layoutArray.Length;
+            parMoves = GetParMovesFromDescription(description);
 
 			// Make boardSpaceDatas, and prep empty lists!
 			MakeEmptyLists();

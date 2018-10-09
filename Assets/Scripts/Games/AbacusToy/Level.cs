@@ -15,6 +15,7 @@ namespace AbacusToy {
 		private Vector2Int mousePosBoard;
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
+        [SerializeField] private LevelUI levelUI;
 		private GameController gameController;
 		private Tile tileOver; // the Tile my mouse is over.
 		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
@@ -45,12 +46,12 @@ namespace AbacusToy {
 			return true;
 		}
 
-		private int NumMovesMade {
+		public int NumMovesMade {
 			get { return numMovesMade; }
-			set {
+			private set {
 				numMovesMade = value;
-				// Dispatch event!
-//				GameManagers.Instance.EventManager.OnNumMovesMadeChanged(numMovesMade);
+				// Tell ppl!
+                levelUI.OnNumMovesMadeChanged();
 			}
 		}
 
@@ -115,7 +116,7 @@ namespace AbacusToy {
 				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
 				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
 				string[] boardLayout = lines.Skip(1).ToArray(); // skip the descrpition string. The rest is the board layout! :)
-				BoardData boardData = new BoardData(boardLayout);
+				BoardData boardData = new BoardData(description, boardLayout);
 				RemakeModelAndViewFromData(boardData);
 			}
 			catch (System.Exception e) {
