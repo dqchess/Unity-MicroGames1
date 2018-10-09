@@ -37,7 +37,7 @@ namespace AbacusToy {
             body.UpdateVisualsPostMove();
             bodyShadow.UpdateVisualsPostMove();
             
-            t_debugText.text = MyTile.GroupID.ToString();
+            t_debugText.text = "";//MyTile.GroupID.ToString();
 		}
 
 

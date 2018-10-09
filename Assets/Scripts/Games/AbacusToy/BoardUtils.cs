@@ -133,32 +133,30 @@ namespace AbacusToy {
 			return MoveResults.Success;
 		}
         
-        public static List<string> stepSnapshots; // TEMP DEBUG
-        
         /// NOTE: This function doesn't account for bigger footprints! (No need to support that right now.)
         private static void CalculateAndTowIslandGroups(Board b, BoardOccupant boJustMoved, Vector2Int dir) {
             if (stepSnapshots!=null) { stepSnapshots.Add(b.LayoutString()); }
             
-            List<List<Tile>> groups;
+            int numGroups;//List<List<Tile>> groups;
             Vector2Int newlyVacantPos = boJustMoved.BoardPos.ToVector2Int() - dir; // The pos that was just vacated before this function was called.
             
             // Try to tow the next tile; Priority order: 1) Tile *behind* one just moved, 2) Tile beside one just moved that's in a DIFFERENT Group.
             
             // Recalculate groups.
-            groups = CalculateTileGroups(b);
-            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            numGroups = CalculateTileGroups(b);
+            if (numGroups <= 1) { return; } // Only 1 group? We can stop. :)
             Tile tileBehind = GetTile(b, newlyVacantPos-dir);
             MaybeTowTile(b, tileBehind, dir, boJustMoved.GroupID);
             
             // Recalculate groups.
-            groups = CalculateTileGroups(b);
-            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            numGroups = CalculateTileGroups(b);
+            if (numGroups <= 1) { return; } // Only 1 group? We can stop. :)
             Tile tileBesideA = GetTile(b, newlyVacantPos-dir.RotatedClockwise());
             MaybeTowTile(b, tileBesideA, dir, boJustMoved.GroupID);
             
             // Recalculate groups.
-            groups = CalculateTileGroups(b);
-            if (groups.Count <= 1) { return; } // Only 1 group? We can stop. :)
+            numGroups = CalculateTileGroups(b);
+            if (numGroups <= 1) { return; } // Only 1 group? We can stop. :)
             Tile tileBesideB = GetTile(b, newlyVacantPos-dir.RotatedCounterClockwise());
             MaybeTowTile(b, tileBesideB, dir, boJustMoved.GroupID);
         }
@@ -167,28 +165,38 @@ namespace AbacusToy {
                 MoveOccupant(b, t, dir);
             }
         }
-        private static List<List<Tile>> CalculateTileGroups(Board b) {
+        private static int CalculateTileGroups(Board b) {
             // Reset GroupIDs.
             for (int i=0; i<b.tiles.Count; i++) { b.tiles[i].GroupID = -1; }
             // Find dem groupz!
-            List<List<Tile>> groups = new List<List<Tile>>();
+            int numGroups = 0;
             for (int i=b.tiles.Count-1; i>=0; --i) {
                 Tile t = b.tiles[i];
                 if (t.GroupID != -1) { continue; } // Skip ones that've been set already.
-                groups.Add(new List<Tile>()); // Add a new group!
-                RecursiveTileFinding(b, groups, t);
+                numGroups ++; // There's a new group!
+                RecursiveTileFinding(b, numGroups, t);
             }
             // Return.
-            return groups;
+            return numGroups;
         }
-        private static void RecursiveTileFinding(Board b, List<List<Tile>> groups, Tile t) {
+        private static void RecursiveTileFinding(Board b, int numGroups, Tile t) {
             if (t==null || t.GroupID!=-1) { return; } // No unused tile here? Stop.
-            t.GroupID = groups.Count-1;
-            groups[groups.Count-1].Add(t);
-            RecursiveTileFinding(b,groups, b.GetTile(t.Col-1, t.Row));
-            RecursiveTileFinding(b,groups, b.GetTile(t.Col+1, t.Row));
-            RecursiveTileFinding(b,groups, b.GetTile(t.Col,   t.Row-1));
-            RecursiveTileFinding(b,groups, b.GetTile(t.Col,   t.Row+1));
+            t.GroupID = numGroups-1;
+            RecursiveTileFinding(b,numGroups, b.GetTile(t.Col-1, t.Row));
+            RecursiveTileFinding(b,numGroups, b.GetTile(t.Col+1, t.Row));
+            RecursiveTileFinding(b,numGroups, b.GetTile(t.Col,   t.Row-1));
+            RecursiveTileFinding(b,numGroups, b.GetTile(t.Col,   t.Row+1));
+        }
+        
+        
+        // DEBUG Snapshots
+        private static List<string> stepSnapshots;
+        public static void ResetMoveStepSnapshots() {
+            stepSnapshots = new List<string>();
+        }
+        public static void PrintMoveStepSnapshots() {
+            Debug.Log("Move Step Snapshots:");
+            foreach (string snapshot in BoardUtils.stepSnapshots) { Debug.Log(snapshot); }
         }
 
 

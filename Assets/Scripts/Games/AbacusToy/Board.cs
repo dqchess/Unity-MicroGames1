@@ -110,19 +110,12 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		/** Moves requested Tile, and the Occupants it'll also push.
 			Returns TRUE if we made a successful, legal move, and false if we couldn't move anything. */
-		public MoveResults ExecuteMove (BoardPos boToMovePos, Vector2Int dir) {
+		public MoveResults ExecuteMove(BoardPos boToMovePos, Vector2Int dir) {
 			// Clear out the Objects-added list just before the move.
 			objectsAddedThisMove.Clear ();
 
 			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
-            
-            BoardUtils.stepSnapshots = new List<string>(); // TEMP DEBUG
 			MoveResults result = BoardUtils.MoveOccupant(this, boToMove, dir);
-            
-            Debug.Log("Move Snapshots:");
-            foreach (string snapshot in BoardUtils.stepSnapshots) {
-                Debug.Log(snapshot);
-            }
             
             // ONLY if this move was a success, do the OnMoveComplete paperwork!
             if (result == MoveResults.Success) {
