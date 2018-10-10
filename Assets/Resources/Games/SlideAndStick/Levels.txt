@@ -23,34 +23,32 @@ LEVEL - Intro to Undo
 0.0
 010
 
+
+
+// ---- EASY, 3x3 ----
+
+//LEVEL - untitled
+//0..
+//010
+//10.
 //LEVEL - easy, not satisfying
 //0.2
 //1.1
 //2.0
-
-
-
-// ---- EASY, 3x3 ----
+//LEVEL - very easy (but can fail in a few different ways)
+//201
+//12.
+//1.0
 
 LEVEL - very easy
 2.2
 1.1
 222
 
-//LEVEL - untitled
-//0..
-//010
-//10.
-
 LEVEL - very easy
 220
 .02
 2.0
-
-LEVEL - very easy
-201
-12.
-1.0
 
 LEVEL - easy
 .03
@@ -58,14 +56,14 @@ LEVEL - easy
 0.0
 
 LEVEL - easy
-232
-..3
-322
-
-LEVEL - easy
 2..
 121
 211
+
+LEVEL - easy
+232
+..3
+322
 
 //LEVEL - med
 //21.

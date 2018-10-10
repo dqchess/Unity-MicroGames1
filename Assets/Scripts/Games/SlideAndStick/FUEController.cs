@@ -9,7 +9,7 @@ namespace SlideAndStick {
 		// Constants
 		public const string ID_FUE_1 = "1"; // Matches Levels.xml's fueID. TODO: Update this inaccurate comment
 		public const string ID_FUE_2 = "2"; // Matches Levels.xml's fueID.
-		public const string ID_INTRO_UNDO = "4"; // Matches Levels.xml's fueID.
+		public const string ID_INTRO_UNDO = "DISABLED";//"4"; // Matches Levels.xml's fueID.
 		private const string SEQ_FUE_1 = "SEQ_FUE_1"; // Doesn't matter what this is.
 		private const string SEQ_FUE_2 = "SEQ_FUE_2"; // Doesn't matter what this is.
 		private const string SEQ_INTRO_UNDO = "SEQ_INTRO_UNDO"; // Doesn't matter what this is.
@@ -70,6 +70,7 @@ namespace SlideAndStick {
 		private void Awake () {
 			// Hide things by default!
 			HideAllComponents();
+			CanTouchBoard = true;
 
 			// Add event listeners!
 //			GameManagers.Instance.EventManager.StartGameAtLevelEvent += OnStartLevel;

@@ -8,6 +8,7 @@ namespace SlideAndStick {
 Key presses are handled internally; UI Undo-Button presses I'm told about by Button_UndoMove.cs. */
 	public class UndoMoveInputController : MonoBehaviour {
 		// Properties
+		private bool areButtonsEmphasized; // TRUE when we're in a known, hardcoded fail state! When TRUE, the buttons will oscillate loudly.
 		private float undoLoc; // when this hits past 1, we say to undo a move (and reset its value)!
 		private float undoVel;
 		// References
@@ -40,12 +41,26 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			if (isButton_undo_up) { OnButton_Undo_Up (); }
 			else if (isButton_undo_down) { OnButton_Undo_Down (); }
 			else if (isButton_undo_held) { OnButton_Undo_Held (); }
+
+			if (areButtonsEmphasized) {
+				SetButtonsScale(0.9f + Mathf.Abs(Mathf.Sin(Time.unscaledTime*8f))*0.3f);
+			}
 		}
 
 		// doers
 		public void SetButtonsVisible(bool _isVisible) {
 			undoButton.gameObject.SetActive(_isVisible);
 			restartLevelButton.gameObject.SetActive(_isVisible);
+		}
+		private void SetButtonsScale(float scale) {
+			undoButton.transform.localScale = Vector3.one * scale;
+//			restartLevelButton.transform.localScale = Vector3.one * scale;DISABLED scaling this one.
+		}
+		private void EmphasizeButtonsIfInFailState() {
+			areButtonsEmphasized = BoardUtils.IsInHardcodedFailState(level.Board, level.LevelIndex);
+			if (!areButtonsEmphasized) { // Stop emphasizing?
+				SetButtonsScale(1);
+			}
 		}
 
 
@@ -55,6 +70,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		public void OnNumMovesMadeChanged(int numMovesMade) {
 			undoButton.interactable = numMovesMade > 0;
 			restartLevelButton.interactable = numMovesMade > 0;
+			EmphasizeButtonsIfInFailState();
 		}
 
 

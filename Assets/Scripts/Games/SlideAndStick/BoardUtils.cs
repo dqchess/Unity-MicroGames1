@@ -131,5 +131,99 @@ namespace SlideAndStick {
 		}
 
 
+
+		public static bool IsInHardcodedFailState(Board b, int levelIndex) {
+			if (b==null) { return false; }
+			if (levelIndex == 4) {
+				if (b.GetNumTiles(1)==1 && IsTileVert(GetFirstTileOfColor(b, 1))) {
+					return true;
+				}
+			}
+			else if (levelIndex == 5) {
+				if (b.tiles.Count==3 && IsTileHorz(b.tiles[0]) && IsTileHorz(b.tiles[1]) && IsTileHorz(b.tiles[2])) {
+					return true;
+				}
+			}
+//			else if (levelIndex == 7) {
+//				if (b.tiles.Count==4) { // 4 tiles?
+//					if (IsTileVert(GetFirstTileOfColor(b,0))) { // blue is vertical?
+//						Vector2Int[] shape = new Vector2Int[]{new Vector2Int(0,0),new Vector2Int(0,1),new Vector2Int(1,0)};
+//						if (IsTileShape(GetFirstTileOfColor(b,1), shape)) { // green is tromino?
+//							return true;
+//						}
+//					}
+//				}
+//			}
+			else if (levelIndex == 7) {
+				if (b.tiles.Count==3) { // 3 tiles?
+					if (IsTileTall(GetFirstTileOfColor(b,0), 3)) { // blue is at least 3 tall?
+						return true;
+					}
+				}
+			}
+			else if (levelIndex == 8) {
+				Tile topLeftTile = b.GetTile(0,0);
+				if (b.tiles.Count==3 && topLeftTile!=null && topLeftTile.FootprintLocal.Count==1 && GetOccupant(b,0,1)!=null) {
+					return true;
+				}
+			}
+			else if (levelIndex == 9) { // NOTE: This one hardly captures most of the fail states for this lvl.
+				Tile topLeftTile = b.GetTile(0,0);
+				if (topLeftTile!=null && topLeftTile.FootprintLocal.Count==1) {
+					if (IsTileColor(b,0,1, 3) && IsTileColor(b,1,0, 3) && IsTileColor(b,1,1, 3)) {
+						return true;
+					}
+				}
+			}
+			// Nah, I have no opinions on this state.
+			return false;
+		}
+		private static Tile GetFirstTileOfColor(Board b, int colorID) {
+			for (int i=0; i<b.tiles.Count; i++) {
+				if (b.tiles[i].ColorID == colorID) { return b.tiles[i]; }
+			}
+			return null;
+		}
+		private static bool IsTileColor(Board b, int col,int row, int colorID) {
+			Tile t = b.GetTile(col,row);
+			return t!=null && t.ColorID==colorID;
+		}
+		private static bool IsTileVert(Tile t) {
+			if (t==null) { return false; }
+			if (t.FootprintLocal.Count <= 1) { return false; } // Only 1 space? Nah.
+			for (int i=0; i<t.FootprintLocal.Count; i++) {
+				if (t.FootprintLocal[i].x != 0) { return false; }
+			}
+			return true;
+		}
+		private static bool IsTileHorz(Tile t) {
+			if (t==null) { return false; }
+			if (t.FootprintLocal.Count <= 1) { return false; } // Only 1 space? Nah.
+			for (int i=0; i<t.FootprintLocal.Count; i++) {
+				if (t.FootprintLocal[i].y != 0) { return false; }
+			}
+			return true;
+		}
+//		private static bool IsTileShape(Tile t, Vector2Int[] shape) { NOTE: Doesn't work yet... footprints can be offset from what we pass in. :P
+//			if (t.FootprintLocal.Count != shape.Length) { return false; } // # footprints don't match? Nah.
+//			for (int i=0; i<shape.Length; i++) {
+//				if (!t.FootprintLocal.Contains(shape[i])) { return false; }
+//			}
+//			return true;
+//		}
+		private static bool IsTileTall(Tile t, int numTall) {
+			if (t.FootprintLocal.Count < numTall) { return false; } // Quick check: Not even enough footprints? Nah.
+			int yMin= 999;
+			int yMax=-999;
+			for (int i=0; i<t.FootprintLocal.Count; i++) {
+				int y = t.FootprintLocal[i].y;
+				yMin = Mathf.Min(y, yMin);
+				yMax = Mathf.Max(y, yMax);
+			}
+			int tileHeight = (yMax - yMin) + 1;
+			return tileHeight >= numTall;
+		}
+
+
 	}
 }
