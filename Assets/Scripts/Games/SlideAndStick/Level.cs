@@ -41,6 +41,7 @@ namespace SlideAndStick {
 			return null;
 		}
 		private bool CanUndoMove () {
+			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
 			if (NumMovesMade <= 0) { return false; } // Can't go before time started, duhh.
 			return true;
 		}
@@ -204,6 +205,12 @@ namespace SlideAndStick {
 				if (tileGrabbing!=null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
 			}
 		}
+		/// Call this after we finish a move: tileGrabbing may now be null (it was destroyed in a merge), so we want to set tileGrabbing to what it LOOKS like we were already grabbing.
+		private void ConfirmTileGrabbing() {
+			if (tileGrabbing != null) {
+				SetTileGrabbing(board.GetTile(tileGrabbing.BoardPos));
+			}
+		}
 
 
         // ----------------------------------------------------------------
@@ -212,6 +219,8 @@ namespace SlideAndStick {
         private void OnBoardMoveComplete () {
             // Tell BoardView!
 			boardView.OnBoardMoveComplete();
+			// Trade-off tileGrabbing, in case it's changed (from a merge)!
+			ConfirmTileGrabbing();
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {

@@ -42,6 +42,7 @@ namespace AbacusToy {
 			return null;
 		}
 		private bool CanUndoMove () {
+			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
 			if (NumMovesMade <= 0) { return false; } // Can't go before time started, duhh.
 			return true;
 		}

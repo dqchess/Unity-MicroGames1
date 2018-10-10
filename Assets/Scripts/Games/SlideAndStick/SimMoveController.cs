@@ -59,8 +59,8 @@ namespace SlideAndStick {
         //  Initialize
         // ----------------------------------------------------------------
         public SimMoveController(float _unitSize) {
-            this.unitSize = _unitSize;
-            this.minDragOffset = _unitSize * 0.1f;
+			this.unitSize = _unitSize;
+			this.minDragOffset = 2;//_unitSize * 0.1f;
         }
 
 
