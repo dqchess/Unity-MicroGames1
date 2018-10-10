@@ -182,18 +182,7 @@ namespace SlideAndStick {
 
 			if (inputController.IsTouchUp()) { OnTouchUp(); }
 			else if (inputController.IsTouchDown()) { OnTouchDown(); }
-            
-            //if (inputDetector.isAutoSwipeTestHack) {
-            //    AutoSwipeTestHack();
-            //}
         }
-        
-  //      private void AutoSwipeTestHack() {
-  //          if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
-  //          Tile tileToContinueGrabbing = board.GetTile(tileGrabbing.BoardPos);
-  //          OnTouchUp();
-  //          SetTileGrabbing(tileToContinueGrabbing);
-		//}
 
 		private void OnTouchDown() {
 			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
@@ -210,7 +199,7 @@ namespace SlideAndStick {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
-				// Tell the dudes!
+				// Tell the Tiles!
 				if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
 				if (tileGrabbing!=null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
 			}
@@ -221,9 +210,8 @@ namespace SlideAndStick {
         //  Events
         // ----------------------------------------------------------------
         private void OnBoardMoveComplete () {
-            // Update BoardView visuals!!
-            boardView.ClearSimMoveDirAndBoard();
-            boardView.UpdateAllViewsMoveStart();
+            // Tell BoardView!
+			boardView.OnBoardMoveComplete();
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {

@@ -76,7 +76,7 @@ namespace SlideAndStick {
 			// Start off with all the right visual bells and whistles!
 			UpdateAllViewsMoveEnd ();
 		}
-		public void DestroySelf () {
+		public void DestroySelf() {
 			// Destroy my entire GO.
 			Destroy (this.gameObject);
 		}
@@ -86,7 +86,7 @@ namespace SlideAndStick {
 			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
 		}
 
-		TileView AddTileView (Tile data) {
+		TileView AddTileView(Tile data) {
 			TileView newObj = Instantiate(resourcesHandler.slideAndStick_tileView).GetComponent<TileView>();
 			newObj.Initialize (this, data);
 			allOccupantViews.Add (newObj);
@@ -112,37 +112,32 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		public void UpdateAllViewsMoveStart () {
-			print(Time.frameCount + " UpdateAllViewsMoveStart");
+		private void UpdateAllViewsMoveStart() {
 			AddViewsForAddedObjects();
 			UpdateBoardOccupantViewVisualsMoveStart();
 			// Note that destroyed Objects' views will be removed by the view in the UpdateVisualsMoveEnd.
 			// Reset our BoardOccupantView' "from" values to where they *currently* are! Animate from there.
 			foreach (BoardOccupantView bov in allOccupantViews) {
-				bov.SetValues_From_ByCurrentValues ();
+				bov.SetValues_From_ByCurrentValues();
 			}
 			areObjectsAnimating = true;
 			objectsAnimationLoc = 0;
 			objectsAnimationLocTarget = 1;
-			//		// Blindly confirm that at least someone is moving!
-			//		areAnyOccupantsAnimating = true;
-			//		doCheckIfOccupantsFinishedAnimating = true;
 		}
-		private void UpdateAllViewsMoveEnd () {
-			print(Time.frameCount + " UpdateAllViewsMoveEndUpdateAllViewsMoveEnd");
+		private void UpdateAllViewsMoveEnd() {
 			areObjectsAnimating = false;
 			objectsAnimationLoc = 0; // reset this back to 0, no matter what the target value is.
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
 		}
-		private void UpdateBoardOccupantViewVisualsMoveStart () {
+		private void UpdateBoardOccupantViewVisualsMoveStart() {
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove ();
 			}
 		}
 
-		private void AddViewsForAddedObjects () {
+		private void AddViewsForAddedObjects() {
 			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
 				AddObjectView (bo);
 			}
@@ -167,19 +162,25 @@ namespace SlideAndStick {
             areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
             ApplyObjectsAnimationLoc ();
         }
-        public void ClearSimMoveDirAndBoard() {
+        private void ClearSimMoveDirAndBoard() {
             simMoveDir = Vector2Int.zero;
-            simMoveBoard = null;
-            // Animate all views back to their original positions.
-            areObjectsAnimating = true;
-            objectsAnimationLocTarget = 0;
+			simMoveBoard = null;
+			// Animate all views back to their original positions.
+			areObjectsAnimating = true;
+			objectsAnimationLocTarget = 0;
         }
+		public void OnBoardMoveComplete() {
+			ClearSimMoveDirAndBoard();
+			UpdateAllViewsMoveStart();
+		}
         /** Clones our current Board, and applies the move to it! */
         private void SetSimMoveDirAndBoard(BoardOccupant boToMove, Vector2Int _simMoveDir) {
             // If we accidentally used this function incorrectly, simply do the correct function instead.
             if (_simMoveDir == Vector2Int.zero) { ClearSimMoveDirAndBoard (); return; }
             // Oh, NO boToMove? Ok, no simulated move.
-            if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
+			if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
+			// Make sure we FINISH how things were supposed to look before we set new to/from states!
+			UpdateAllViewsMoveEnd();
             
             simMoveDir = _simMoveDir;
             // Clone our current Board.
@@ -194,7 +195,7 @@ namespace SlideAndStick {
             // Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
             foreach (BoardOccupantView bov in allOccupantViews) {
                 bov.SetValues_To_ByMySimulatedMoveBoardObject();
-            }
+			}
         }
 
 
@@ -203,7 +204,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void FixedUpdate () {
+		private void FixedUpdate() {
 			if (areObjectsAnimating) {
 				objectsAnimationLoc += (objectsAnimationLocTarget-objectsAnimationLoc) / 2f;
 				ApplyObjectsAnimationLoc ();
@@ -212,7 +213,7 @@ namespace SlideAndStick {
 				}
 			}
 		}
-		private void ApplyObjectsAnimationLoc () {
+		private void ApplyObjectsAnimationLoc() {
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.GoToValues(objectsAnimationLoc);
 			}

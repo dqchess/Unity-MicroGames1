@@ -31,7 +31,7 @@ namespace BouncePaint {
 		private Vector2 centerA,centerB; // for TRAVELING Blocks.
         // References
         [SerializeField] private Sprite s_bodyDontTap=null;
-        private GameController gameController;
+//        private GameController gameController;
         private Level myLevel;
         // Editor-Settable Properties
         [Header("Hitbox")]
@@ -100,7 +100,7 @@ namespace BouncePaint {
 			Vector2 _size,
 			Vector2 _centerA,Vector2 _centerB
 		) {
-            gameController = _gameController;
+//            gameController = _gameController;
             myLevel = _myLevel;
             this.transform.SetParent(myLevel.transform);
             this.transform.localScale = Vector3.one;
