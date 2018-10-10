@@ -9,7 +9,7 @@ namespace SlideAndStick {
 		// Constants
 		public const string ID_FUE_1 = "1"; // Matches Levels.xml's fueID. TODO: Update this inaccurate comment
 		public const string ID_FUE_2 = "2"; // Matches Levels.xml's fueID.
-		public const string ID_INTRO_UNDO = "3"; // Matches Levels.xml's fueID.
+		public const string ID_INTRO_UNDO = "4"; // Matches Levels.xml's fueID.
 		private const string SEQ_FUE_1 = "SEQ_FUE_1"; // Doesn't matter what this is.
 		private const string SEQ_FUE_2 = "SEQ_FUE_2"; // Doesn't matter what this is.
 		private const string SEQ_INTRO_UNDO = "SEQ_INTRO_UNDO"; // Doesn't matter what this is.
@@ -43,11 +43,11 @@ namespace SlideAndStick {
 		// Properties
 		private Coroutine fingerMoveTileCoroutine;
 		private Coroutine bounceArrowCoroutine;
+		public bool CanTouchBoard { get; private set; }
 		private int currentStep; // Each sequence is made up of steps. Which step are we on?
 		private float timeUntilNextStep; // when -1, we won't be counting down.
 		private string currentSeq; // set to currentLevel's fueID, and matches one of the constants up top (or is empty).
 		// References
-//		[SerializeField] private GetHintUI getHintUI=null;
 		private Level level;
 
 		// Getters (Private)
@@ -93,6 +93,7 @@ namespace SlideAndStick {
 			HideAllComponents();
 			timeUntilNextStep = -1;
 			currentStep = 0;
+			CanTouchBoard = true;
 
 			currentSeq = newSeqName;
 
@@ -110,6 +111,7 @@ namespace SlideAndStick {
 			currentSeq = null;
 			timeUntilNextStep = -1;
 			currentStep = 0;
+			CanTouchBoard = true;
 			GameUtils.ParentAndReset(i_arrow.gameObject, this.transform); // Make sure it's back on my tf (we may have tossed it on another tf).
 		}
 
@@ -147,13 +149,13 @@ namespace SlideAndStick {
 					NextStep();
 				}
 			}
-//			else if (currentSeq == SEQ_FUE_2) {
-//				if (level.WordsSubmitted.Count == 2) { // Spelled first 2 words. Now recommend a hint for the third word!
-//					NextStep();
-//				}
-//			}
+			else if (currentSeq == SEQ_INTRO_UNDO) {
+				if (level.NumMovesMade == 1) { // First move? Next step!
+					NextStep();
+				}
+			}
 		}
-		private void OnUseHint() {
+		public void OnUndoMove() {
 			if (currentSeq == SEQ_INTRO_UNDO) {
 				NextStep();
 			}
@@ -227,12 +229,11 @@ namespace SlideAndStick {
 			int s = 1; // shortcut to avoid hard-coding numbas.
 
 			currentStep ++;
-			//		Debug.Log ("FUE currentStep: " + currentStep);
 
 			// ---- FUE 1 ----
 			if (currentSeq == SEQ_FUE_1) {
 				if (currentStep == s++) {
-//					GameManagers.Instance.EventManager.SetGetHintButtonVisible(false); // No Get-Hint button.
+					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
 					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_1);
 					t_instructions.text = "Merge the Tiles!";
 				}
@@ -241,6 +242,7 @@ namespace SlideAndStick {
 			// ---- FUE 2 ----
 			else if (currentSeq == SEQ_FUE_2) {
 				if (currentStep == s++) {
+					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
 					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2A, 4); // Give them 4 seconds to merge something before we show the finger animation.
 //					t_instructions.text = "Merge colors together!";
 				}
@@ -250,47 +252,49 @@ namespace SlideAndStick {
 				}
 			}
 
-			/*
 			// ---- FUE 3/3 ----
-			else if (currentSeq == SEQ_FUE_2) {
-				// Show first popup.
+			else if (currentSeq == SEQ_INTRO_UNDO) {
+				// Wait for the first move.
 				if (currentStep == s++) {
-					GameManagers.Instance.EventManager.SetGetHintButtonVisible(false); // No Get-Hint button visible... yet.
-					go_findTheseWordsPopup.SetActive(true);
-					//Vector2 arrowPos = wordsSubmittedUI.Pos + new Vector2(wordsSubmittedUI.Size.x, wordsSubmittedUI.Size.y+50);
-					GameUtils.ParentAndReset(i_arrow.gameObject, wordsSubmittedUI.transform);
-					Vector2 arrowPos = new Vector2(0, -wordsSubmittedUI.Size.y*0.5f-20);
-					StartAnimation_BounceArrow(arrowPos, 180);
-					timeUntilNextStep = 0.4f; // Wait a moment for the player to read the popup.
+					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets... yet!
 				}
-				// Wait for input.
+				// Show instructions.
 				else if (currentStep == s++) {
-				}
-				// Wait for them to spell two words.
-				else if (currentStep == s++) {
-					go_findTheseWordsPopup.SetActive(false);
-					StopAnimation_BounceArrow();
-				}
-				// Show second popup.
-				else if (currentStep == s++) {
-					canTouchBoard = false; // ignore Board input! I'm da captain now!
-					go_useAHintPopup.SetActive(true);
-					GameUtils.ParentAndReset(i_arrow.gameObject, getHintUI.transform);
-					Vector2 arrowPos = new Vector2(0, 60);
+					CanTouchBoard = false; // ignore Board input! I'm da captain now!
+					t_instructions.text = "Press to UNDO.";
+					level.UndoMoveInputController.SetButtonsVisible(true);
+					RectTransform rt_undoButton = level.UndoMoveInputController.rt_undoButton;
+					GameUtils.ParentAndReset(i_arrow.gameObject, rt_undoButton);
+					Vector2 arrowPos = new Vector2(0, rt_undoButton.rect.height*0.5f+20);
 					StartAnimation_BounceArrow(arrowPos, 0);
-					GameManagers.Instance.EventManager.SetGetHintButtonVisible(true);
-					GameManagers.Instance.EventManager.SetNextHintFree();
 					timeUntilNextStep = 0.4f; // Wait a moment for the player to read the popup.
 				}
 				// Wait for input.
 				else if (currentStep == s++) {
 				}
+				// Wait for them to undo the move.
+				else if (currentStep == s++) {
+					t_instructions.text = "";
+					StopAnimation_BounceArrow();
+					CanTouchBoard = true;
+//					go_findTheseWordsPopup.SetActive(false);
+				}
+//				// Show second popup.
+//				else if (currentStep == s++) {
+//					go_useAHintPopup.SetActive(true);
+//					GameUtils.ParentAndReset(i_arrow.gameObject, getHintUI.transform);
+//					Vector2 arrowPos = new Vector2(0, 60);
+//					StartAnimation_BounceArrow(arrowPos, 0);
+//					timeUntilNextStep = 0.4f; // Wait a moment for the player to read the popup.
+//				}
+//				// Wait for input.
+//				else if (currentStep == s++) {
+//				}
 				// End sequence!
 				else {
 					EndSequence();
 				}
 			}
-			*/
 
 		}
 

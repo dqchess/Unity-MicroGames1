@@ -54,11 +54,8 @@ namespace SlideAndStick {
 		public void Initialize (Level _levelRef, Board _myBoard) {
 			levelRef = _levelRef;
 			myBoard = _myBoard;
-			this.transform.SetParent (levelRef.transform);
-			this.transform.localScale = Vector3.one;
-            // Position me nice and horz centered!
-            float parentWidth = levelRef.GetComponent<RectTransform>().rect.width;
-            myRectTransform.anchoredPosition = new Vector2((parentWidth-myRectTransform.rect.width)*0.5f,-200);
+			GameUtils.ParentAndReset(this.gameObject, levelRef.transform);
+			this.transform.SetAsFirstSibling(); // Put me behind the UI.
 
 			// Determine unitSize and other board-specific visual stuff
 			UpdatePosAndSize();
@@ -84,8 +81,16 @@ namespace SlideAndStick {
 		}
 
 		private void UpdatePosAndSize() {
+			// Calculate unitSize.
 			Rect r_availableArea = myRectTransform.rect;
 			unitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
+			// Update my rectTransform size.
+			myRectTransform.sizeDelta = new Vector2(numCols*unitSize, numRows*unitSize);
+			// Position me nice and horz centered!
+			Vector2 parentSize = levelRef.GetComponent<RectTransform>().rect.size;
+			float posX = (parentSize.x-myRectTransform.rect.width)*0.5f;
+			float posY = -(parentSize.y*0.8f - myRectTransform.rect.height); // bottom-align me!
+			myRectTransform.anchoredPosition = new Vector2(posX,posY);
 		}
 
 		TileView AddTileView(Tile data) {

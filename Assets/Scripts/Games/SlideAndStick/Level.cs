@@ -6,6 +6,7 @@ using UnityEngine;
 namespace SlideAndStick {
 	public class Level : BaseLevel {
 		// Components
+		[SerializeField] private UndoMoveInputController undoMoveInputController;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
         private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
@@ -22,14 +23,17 @@ namespace SlideAndStick {
 		// Getters (Public)
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
+		public GameController GameController { get { return gameController; } }
+		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
 		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
 		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
-		private bool CanMakeAnyMove () {
+		private bool CanMakeAnyMove() {
 			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
+			if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {
@@ -46,10 +50,11 @@ namespace SlideAndStick {
 			return true;
 		}
 
-		private int NumMovesMade {
+		public int NumMovesMade {
 			get { return numMovesMade; }
-			set {
+			private set {
 				numMovesMade = value;
+				undoMoveInputController.OnNumMovesMadeChanged(numMovesMade);
 				// Dispatch event!
 //				GameManagers.Instance.EventManager.OnNumMovesMadeChanged(numMovesMade);
 			}
@@ -71,7 +76,7 @@ namespace SlideAndStick {
 
 			// Send in the clowns!
 			AddLevelComponents();
-            simMoveController = new SimMoveController(boardView.UnitSize);
+            simMoveController = new SimMoveController(this);
 		}
 
 
@@ -241,6 +246,7 @@ namespace SlideAndStick {
 		//  Game Doers
 		// ----------------------------------------------------------------
 		public void MoveTileAttempt(Tile tileToMove, Vector2Int dir) {
+			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			// If we can't make this specific move, also stop.
 			if (!BoardUtils.CanExecuteMove(board, tileToMove, dir)) {
 				return;
@@ -267,6 +273,7 @@ namespace SlideAndStick {
 			RemakeModelAndViewFromData(boardSnapshotData);
 			boardSnapshots.Remove(boardSnapshotData);
 			NumMovesMade --; // decrement this here!
+			gameController.FUEController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!
 			OnBoardMoveComplete();
 		}

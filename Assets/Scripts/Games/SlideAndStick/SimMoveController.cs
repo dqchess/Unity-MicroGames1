@@ -18,6 +18,8 @@ namespace SlideAndStick {
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
         private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
+		// References
+		private Level level;
 
         // Getters
         public float SimMovePercent { get; private set; } // from 0 to 1. BoardView uses this value.
@@ -45,6 +47,7 @@ namespace SlideAndStick {
             }
         }
         private float GetSimMovePercent() {
+			if (!level.GameController.FUEController.CanTouchBoard) { return 0; } // Locked out by FUE? No sim move, then.
             switch (simMoveSide) {
                 case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize*2f);
 				case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize*2f);
@@ -58,8 +61,9 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-        public SimMoveController(float _unitSize) {
-			this.unitSize = _unitSize;
+		public SimMoveController(Level _level) {
+			this.level = _level;
+			this.unitSize = level.BoardView.UnitSize;
 			this.minDragOffset = 2;//_unitSize * 0.1f;
         }
 

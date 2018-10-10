@@ -32,6 +32,10 @@ namespace SlideAndStick {
 			StartCoroutine(Coroutine_StartNextLevel());
 		}
 
+		public void RestartLevel() {
+			SetCurrentLevel(LevelIndex, false);
+		}
+
 		private IEnumerator Coroutine_StartNextLevel() {
 			yield return new WaitForSecondsRealtime(0.7f);
 			SetCurrentLevel(LevelIndex+1, true);

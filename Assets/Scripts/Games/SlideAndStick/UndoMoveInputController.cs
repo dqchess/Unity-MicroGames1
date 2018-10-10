@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SlideAndStick {
 	/** For cleanliness. Handles what happens when we hold down the Undo button.
@@ -11,7 +12,11 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		private float undoVel;
 		// References
 		[SerializeField] private Level level;
+		[SerializeField] private Button restartLevelButton;
 		[SerializeField] private UndoMoveButton undoButton;
+
+		// Getters (Public)
+		public RectTransform rt_undoButton { get { return undoButton.GetComponent<RectTransform>(); } }
 
 
 		// ----------------------------------------------------------------
@@ -37,10 +42,29 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			else if (isButton_undo_held) { OnButton_Undo_Held (); }
 		}
 
+		// doers
+		public void SetButtonsVisible(bool _isVisible) {
+			undoButton.gameObject.SetActive(_isVisible);
+			restartLevelButton.gameObject.SetActive(_isVisible);
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Game Events
+		// ----------------------------------------------------------------
+		public void OnNumMovesMadeChanged(int numMovesMade) {
+			undoButton.interactable = numMovesMade > 0;
+			restartLevelButton.interactable = numMovesMade > 0;
+		}
+
 
 		// ----------------------------------------------------------------
 		//  Button Events
 		// ----------------------------------------------------------------
+		public void OnRestartLevelButtonClick() {
+			level.GameController.RestartLevel();//ReloadScene();
+		}
+
 		public void OnButton_Undo_Held () {
 			// Update vel
 			undoVel += 0.006f;
