@@ -47,10 +47,10 @@ namespace CirclePop {
         private bool DoesMove() { return moveSpeed != 0; }
         private bool DoesRotate() { return rotateSpeed!=0; }
 		virtual protected bool MayMove() {
-			return DoesMove() && myLevel.IsGameStatePlaying;
+			return DoesMove() && myLevel.IsPlaying;
 		}
 		virtual protected bool MayRotate() {
-            return DoesRotate() && myLevel.IsGameStatePlaying;
+			return DoesRotate() && myLevel.IsPlaying;
 		}
 		// Getters (Private)
 		private float timeScale { get { return Time.timeScale; } }
@@ -192,7 +192,7 @@ namespace CirclePop {
 		// ----------------------------------------------------------------
 		virtual protected void Update() {
 			if (Time.timeScale == 0) { return; } // No time? No dice.
-            if (myLevel.IsAnimating || !myLevel.IsGameStatePlaying) { return; } // Animating in? Don't move.
+			if (!myLevel.IsPlaying) { return; } // Not playing? Don't move.
 
 			UpdateMove();
 			UpdateRotate();

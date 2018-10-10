@@ -30,7 +30,7 @@ namespace AbacusToy {
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
-			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
+			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {

@@ -18,6 +18,7 @@ namespace BouncePaint {
         private List<Player> players; // oh, balls!
         private List<Block> blocks;
         // Properties
+		public bool IsLevelComplete { get; private set; }
         private float propSizeScale; // for when we add Props! So we can easily change the size of all Props instead of each one by hand.
         private float screenShakeVolume;
         // References
@@ -91,6 +92,8 @@ namespace BouncePaint {
         //  Events
         // ----------------------------------------------------------------
         public void OnWinLevel(Player winningPlayer) {
+			IsLevelOver = true;
+			IsLevelComplete = true;
             // Emit winning burst!!
             ps_finalBounceA.transform.localPosition = winningPlayer.transform.localPosition;
             ps_finalBounceB.transform.localPosition = winningPlayer.transform.localPosition;

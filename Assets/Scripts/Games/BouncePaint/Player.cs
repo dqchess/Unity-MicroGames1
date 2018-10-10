@@ -246,7 +246,7 @@ namespace BouncePaint {
             // Wait a frame or two, THEN squish me! (Squashing right away makes the collision look a little off.)
             StartCoroutine(Coroutine_SquishWithDelay(hitQuality));
 
-            bool isWinningPaintHit = !wasBlockPainted && gameController.IsLevelComplete;
+			bool isWinningPaintHit = !wasBlockPainted && myLevel.IsLevelComplete;
             // Winning hit??
             if (isWinningPaintHit) {
                 block.DipExtraFromWinningBounce(vel);

@@ -113,8 +113,9 @@ namespace SlideAndStick {
 		//  Doers
 		// ----------------------------------------------------------------
 		public void UpdateAllViewsMoveStart () {
-			AddViewsForAddedObjects ();
-			UpdateBoardOccupantViewVisualsMoveStart ();
+			print(Time.frameCount + " UpdateAllViewsMoveStart");
+			AddViewsForAddedObjects();
+			UpdateBoardOccupantViewVisualsMoveStart();
 			// Note that destroyed Objects' views will be removed by the view in the UpdateVisualsMoveEnd.
 			// Reset our BoardOccupantView' "from" values to where they *currently* are! Animate from there.
 			foreach (BoardOccupantView bov in allOccupantViews) {
@@ -128,10 +129,11 @@ namespace SlideAndStick {
 			//		doCheckIfOccupantsFinishedAnimating = true;
 		}
 		private void UpdateAllViewsMoveEnd () {
+			print(Time.frameCount + " UpdateAllViewsMoveEndUpdateAllViewsMoveEnd");
 			areObjectsAnimating = false;
 			objectsAnimationLoc = 0; // reset this back to 0, no matter what the target value is.
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
-				allOccupantViews[i].UpdateVisualsPostMove ();
+				allOccupantViews[i].UpdateVisualsPostMove();
 			}
 		}
 		private void UpdateBoardOccupantViewVisualsMoveStart () {

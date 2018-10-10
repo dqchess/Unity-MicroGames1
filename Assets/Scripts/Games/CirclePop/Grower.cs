@@ -132,7 +132,7 @@ namespace CirclePop {
             t_scoreValue.transform.localEulerAngles = new Vector3(0, 0, -this.transform.localEulerAngles.z); // Rotate my text BACK so it's always horizontal.
         }
 		private void OnCollisionEnter2D(Collision2D collision) {
-			if (!myLevel.IsGameStatePlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
+			if (!myLevel.IsPlaying) { return; } // If we're NOT playing (pre-game or level-over), ignore all collisions.
 			if (currentState == GrowerStates.Sleeping) { return; } // Ignore sleeping beauties! (At least for now.)
 			Prop otherProp = collision.collider.GetComponent<Prop>();
 			// Illegal overlap!
@@ -158,14 +158,14 @@ namespace CirclePop {
 			base.Update();
 
             if (Time.timeScale == 0) { return; } // No time? Do nothin'.
-            if (myLevel.IsAnimating || !myLevel.IsGameStatePlaying) { return; } // Animating in? Don't move.
+			if (!myLevel.IsPlaying) { return; } // Not playing? Don't move.
             if (myLevel.IsFUEGameplayFrozen) { return; } // FUE's frozen gameplay? Don't move.
 
 			UpdatePreGrowingFlash();
 			UpdateGrowing();
 		}
 		private void UpdatePreGrowingFlash() {
-			if (!myLevel.IsGameStatePlaying) { return; } // Not playing? Do nothing.
+			if (!myLevel.IsPlaying) { return; } // Not playing? Do nothing.
 			// Am I pre-growing? Then flash!
 			if (currentState==GrowerStates.PreGrowing) {
 				float colorLoc = MathUtils.SinRange(-0.3f, 1.3f, Time.time*14f);
@@ -174,7 +174,7 @@ namespace CirclePop {
 			}
 		}
 		private void UpdateGrowing() {
-			if (!myLevel.IsGameStatePlaying) { return; } // Not playing? Do nothing.
+			if (!myLevel.IsPlaying) { return; } // Not playing? Do nothing.
 			// If I'm growing, then GROW!
 			if (currentState==GrowerStates.Growing) {
 				GrowStep();

@@ -53,13 +53,15 @@ namespace WaveTap {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		public void OnLoseLevel(LoseReasons reason) {
-			levelUI.OnLoseLevel(reason);
-			player.OnLoseLevel();
-		}
 		public void OnWinLevel() {
+			IsLevelOver = true;
 			levelUI.OnWinLevel();
 			player.OnWinLevel();
+		}
+		public void OnLoseLevel(LoseReasons reason) {
+			IsLevelOver = true;
+			levelUI.OnLoseLevel(reason);
+			player.OnLoseLevel();
 		}
 
 

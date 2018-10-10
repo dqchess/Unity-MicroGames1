@@ -38,18 +38,18 @@ namespace SlideAndStick {
 
 		override protected void WinLevel() {
 			base.WinLevel();
-			StartCoroutine(Coroutine_StartNextLevel());
-//			// Tell people!
-//			level.OnWinLevel();
+			// Tell people!
+			level.OnWinLevel();
 //			// Update best score!
 //			int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
 //			if (scoreSolidified > bestScore) {
 //				SaveStorage.SetInt(SaveKeys.BestScore(MyGameName(),LevelIndex), scoreSolidified);
 //			}
+			StartCoroutine(Coroutine_StartNextLevel());
 		}
 
 		private IEnumerator Coroutine_StartNextLevel() {
-			yield return new WaitForSecondsRealtime(0.5f);//1.2f);
+			yield return new WaitForSecondsRealtime(0.7f);
 			SetCurrentLevel(LevelIndex+1, true);
 		}
 

@@ -1,5 +1,18 @@
 
 
+LEVEL - Test
+0..
+.0.
+0..
+
+LEVEL - Test
+...0.
+...0.
+.0...
+...0.
+0..0.
+
+
 
 
 // ---- TUTORIAL/HANDMADE ----
@@ -23,6 +36,10 @@ LEVEL - Intro to Undo
 .1.
 0.0
 010
+
+
+
+// ---- EASY, 3x3 ----
 
 LEVEL - very easy
 2.2
@@ -50,26 +67,26 @@ LEVEL - easy
 0.0
 
 LEVEL - easy
-002
-.21
-1.0
-
-LEVEL - med
 232
 ..3
 322
 
-LEVEL - med-hard
-21.
-12.
+LEVEL - easy
+2..
+121
 211
 
+//LEVEL - med
+//21.
+//12.
+//211
 
 
 
 
 
-// ---- 4x4, EASY, 2 COLORS ----
+
+// ---- EASY, 4x4, 2 COLORS ----
 
 //LEVEL - easy
 //0..1
@@ -145,12 +162,6 @@ LEVEL - easy
 1.1.
 
 LEVEL - easy
-010.
-1.11
-0111
-..0.
-
-LEVEL - easy
 ..11
 00.1
 01.1
@@ -185,6 +196,11 @@ LEVEL - easy-med
 0...
 00.1
 0110
+
+LEVEL - easy-med
+002
+.21
+1.0
 
 LEVEL - easy-med
 ..11
@@ -282,6 +298,12 @@ LEVEL - med
 01.0
 0100
 
+LEVEL - med
+010.
+1.11
+0111
+..0.
+
 LEVEL - med, more tricky than satisfying
 011.
 1010
@@ -308,8 +330,8 @@ LEVEL - med
 
 
 
-// ---- 4x4, MEDIUM, 3 COLORS ----
 
+// ---- 4x4, MEDIUM, 3 COLORS ----
 
 LEVEL - med, fine
 1.0.
@@ -412,207 +434,6 @@ LEVEL - untitled
 LEVEL - untitled
 .
 
-
-
-
-LEVEL - ANY shape (easy)
-123
-321
-...
-
-LEVEL - ANY shape, intro to Undo
-##2
-101
-00.
-..1
-##2
-
-LEVEL - ANY shape (easy, boring)
-..11.
-.200.
-002..
-.220.
-11...
-
-LEVEL - ANY shape (easy, boring)
-.221
-20.2
-0...
-.121
-
-LEVEL - ANY shape (easy-ish)
-1000.
-.1011
-1000.
-.....
-0...0
-
-LEVEL - ANY shape (medium)
-...0.
-200.0
-201.0
-02.12
-..001
-
-LEVEL - ANY shape aggressive checkerboard (medium)
-0.0.0
-10101
-0.0.0
-10101
-0.0.0
-
-
-
-
-
-
-
-
-
-// MAKE-RECT levels
-LEVEL - Empty
-.
-
-LEVEL - Make rects (easy)
-1.000
-1.1..
-.000.
-..1.1
-000.1
-
-LEVEL - Make rects (medium)
-00011
-.1.2.
-202..
-110.2
-..10.
-
-LEVEL - Make rects (hard)
-12..31
-0.23.0
-33.21.
-...003
-0131..
-.20133
-
-LEVEL - Make rects (hard)
-..11.1
-.3..32
-0.02..
-.32300
-022..2
-030301
-
-LEVEL - Make rects (hard W)
-20.1.1
-.20...
-122.1.
-..2212
-..0.20
-0.0.12
-
-LEVEL - Make rects (UNTESTED)
-.2002
-2.2..
-22232
-..320
-0.33.
-
-LEVEL - Make rects "I" vice (hard, UNTESTED)
-1000.
-.1011
-1000.
-.....
-0.1.0
-
-LEVEL - Make rects (hard, UNTESTED)
-..2.3
-32333
-.11..
-22131
-...22
-
-LEVEL - Make rects (infuriating, fascinating, UNTESTED)
-.11.2
-2.2..
-1..22
-.0200
-2.201
-
-LEVEL - Make rects: Indigo 3x3 (hard; UNTESTED)
-3.....
-331..0
-0..033
-.021.3
-.12.21
-2..333
-
-LEVEL - Make rects: Indigo headache. (very hard; UNTESTED)
-3.3...
-331..0
-0..123
-.023.0
-.13.21
-2..333
-
-
-
-
-// OTHER THEORETICAL GOALS
-
-LEVEL - Empty
-.
-
-LEVEL - Make 0 and 1 rects (not 2's!)
-11.22
-01.22
-.....
-22.00
-22.01
-
-
-
-
-LEVEL - Untitled
-.....
-.....
-.....
-.....
-.....
-
-
-LEVEL - Untitled
-......
-......
-......
-......
-......
-......
-
-
-
-
-LEVEL - Test
-..000
-...00
-.....
-0....
-000..
-
-LEVEL - Impossible L example
-..0.0
-...0.
-0...0
-0....
-000..
-
-
-LEVEL - Impossible! But hilariously infuriating.
-11.22
-10.22
-.....
-22.10
-22.00
 
 
 

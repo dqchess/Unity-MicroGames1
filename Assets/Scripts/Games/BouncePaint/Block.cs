@@ -305,7 +305,7 @@ namespace BouncePaint {
                     (posDipTarget.y-posDipOffset.y) * 0.24f);
 			}
             // Dance
-            if (gameController.IsLevelComplete) {
+			if (myLevel.IsLevelComplete) {
                 posDanceOffset = new Vector2(0, Mathf.Sin(Time.time*4f+center.x*0.016f) * 26f);
             }
         }

@@ -124,12 +124,14 @@ namespace CirclePop {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		public void OnLoseLevel(LoseReasons reason) {
-			levelUI.OnLoseLevel(reason);
-		}
 		public void OnWinLevel() {
+			IsLevelOver = true;
 			levelUI.OnWinLevel();
             SetAllPropCollidersEnabled(false);
+		}
+		public void OnLoseLevel(LoseReasons reason) {
+			IsLevelOver = true;
+			levelUI.OnLoseLevel(reason);
 		}
 
 		public void OnTapDown() {
@@ -395,32 +397,3 @@ namespace CirclePop {
 
 	}
 }
-
-/*
-
-//		// ----------------------------------------------------------------
-//		//  Events
-//		// ----------------------------------------------------------------
-//		public void OnWinLevel(Player winningPlayer) {
-//			// Shaken, not stirred!
-//			screenShakeVolume = 2f;
-//		}
-//		// ----------------------------------------------------------------
-//		//  Update
-//		// ----------------------------------------------------------------
-//		private void Update() {
-//			UpdateScreenShake();
-//		}
-//		private void UpdateScreenShake() {
-//			if (screenShakeVolume != 0) {
-//				// Apply!
-//				//float rotation = Mathf.Sin(screenShakeVolume*5f) * screenShakeVolume*4f;
-//				//this.transform.localEulerAngles = new Vector3(0,0,rotation);
-//				float yOffset = Mathf.Sin(screenShakeVolume*20f) * screenShakeVolume*7f;
-//				myRectTransform.anchoredPosition = new Vector3(0, yOffset, 0); // TEST
-//				// Update!
-//				screenShakeVolume += (0-screenShakeVolume) / 24f * TimeController.FrameTimeScale;
-//				if (Mathf.Abs(screenShakeVolume) < 0.5f) { screenShakeVolume = 0; }
-//			}
-//		}
-*/

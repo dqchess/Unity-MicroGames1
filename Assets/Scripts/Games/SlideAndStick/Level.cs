@@ -29,7 +29,7 @@ namespace SlideAndStick {
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove () {
-			if (!gameController.IsGameStatePlaying) { return false; } // If the level's over, don't allow further movement. :)
+			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {
@@ -154,9 +154,11 @@ namespace SlideAndStick {
 
 		private void UpdateTileOver() {
 			Tile prevTileOver = tileOver;
-			// A) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
-			if (tileGrabbing != null) { tileOver = tileGrabbing; }
-			// B) Otherwise, use the one the mouse is over.
+			// A) Can't make a move? Then no highlighting.
+			if (!CanMakeAnyMove()) { tileOver = null; }
+			// B) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
+			else if (tileGrabbing != null) { tileOver = tileGrabbing; }
+			// C) Otherwise, use the one the mouse is over.
 			else { tileOver = board.GetTile(mousePosBoard); }
 			// It's changed!
 			if (prevTileOver != tileOver) {
@@ -228,6 +230,11 @@ namespace SlideAndStick {
                 gameController.OnBoardGoalsSatisfied();
             }
         }
+		public void OnWinLevel() {
+			IsLevelOver = true;
+			// Make sure to let go of any tileGrabbing for visuals.
+			SetTileGrabbing(null);
+		}
 
 
 

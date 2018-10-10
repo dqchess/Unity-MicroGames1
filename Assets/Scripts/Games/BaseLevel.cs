@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class BaseLevel : MonoBehaviour {
 	// Properties
 	[HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
+	protected bool IsLevelOver;
 	private int levelIndex;
 	// Components
 	[SerializeField] protected RectTransform myRectTransform=null;
@@ -13,7 +14,7 @@ public abstract class BaseLevel : MonoBehaviour {
 	private BaseLevelGameController myGameController;
 
 	// Getters (Public)
-	public bool IsGameStatePlaying { get { return myGameController.IsGameStatePlaying; } }
+	public bool IsPlaying { get { return myGameController.IsGameStatePlaying && !IsAnimating && !IsLevelOver; } }
 	public Canvas Canvas { get { return myGameController.Canvas; } }
 	public int LevelIndex { get { return levelIndex; } }
 	// Getters (Protected)
@@ -26,6 +27,7 @@ public abstract class BaseLevel : MonoBehaviour {
 	protected void BaseInitialize(BaseLevelGameController _myGameController, Transform tf_parent, int _levelIndex) {
 		myGameController = _myGameController;
 		levelIndex = _levelIndex;
+		IsLevelOver = false;
 
 		gameObject.name = "Level " + levelIndex;
 		GameUtils.ParentAndReset(this.gameObject, tf_parent);
