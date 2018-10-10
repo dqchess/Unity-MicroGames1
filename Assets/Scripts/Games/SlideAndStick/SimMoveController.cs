@@ -46,10 +46,10 @@ namespace SlideAndStick {
         }
         private float GetSimMovePercent() {
             switch (simMoveSide) {
-                case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize);
-                case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize);
-                case Sides.B: return Mathf.Max(0, -dragAxes.y/unitSize);
-                case Sides.T: return Mathf.Max(0,  dragAxes.y/unitSize);
+                case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize*2f);
+				case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize*2f);
+				case Sides.B: return Mathf.Max(0, -dragAxes.y/unitSize*2f);
+				case Sides.T: return Mathf.Max(0,  dragAxes.y/unitSize*2f);
                 default: Debug.LogError("Whoa, side not recognized: " + simMoveSide); return 0;
             }
         }

@@ -221,6 +221,8 @@ namespace SlideAndStick {
 			boardView.OnBoardMoveComplete();
 			// Trade-off tileGrabbing, in case it's changed (from a merge)!
 			ConfirmTileGrabbing();
+			// Tell people!
+			gameController.FUEController.OnBoardMoveComplete();
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {

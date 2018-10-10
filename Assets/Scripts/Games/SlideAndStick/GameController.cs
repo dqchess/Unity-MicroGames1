@@ -9,37 +9,21 @@ namespace SlideAndStick {
 		// Objects
 		private Level level; // MY game-specific Level class.
 		// References
-//		[SerializeField] private GameUI ui=null;
+		[SerializeField] private FUEController fueController=null;
+
+		// Getters (Public)
+		public FUEController FUEController { get { return fueController; } }
 
 
 
 		// ----------------------------------------------------------------
 		//  Doers - Loading Level
 		// ----------------------------------------------------------------
-//		public void ResetLevel() {
-//			StartCoroutine (Coroutine_ResetLevel ());
-//		}
-//		/** This actually shows "Loading" overlay FIRST, THEN next frame loads the world. */
-//		private IEnumerator Coroutine_ResetLevel () {
-//            // Destroy the previous level.
-//            DestroyCurrentLevel ();
-//
-//			// Instantiate the Level from the provided LevelData!
-//			level = Instantiate(resourcesHandler.slideAndStick_boardController).GetComponent<Level>();
-//			level.Initialize (this, canvas.transform);
-//
-//			// Tell the people!
-//            ui.OnStartLevel();
-////			// Dispatch event!
-////			GameManagers.Instance.EventManager.OnStartGameAtLevel (currentLevel);
-//
-//			yield return null;
-//		}
-
 		override protected void WinLevel() {
 			base.WinLevel();
 			// Tell people!
 			level.OnWinLevel();
+			fueController.OnCompleteLevel();
 //			// Update best score!
 //			int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
 //			if (scoreSolidified > bestScore) {
@@ -65,15 +49,18 @@ namespace SlideAndStick {
 		private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
 			Level prevLevel = level;
 
+			// Wait until there's no touch on the screen.
+			while (inputController.IsTouchHold()) { yield return null; }
+
 			// Make the new level!
 			InitializeLevel(Instantiate(resourcesHandler.slideAndStick_level), _levelIndex);
 
 			// DO animate!
 			if (doAnimate) {
-				float duration = 1.2f;
-
 				level.IsAnimating = true;
 				prevLevel.IsAnimating = true;
+
+				float duration = 1.2f;
 				float height = 1200;
 				Vector3 levelDefaultPos = level.transform.localPosition;
 				level.transform.localPosition += new Vector3(0, height, 0);
@@ -93,10 +80,15 @@ namespace SlideAndStick {
 				}
 			}
 
+			// Tell people!
+			fueController.OnStartLevel(level);
+
 			yield return null;
 		}
 
-		// game events
+		// ----------------------------------------------------------------
+		//  Game Events
+		// ----------------------------------------------------------------
 		public void OnBoardGoalsSatisfied() {
 			WinLevel();
 		}

@@ -1,19 +1,5 @@
 
 
-LEVEL - Test
-0..
-.0.
-0..
-
-LEVEL - Test
-...0.
-...0.
-.0...
-...0.
-0..0.
-
-
-
 
 // ---- TUTORIAL/HANDMADE ----
 
@@ -36,6 +22,11 @@ LEVEL - Intro to Undo
 .1.
 0.0
 010
+
+//LEVEL - easy, not satisfying
+//0.2
+//1.1
+//2.0
 
 
 

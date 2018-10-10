@@ -27,6 +27,11 @@ namespace SlideAndStick {
         public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
         public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
         public Tile GetTile(int col,int row) { return BoardUtils.GetOccupant(this, col,row) as Tile; }
+		public int GetNumTiles(int colorID) {
+			int total = 0;
+			foreach (Tile t in tiles) { if (t.ColorID==colorID) { total ++; } }
+			return total;
+		}
 
 		public Board Clone () {
 			BoardData data = SerializeAsData();

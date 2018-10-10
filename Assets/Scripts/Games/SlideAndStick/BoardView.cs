@@ -38,10 +38,12 @@ namespace SlideAndStick {
 		private int numCols { get { return myBoard.NumCols; } }
 		private int numRows { get { return myBoard.NumRows; } }
 
-//		public float BoardToX(float col) { return Pos.x + (col+0.5f)*unitSize; } // +0.5f to center.
-//		public float BoardToY(float row) { return Pos.y - (row+0.5f)*unitSize; } // +0.5f to center.
 		public float BoardToX(float col) { return  (col+0.5f)*unitSize; } // +0.5f to center.
 		public float BoardToY(float row) { return -(row+0.5f)*unitSize; } // +0.5f to center.
+//		public float BoardToX(float col) { return Pos.x + (col+0.5f)*unitSize; } // +0.5f to center.
+//		public float BoardToY(float row) { return Pos.y - (row+0.5f)*unitSize; } // +0.5f to center.
+		public float BoardToXGlobal(float col) { return BoardToX(col) + Pos.x; }
+		public float BoardToYGlobal(float row) { return BoardToY(row) + Pos.y; }
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
 
