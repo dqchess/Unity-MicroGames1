@@ -4,14 +4,18 @@ using System.Collections.Generic;
 
 
 abstract public class BaseGameController : MonoBehaviour {
+    // Overrideables
+    abstract public string MyGameName();
 	// Properties
 	private bool isPaused = false;
 	private bool debug_isSlowMo = false;
 	// References
+    [SerializeField] protected Canvas canvas=null;
 //	[SerializeField] private GameplayUI ui=null;
 //	[SerializeField] private Transform tf_world=null;
 
 	// Getters / Setters
+    public Canvas Canvas { get { return canvas; } }
 	protected DataManager dataManager { get { return GameManagers.Instance.DataManager; } }
 	protected InputController inputController { get { return InputController.Instance; } }
 	protected ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }

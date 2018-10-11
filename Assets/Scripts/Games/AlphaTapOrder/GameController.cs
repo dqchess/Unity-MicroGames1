@@ -8,6 +8,8 @@ namespace AlphaTapOrder {
 	public enum GameStates { PreLevel, Playing, PostLevel, GameOver }
 
 	public class GameController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.Undefined; }
 		// Components
 		private TapSpace[] tapSpaces;
 		// Properties

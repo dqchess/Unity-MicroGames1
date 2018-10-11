@@ -2,18 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//public enum FlipTypes { Horizontal, Vertical }
-
 namespace SlideAndStick {
 	public class BoardData {
+        // Constants
+        private readonly char[] LINE_BREAKS_CHARS = new char[] { ',' }; // our board layouts are comma-separated (because XML's don't encode line breaks).
 		// Properties
-		public int numCols,numRows;
+        public int devRating;
+        public int difficulty;
+        public int numCols,numRows;
+        public string fueID; // which tutorial this is gonna be!
 		// BoardObjects
 		public BoardSpaceData[,] spaceDatas;
 		public List<TileData> tileDatas;
 
 		// Getters (Private)
 		private BoardSpaceData GetSpaceData (int col,int row) { return spaceDatas[col,row]; }
+
+        private string[] GetLevelStringArrayFromLayoutString (string layout) {
+            List<string> stringList = new List<string>(layout.Split (LINE_BREAKS_CHARS, System.StringSplitOptions.None));
+            // Remove the last element, which will be just empty space (because of how we format the layout in the XML).
+            stringList.RemoveAt (stringList.Count-1);
+            // Cut the excess white space.
+            for (int i=0; i<stringList.Count; i++) {
+                stringList[i] = TextUtils.RemoveWhitespace (stringList[i]);
+            }
+            string[] returnArray = stringList.ToArray();
+            if (returnArray.Length == 0) { returnArray = new string[]{"."}; } // Safety catch.
+            return returnArray;
+        }
 
 
 		/** Initializes a totally empty BoardData. */
@@ -22,7 +38,12 @@ namespace SlideAndStick {
 			numRows = _numRows;
 			MakeEmptyLists ();
 		}
-		public BoardData(string[] layoutArray) {
+		public BoardData(BoardDataXML bdxml) {
+            difficulty = bdxml.difficulty;
+            devRating = bdxml.devRating;
+            fueID = bdxml.fueID;
+            string[] layoutArray = GetLevelStringArrayFromLayoutString(bdxml.layout);
+        
 			// Set numCols and numRows!
 			numCols = layoutArray[0].Length;
 			numRows = layoutArray.Length;

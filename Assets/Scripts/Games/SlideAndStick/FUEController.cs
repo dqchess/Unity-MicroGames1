@@ -7,9 +7,9 @@ using TMPro;
 namespace SlideAndStick {
 	public class FUEController : MonoBehaviour {
 		// Constants
-		public const string ID_FUE_1 = "1"; // Matches Levels.xml's fueID. TODO: Update this inaccurate comment
+		public const string ID_FUE_1 = "1"; // Matches Levels.xml's fueID.
 		public const string ID_FUE_2 = "2"; // Matches Levels.xml's fueID.
-		public const string ID_INTRO_UNDO = "DISABLED";//"4"; // Matches Levels.xml's fueID.
+		public const string ID_INTRO_UNDO = "introToUndo"; // Matches Levels.xml's fueID.
 		private const string SEQ_FUE_1 = "SEQ_FUE_1"; // Doesn't matter what this is.
 		private const string SEQ_FUE_2 = "SEQ_FUE_2"; // Doesn't matter what this is.
 		private const string SEQ_INTRO_UNDO = "SEQ_INTRO_UNDO"; // Doesn't matter what this is.
@@ -130,16 +130,16 @@ namespace SlideAndStick {
 			}
 
 			// Start an FUE sequence??
-			string levelIndex = _level.LevelIndex.ToString();
-			if (levelIndex == ID_FUE_1) {
+			string fueID = _level.Board.FUEID;
+			if (fueID == ID_FUE_1) {
 				StartSequence(SEQ_FUE_1);
 			}
-			else if (levelIndex == ID_FUE_2) {
+			else if (fueID == ID_FUE_2) {
 				StartSequence(SEQ_FUE_2);
 			}
-			else if (levelIndex == ID_INTRO_UNDO) {
-				StartSequence(SEQ_INTRO_UNDO);
-			}
+			//else if (fueID == ID_INTRO_UNDO) {NOTE: Disabled this FUE. It's meh.
+			//	StartSequence(SEQ_INTRO_UNDO);
+			//}
 		}
 		public void OnCompleteLevel() {
 			HideAllComponents();

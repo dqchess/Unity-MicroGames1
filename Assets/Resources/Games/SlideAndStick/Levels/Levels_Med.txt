@@ -1,0 +1,98 @@
+
+// ---- 4x4, MEDIUM, 2 COLORS ----
+
+LEVEL - med
+...1
+1000
+0101
+0.11
+
+LEVEL - med
+.101
+0.00
+1.1.
+1011
+
+LEVEL - med
+.010
+.01.
+01.0
+0100
+
+LEVEL - med
+010.
+1.11
+0111
+..0.
+
+LEVEL - med, more tricky than satisfying
+011.
+1010
+1.10
+.0..
+
+LEVEL - med
+00..
+0.10
+.00.
+1011
+
+LEVEL - med, fine
+0100
+1.01
+.0.0
+0.11
+
+LEVEL - med
+0010
+10..
+1..1
+1010
+
+
+
+
+// ---- 4x4, MEDIUM, 3 COLORS ----
+
+LEVEL - med, fine
+1.0.
+.2..
+2011
+1.12
+
+LEVEL - med
+2220
+011.
+20.1
+12..
+
+LEVEL - med, lots of single drags tho
+12..
+00..
+.010
+2201
+
+LEVEL - med, pretty good
+1..0
+10.2
+222.
+12.0
+
+LEVEL - med
+22.1
+022.
+..12
+201.
+
+LEVEL - med, nice
+.220
+1.1.
+1220
+.002
+
+
+
+
+
+
+

@@ -6,6 +6,8 @@ namespace WallPaint {
     public enum GameStates { PreLevel, Playing, PostLevel, GameOver }
 
     public class GameController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.WallPaint; }
         // Properties
         private GameStates gameState;
         private int currentLevelIndex;

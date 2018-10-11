@@ -6,8 +6,6 @@ using UnityEngine;
 public enum GameStates { Playing, GameOver, PostLevel }
 
 abstract public class BaseLevelGameController : BaseGameController {
-	// Overrideables
-	abstract public string MyGameName();
 	// Properties
 	private GameStates gameState;
 	protected float timeWhenLevelStarted; // in UNSCALED SECONDS.
@@ -16,13 +14,11 @@ abstract public class BaseLevelGameController : BaseGameController {
 	protected BaseLevel baseLevel;
 	private LevelLoader levelLoader; // this is added in Start! :)
 	// References
-	[SerializeField] protected Canvas canvas=null;
 	[SerializeField] private LevelGameUI levelGameUI=null; // All BaseLevelGames come with a boilerplate LevelGameUI. Retry, Quit, and Debug buttons.
 
 	// Getters (Public)
 	public bool IsGameStatePlaying { get { return gameState==GameStates.Playing; } } // NOTE: This can be improved! This'll cause confusion when animating lvls in/out, as we say we're playing, but not WHICH lvl we're playing. :P
 	public bool IsLevelComplete { get { return gameState == GameStates.PostLevel; } }
-	public Canvas Canvas { get { return canvas; } }
 	public GameStates GameState { get { return gameState; } }
 	public LevelLoader LevelLoader { get { return levelLoader; } }
 	// Getters (Protected)

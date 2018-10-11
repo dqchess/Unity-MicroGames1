@@ -7,6 +7,8 @@ namespace AlphaTapMost {
 		PreGame, Playing, GameOver
 	}
 	public class AlphaTapMostController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.Undefined; }
 		// Constants
 		private const float AlphaGraceWindow = 0.12f; // we'll allow this much wiggle room in clicking tiles, so we're not TOO much of an alpha stickler.
 		// Components

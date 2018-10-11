@@ -4,15 +4,18 @@ using System.Linq;
 using UnityEngine;
 
 namespace SlideAndStick {
-	public class Level : BaseLevel {
+	public class Level : MonoBehaviour {
 		// Components
-		[SerializeField] private UndoMoveInputController undoMoveInputController;
+        [SerializeField] protected RectTransform myRectTransform=null;
+		[SerializeField] private UndoMoveInputController undoMoveInputController=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
         private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
 		// Properties
+        [HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
+        private bool IsLevelOver;
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
-		private string description; // dev's description of the level (set in Levels.txt).
+        private LevelAddress myAddress;
 		private Vector2Int mousePosBoard;
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
@@ -24,7 +27,9 @@ namespace SlideAndStick {
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
 		public GameController GameController { get { return gameController; } }
+        public LevelAddress MyAddress { get { return myAddress; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
+        public bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
 		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
@@ -58,16 +63,21 @@ namespace SlideAndStick {
 				// Dispatch event!
 //				GameManagers.Instance.EventManager.OnNumMovesMadeChanged(numMovesMade);
 			}
-		}
-
-
+		
+        }
 
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
-		public void Initialize (GameController _gameController, Transform tf_parent, int _levelIndex) {
+		public void Initialize (GameController _gameController, Transform tf_parent, LevelData _levelData) {
 			gameController = _gameController;
-			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
+            myAddress = _levelData.myAddress;
+            IsLevelOver = false;
+    
+            gameObject.name = "Level " + myAddress.level;
+            GameUtils.ParentAndReset(this.gameObject, tf_parent);
+            myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
+            myRectTransform.anchoredPosition = Vector2.zero;
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
 
 			// Reset easy stuff
@@ -75,7 +85,7 @@ namespace SlideAndStick {
 			NumMovesMade = 0;
 
 			// Send in the clowns!
-			AddLevelComponents();
+            RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
 		}
 
@@ -100,6 +110,7 @@ namespace SlideAndStick {
 			tileOver = null;
 			tileGrabbing = null;
 		}
+        /*
 		override protected void AddLevelComponents() {
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
@@ -128,6 +139,7 @@ namespace SlideAndStick {
 				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
 			}
 		}
+        */
 
 
 
