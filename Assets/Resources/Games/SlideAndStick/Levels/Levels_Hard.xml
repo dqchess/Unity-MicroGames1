@@ -1,0 +1,55 @@
+<LevelsCollection collectionName="Hard" gameMode="SlideAndStick">
+<Packs>
+
+
+
+<!--
+    ================================================================
+    Hard
+    ================================================================
+-->
+<LevelPack packName="Hard">
+<Levels>
+
+    <!-- 4x4, HARD -->
+    <Level diff="5" layout="
+        0001,
+        1.10,
+        0.00,
+        11..,
+    " />
+    <Level diff="5" desc="smart req moment" layout="
+        00.1,
+        0101,
+        100.,
+        ....,
+    " />
+    <Level diff="6" layout="
+        1.00,
+        00.1,
+        1101,
+        0.1.,
+    " />
+    <Level diff="6" layout="
+        00.0,
+        1.11,
+        100.,
+        011.,
+    " />
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+
