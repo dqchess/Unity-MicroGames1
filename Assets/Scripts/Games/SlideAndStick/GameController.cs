@@ -36,6 +36,19 @@ namespace SlideAndStick {
     
             // Start at the level we've most recently played!
             SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
+            
+            // Add event listeners!
+            GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent += OnQuitGameplayButtonClick;
+        }
+        override protected void OnDestroy() {
+            base.OnDestroy();
+            
+            // Remove event listeners!
+            GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent -= OnQuitGameplayButtonClick;
+        }
+        
+        private void OnQuitGameplayButtonClick() {
+            OpenScene(SceneNames.LevelSelect(MyGameName()));
         }
         
         
@@ -125,10 +138,8 @@ namespace SlideAndStick {
             //gameState = GameStates.Playing;
             // Tell people!
             fueController.OnStartLevel(level);
-            //// Save values!
-            //SaveStorage.SetInt(SaveKeys.LastLevelPlayed(MyGameName()), LevelIndex);
-    //        SaveStorage.SetString (SaveKeys.LastPlayedLevelAddress, currentAddress.ToString());
-    ////      SaveStorage.SetString (SaveKeys.LastPlayedLevelKey, currentLevelKey);
+            // Save values!
+            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress, currentAddress.ToString());
         }
         
         

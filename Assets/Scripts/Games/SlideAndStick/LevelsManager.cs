@@ -98,13 +98,10 @@ namespace SlideAndStick {
     
     
         public void ReloadModeDatas () {
-            modeDatas = new ModeCollectionData[5];
+            modeDatas = new ModeCollectionData[2];
     
             modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
-            modeDatas[GameModes.FindTheWordIndex] = new ModeCollectionData(GameModes.FindTheWordIndex, GameModes.FindTheWord, "Wordfinder");
-            modeDatas[GameModes.FindTheWordMultiIndex] = new ModeCollectionData(GameModes.FindTheWordMultiIndex, GameModes.FindTheWordMulti, "Wordfinder Multi");
-            modeDatas[GameModes.LetterSmashIndex] = new ModeCollectionData(GameModes.LetterSmashIndex, GameModes.LetterSmash, "LetterSmash");
-            modeDatas[GameModes.PuzzlePathIndex] = new ModeCollectionData(GameModes.PuzzlePathIndex, GameModes.PuzzlePath, "Puzzle Path");
+            modeDatas[GameModes.StandardIndex] = new ModeCollectionData(GameModes.StandardIndex, GameModes.Standard, "Standard");
         }
     
     
