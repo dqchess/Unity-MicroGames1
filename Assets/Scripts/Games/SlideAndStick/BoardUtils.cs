@@ -136,7 +136,7 @@ namespace SlideAndStick {
 			if (b==null) { return false; }
             string fueID = b.FUEID;
 			if (fueID == "introToUndo") {
-				if (b.GetNumTiles(1)==1 && IsTileVert(GetFirstTileOfColor(b, 1))) {
+				if (b.tiles.Count==3 && (!IsTileColor(b,0,0, 1) || !IsTileColor(b,2,0, 1))) {
 					return true;
 				}
 			}

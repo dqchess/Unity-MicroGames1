@@ -13,6 +13,7 @@ namespace SlideAndStick {
         public string FUEID { get; private set; }
         // Properties (Variable)
         public bool AreGoalsSatisfied { get; private set; }
+        public bool IsInKnownFailState { get; private set; }
         private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		// Objects
 		public BoardSpace[,] spaces;
@@ -43,6 +44,9 @@ namespace SlideAndStick {
 		}
 		public BoardData SerializeAsData() {
 			BoardData bd = new BoardData(NumCols,NumRows);
+            bd.devRating = DevRating;
+            bd.difficulty = Difficulty;
+            bd.fueID = FUEID;
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<NumCols; col++) {
 				for (int row=0; row<NumRows; row++) {
@@ -188,6 +192,8 @@ namespace SlideAndStick {
 		private void OnMoveComplete () {
 			MergeAdjacentTiles();
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
+            // Update IsInKnownFailState!
+            IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
 
 
@@ -212,7 +218,7 @@ namespace SlideAndStick {
 				boardString += "\n";
 			}
 			Debug.Log (boardString);
-            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = boardString; }
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
 		}
 
 

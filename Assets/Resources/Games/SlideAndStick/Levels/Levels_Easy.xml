@@ -26,12 +26,10 @@
         33.,
     " />
     <Level diff="1" name="IntroToUndo" fueID="introToUndo" layout="
-        .1.,
-        0.0,
+        1.1,
         010,
+        0.0,
     " />
-
-
 
 
     <Level diff="1" fueID="failHelp0" layout="
@@ -39,15 +37,22 @@
         1.1,
         222,
     " />
-    <Level diff="2" layout="
-        220,
-        .02,
-        2.0,
+    <!--
+    <Level diff="1" fueID="TEST" layout="
+        2.2,
+        1.1,
+        2.2,
     " />
+    -->
     <Level diff="2" fueID="failHelp1" layout="
         .03,
         303,
         0.0,
+    " />
+    <Level diff="2" layout="
+        220,
+        .02,
+        2.0,
     " />
     <Level diff="2" fueID="failHelp2" layout="
         2..,
@@ -64,10 +69,10 @@
 
     <!-- EASY, 4x4, 2 COLORS -->
     <Level diff="1" layout="
-        1110,
-        0.00,
-        .1.0,
+        1111,
+        0.0.,
         110.,
+        000.,
     " />
     <Level diff="2" layout="
         2.20,
@@ -86,12 +91,6 @@
         01.1,
         .100,
         1.01,
-    " />
-    <Level diff="2" layout="
-        1111,
-        0.0.,
-        110.,
-        000.,
     " />
     <Level diff="2" layout="
         1.22,
@@ -241,7 +240,15 @@
         1..2,
         000.,
     " />
+
+
     <!-- -->
+    <Level diff="3" desc="great" layout="
+        .220,
+        20.1,
+        1..2,
+        000.,
+    " />
 </Levels>
 </LevelPack>
 

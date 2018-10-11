@@ -37,8 +37,9 @@ namespace SlideAndStick {
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove() {
-			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
-			if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
+            if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {
@@ -171,13 +172,16 @@ namespace SlideAndStick {
 		}
 
 		private void UpdateTileOver() {
-			Tile prevTileOver = tileOver;
 			// A) Can't make a move? Then no highlighting.
-			if (!CanMakeAnyMove()) { tileOver = null; }
+			if (!CanMakeAnyMove()) { SetTileOver(null); }
 			// B) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
-			else if (tileGrabbing != null) { tileOver = tileGrabbing; }
+			else if (tileGrabbing != null) { SetTileOver(tileGrabbing); }
 			// C) Otherwise, use the one the mouse is over.
-			else { tileOver = board.GetTile(mousePosBoard); }
+			else { SetTileOver(board.GetTile(mousePosBoard)); }
+        }
+        private void SetTileOver(Tile tile) {
+            Tile prevTileOver = tileOver;
+            tileOver = tile;
 			// It's changed!
 			if (prevTileOver != tileOver) {
 				if (prevTileOver!=null && prevTileOver.IsInPlay) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
@@ -240,6 +244,11 @@ namespace SlideAndStick {
 			ConfirmTileGrabbing();
 			// Tell people!
 			gameController.FUEController.OnBoardMoveComplete();
+            // In fail scenario? Nullify tileOver and tileGrabbing.
+            if (board.IsInKnownFailState) {
+                SetTileOver(null);
+                SetTileGrabbing(null);
+            }
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {

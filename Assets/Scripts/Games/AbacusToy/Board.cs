@@ -146,7 +146,7 @@ namespace AbacusToy {
 		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
             string layoutString = LayoutString();
 			Debug.Log (layoutString);
-            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = layoutString; }
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(layoutString); }
 		}
         public string LayoutString() {
             string layoutString = "";

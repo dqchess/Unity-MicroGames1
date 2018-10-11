@@ -38,17 +38,22 @@ namespace SlideAndStick {
             SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
             
             // Add event listeners!
+            GameManagers.Instance.EventManager.LevelJumpButtonClickEvent += OnLevelJumpButtonClick;
             GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent += OnQuitGameplayButtonClick;
         }
         override protected void OnDestroy() {
             base.OnDestroy();
             
             // Remove event listeners!
+            GameManagers.Instance.EventManager.LevelJumpButtonClickEvent -= OnLevelJumpButtonClick;
             GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent -= OnQuitGameplayButtonClick;
         }
         
         private void OnQuitGameplayButtonClick() {
             OpenScene(SceneNames.LevelSelect(MyGameName()));
+        }
+        private void OnLevelJumpButtonClick(int levelIndexChange) {
+            ChangeLevel(levelIndexChange);
         }
         
         

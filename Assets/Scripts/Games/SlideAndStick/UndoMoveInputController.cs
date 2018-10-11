@@ -57,7 +57,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 //			restartLevelButton.transform.localScale = Vector3.one * scale;DISABLED scaling this one.
 		}
 		private void EmphasizeButtonsIfInFailState() {
-			areButtonsEmphasized = BoardUtils.IsInHardcodedFailState(level.Board);
+			areButtonsEmphasized = level.Board != null && level.Board.IsInKnownFailState;
 			if (!areButtonsEmphasized) { // Stop emphasizing?
 				SetButtonsScale(1);
 			}
