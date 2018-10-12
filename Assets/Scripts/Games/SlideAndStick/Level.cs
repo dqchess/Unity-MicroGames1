@@ -86,7 +86,7 @@ namespace SlideAndStick {
 			NumMovesMade = 0;
 
 			// Send in the clowns!
-            RemakeModelAndViewFromData(_levelData.boardData);
+			RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
 		}
 
@@ -95,7 +95,8 @@ namespace SlideAndStick {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
-			board = new Board (bd);
+			board = new Board(bd);
+			board.Debug_AddTilesIfNone(gameController); // For rando layout generating!
 			boardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
 			boardView.Initialize (this, board);
 		}

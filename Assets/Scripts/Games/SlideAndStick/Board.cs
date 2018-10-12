@@ -38,7 +38,7 @@ namespace SlideAndStick {
 			return total;
 		}
 
-		public Board Clone () {
+		public Board Clone() {
 			BoardData data = SerializeAsData();
 			return new Board(data);
 		}
@@ -72,10 +72,6 @@ namespace SlideAndStick {
 			MakeEmptyPropLists ();
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
-
-			// TEMP TESTING
-            int numColors = 3;//Random.Range(3,5);
-			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
 
 			// Start our solo bubbas out merged, goro!
 			MergeAdjacentTiles();
@@ -200,6 +196,14 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Debug
 		// ----------------------------------------------------------------
+		public void Debug_AddTilesIfNone(GameController gameController) {
+			if (tiles.Count > 0) { return; } // Nah, we've got some.
+			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
+			int numColors = gameController.NumColors;
+			//			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
+			Debug_AddRandomTiles(numToAdd, numColors);
+			OnMoveComplete();
+		}
 		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
 			for (int i=0; i<numToAdd; i++) {
 				BoardPos randPos = BoardUtils.GetRandOpenPos(this);

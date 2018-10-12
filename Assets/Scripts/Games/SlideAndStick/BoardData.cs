@@ -31,6 +31,11 @@ namespace SlideAndStick {
             return returnArray;
         }
 
+		public BoardData Clone() {
+			Board b = new Board(this);
+			return b.SerializeAsData();
+		}
+
 
 		/** Initializes a totally empty BoardData. */
 		public BoardData (int _numCols,int _numRows) {
@@ -93,6 +98,7 @@ namespace SlideAndStick {
 			TileData newData = new TileData (new BoardPos(col,row), colorID);
 			tileDatas.Add (newData);
 		}
+
 
 
 

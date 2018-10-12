@@ -11,6 +11,12 @@ namespace SlideAndStick {
 		private Level level;
 		// References
 		[SerializeField] private FUEController fueController=null;
+		// Editing Levels Stuff
+		[Header ("Random Tile Params")]
+//		public float MinPercentTiles = 0.4f;
+//		public float MinPercentTiles = 0.4f;
+		public float PercentTiles = 0.8f;
+		public int NumColors = 3;
 
 		// Getters (Public)
 		public FUEController FUEController { get { return fueController; } }
@@ -201,6 +207,12 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
+
+			// R = Restart Level (without reloading scene)
+			if (Input.GetKeyDown(KeyCode.R)) {
+				RestartLevel();
+				return;
+			}
     
             // DEBUG
             if (Input.GetKeyDown(KeyCode.P))            { ChangeLevel(-10); return; } // P = Back 10 levels.
