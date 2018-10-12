@@ -12,6 +12,11 @@ public class GameUtils {
 		go.transform.localEulerAngles = Vector3.zero;
 		go.transform.localScale = Vector3.one;
 	}
+    
+    public static void CopyToClipboard(string str) {
+        UnityEngine.GUIUtility.systemCopyBuffer = str;
+        //UnityEditor.EditorGUIUtility.systemCopyBuffer = str;
+    }
 
 	public static string GetSecondsToTimeString (float _totalSeconds) {
 		string minutes = Mathf.Floor (_totalSeconds / 60).ToString("0");

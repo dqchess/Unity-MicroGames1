@@ -4,15 +4,18 @@ using System.Linq;
 using UnityEngine;
 
 namespace SlideAndStick {
-	public class Level : BaseLevel {
+	public class Level : MonoBehaviour {
 		// Components
-		[SerializeField] private UndoMoveInputController undoMoveInputController;
+        [SerializeField] protected RectTransform myRectTransform=null;
+		[SerializeField] private UndoMoveInputController undoMoveInputController=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
 		private BoardView boardView;
         private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
 		// Properties
+        [HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
+        private bool IsLevelOver;
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
-		private string description; // dev's description of the level (set in Levels.txt).
+        private LevelAddress myAddress;
 		private Vector2Int mousePosBoard;
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
@@ -24,7 +27,9 @@ namespace SlideAndStick {
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
 		public GameController GameController { get { return gameController; } }
+        public LevelAddress MyAddress { get { return myAddress; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
+        public bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		// Getters (Private)
 		private InputController inputController { get { return InputController.Instance; } }
 		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
@@ -32,8 +37,9 @@ namespace SlideAndStick {
 		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
 		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
 		private bool CanMakeAnyMove() {
-			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
-			if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
+            if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
 		}
 		private TileView Temp_GetTileView(Tile _tile) {
@@ -58,16 +64,21 @@ namespace SlideAndStick {
 				// Dispatch event!
 //				GameManagers.Instance.EventManager.OnNumMovesMadeChanged(numMovesMade);
 			}
-		}
-
-
+		
+        }
 
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
-		public void Initialize (GameController _gameController, Transform tf_parent, int _levelIndex) {
+		public void Initialize (GameController _gameController, Transform tf_parent, LevelData _levelData) {
 			gameController = _gameController;
-			base.BaseInitialize(_gameController, tf_parent, _levelIndex);
+            myAddress = _levelData.myAddress;
+            IsLevelOver = false;
+    
+            gameObject.name = "Level " + myAddress.level;
+            GameUtils.ParentAndReset(this.gameObject, tf_parent);
+            myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
+            myRectTransform.anchoredPosition = Vector2.zero;
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
 
 			// Reset easy stuff
@@ -75,7 +86,7 @@ namespace SlideAndStick {
 			NumMovesMade = 0;
 
 			// Send in the clowns!
-			AddLevelComponents();
+            RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
 		}
 
@@ -100,6 +111,7 @@ namespace SlideAndStick {
 			tileOver = null;
 			tileGrabbing = null;
 		}
+        /*
 		override protected void AddLevelComponents() {
 			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
 
@@ -128,6 +140,7 @@ namespace SlideAndStick {
 				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
 			}
 		}
+        */
 
 
 
@@ -159,13 +172,16 @@ namespace SlideAndStick {
 		}
 
 		private void UpdateTileOver() {
-			Tile prevTileOver = tileOver;
 			// A) Can't make a move? Then no highlighting.
-			if (!CanMakeAnyMove()) { tileOver = null; }
+			if (!CanMakeAnyMove()) { SetTileOver(null); }
 			// B) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
-			else if (tileGrabbing != null) { tileOver = tileGrabbing; }
+			else if (tileGrabbing != null) { SetTileOver(tileGrabbing); }
 			// C) Otherwise, use the one the mouse is over.
-			else { tileOver = board.GetTile(mousePosBoard); }
+			else { SetTileOver(board.GetTile(mousePosBoard)); }
+        }
+        private void SetTileOver(Tile tile) {
+            Tile prevTileOver = tileOver;
+            tileOver = tile;
 			// It's changed!
 			if (prevTileOver != tileOver) {
 				if (prevTileOver!=null && prevTileOver.IsInPlay) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
@@ -228,6 +244,11 @@ namespace SlideAndStick {
 			ConfirmTileGrabbing();
 			// Tell people!
 			gameController.FUEController.OnBoardMoveComplete();
+            // In fail scenario? Nullify tileOver and tileGrabbing.
+            if (board.IsInKnownFailState) {
+                SetTileOver(null);
+                SetTileGrabbing(null);
+            }
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {

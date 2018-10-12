@@ -146,7 +146,9 @@ namespace AbacusToy {
             numGroups = CalculateTileGroups(b);
             if (numGroups <= 1) { return; } // Only 1 group? We can stop. :)
             Tile tileBehind = GetTile(b, newlyVacantPos-dir);
-            MaybeTowTile(b, tileBehind, dir, boJustMoved.GroupID);
+            if (tileBehind!=null) { // ALWAYS tow the tile behind us (groupID doesn't matter).
+                MoveOccupant(b, tileBehind, dir);
+            }
             
             // Recalculate groups.
             numGroups = CalculateTileGroups(b);

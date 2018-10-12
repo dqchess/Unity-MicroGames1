@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace ExtrudeMatch {
 	public class GameController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.ExtrudeMatch; }
         // Properties
         private int score;
 		// Objects
 		private BoardController boardController;
 		// References
-		[SerializeField] private Canvas canvas=null;
 		[SerializeField] private GameUI ui=null;
 
 		// Getters
-		public Canvas Canvas { get { return canvas; } }
 //		public Level CurrentLevel { get { return currentLevel; } }
 
 

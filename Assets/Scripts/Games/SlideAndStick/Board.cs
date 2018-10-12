@@ -5,6 +5,15 @@ using UnityEngine;
 namespace SlideAndStick {
 	[System.Serializable]
 	public class Board {
+        // Properties
+        public int DevRating { get; private set; }
+        public int Difficulty { get; private set; }
+        public int NumCols { get; private set; }
+        public int NumRows { get; private set; }
+        public string FUEID { get; private set; }
+        // Properties (Variable)
+        public bool AreGoalsSatisfied { get; private set; }
+        public bool IsInKnownFailState { get; private set; }
         private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		// Objects
 		public BoardSpace[,] spaces;
@@ -18,10 +27,6 @@ namespace SlideAndStick {
 		}
 
         // Getters (Public)
-        public bool AreGoalsSatisfied { get; private set; }
-        public int NumCols { get; private set; }
-        public int NumRows { get; private set; }
-
         public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
 		public BoardSpace[,] Spaces { get { return spaces; } }
         public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
@@ -39,6 +44,9 @@ namespace SlideAndStick {
 		}
 		public BoardData SerializeAsData() {
 			BoardData bd = new BoardData(NumCols,NumRows);
+            bd.devRating = DevRating;
+            bd.difficulty = Difficulty;
+            bd.fueID = FUEID;
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<NumCols; col++) {
 				for (int row=0; row<NumRows; row++) {
@@ -56,6 +64,9 @@ namespace SlideAndStick {
 		public Board (BoardData bd) {
 			NumCols = bd.numCols;
 			NumRows = bd.numRows;
+            Difficulty = bd.difficulty;
+            DevRating = bd.devRating;
+            FUEID = bd.fueID;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -181,6 +192,8 @@ namespace SlideAndStick {
 		private void OnMoveComplete () {
 			MergeAdjacentTiles();
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
+            // Update IsInKnownFailState!
+            IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
 
 
@@ -195,7 +208,7 @@ namespace SlideAndStick {
 				AddTile(randPos, colorID);
 			}
 		}
-		public string Debug_GetBoardLayout() {
+		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
 			string boardString = "";
 			for (int row=0; row<NumRows; row++) {
 				for (int col=0; col<NumCols; col++) {
@@ -204,11 +217,9 @@ namespace SlideAndStick {
 				}
 				boardString += "\n";
 			}
-			return boardString;
+			Debug.Log (boardString);
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
 		}
-//		public void Debug_PrintBoardLayout() {
-//			Debug.Log (Debug_GetBoardLayout());
-//		}
 
 
 

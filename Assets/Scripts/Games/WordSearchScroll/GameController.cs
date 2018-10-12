@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 namespace WordSearchScroll {
 	public class GameController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.WordSearchScroll; }
+        
 		// Objects
 		private Level level;
 		// References
-		[SerializeField] private Canvas canvas=null;
 //		[SerializeField] private GameUI ui=null;
-
-		// Getters
-		public Canvas Canvas { get { return canvas; } }
 
 
 		// ----------------------------------------------------------------

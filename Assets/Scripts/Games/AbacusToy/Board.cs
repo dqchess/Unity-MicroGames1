@@ -117,8 +117,8 @@ namespace AbacusToy {
 			// Clear out the Objects-added list just before the move.
 			objectsAddedThisMove.Clear ();
 
-			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
-			MoveResults result = BoardUtils.MoveOccupant(this, boToMove, dir);
+            BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
+            MoveResults result = BoardUtils.MoveOccupant(this, boToMove, dir);
             
             // ONLY if this move was a success, do the OnMoveComplete paperwork!
             if (result == MoveResults.Success) {
@@ -146,7 +146,7 @@ namespace AbacusToy {
 		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
             string layoutString = LayoutString();
 			Debug.Log (layoutString);
-            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = layoutString; }
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(layoutString); }
 		}
         public string LayoutString() {
             string layoutString = "";

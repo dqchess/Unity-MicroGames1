@@ -16,7 +16,7 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
 		private void Start () {
-			t_levelName.text = "LEVEL " + level.LevelIndex.ToString();
+			t_levelName.text = "LEVEL " + level.MyAddress.level.ToString();
 		}
 
 

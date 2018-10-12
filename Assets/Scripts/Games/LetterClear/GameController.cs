@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace LetterClear {
     public class GameController : BaseGameController {
+        // Overrideables
+        override public string MyGameName() { return GameNames.Undefined; }
 		// Constants
 		private const int fontSize = 100;
         // Components

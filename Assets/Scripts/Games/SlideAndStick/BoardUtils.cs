@@ -132,14 +132,15 @@ namespace SlideAndStick {
 
 
 
-		public static bool IsInHardcodedFailState(Board b, int levelIndex) {
+		public static bool IsInHardcodedFailState(Board b) {
 			if (b==null) { return false; }
-			if (levelIndex == 4) {
-				if (b.GetNumTiles(1)==1 && IsTileVert(GetFirstTileOfColor(b, 1))) {
+            string fueID = b.FUEID;
+			if (fueID == "introToUndo") {
+				if (b.tiles.Count==3 && (!IsTileColor(b,0,0, 1) || !IsTileColor(b,2,0, 1))) {
 					return true;
 				}
 			}
-			else if (levelIndex == 5) {
+			else if (fueID == "failHelp0") {
 				if (b.tiles.Count==3 && IsTileHorz(b.tiles[0]) && IsTileHorz(b.tiles[1]) && IsTileHorz(b.tiles[2])) {
 					return true;
 				}
@@ -154,20 +155,20 @@ namespace SlideAndStick {
 //					}
 //				}
 //			}
-			else if (levelIndex == 7) {
+            else if (fueID == "failHelp1") {
 				if (b.tiles.Count==3) { // 3 tiles?
 					if (IsTileTall(GetFirstTileOfColor(b,0), 3)) { // blue is at least 3 tall?
 						return true;
 					}
 				}
 			}
-			else if (levelIndex == 8) {
+            else if (fueID == "failHelp2") {
 				Tile topLeftTile = b.GetTile(0,0);
 				if (b.tiles.Count==3 && topLeftTile!=null && topLeftTile.FootprintLocal.Count==1 && GetOccupant(b,0,1)!=null) {
 					return true;
 				}
 			}
-			else if (levelIndex == 9) { // NOTE: This one hardly captures most of the fail states for this lvl.
+            else if (fueID == "failHelp3") { // NOTE: This one hardly captures most of the fail states for this lvl.
 				Tile topLeftTile = b.GetTile(0,0);
 				if (topLeftTile!=null && topLeftTile.FootprintLocal.Count==1) {
 					if (IsTileColor(b,0,1, 3) && IsTileColor(b,1,0, 3) && IsTileColor(b,1,1, 3)) {
