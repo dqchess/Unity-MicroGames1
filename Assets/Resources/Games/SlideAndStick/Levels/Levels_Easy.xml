@@ -92,6 +92,12 @@
         .100,
         1.01,
     " />
+    <Level diff="1" desc="satisfying" layout="
+		.000,
+		0.02,
+		2220,
+		..20,
+    " />
     <Level diff="2" layout="
         1.22,
         2.11,
@@ -216,6 +222,72 @@
         122.,
         2120,
     " />
+    <Level diff="2" layout="
+		.221,
+		21..,
+		.221,
+		1.21,
+    " />
+    <Level diff="2" layout="
+		.100,
+		00..,
+		22.2,
+		.111,
+    " />
+    <Level diff="2" layout="
+		.120,
+		2.20,
+		11..,
+		2...,
+    " />
+    <Level diff="2" layout="
+		.1..,
+		.101,
+		1011,
+		11.0,
+    " />
+    <Level diff="2" layout="
+		1101,
+		..2.,
+		0..2,
+		.200,
+    " />
+    <Level diff="2" layout="
+		12.2,
+		10.0,
+		...1,
+		1.2.,
+    " />
+    <Level diff="2" layout="
+		..10,
+		22.0,
+		.122,
+		2.20,
+    " />
+    <Level diff="2" layout="
+		212.,
+		.22.,
+		2..0,
+		.201,
+    " />
+    <Level diff="2" layout="
+		21.0,
+		.00.,
+		010.,
+		.21.,
+    " />
+    <Level diff="2" layout="
+		.010,
+		..10,
+		02.0,
+		21.1,
+    " />
+    <Level diff="2" layout="
+		.0.2,
+		20.2,
+		.101,
+		...0,
+    " />
     <Level diff="3" desc="neat" layout="
         2012,
         20.1,
@@ -234,6 +306,24 @@
         1.11,
         0.01,
     " />
+    <Level diff="3" layout="
+		010.,
+		0221,
+		.0.2,
+		20..,
+    " />
+    <Level diff="3" layout="
+		1122,
+		121.,
+		21.2,
+		.2..,
+    " />
+    <Level diff="3" desc="very simple 'gotcha' level" layout="
+		1...,
+		.000,
+		....,
+		001.,
+    " />
     <Level diff="3" desc="great" layout="
         .220,
         20.1,
@@ -242,13 +332,8 @@
     " />
 
 
-    <!-- -->
-    <Level diff="3" desc="great" layout="
-        .220,
-        20.1,
-        1..2,
-        000.,
-    " />
+	
+	
 </Levels>
 </LevelPack>
 

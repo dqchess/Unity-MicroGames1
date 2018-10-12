@@ -209,16 +209,20 @@ namespace SlideAndStick {
 			}
 		}
 		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
-			string boardString = "";
+			string boardString = Debug_GetBoardLayout();
+			Debug.Log (boardString);
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
+		}
+		public string Debug_GetBoardLayout() {
+			string str = "";
 			for (int row=0; row<NumRows; row++) {
 				for (int col=0; col<NumCols; col++) {
 					Tile tile = GetTile(col,row);
-					boardString += tile==null ? "." : tile.ColorID.ToString();
+					str += tile==null ? "." : tile.ColorID.ToString();
 				}
-				boardString += "\n";
+				str += "\n";
 			}
-			Debug.Log (boardString);
-            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
+			return str;
 		}
 
 

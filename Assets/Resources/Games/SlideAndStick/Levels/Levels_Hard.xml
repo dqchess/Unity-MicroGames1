@@ -36,7 +36,39 @@
         100.,
         011.,
     " />
-
+	
+    <Level diff="6" layout="
+		1120,
+		2..0,
+		.02.,
+		221.,
+    " />
+    <Level diff="6" layout="
+		2...,
+		00.0,
+		20..,
+		1021,
+    " />
+    <Level diff="6" layout="
+		...2,
+		2.0.,
+		1211,
+		12.0,
+    " />
+	
+	
+    <Level diff="7" desc="can lose easily on first move :P" layout="
+		0.20,
+		22.2,
+		1.0.,
+		2201,
+    " />
+    <Level diff="7" layout="
+		.00.,
+		.01.,
+		0.02,
+		1022,
+    " />
 
 </Levels>
 </LevelPack>
