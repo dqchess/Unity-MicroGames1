@@ -401,24 +401,195 @@ LEVEL - untitled
 ....
 
 
+// EASY
 
-LEVEL - untitled
-.
 
-LEVEL - untitled
-.
+LEVEL - very easy, satisfying
+.000
+0.02
+2220
+..20
 
-LEVEL - untitled
-.
+LEVEL - easy
+.221
+21..
+.221
+1.21
 
-LEVEL - untitled
-.
+LEVEL - easy
+.100
+00..
+22.2
+.111
 
-LEVEL - untitled
-.
+LEVEL - easy
+.120
+2.20
+11..
+2...
 
-LEVEL - untitled
-.
+LEVEL - easy
+.1..
+.101
+1011
+11.0
+
+LEVEL - easy
+1101
+..2.
+0..2
+.200
+
+LEVEL - easy
+12.2
+10.0
+...1
+1.2.
+
+LEVEL - easy
+..10
+22.0
+.122
+2.20
+
+LEVEL - easy
+212.
+.22.
+2..0
+.201
+
+LEVEL - easy
+21.0
+.00.
+010.
+.21.
+
+LEVEL - easy
+.010
+..10
+02.0
+21.1
+
+LEVEL - easy
+.0.2
+20.2
+.101
+...0
+
+LEVEL - easy-med
+010.
+0221
+.0.2
+20..
+
+LEVEL - easy-med
+1122
+121.
+21.2
+.2..
+
+LEVEL - easy-med (very simple "gotcha" level)
+1...
+.000
+....
+001.
+
+
+
+// MED
+
+
+LEVEL - med
+0.00
+.2.0
+11..
+0020
+
+LEVEL - med, great
+2...
+21.1
+0100
+.2.1
+
+LEVEL - med
+0.02
+0100
+12.0
+1.12
+
+LEVEL - med
+1...
+.221
+2111
+..12
+
+LEVEL - med-hard
+1.22
+2.1.
+.12.
+0100
+
+LEVEL - med-hard
+.1.0
+10..
+2011
+2101
+
+LEVEL - med-hard
+..2.
+1.00
+2.2.
+0001
+
+LEVEL - med-hard
+0..0
+202.
+..22
+1100
+
+
+
+
+
+LEVEL - hard
+1120
+2..0
+.02.
+221.
+
+LEVEL - hard
+2...
+00.0
+20..
+1021
+
+LEVEL - hard
+...2
+2.0.
+1211
+12.0
+
+LEVEL - very hard
+.00.
+.01.
+0.02
+1022
+
+LEVEL - very hard (can lose easily on first move :P)
+0.20
+22.2
+1.0.
+2201
+
+
+
+
+
+
+
+
+
+
 
 LEVEL - untitled
 .

@@ -175,7 +175,7 @@ namespace SlideAndStick {
 
 		private void RegisterButtonInput() {
 			// DEBUG
-			if (Input.GetKeyDown(KeyCode.T)) { board.Debug_PrintBoardLayout(); }
+			if (Input.GetKeyDown(KeyCode.T)) { Debug_PrintLevelLayout(); }
 		}
 
 		private void RegisterTouchInput() {
@@ -278,6 +278,11 @@ namespace SlideAndStick {
 			OnBoardMoveComplete();
 		}
 
+		private void Debug_PrintLevelLayout() {
+			string str = "\nLEVEL - \n";
+			str += board.Debug_GetBoardLayout();
+			UnityEditor.EditorGUIUtility.systemCopyBuffer = str;
+		}
 
 	}
 

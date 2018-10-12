@@ -195,7 +195,7 @@ namespace SlideAndStick {
 				AddTile(randPos, colorID);
 			}
 		}
-		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
+		public string Debug_GetBoardLayout() {
 			string boardString = "";
 			for (int row=0; row<NumRows; row++) {
 				for (int col=0; col<NumCols; col++) {
@@ -204,9 +204,11 @@ namespace SlideAndStick {
 				}
 				boardString += "\n";
 			}
-			Debug.Log (boardString);
-            if (alsoCopyToClipboard) { UnityEditor.EditorGUIUtility.systemCopyBuffer = boardString; }
+			return boardString;
 		}
+//		public void Debug_PrintBoardLayout() {
+//			Debug.Log (Debug_GetBoardLayout());
+//		}
 
 
 
