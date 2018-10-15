@@ -13,11 +13,11 @@ void RemoveTile(Tile tile) {
   tiles.remove(tile);
 }
 
-void AddRandTile() {
+void AddRandTile(int fromDirX,int fromDirY) {
   int count=0;
   while (true) {
-    GridSpace randSpace = GetRandSpace();
-    if (randSpace.getTile() == null) { // This space is vacant!
+    GridSpace randSpace = GetRandSpace(fromDirX,fromDirY);
+    if (randSpace!=null && randSpace.IsOpen()) { // This space is vacant!
       int colorID = (int)random(0, 4);
       int numberID = (int)random(0, 3)+1; // start numberID at 1.
       addTile(randSpace.col,randSpace.row, colorID,numberID);
@@ -152,17 +152,6 @@ ArrayList GetTilesToMove(int dirX,int dirY) {
 void MoveTiles(int dirX,int dirY) {
   resetColsRowsMovedIn();
   
-  /*
-  // Get a list of all the Tiles we're gonna move. (Note: We want the list first, as some spaces become empty as we're moving stuff around.)
-  ArrayList tilesToMove = GetTilesToMove(dirX,dirY);
-  // Move each Tile!
-  for (int i=0; i<tilesToMove.size(); i++) {
-    Tile tile = (Tile) tilesToMove.get(i);
-    MoveTileAttempt(tile, dirX,dirY);
-  }
-  //*/
-  
-  //*
   // VERTICAL
   if (dirY != 0) {
     int startingRow = dirY<0 ? 0 : rows-1;
@@ -181,7 +170,9 @@ void MoveTiles(int dirX,int dirY) {
       }
     }
   }
-  //*/
+  
+  // Add new tile!
+  AddRandTile(dirX,dirY);
 }
 private void MoveTileAttempt(int col,int row, int dirX,int dirY) {
   MoveTileAttempt(GetTile(col,row), dirX,dirY);
@@ -194,7 +185,6 @@ private void MoveTileAttempt(Tile tile, int dirX,int dirY) {
     }
   }
 }
-
 
 
 

@@ -16,6 +16,7 @@ class Tile {
   color textColor;
   boolean canMoveInPreview;
   boolean isAtTargetPosition;
+  float previewXDisplay,previewYDisplay;
   
   Tile clone() {
     Tile cloneTile = new Tile(col,row, colorID,numberID);
@@ -30,6 +31,8 @@ class Tile {
     cloneTile.highlightLoc = highlightLoc;
     cloneTile.canMoveInPreview = canMoveInPreview;
     cloneTile.isAtTargetPosition = isAtTargetPosition;
+    cloneTile.previewXDisplay = previewXDisplay;
+    cloneTile.previewYDisplay = previewYDisplay;
     return cloneTile;
   }
   
@@ -38,9 +41,10 @@ class Tile {
     row = Row;
     SetColorID(ColorID);
     SetNumberID(NumberID);
-    setTargetXY();
+    SetTargetPos();
+    GoToTargetPos();
   }
-  void setTargetXY() {
+  void SetTargetPos() {
     targetX = getGridPosX(col);
     targetY = getGridPosY(row);
     isAtTargetPosition = false;
@@ -56,16 +60,31 @@ class Tile {
   void SetNumberID(int numberID) {
     this.numberID = numberID;
   }
-  
+  void GoToPreviewPos() {
+    if (canMoveInPreview) {
+      x = previewXDisplay;
+      y = previewYDisplay;
+    }
+  }
   
   void move(int dirX,int dirY) {
-    if (isPreviewMove()) gridSpaces[col][row].canMoveMyTileInPreviewMove = true;
+    GridSpace prevSpace = gridSpaces[col][row];
     
     removeTileFromItsGridSpace(this);
-    col += dirX;
-    row += dirY;
+    while (true) { // Keep moving until we can't anymore!
+      col += dirX;
+      row += dirY;
+      GridSpace nextSpace = GetSpace(col+dirX,row+dirY);
+      if (nextSpace==null || !nextSpace.IsOpen()) { break; }
+    }
     addTileToItsGridSpace(this);
-    setTargetXY();
+    SetTargetPos();
+    
+    if (isPreviewMove()) {
+      prevSpace.canMoveMyTileInPreviewMove = true;
+      prevSpace.myTilePreviewXDisplay = targetX;
+      prevSpace.myTilePreviewYDisplay = targetY;
+    }
   }
 //  void moveAndMerge(int dirX,int dirY) {
 //    if (isPreviewMove()) gridSpaces[col][row].canMoveMyTileInPreviewMove = true;
@@ -79,9 +98,7 @@ class Tile {
   
   
   private void onReachTargetPosition() {
-    isAtTargetPosition = true;
-    x = targetX;
-    y = targetY;
+    GoToTargetPos();
 //    // Merge?!
 //    if (doReplaceWhenReachTargetPos) {
 //      Tile otherTile = GetTile(col,row);
@@ -89,6 +106,11 @@ class Tile {
 //      removeTile(this); // remove the remaining tile at this grid space
 //      addTileToItsGridSpace(otherTile);
 //    }
+  }
+  private void GoToTargetPos() {
+    isAtTargetPosition = true;
+    x = targetX;
+    y = targetY;
   }
   
   
@@ -121,8 +143,8 @@ class Tile {
     float xDisplay = x;
     float yDisplay = y;
     if (canMoveInPreview) {
-      xDisplay += previewMoveOffsetX;
-      yDisplay += previewMoveOffsetY;
+      xDisplay = lerp(x,previewXDisplay, previewLoc);
+      yDisplay = lerp(y,previewYDisplay, previewLoc);
     }
     translate(xDisplay,yDisplay);
     

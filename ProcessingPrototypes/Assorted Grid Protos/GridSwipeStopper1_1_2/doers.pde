@@ -13,11 +13,11 @@ void RemoveTile(Tile tile) {
   tiles.remove(tile);
 }
 
-void AddRandTile() {
+void AddRandTile(int fromDirX,int fromDirY) {
   int count=0;
   while (true) {
-    GridSpace randSpace = GetRandSpace();
-    if (randSpace.getTile() == null) { // This space is vacant!
+    GridSpace randSpace = GetRandSpace(fromDirX,fromDirY);
+    if (randSpace!=null && randSpace.IsOpen()) { // This space is vacant!
       int colorID = (int)random(0, 4);
       int numberID = (int)random(0, 3)+1; // start numberID at 1.
       addTile(randSpace.col,randSpace.row, colorID,numberID);
@@ -64,7 +64,7 @@ void determineWhatTilesCanMoveInPreview() {
   }
   
   // ACTUALLY move the tiles!
-  MoveTiles(previewDirX, previewDirY);
+  MoveTiles(previewDirX,previewDirY);
   
   // Restore the tiles as they were!
   // Nullify grid spaces' tiles
@@ -82,27 +82,30 @@ void determineWhatTilesCanMoveInPreview() {
   // For all the spaces that DID succeed in moving a tile or whatever, let the tiles on those spaces know!
   for (int col=0; col<cols; col++) {
     for (int row=0; row<rows; row++) {
-      // Is there a tile here?!
-      if (GetTile(col,row) != null) {
-        // If this space was informed that a tile moved on it for the preview...
-        if (gridSpaces[col][row].canMoveMyTileInPreviewMove) {
-          gridSpaces[col][row].getTile().canMoveInPreview = true;
-        }
-        // Otherwise, if there is at least a tile here, tell it it CAN'T move from the preview
-        else {
-          GetTile(col,row).canMoveInPreview = false;
-        }
+      Tile tile = GetTile(col,row);
+      if (tile != null) {
+        tile.canMoveInPreview = true;
+        tile.previewXDisplay = gridSpaces[col][row].myTilePreviewXDisplay;
+        tile.previewYDisplay = gridSpaces[col][row].myTilePreviewYDisplay;
+//        // If this space was informed that a tile moved on it for the preview...
+//        if (gridSpaces[col][row].canMoveMyTileInPreviewMove) {
+//          gridSpaces[col][row].getTile().canMoveInPreview = true;
+//        }
+//        // Otherwise, if there is at least a tile here, tell it it CAN'T move from the preview
+//        else {
+//          GetTile(col,row).canMoveInPreview = false;
+//        }
       }
     }
   }
 }
 void resetPreviewDrag() {
-  previewAmount = 0;
+  previewLoc = 0;
   previewDirX = previewDirY = 0;
   
   for (int col=0; col<cols; col++) {
     for (int row=0; row<rows; row++) {
-      gridSpaces[col][row].canMoveMyTileInPreviewMove = false;
+      gridSpaces[col][row].ResetPreview();
     }
   }
 }
@@ -122,9 +125,9 @@ void moveTileInDir(Tile tile, int dirX,int dirY) {
   // Into EMPTY space?
   if (gridSpace!=null && gridSpace.IsOpen()) {
     tileToMove.move(dirX,dirY);
+    didMoveInCol[tileToMove.col] = true;
+    didMoveInRow[tileToMove.row] = true;
   }
-  didMoveInCol[tileToMove.col] = true;
-  didMoveInRow[tileToMove.row] = true;
 }
 
 
@@ -152,17 +155,6 @@ ArrayList GetTilesToMove(int dirX,int dirY) {
 void MoveTiles(int dirX,int dirY) {
   resetColsRowsMovedIn();
   
-  /*
-  // Get a list of all the Tiles we're gonna move. (Note: We want the list first, as some spaces become empty as we're moving stuff around.)
-  ArrayList tilesToMove = GetTilesToMove(dirX,dirY);
-  // Move each Tile!
-  for (int i=0; i<tilesToMove.size(); i++) {
-    Tile tile = (Tile) tilesToMove.get(i);
-    MoveTileAttempt(tile, dirX,dirY);
-  }
-  //*/
-  
-  //*
   // VERTICAL
   if (dirY != 0) {
     int startingRow = dirY<0 ? 0 : rows-1;
@@ -181,7 +173,9 @@ void MoveTiles(int dirX,int dirY) {
       }
     }
   }
-  //*/
+  
+  // Add new tile!
+  AddRandTile(dirX,dirY);
 }
 private void MoveTileAttempt(int col,int row, int dirX,int dirY) {
   MoveTileAttempt(GetTile(col,row), dirX,dirY);
@@ -194,7 +188,6 @@ private void MoveTileAttempt(Tile tile, int dirX,int dirY) {
     }
   }
 }
-
 
 
 

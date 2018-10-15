@@ -6,6 +6,7 @@ class GridSpace {
   float x,y;
   private Tile myTile;
   boolean canMoveMyTileInPreviewMove;
+  float myTilePreviewXDisplay,myTilePreviewYDisplay; // NOTE: Cheap workaround for method that DOESN'T clone the Board. (Cloning would be way easier.)
   
   boolean IsOpen() {
     return myTile==null && !IsStopper();
@@ -23,7 +24,12 @@ class GridSpace {
   }
   void Reset() {
     myTile = null;
+    ResetPreview();
+  }
+  void ResetPreview() {
     canMoveMyTileInPreviewMove = false;
+    myTilePreviewXDisplay = x;
+    myTilePreviewYDisplay = y;
   }
   
   Tile getTile() {

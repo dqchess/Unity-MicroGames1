@@ -33,8 +33,6 @@ void resetGame() {
   int numNumbers = 3;
   for (int c=0; c<numColors; c++) {
     for (int n=0; n<numNumbers; n++) {
-//      // TEST leave one space blank!
-//      if (c==numColors-1 && n==numNumbers-1) { break; }
       int count=0;
       while (true) {
         GridSpace randSpace = GetRandSpace();

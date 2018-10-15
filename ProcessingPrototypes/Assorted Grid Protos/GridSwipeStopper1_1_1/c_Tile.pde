@@ -38,9 +38,10 @@ class Tile {
     row = Row;
     SetColorID(ColorID);
     SetNumberID(NumberID);
-    setTargetXY();
+    SetTargetPos();
+    GoToTargetPos();
   }
-  void setTargetXY() {
+  void SetTargetPos() {
     targetX = getGridPosX(col);
     targetY = getGridPosY(row);
     isAtTargetPosition = false;
@@ -65,7 +66,7 @@ class Tile {
     col += dirX;
     row += dirY;
     addTileToItsGridSpace(this);
-    setTargetXY();
+    SetTargetPos();
   }
 //  void moveAndMerge(int dirX,int dirY) {
 //    if (isPreviewMove()) gridSpaces[col][row].canMoveMyTileInPreviewMove = true;
@@ -79,9 +80,7 @@ class Tile {
   
   
   private void onReachTargetPosition() {
-    isAtTargetPosition = true;
-    x = targetX;
-    y = targetY;
+    GoToTargetPos();
 //    // Merge?!
 //    if (doReplaceWhenReachTargetPos) {
 //      Tile otherTile = GetTile(col,row);
@@ -89,6 +88,11 @@ class Tile {
 //      removeTile(this); // remove the remaining tile at this grid space
 //      addTileToItsGridSpace(otherTile);
 //    }
+  }
+  private void GoToTargetPos() {
+    isAtTargetPosition = true;
+    x = targetX;
+    y = targetY;
   }
   
   

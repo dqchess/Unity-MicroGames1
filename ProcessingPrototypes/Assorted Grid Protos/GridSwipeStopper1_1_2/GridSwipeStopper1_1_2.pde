@@ -19,9 +19,9 @@ boolean[] didMoveInRow;
 int mouseCol,mouseRow;
 int previewDirX,previewDirY; // when I slide in a direction to preview what the move will result in
 int stopperCol,stopperRow;
-float previewAmount; // from 0 to 1.
+float previewLoc; // from 0 to 1.
 float mouseDownX,mouseDownY;
-float previewMoveOffsetX,previewMoveOffsetY;
+//float previewMoveOffsetX,previewMoveOffsetY;
 
 // Objects
 GridSpace[][] gridSpaces;
@@ -50,8 +50,8 @@ void draw() {
   // Where the dragging mouse be at?
   UpdateMousePosGrid();
   MouseDraggingMath();
-  previewMoveOffsetX = previewDirX * previewAmount * unitSize.x;
-  previewMoveOffsetY = previewDirY * previewAmount * unitSize.y;
+//  previewMoveOffsetX = previewDirX * previewLoc * unitSize.x;
+//  previewMoveOffsetY = previewDirY * previewLoc * unitSize.y;
   
   // Grid back
   fill(128,28,220);
@@ -107,11 +107,11 @@ void MouseDraggingMath() {
     else {
       // HORIZONTAL
       if (previewDirX != 0) {
-        previewAmount = max(0, min(0.95, previewDirX * (mouseX-mouseDownX) / unitSize.x));
+        previewLoc = max(0, min(0.95, previewDirX * (mouseX-mouseDownX) / unitSize.x));
       }
       // VERTICAL
       else {
-        previewAmount = max(0, min(0.95, previewDirY * (mouseY-mouseDownY) / unitSize.x));
+        previewLoc = max(0, min(0.95, previewDirY * (mouseY-mouseDownY) / unitSize.x));
       }
     }
   }
@@ -133,14 +133,11 @@ void mousePressed() {
 }
 void mouseReleased() {
   // Did we drag the preview far enough to count it as a move?!
-  if (previewAmount > 0.5) {
+  if (previewLoc > 0.5) {
     // HACKISHLY bump the positions of the tiles for a smoother animation into place.
     for (int i=tiles.size()-1; i>=0; --i) {
       Tile tempTile = (Tile) tiles.get(i);
-      if (tempTile.canMoveInPreview) {
-        tempTile.x += previewMoveOffsetX;
-        tempTile.y += previewMoveOffsetY;
-      }
+      tempTile.GoToPreviewPos();
     }
     // Move the tiles!!
     MoveTiles(previewDirX,previewDirY);
@@ -157,9 +154,9 @@ void keyPressed() {
   else if (keyCode == LEFT) MoveTiles(-1, 0);
   else if (keyCode == RIGHT) MoveTiles(1, 0);
   
-  else if (key == 'a') {
-    AddRandTile();
-  }
+//  else if (key == 'a') {
+//    AddRandTile();
+//  }
   
   if (key == 'p') printGridSpaces();
 }

@@ -157,9 +157,9 @@ void keyPressed() {
   else if (keyCode == LEFT) MoveTiles(-1, 0);
   else if (keyCode == RIGHT) MoveTiles(1, 0);
   
-  else if (key == 'a') {
-    AddRandTile();
-  }
+//  else if (key == 'a') {
+//    AddRandTile();
+//  }
   
   if (key == 'p') printGridSpaces();
 }
