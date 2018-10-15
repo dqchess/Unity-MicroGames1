@@ -24,6 +24,16 @@
         100.,
         ....,
     " />
+
+    <Level diff="5" desc="smart. requires planning on first move." layout="
+        21121,
+        ..111,
+        .1.01,
+        1.00.,
+        ...00,
+    " />
+
+
     <Level diff="6" layout="
         1.00,
         00.1,
@@ -74,6 +84,26 @@
 		.01.,
 		0.02,
 		1022,
+    " />
+    <Level diff="7" desc="IDK if possible!" layout="
+        11.22,
+        1.01.,
+        .0011,
+        0010.,
+        .1.0.,
+    " />
+
+
+    
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
     " />
 
 </Levels>

@@ -16,7 +16,8 @@ namespace SlideAndStick {
 //		public float MinPercentTiles = 0.4f;
 //		public float MinPercentTiles = 0.4f;
 		public float PercentTiles = 0.8f;
-		public int NumColors = 3;
+        public int NumColors = 3;
+        public int Stickiness = 3;
 
 		// Getters (Public)
 		public FUEController FUEController { get { return fueController; } }
@@ -34,6 +35,11 @@ namespace SlideAndStick {
         override protected void Start() {
             base.Start();
             
+            // Load rand tile placement properties!
+            PercentTiles = SaveStorage.GetFloat(SaveKeys.SlideAndStick_RandGenPercentTiles, 0.8f);
+            NumColors = SaveStorage.GetInt(SaveKeys.SlideAndStick_NumColors, 3);
+            Stickiness = SaveStorage.GetInt(SaveKeys.SlideAndStick_RandGenStickiness, 1);
+            
             // In the editor? Reload levels!
             #if UNITY_EDITOR
             AssetDatabase.Refresh();
@@ -49,6 +55,11 @@ namespace SlideAndStick {
         }
         override protected void OnDestroy() {
             base.OnDestroy();
+            
+            // Save tile placement properties!
+            SaveStorage.SetFloat(SaveKeys.SlideAndStick_RandGenPercentTiles, PercentTiles);
+            SaveStorage.SetInt(SaveKeys.SlideAndStick_NumColors, NumColors);
+            SaveStorage.SetInt(SaveKeys.SlideAndStick_RandGenStickiness, Stickiness);
             
             // Remove event listeners!
             GameManagers.Instance.EventManager.LevelJumpButtonClickEvent -= OnLevelJumpButtonClick;

@@ -301,7 +301,7 @@ namespace SlideAndStick {
 		}
 
 		private void Debug_PrintLevelLayout() {
-			string str = "\nLEVEL - \n";
+			string str = "\n";//\nLEVEL - \n";
 			str += board.Debug_GetBoardLayout();
 			UnityEditor.EditorGUIUtility.systemCopyBuffer = str;
 		}

@@ -200,17 +200,35 @@ namespace SlideAndStick {
 			if (tiles.Count > 0) { return; } // Nah, we've got some.
 			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
 			int numColors = gameController.NumColors;
+            int stickiness = gameController.Stickiness;
 			//			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
-			Debug_AddRandomTiles(numToAdd, numColors);
+			Debug_AddRandomTiles(numToAdd, numColors, stickiness);
 			OnMoveComplete();
 		}
-		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
-			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this);
-				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-				int colorID = Random.Range(0, numColors);
-				AddTile(randPos, colorID);
-			}
+		private void Debug_AddRandomTiles(int numToAdd, int numColors, int stickiness) {
+            //for (int i=0; i<numToAdd; i++) {TEST TEMP
+            //    BoardPos randPos = BoardUtils.GetRandOpenPos(this);
+            //    if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+            //    int colorID = Random.Range(0, numColors);
+            //    AddTile(randPos, colorID);
+            //}
+            int safetyCount=0;
+            while (numToAdd > 0 && safetyCount++<99) {
+                BoardPos randPos = BoardUtils.GetRandOpenPos(this);
+                if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+                int colorID = Random.Range(0, numColors);
+                int clusterAttemptSize = Random.Range(1, stickiness+1);
+                for (int j=0; j<clusterAttemptSize; j++) { // For every ONE tile, add more of the same color next to it!
+                    if (!BoardUtils.CanAddTile(this,randPos)) { continue; }
+                    AddTile(randPos, colorID);
+                    numToAdd --;
+                    if (numToAdd <= 0) { break; }
+                    Vector2Int randDir = BoardUtils.GetRandOpenDir(this, randPos);
+                    if (randDir == Vector2Int.zero) { continue; }
+                    randPos.col += randDir.x;
+                    randPos.row += randDir.y;
+                }
+            }
 		}
 		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
 			string boardString = Debug_GetBoardLayout();
@@ -220,11 +238,13 @@ namespace SlideAndStick {
 		public string Debug_GetBoardLayout() {
 			string str = "";
 			for (int row=0; row<NumRows; row++) {
+                str += "        "; // put it on my tab!
 				for (int col=0; col<NumCols; col++) {
 					Tile tile = GetTile(col,row);
 					str += tile==null ? "." : tile.ColorID.ToString();
 				}
-				str += "\n";
+				str += ",";
+                if (row<NumRows-1) { str += "\n"; }
 			}
 			return str;
 		}

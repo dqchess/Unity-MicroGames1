@@ -35,6 +35,9 @@ public static class SaveKeys {
     public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
     
     // SlideAndStick
+    public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";
+    public const string SlideAndStick_NumColors = "SlideAndStick_NumColors";
+    public const string SlideAndStick_RandGenStickiness = "SlideAndStick_RandGenStickiness";
     public const string SlideAndStick_LastPlayedLevelAddress = "SlideAndStick_LastPlayedLevelAddress";
     static public string SlideAndStick_DidCompleteLevel(SlideAndStick.LevelAddress address) {
         return "SlideAndStick_DidCompleteLevel_" + address.mode + "_" + address.collection + "_" + address.pack + "_" + address.level;

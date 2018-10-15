@@ -17,7 +17,8 @@ namespace SlideAndStick {
 		}
 
 
-		public static BoardSpace GetSpace(Board b, int col, int row) {
+        public static BoardSpace GetSpace(Board b, BoardPos pos) { return GetSpace(b, pos.col,pos.row); }
+        public static BoardSpace GetSpace(Board b, int col, int row) {
 			if (col<0 || row<0  ||  col>=b.NumCols || row>=b.NumRows) return null;
 			return b.Spaces[col,row];
 		}
@@ -55,6 +56,20 @@ namespace SlideAndStick {
 			}
 			return BoardPos.undefined;
 		}
+        public static Vector2Int GetRandOpenDir(Board b, BoardPos originPos) {
+            int[] randSides = MathUtils.GetShuffledIntArray(4);
+            for (int i=0; i<randSides.Length; i++) {
+                Vector2Int dir = MathUtils.GetDir(i);
+                if (CanAddTile(b, new BoardPos(originPos.col+dir.x, originPos.row+dir.y))) {
+                    return dir;
+                }
+            }
+            return Vector2Int.zero;
+        }
+        public static bool CanAddTile(Board b, BoardPos pos) {
+            BoardSpace space = GetSpace(b, pos);
+            return space!=null && space.IsOpen();
+        }
 
 		public static int GetNumPlayableSpaces(Board b) {
 			int total = 0;
