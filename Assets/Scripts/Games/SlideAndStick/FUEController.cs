@@ -244,12 +244,12 @@ namespace SlideAndStick {
 			else if (currentSeq == SEQ_FUE_2) {
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
-					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2A, 4); // Give them 4 seconds to merge something before we show the finger animation.
+					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2A, 3); // Give them 3 seconds to merge something before we show the finger animation.
 //					t_instructions.text = "Merge colors together!";
 				}
 				else if (currentStep == s++) {
 					StopAnimation_FingerMoveTile();
-					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2B(), 4); // Give them 4 seconds to merge something before we show the finger animation.
+					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2B(), 2); // Give them 2 seconds to merge something before we show the finger animation.
 				}
 			}
 

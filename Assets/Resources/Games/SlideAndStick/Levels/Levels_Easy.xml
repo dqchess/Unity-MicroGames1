@@ -32,6 +32,17 @@
     " />
 
 
+    <Level diff="1" desc="clearly handmade" layout="
+        ..10,
+        ..11,
+        00..,
+        10..,
+    " />
+    <Level diff="2" fueID="failHelp1" layout="
+        .03,
+        303,
+        0.0,
+    " />
     <Level diff="1" fueID="failHelp0" layout="
         2.2,
         1.1,
@@ -44,11 +55,6 @@
         2.2,
     " />
     -->
-    <Level diff="2" fueID="failHelp1" layout="
-        .03,
-        303,
-        0.0,
-    " />
     <Level diff="2" layout="
         220,
         .02,
@@ -80,12 +86,6 @@
         00..,
         2200,
     " />
-    <Level diff="1" desc="clearly handmade" layout="
-        ..10,
-        ..11,
-        00..,
-        10..,
-    " />
     <Level diff="2" layout="
         0.00,
         01.1,
@@ -115,6 +115,12 @@
         .0..,
         01.1,
         0011,
+    " />
+    <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
+        0011,
+        ....,
+        ....,
+        1100,
     " />
     <Level diff="2" layout="
         1111,
@@ -159,28 +165,10 @@
         1001,
         1010,
     " />
-    <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
-        0011,
-        1100,
-        ....,
-        ....,
-    " />
-    <Level diff="3" layout="
-        1001,
-        0...,
-        00.1,
-        0110,
-    " />
     <Level diff="3" layout="
         002,
         .21,
         1.0,
-    " />
-    <Level diff="3" layout="
-        ..11,
-        010.,
-        1.01,
-        1101,
     " />
 
 

@@ -71,12 +71,12 @@ class Tile {
     GridSpace prevSpace = gridSpaces[col][row];
     
     removeTileFromItsGridSpace(this);
-    while (true) { // Keep moving until we can't anymore!
+//    while (true) { // Keep moving until we can't anymore!
       col += dirX;
       row += dirY;
       GridSpace nextSpace = GetSpace(col+dirX,row+dirY);
-      if (nextSpace==null || !nextSpace.IsOpen()) { break; }
-    }
+//      if (nextSpace==null || !nextSpace.IsOpen()) { break; }
+//    }
     addTileToItsGridSpace(this);
     SetTargetPos();
     
