@@ -10,6 +10,16 @@
 -->
 <LevelPack packName="Easy">
 <Levels>
+
+    <Level diff="0" name="QQQ test" layout="
+        .....,
+        ..00.,
+        .0...,
+        .....,
+        0....,
+    " />
+
+
     <Level diff="1" name="IntroGame1" fueID="1" layout="
         ...,
         0.0,

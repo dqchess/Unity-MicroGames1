@@ -6,22 +6,19 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class TileView : BoardOccupantView {
 		// Components
-        [SerializeField] private TileViewBody body;
-        [SerializeField] private TileViewBody bodyShadow;
-		// References
-		private Tile myTile;
+        [SerializeField] private TileViewBody body=null;
+        [SerializeField] private TileViewBody bodyShadow=null;
+        // References
+        public Tile MyTile { get; private set; }
 
-        // Getters (Public)
-        public Tile MyTile { get { return myTile; } }
-        
-        
 
-		// ----------------------------------------------------------------
-		//  Initialize
-		// ----------------------------------------------------------------
-		public void Initialize (BoardView _myBoardView, Tile _myObj) {
+
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public void Initialize (BoardView _myBoardView, Tile _myObj) {
 			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
-			myTile = _myObj;
+			MyTile = _myObj;
             body.Initialize();
             bodyShadow.Initialize();
 		}

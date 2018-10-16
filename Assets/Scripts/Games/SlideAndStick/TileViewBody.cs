@@ -20,12 +20,18 @@ namespace SlideAndStick {
         // Getters (Static)
         private static Color GetBodyColor(int _colorID) {
             switch (_colorID) {
-            case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
-            case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
-            case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
-            case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
-            case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
-            case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
+            case 0: return new Color( 71/255f,128/255f,214/255f);
+            case 1: return new Color(100/255f,220/255f, 95/255f);
+            case 2: return new Color(231/255f,100/255f,192/255f);
+            case 3: return new Color(232/255f,182/255f,110/255f);
+            case 4: return new Color(110/255f,215/255f,233/255f);
+            case 5: return new Color(  5/255f,250/255f,220/255f);
+            //case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
+            //case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
+            //case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
+            //case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
+            //case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
+            //case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
             //case 0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
             //case 1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
             //case 2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();

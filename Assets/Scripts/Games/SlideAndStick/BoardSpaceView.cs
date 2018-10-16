@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class BoardSpaceView : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_backing;
-		[SerializeField] private Image i_border;
+		[SerializeField] private Image i_backing=null;
+		[SerializeField] private Image i_border=null;
 		// Properties
 		private Color fillColor;
 		// References
@@ -34,21 +34,25 @@ namespace SlideAndStick {
 			if (mySpace.IsPlayable) {
 				const float spaceGap = 0f; // make this something between 0 and 5, to taste.
 				float diameter = _boardView.UnitSize-spaceGap;
-				GameUtils.SizeUIGraphic (i_border, _boardView.UnitSize+4,_boardView.UnitSize+4);
+				GameUtils.SizeUIGraphic (i_border, _boardView.UnitSize+14,_boardView.UnitSize+14);
 				GameUtils.SizeUIGraphic (i_backing, diameter,diameter);
 
-                float fillS = Random.Range(0.2f, 0.25f);
-                float fillB = Random.Range(0.9f, 0.98f);
-                //float fillB = Random.Range(0.01f, 0.06f);
-				fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
-				i_backing.color = fillColor;
-				i_border.color = new ColorHSB(30/360f, 0.2f, 0.75f).ToColor();
+    //            float fillS = Random.Range(0.2f, 0.25f);
+    //            float fillB = Random.Range(0.9f, 0.98f); //Random.Range(0.01f, 0.06f);
+				//fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
+				//i_border.color = new ColorHSB(30/360f, 0.2f, 0.75f).ToColor();
                 i_border.enabled = false; // note: DISABLED borders!
+                
+                
+                float b = BoardUtils.IsSpaceEven(col,row) ? 0.92f : 0.98f;
+                fillColor = new Color(b,b,b);
+                i_backing.color = fillColor;
+                //i_border.color = fillColor;
 			}
 			// NOT playable? Destroy my sprites and do nothing.
 			else {
-				GameObject.Destroy(i_border.gameObject);
-				GameObject.Destroy(i_backing.gameObject);
+                Destroy(i_border.gameObject);
+                Destroy(i_backing.gameObject);
 			}
 		}
 

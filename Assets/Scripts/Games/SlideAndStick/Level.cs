@@ -19,11 +19,14 @@ namespace SlideAndStick {
 		private Vector2Int mousePosBoard;
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
+        [SerializeField] private LevelUI levelUI;
 		private GameController gameController;
 		private Tile tileOver; // the Tile my mouse is over.
 		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
 
 		// Getters (Public)
+        //public TileView Temp_TileViewGrabbing { get { return Temp_GetTileView(tileGrabbing); } }
+        //public Tile Temp_TileGrabbing { get { return tileGrabbing; } }
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
 		public GameController GameController { get { return gameController; } }
@@ -99,6 +102,8 @@ namespace SlideAndStick {
 			board.Debug_AddTilesIfNone(gameController); // For rando layout generating!
 			boardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
 			boardView.Initialize (this, board);
+            // Tell ppl!
+            levelUI.OnBoardMade();
 		}
 		private void DestroyBoardModelAndView () {
 			// Nullify the model (there's nothing to destroy).

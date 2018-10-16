@@ -249,7 +249,7 @@ namespace SlideAndStick {
 				}
 				else if (currentStep == s++) {
 					StopAnimation_FingerMoveTile();
-					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2B(), 2); // Give them 2 seconds to merge something before we show the finger animation.
+					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2B(), 1.1f); // Give them 1 second to merge something before we show the finger animation.
 				}
 			}
 

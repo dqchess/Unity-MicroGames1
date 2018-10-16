@@ -7,7 +7,7 @@ namespace SlideAndStick {
 		// Visual properties
 		private float unitSize; // how big each board space is in pixels
 		// Components
-		[SerializeField] private RectTransform myRectTransform=null;
+		[SerializeField] private RectTransform myRectTransform;
 		[SerializeField] private Transform tf_boardSpaces=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
@@ -28,6 +28,7 @@ namespace SlideAndStick {
 		public Level MyLevel { get { return levelRef; } }
 		public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
 		public float UnitSize { get { return unitSize; } }
+        public RectTransform MyRectTransform { get { return myRectTransform; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
 		public List<BoardOccupantView> AllOccupantViews { get { return allOccupantViews; } }
 		public bool AreObjectsAnimating { get { return areObjectsAnimating; } }
@@ -43,7 +44,8 @@ namespace SlideAndStick {
 //		public float BoardToX(float col) { return Pos.x + (col+0.5f)*unitSize; } // +0.5f to center.
 //		public float BoardToY(float row) { return Pos.y - (row+0.5f)*unitSize; } // +0.5f to center.
 		public float BoardToXGlobal(float col) { return BoardToX(col) + Pos.x; }
-		public float BoardToYGlobal(float row) { return BoardToY(row) + Pos.y; }
+        public float BoardToYGlobal(float row) { return BoardToY(row) + Pos.y; }
+        public Vector2 BoardToGlobal(BoardPos bp) { return new Vector2(BoardToXGlobal(bp.col), BoardToYGlobal(bp.row)); }
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
 
@@ -89,7 +91,8 @@ namespace SlideAndStick {
 			// Position me nice and horz centered!
 			Vector2 parentSize = levelRef.GetComponent<RectTransform>().rect.size;
 			float posX = (parentSize.x-myRectTransform.rect.width)*0.5f;
-			float posY = -(parentSize.y*0.8f - myRectTransform.rect.height); // bottom-align me!
+			//float posY = -(parentSize.y*0.8f - myRectTransform.rect.height); // bottom-align me!
+            float posY = -(parentSize.y-myRectTransform.rect.height) * 0.5f; // center-align me!
 			myRectTransform.anchoredPosition = new Vector2(posX,posY);
 		}
 

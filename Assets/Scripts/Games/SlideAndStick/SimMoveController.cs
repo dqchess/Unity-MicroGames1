@@ -105,6 +105,17 @@ namespace SlideAndStick {
         }
 
         private void UpdateDragAxes() {
+            //// TEST
+            //Tile tileGrabbing = level.Temp_TileGrabbing;
+            //if (tileGrabbing != null) {
+            //    Canvas canvas = Object.FindObjectOfType<Canvas>();
+            //    Vector2 tilePos = level.BoardView.BoardToGlobal(tileGrabbing.BoardPos);
+            //    tilePos = new Vector2(tilePos.x, canvas.GetComponent<RectTransform>().rect.height + tilePos.y); // meh. flip y.
+            //    tilePos *= canvas.scaleFactor;
+            //    dragAnchorPos = tilePos;
+            //    Debug.Log(Time.frameCount + " tilePos: " + tilePos + "     touchPos: " + GetTouchPos());
+            //}
+            
             dragAxes = GetTouchPos() - dragAnchorPos;
         }
 
