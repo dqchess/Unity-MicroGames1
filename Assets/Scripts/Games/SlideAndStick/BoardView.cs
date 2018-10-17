@@ -129,12 +129,14 @@ namespace SlideAndStick {
 			UpdateBoardOccupantViewVisualsMoveStart();
 			// Note that destroyed Objects' views will be removed by the view in the UpdateVisualsMoveEnd.
 			// Reset our BoardOccupantView' "from" values to where they *currently* are! Animate from there.
-			foreach (BoardOccupantView bov in allOccupantViews) {
-				bov.SetValues_From_ByCurrentValues();
-			}
+//			foreach (BoardOccupantView bov in allOccupantViews) {Note: Disabled this! Doesn't have much of an effect.
+//				bov.SetValues_From_ByCurrentValues();
+//			}
 			areObjectsAnimating = true;
-			objectsAnimationLoc = 0;
+//			objectsAnimationLoc = 0;
 			objectsAnimationLocTarget = 1;
+			// Do this for safety.
+			ApplyObjectsAnimationLoc();
 		}
 		private void UpdateAllViewsMoveEnd() {
 			areObjectsAnimating = false;
@@ -204,8 +206,6 @@ namespace SlideAndStick {
             }
             // Now actually simulate the move!
             simMoveResult = simMoveBoard.ExecuteMove(boToMove.BoardPos, simMoveDir);
-			// What planned merges do we have?
-
             // Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
             foreach (BoardOccupantView bov in allOccupantViews) {
                 bov.SetValues_To_ByMySimulatedMoveBoardObject();

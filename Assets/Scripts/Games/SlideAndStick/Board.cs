@@ -212,12 +212,12 @@ namespace SlideAndStick {
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
 
-		/// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the end of the list, we can count on it NOT being taken out of play.
+		/// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the start of the list, we can count on it always being taken out of play.
 		public void OnSetTileGrabbing(Tile _tile) {
-			// If there's a tileGrabbing, move it to the end of the list (so that it'll be merged first).
+			// If there's a tileGrabbing, move it to the beginning of the list (so that it'll be merged last).
 			if (_tile != null) {
 				tiles.Remove(_tile);
-				tiles.Add(_tile);
+				tiles.Insert(0, _tile);
 			}
 		}
 

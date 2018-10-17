@@ -6,9 +6,8 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class TileView : BoardOccupantView {
 		// Components
-//        [SerializeField] private TileViewBody body=null;QQQ! disabled
-        [SerializeField] private TileViewBody bodyShadow=null;
-		private List<MergeSpotView> mergeSpotViews; // only exists when we're animating (aka between loc from and to).
+        [SerializeField] private TileViewBody body=null;
+//        [SerializeField] private TileViewBody bodyShadow=null;
         // References
         public Tile MyTile { get; private set; }
 
@@ -20,8 +19,8 @@ namespace SlideAndStick {
         public void Initialize (BoardView _myBoardView, Tile _myObj) {
 			MyTile = _myObj;
 			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
-//            body.Initialize();
-            bodyShadow.Initialize();
+            body.Initialize();
+//            bodyShadow.Initialize();
 		}
 
 
@@ -30,49 +29,25 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
 		override public void UpdateVisualsPostMove() {
 			base.UpdateVisualsPostMove();
-			DestroyMergeSpotViews();
             
-//            body.UpdateVisualsPostMove();
-            bodyShadow.UpdateVisualsPostMove();
+            body.UpdateVisualsPostMove();
+//            bodyShadow.UpdateVisualsPostMove();
 		}
 		override public void GoToValues (float lerpLoc) {
 			base.GoToValues(lerpLoc);
-
-			for (int i=0; i<mergeSpotViews.Count; i++) {
-				mergeSpotViews[i].GoToValues(lerpLoc);
-			}
+			body.GoToValues(lerpLoc);
+//			bodyShadow.GoToValues(lerpLoc);
 		}
-		override public void SetValues_To (BoardObject _bo) {
+//		override public void SetValues_From_ByCurrentValues () {
+//			base.SetValues_From_ByCurrentValues();
+//			body.SetValues_From_ByCurrentValues();
+////			bodyShadow.SetValues_From_ByCurrentValues();
+//		}
+		override public void SetValues_To(BoardObject _bo) {
 			base.SetValues_To(_bo);
-			RemakeMergeSpotViews(_bo.BoardRef);
+			body.SetValues_To(_bo);
+//			bodyShadow.SetValues_To(_bo);QQQ disabled
 		}
-		private void RemakeMergeSpotViews(Board simBoard) {
-			DestroyMergeSpotViews(); // Just in case.
-//			if (MyTile != null) {//TEST
-			for (int i=0; i<simBoard.LastMergeSpots.Count; i++) {
-				MergeSpot ms = simBoard.LastMergeSpots[i];
-				if (MyTile.FootprintGlobal.Contains(ms.pos+ms.dir)) {
-					AddMergeSpotView(ms);
-				}
-			}
-//			}
-		}
-
-
-		private void DestroyMergeSpotViews() {
-			if (mergeSpotViews != null) {
-				for (int i=0; i<mergeSpotViews.Count; i++) {
-					Destroy(mergeSpotViews[i].gameObject);
-				}
-			}
-			mergeSpotViews = new List<MergeSpotView>();
-		}
-		private void AddMergeSpotView(MergeSpot mergeSpot) {
-			MergeSpotView obj = Instantiate(ResourcesHandler.Instance.slideAndStick_mergeSpotView).GetComponent<MergeSpotView>();
-			obj.Initialize(this, mergeSpot);
-			mergeSpotViews.Add(obj);
-		}
-
 
 
 		public void OnMouseOut() {

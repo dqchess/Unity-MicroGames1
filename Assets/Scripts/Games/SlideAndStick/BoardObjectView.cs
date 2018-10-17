@@ -121,12 +121,12 @@ namespace SlideAndStick {
 		public void SetValues_To_ByMySimulatedMoveBoardObject () {
 			SetValues_To (mySimulatedMoveObject);
 		}
-		public void SetValues_From_ByCurrentValues () {
-			pos_from = Pos;
-			rotation_from = Rotation;
-			scale_from = Scale;
-			//		SetValues_From (myObject);
-		}
+//		virtual public void SetValues_From_ByCurrentValues () {
+//			pos_from = Pos;
+//			rotation_from = Rotation;
+//			scale_from = Scale;
+//			//		SetValues_From (myObject);
+//		}
 
 
 		// ----------------------------------------------------------------

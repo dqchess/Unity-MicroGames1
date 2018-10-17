@@ -9,24 +9,25 @@ namespace SlideAndStick {
 		[SerializeField] private Image myImage;
 		[SerializeField] private RectTransform myRectTransform;
 		// Properties
-//		private MergeSpot myMergeSpot;
 		private Vector2 posA;
 		private Vector2 posB;
 
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize(TileView myTileView, MergeSpot myMergeSpot) {
-//			this.myMergeSpot = myMergeSpot;
+		public void Initialize(TileView myTileView, TileViewBody myTileViewBody, MergeSpot myMergeSpot) {
+			BoardView boardView = myTileView.MyBoardView;
+			Tile myTile = myTileView.MyTile;
+
 			// Parent jazz.
-			GameUtils.ParentAndReset(this.gameObject, myTileView.transform);
+			GameUtils.ParentAndReset(this.gameObject, myTileViewBody.transform);
+
 			// Size and color me, Ayla.
-			float unitSize = myTileView.MyBoardView.UnitSize;
+			float unitSize = boardView.UnitSize;
 			float diameter = TileViewBody.GetDiameter(unitSize);
 			myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
-			myImage.color = TileViewBody.GetBodyColor(myTileView.MyTile.ColorID); // TODO: darken for the shadow, yanno.
+			myImage.color = myTileViewBody.BodyColor;
 
-			BoardView boardView = myTileView.MyBoardView;
 			posA = boardView.BoardToLocal(myMergeSpot.pos+myMergeSpot.dir);
 			posB = boardView.BoardToLocal(myMergeSpot.pos);
 			posB = Vector2.Lerp(posA,posB, 0.2f); // Ok, keep posB PRETTY dialed back-- keep it close to home.
@@ -46,5 +47,9 @@ namespace SlideAndStick {
 
 			myRectTransform.anchoredPosition = Vector2.Lerp(posA,posB, loc);
 		}
+//		/** Same principle as SetValues_From_ByCurrentValues in BoardObjectView. */
+//		public void SetValues_From_ByCurrentValues() {
+//			posA = myRectTransform.anchoredPosition;
+//		}
 	}
 }
