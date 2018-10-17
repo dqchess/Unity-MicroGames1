@@ -103,12 +103,11 @@ namespace SlideAndStick {
 			SetValues_From (myObject);
 			GoToValues (myBoardView.ObjectsAnimationLocTarget); // go 100% to the target values, of course! (This could be either 1 *or* 0.)
 		}
-		public void SetValues_To (BoardObject _bo) {
+		virtual public void SetValues_To (BoardObject _bo) {
 			if (_bo == null) { return; }
 			pos_to = GetPosFromBO (_bo);
 			rotation_to = GetRotationFromBO (_bo);
 			scale_to = 1;// GetScaleFromBO (_bo);
-//			myBoardView.OnObjectStartAnimating (); // yes, we know at least *I* am animating!
 		}
 		private void SetValues_From (BoardObject _bo) {
 			if (_bo == null) { return; }
@@ -137,7 +136,7 @@ namespace SlideAndStick {
 			// No animating in an undo. It's simply more professional.
 			GoToValues (myBoardView.ObjectsAnimationLocTarget);
 		}
-		public void GoToValues (float lerpLoc) {
+		virtual public void GoToValues (float lerpLoc) {
 			//		if (mySimulatedMoveObject == null) { return; }
 			Pos = Vector2.Lerp (pos_from, pos_to, lerpLoc);
 			Rotation = Mathf.Lerp (rotation_from, rotation_to, lerpLoc);

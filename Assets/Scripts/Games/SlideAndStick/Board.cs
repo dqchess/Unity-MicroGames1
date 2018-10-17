@@ -15,6 +15,7 @@ namespace SlideAndStick {
         public bool AreGoalsSatisfied { get; private set; }
         public bool IsInKnownFailState { get; private set; }
         private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
+		private List<MergeSpot> lastMergeSpots; // remade when we call MergeAllTiles.
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
@@ -23,7 +24,8 @@ namespace SlideAndStick {
 
 		// Getters (Private)
 		private bool GetAreGoalsSatisfied() {
-			return tiles.Count <= numTilesToWin;
+			return false; // QQQ
+//			return tiles.Count <= numTilesToWin;
 		}
 
         // Getters (Public)
@@ -37,6 +39,7 @@ namespace SlideAndStick {
 			foreach (Tile t in tiles) { if (t.ColorID==colorID) { total ++; } }
 			return total;
 		}
+		public List<MergeSpot> LastMergeSpots { get { return lastMergeSpots; } }
 
 		public Board Clone() {
 			BoardData data = SerializeAsData();
@@ -128,12 +131,12 @@ namespace SlideAndStick {
 			else { Debug.LogError ("Trying to RemoveFromPlay an Object of type " + bo.GetType().ToString() + ", but our OnObjectRemovedFromPlay function doesn't recognize this type!"); }
 		}
 
-
-
         // ----------------------------------------------------------------
         //  Tile Group-Finding
         // ----------------------------------------------------------------
 		private void MergeAdjacentTiles() {
+			lastMergeSpots = new List<MergeSpot>();
+
 			for (int i=tiles.Count-1; i>=0; --i) {
 				if (i >= tiles.Count) { continue; } // Oh, if this tile was removed, skip it.
 				Tile t = tiles[i];
@@ -160,11 +163,28 @@ namespace SlideAndStick {
 			}
 		}
 		private void MergeTiles(Tile tileA, Tile tileB) {
-			List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it for safety.
+			AddMergeSpots(tileA, tileB);
+			List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it so we don't modify the original.
 			// Remove tileB from the board!
 			tileB.RemoveFromPlay();
 			// Append tileA's footprint, yo.
 			tileA.AppendMyFootprint(tileBFootGlobal);
+		}
+		/** For each global footprint of tileA, looks around to see if it's mergin' with tileB. If so, we add a MergeLocation there. */
+		private void AddMergeSpots(Tile tileA, Tile tileB) {
+			for (int i=0; i<tileA.FootprintGlobal.Count; i++) {
+				Vector2Int footA = tileA.FootprintGlobal[i];
+				MaybeAddMergeLocation(tileA,tileB, footA, Vector2Int.B);
+				MaybeAddMergeLocation(tileA,tileB, footA, Vector2Int.L);
+				MaybeAddMergeLocation(tileA,tileB, footA, Vector2Int.R);
+				MaybeAddMergeLocation(tileA,tileB, footA, Vector2Int.T);
+			}
+		}
+		private void MaybeAddMergeLocation(Tile tileA,Tile tileB, Vector2Int footAPos, Vector2Int dir) {
+			// Yes, tileB has a footprint in this dir!
+			if (tileB.FootprintGlobal.Contains(footAPos+dir)) {
+				lastMergeSpots.Add(new MergeSpot(tileA,tileB, footAPos,dir));
+			}
 		}
 
 
@@ -191,6 +211,16 @@ namespace SlideAndStick {
             // Update IsInKnownFailState!
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
+
+		/// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the end of the list, we can count on it NOT being taken out of play.
+		public void OnSetTileGrabbing(Tile _tile) {
+			// If there's a tileGrabbing, move it to the end of the list (so that it'll be merged first).
+			if (_tile != null) {
+				tiles.Remove(_tile);
+				tiles.Add(_tile);
+			}
+		}
+
 
 
 		// ----------------------------------------------------------------

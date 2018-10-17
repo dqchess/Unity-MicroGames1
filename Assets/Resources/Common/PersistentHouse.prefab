@@ -301,7 +301,6 @@ MonoBehaviour:
     type: 2}
   abacusToy_boardView: {fileID: 1509143095400638, guid: 69b8909957be8428cbc3c57b46d216c7,
     type: 2}
-  abacusToy_boardController: {fileID: 0}
   abacusToy_level: {fileID: 1698266709426448, guid: c1edc1d35ef1e44e28649341fb4a744a,
     type: 2}
   abacusToy_tileView: {fileID: 1647619775195882, guid: 541fdce12feff43ea80d7bcb0ad5aafa,
@@ -353,6 +352,8 @@ MonoBehaviour:
   slideAndStick_boardController: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
     type: 2}
   slideAndStick_level: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+    type: 2}
+  slideAndStick_mergeSpotView: {fileID: 1480341240316084, guid: 858b5a69e3216964d80ed1d706b23442,
     type: 2}
   slideAndStick_tileView: {fileID: 1647619775195882, guid: c44131899001147ba98a0baf8a047802,
     type: 2}

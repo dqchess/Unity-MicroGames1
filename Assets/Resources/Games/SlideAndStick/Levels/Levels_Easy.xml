@@ -11,7 +11,29 @@
 <LevelPack packName="Easy">
 <Levels>
 
-    <Level diff="0" name="QQQ test" layout="
+	<!-- TESTS! QQQ. -->
+    <Level diff="0" name="test" layout="
+        .....,
+        .....,
+        .0.0.,
+        .....,
+        .....,
+    " />
+    <Level diff="0" name="test" layout="
+        .....,
+        .000.,
+        .0.0.,
+        ..0..,
+        .....,
+    " />
+    <Level diff="0" name="test" layout="
+        .....,
+        ..0..,
+        .0.0.,
+        ..0..,
+        0....,
+    " />
+    <Level diff="0" name="test" layout="
         .....,
         ..00.,
         .0...,

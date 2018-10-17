@@ -18,7 +18,8 @@ namespace SlideAndStick {
         private float highlightAlpha=0;
         
         // Getters (Static)
-        private static Color GetBodyColor(int _colorID) {
+		static public float GetDiameter(float unitSize) { return unitSize * 0.9f; }
+		static public Color GetBodyColor(int _colorID) {
             switch (_colorID) {
             case 0: return new Color( 71/255f,128/255f,214/255f);
             case 1: return new Color(100/255f,220/255f, 95/255f);
@@ -26,18 +27,6 @@ namespace SlideAndStick {
             case 3: return new Color(232/255f,182/255f,110/255f);
             case 4: return new Color(110/255f,215/255f,233/255f);
             case 5: return new Color(  5/255f,250/255f,220/255f);
-            //case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
-            //case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
-            //case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
-            //case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
-            //case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
-            //case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
-            //case 0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
-            //case 1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
-            //case 2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();
-            //case 3: return new ColorHSB(180/255f,250/255f,200/255f).ToColor();
-            //case 4: return new ColorHSB(220/255f,150/255f,245/255f).ToColor();
-            //case 5: return new ColorHSB(  5/255f,250/255f,245/255f).ToColor();
             default: return Color.red; // Oops! Too many colors.
             }
         }
@@ -92,10 +81,11 @@ namespace SlideAndStick {
         
 
         private void AddBodyImage(Vector2Int footPos) {
-            float diameter = UnitSize*0.9f;
+			float diameter = GetDiameter(UnitSize);
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             newImage.sprite = s_bodyUnitRound;
+//			newImage.type = Image.Type.Sliced;
             GameUtils.SizeUIGraphic(newImage, diameter,diameter);
             newImage.color = GetAppliedBodyColor();
             newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*UnitSize, -footPos.y*UnitSize);
@@ -104,7 +94,7 @@ namespace SlideAndStick {
             bodyImages.Add(newImage);
         }
         private void AddBetweenImage(Vector2 bwPos) {
-            float diameter = UnitSize*0.9f;
+			float diameter = GetDiameter(UnitSize);
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             //newImage.sprite = s_bodyUnitRound;
@@ -150,3 +140,17 @@ namespace SlideAndStick {
         
     }
 }
+
+
+//case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
+//case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
+//case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
+//case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
+//case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
+//case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
+//case 0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
+//case 1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
+//case 2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();
+//case 3: return new ColorHSB(180/255f,250/255f,200/255f).ToColor();
+//case 4: return new ColorHSB(220/255f,150/255f,245/255f).ToColor();
+//case 5: return new ColorHSB(  5/255f,250/255f,245/255f).ToColor();

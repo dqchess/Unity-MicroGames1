@@ -44,8 +44,10 @@ namespace SlideAndStick {
 //		public float BoardToX(float col) { return Pos.x + (col+0.5f)*unitSize; } // +0.5f to center.
 //		public float BoardToY(float row) { return Pos.y - (row+0.5f)*unitSize; } // +0.5f to center.
 		public float BoardToXGlobal(float col) { return BoardToX(col) + Pos.x; }
-        public float BoardToYGlobal(float row) { return BoardToY(row) + Pos.y; }
-        public Vector2 BoardToGlobal(BoardPos bp) { return new Vector2(BoardToXGlobal(bp.col), BoardToYGlobal(bp.row)); }
+		public float BoardToYGlobal(float row) { return BoardToY(row) + Pos.y; }
+		public Vector2 BoardToLocal(Vector2Int pos) { return new Vector2(BoardToX(pos.x), BoardToY(pos.y)); }
+		public Vector2 BoardToGlobal(Vector2Int pos) { return new Vector2(BoardToXGlobal(pos.x), BoardToYGlobal(pos.y)); }
+		public Vector2 BoardToGlobal(BoardPos bp) { return new Vector2(BoardToXGlobal(bp.col), BoardToYGlobal(bp.row)); }
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
 
@@ -202,6 +204,8 @@ namespace SlideAndStick {
             }
             // Now actually simulate the move!
             simMoveResult = simMoveBoard.ExecuteMove(boToMove.BoardPos, simMoveDir);
+			// What planned merges do we have?
+
             // Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
             foreach (BoardOccupantView bov in allOccupantViews) {
                 bov.SetValues_To_ByMySimulatedMoveBoardObject();
