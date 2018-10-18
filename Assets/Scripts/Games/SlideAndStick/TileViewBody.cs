@@ -146,23 +146,27 @@ namespace SlideAndStick {
 //				mergeSpotViews[i].SetValues_From_ByCurrentValues();
 //			}
 //		}
-		public void SetValues_To(BoardObject _bo) {
-			RemakeMergeSpotViews(_bo.BoardRef);
+		public void SetValues_To(Tile simTile) {
+			RemakeMergeSpotViews(simTile);
 		}
-		private void RemakeMergeSpotViews(Board simBoard) {
+		private void RemakeMergeSpotViews(Tile simTile) {
 			DestroyMergeSpotViews(); // Just in case.
 
 //			if (bodyImages != null) {
-//				BodyColor = new Color(BodyColor.r,BodyColor.g,BodyColor.b, MyTile.IsInPlay ? 1 : 0.4f);
+//				BodyColor = new Color(BodyColor.r,BodyColor.g,BodyColor.b, simBO.IsInPlay ? 1 : 0.4f);
 //				ApplyBodyColor();
 //			}
-
-			for (int i=0; i<simBoard.LastMergeSpots.Count; i++) {
-				MergeSpot ms = simBoard.LastMergeSpots[i];
-				if (MyTile.FootprintGlobal.Contains(ms.pos+ms.dir)) {
-					AddMergeSpotView(ms);
-				}
-			}
+            
+            // ONLY make MergeSpotViews for Tiles still in play!
+            if (simTile.IsInPlay) {
+                Board simBoard = simTile.BoardRef;
+    			for (int i=0; i<simBoard.LastMergeSpots.Count; i++) {
+    				MergeSpot ms = simBoard.LastMergeSpots[i];
+    				if (simTile.FootprintGlobal.Contains(ms.pos+ms.dir)) {
+    					AddMergeSpotView(ms);
+    				}
+    			}
+            }
 		}
 
 

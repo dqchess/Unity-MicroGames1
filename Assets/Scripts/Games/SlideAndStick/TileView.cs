@@ -7,7 +7,7 @@ namespace SlideAndStick {
 	public class TileView : BoardOccupantView {
 		// Components
         [SerializeField] private TileViewBody body=null;
-//        [SerializeField] private TileViewBody bodyShadow=null;
+        [SerializeField] private TileViewBody bodyShadow=null;
         // References
         public Tile MyTile { get; private set; }
 
@@ -20,7 +20,7 @@ namespace SlideAndStick {
 			MyTile = _myObj;
 			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
             body.Initialize();
-//            bodyShadow.Initialize();
+            bodyShadow.Initialize();
 		}
 
 
@@ -31,22 +31,23 @@ namespace SlideAndStick {
 			base.UpdateVisualsPostMove();
             
             body.UpdateVisualsPostMove();
-//            bodyShadow.UpdateVisualsPostMove();
+            bodyShadow.UpdateVisualsPostMove();
 		}
 		override public void GoToValues (float lerpLoc) {
 			base.GoToValues(lerpLoc);
 			body.GoToValues(lerpLoc);
-//			bodyShadow.GoToValues(lerpLoc);
+			bodyShadow.GoToValues(lerpLoc);
 		}
 //		override public void SetValues_From_ByCurrentValues () {
 //			base.SetValues_From_ByCurrentValues();
 //			body.SetValues_From_ByCurrentValues();
-////			bodyShadow.SetValues_From_ByCurrentValues();
+//			bodyShadow.SetValues_From_ByCurrentValues();
 //		}
 		override public void SetValues_To(BoardObject _bo) {
 			base.SetValues_To(_bo);
-			body.SetValues_To(_bo);
-//			bodyShadow.SetValues_To(_bo);QQQ disabled
+            Tile simTile = _bo as Tile; // _bo must be a Tile.
+			body.SetValues_To(simTile);
+			bodyShadow.SetValues_To(simTile);
 		}
 
 
@@ -63,7 +64,7 @@ namespace SlideAndStick {
 			SetHighlightAlpha(0.35f);
 		}
         private void SetHighlightAlpha(float alpha) {
-//            body.SetHighlightAlpha(alpha);
+            body.SetHighlightAlpha(alpha);
         }
 
 

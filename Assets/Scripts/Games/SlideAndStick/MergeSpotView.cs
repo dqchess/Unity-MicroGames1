@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class MergeSpotView : MonoBehaviour {
 		// Components
-		[SerializeField] private Image myImage;
-		[SerializeField] private RectTransform myRectTransform;
+		[SerializeField] private Image myImage=null;
+		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
 		private Vector2 posA;
 		private Vector2 posB;
@@ -28,8 +28,8 @@ namespace SlideAndStick {
 			myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
 			myImage.color = myTileViewBody.BodyColor;
 
-			posA = boardView.BoardToLocal(myMergeSpot.pos+myMergeSpot.dir);
-			posB = boardView.BoardToLocal(myMergeSpot.pos);
+			posA = boardView.BoardToLocal(myMergeSpot.pos); // "home-base" space that's gonna lean into the merge.
+			posB = boardView.BoardToLocal(myMergeSpot.pos+myMergeSpot.dir); // "away" space that we're leaning into.
 			posB = Vector2.Lerp(posA,posB, 0.2f); // Ok, keep posB PRETTY dialed back-- keep it close to home.
 			posA -= myTileView.Pos; // a little weirdly offset back so we're local to my TileView.
 			posB -= myTileView.Pos; // a little weirdly offset back so we're local to my TileView.

@@ -7,8 +7,9 @@ namespace SlideAndStick {
 		// Visual properties
 		private float unitSize; // how big each board space is in pixels
 		// Components
-		[SerializeField] private RectTransform myRectTransform;
+		[SerializeField] private RectTransform myRectTransform=null;
 		[SerializeField] private Transform tf_boardSpaces=null;
+        //[SerializeField] private MergeSpotViews mergeSpotViews=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
 		public List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!

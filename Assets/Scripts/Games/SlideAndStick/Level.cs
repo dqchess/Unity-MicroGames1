@@ -228,6 +228,7 @@ namespace SlideAndStick {
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
 				board.OnSetTileGrabbing(tileGrabbing); // tell the Board.
+                MoveTileViewToTop(tileGrabbing); // move the TileView on TOP of all others!
 				// Tell the Tiles!
 				if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
 				if (tileGrabbing!=null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
@@ -239,6 +240,12 @@ namespace SlideAndStick {
 				SetTileGrabbing(board.GetTile(tileGrabbing.BoardPos));
 			}
 		}
+        private void MoveTileViewToTop(Tile tile) {
+            if (tile == null) { return; } // Check for da obvious.
+            TileView tileView = Temp_GetTileView(tile);
+            if (tileView != null) { tileView.transform.SetAsLastSibling(); }
+            else { Debug.LogError("Whoa, MoveTileViewToTop passed in Tile that doesn't have corresponding TileView??"); }
+        }
 
 
         // ----------------------------------------------------------------
