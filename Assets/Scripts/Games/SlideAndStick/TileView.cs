@@ -27,7 +27,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-		override public void UpdateVisualsPostMove() {
+        override public void UpdateVisualsPostMove() {
 			base.UpdateVisualsPostMove();
             
             body.UpdateVisualsPostMove();
@@ -64,7 +64,7 @@ namespace SlideAndStick {
 			SetHighlightAlpha(0.35f);
 		}
         private void SetHighlightAlpha(float alpha) {
-            body.SetHighlightAlpha(alpha);
+            //body.SetHighlightAlpha(alpha);TEMP! Disabled highlighting!
         }
 
 

@@ -66,6 +66,8 @@ namespace SlideAndStick {
 //			BodyColor = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f)); // DEBUG TEST
             bodyImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
             betweenImages = new List<Image>();
+            // Note: Can't set this in the Editor for some reason. :P
+            this.GetComponent<Canvas>().overrideSorting = true;
             
             // Kinda sloppy how we handle the shadow. :P
             if (isShadow) {

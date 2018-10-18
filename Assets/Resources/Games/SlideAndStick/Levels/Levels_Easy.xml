@@ -21,6 +21,13 @@
     " />
     <Level diff="0" name="test" layout="
         .....,
+        ..0..,
+        .0.0.,
+        .....,
+        .....,
+    " />
+    <Level diff="0" name="test" layout="
+        .....,
         .000.,
         .0.0.,
         ..0..,

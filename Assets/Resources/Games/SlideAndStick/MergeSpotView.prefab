@@ -69,6 +69,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myImage: {fileID: 114051201263245888}
   myRectTransform: {fileID: 224650551474317464}
+  ac_locMovement:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.32925797
+      value: 0
+      inSlope: 0.042366017
+      outSlope: 0.042366017
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.13308324
+    - serializedVersion: 3
+      time: 0.8888194
+      value: 0.10372868
+      inSlope: 0.5379353
+      outSlope: 2.8021445
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.095034026
+      outWeight: 0.6372806
+    - serializedVersion: 3
+      time: 1.0014954
+      value: 0.51203156
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!222 &222884232869368600
 CanvasRenderer:
   m_ObjectHideFlags: 1

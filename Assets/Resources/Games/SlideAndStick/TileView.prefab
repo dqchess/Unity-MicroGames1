@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224667023295084864}
   - component: {fileID: 114675069884615092}
+  - component: {fileID: 223105760137537260}
   m_Layer: 5
   m_Name: BodyShadow
   m_TagString: Untagged
@@ -52,6 +53,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224412915251505324}
   - component: {fileID: 114882989784919118}
+  - component: {fileID: 223524808259506282}
   m_Layer: 5
   m_Name: Body
   m_TagString: Untagged
@@ -100,6 +102,46 @@ MonoBehaviour:
   myTileView: {fileID: 114236114910388666}
   s_bodyUnitRound: {fileID: 21300000, guid: d4a9ff30a54084288910ab9ec41efbd2, type: 3}
   isShadow: 0
+--- !u!223 &223105760137537260
+Canvas:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1303292581475266}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
+--- !u!223 &223524808259506282
+Canvas:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1654714830743212}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
 --- !u!224 &224412915251505324
 RectTransform:
   m_ObjectHideFlags: 1
