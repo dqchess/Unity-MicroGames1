@@ -83,7 +83,7 @@ namespace SlideAndStick {
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             newImage.sprite = s_bodyUnitRound;
-//			newImage.type = Image.Type.Sliced;
+			newImage.type = Image.Type.Sliced;
             GameUtils.SizeUIGraphic(newImage, diameter,diameter);
             newImage.color = GetAppliedBodyColor();
             newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*UnitSize, -footPos.y*UnitSize);
@@ -182,7 +182,7 @@ namespace SlideAndStick {
 			MergeSpotView obj = Instantiate(ResourcesHandler.Instance.slideAndStick_mergeSpotView).GetComponent<MergeSpotView>();
 			obj.Initialize(myTileView, this, mergeSpot);
 			mergeSpotViews.Add(obj);
-			print(Time.frameCount + "  " + MyTile.BoardRef.tiles.IndexOf(MyTile) + "  add mergeSpot: " + mergeSpot.pos + ", dir: " + mergeSpot.dir + ". footprint size: " + MyTile.FootprintGlobal.Count);
+			//print(Time.frameCount + "  " + MyTile.BoardRef.tiles.IndexOf(MyTile) + "  add mergeSpot: " + mergeSpot.pos + ", dir: " + mergeSpot.dir + ". footprint size: " + MyTile.FootprintGlobal.Count);
 		}
         
         

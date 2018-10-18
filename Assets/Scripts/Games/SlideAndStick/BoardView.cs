@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace SlideAndStick {
 	public class BoardView : MonoBehaviour {
+        // Constants
+        private const float AnimationEasing = 5f; // HIGHER is SLOWER. (1 would be no easing.)
 		// Visual properties
 		private float unitSize; // how big each board space is in pixels
 		// Components
@@ -223,7 +225,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
 			if (areObjectsAnimating) {
-				objectsAnimationLoc += (objectsAnimationLocTarget-objectsAnimationLoc) / 2f;
+				objectsAnimationLoc += (objectsAnimationLocTarget-objectsAnimationLoc) / AnimationEasing;
 				ApplyObjectsAnimationLoc ();
 				if (Mathf.Abs (objectsAnimationLocTarget-objectsAnimationLoc) < 0.01f) {
 					UpdateAllViewsMoveEnd ();

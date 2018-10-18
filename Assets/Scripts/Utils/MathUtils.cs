@@ -27,6 +27,7 @@ public class MathUtils {
 		return Mathf.Round (_value * 1000f) / 1000f;
 	}
 	
+    static public float DirToRotation(Vector2Int dir) { return -(GetSide(dir)+2) * 90; }
 	static public float GetDifferenceBetweenAnglesDegrees (float angleA, float angleB) {
 		// Keep both angles between -180 and 180.
 		float difference = angleA - angleB;

@@ -10,44 +10,47 @@ namespace SlideAndStick {
 		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
         [SerializeField] private AnimationCurve ac_locMovement=null;
-		private Vector2 posA;
-		private Vector2 posB;
+		private Vector2 sizeA;
+		private Vector2 sizeB;
 
-		// ----------------------------------------------------------------
-		//  Initialize
-		// ----------------------------------------------------------------
-		public void Initialize(TileView myTileView, TileViewBody myTileViewBody, MergeSpot myMergeSpot) {
-			BoardView boardView = myTileView.MyBoardView;
-			Tile myTile = myTileView.MyTile;
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public void Initialize(TileView myTileView, TileViewBody myTileViewBody, MergeSpot myMergeSpot) {
+            BoardView boardView = myTileView.MyBoardView;
+            Tile myTile = myTileView.MyTile;
 
-			// Parent jazz.
-			GameUtils.ParentAndReset(this.gameObject, myTileViewBody.transform);
+            // Parent jazz.
+            GameUtils.ParentAndReset(this.gameObject, myTileViewBody.transform);
 
-			// Size and color me, Ayla.
-			float unitSize = boardView.UnitSize;
-			float diameter = TileViewBody.GetDiameter(unitSize);
-			myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
-			myImage.color = myTileViewBody.BodyColor;
+            // Size and color me, Ayla.
+            float unitSize = boardView.UnitSize;
+            float diameter = TileViewBody.GetDiameter(unitSize);
+            myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
+            myImage.color = myTileViewBody.BodyColor;
+            
+            Vector2 pos = boardView.BoardToLocal(myMergeSpot.pos) - myTileView.Pos; // a little weirdly offset back so we're local to my TileView.
+            Vector2 dirVec2 = new Vector2(myMergeSpot.dir.x, -myMergeSpot.dir.y); // flip y.
+            pos -= dirVec2*0.4f * unitSize;
+            myRectTransform.anchoredPosition = pos;
+            myRectTransform.localEulerAngles = new Vector3(0,0, MathUtils.DirToRotation(myMergeSpot.dir));
+            
+            sizeA = new Vector2(diameter, diameter*0.9f); // from my center to my edge (half a unit).
+            sizeB = new Vector2(diameter, diameter*1.9f); // from my center to the edge of the next space (one and a half units).
 
-			posA = boardView.BoardToLocal(myMergeSpot.pos); // "home-base" space that's gonna lean into the merge.
-			posB = boardView.BoardToLocal(myMergeSpot.pos+myMergeSpot.dir); // "away" space that we're leaning into.
-			posA -= myTileView.Pos; // a little weirdly offset back so we're local to my TileView.
-			posB -= myTileView.Pos; // a little weirdly offset back so we're local to my TileView.
+            // Start at loc 0 for cleanness.
+            GoToValues(0);
+        }
 
-			// Start at loc 0 for cleanness.
-			GoToValues(0);
-		}
-
-		// ----------------------------------------------------------------
-		//  Doers
-		// ----------------------------------------------------------------
-		public void GoToValues(float loc) {
-			// Scale loc to fit along animation curve! So we only pop out a little initially, and lots at the end.
-			//loc = Mathf.Lerp(-3, 1, loc);
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        public void GoToValues(float loc) {
+            // Scale loc to fit along animation curve! So we only pop out a little initially, and lots at the end.
             float appliedLoc = ac_locMovement.Evaluate(loc);
+            myRectTransform.sizeDelta = Vector2.Lerp(sizeA,sizeB, appliedLoc);
+        }
 
-			myRectTransform.anchoredPosition = Vector2.Lerp(posA,posB, appliedLoc);
-		}
 //		/** Same principle as SetValues_From_ByCurrentValues in BoardObjectView. */
 //		public void SetValues_From_ByCurrentValues() {
 //			posA = myRectTransform.anchoredPosition;
