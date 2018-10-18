@@ -9,7 +9,7 @@ namespace SlideAndStick {
 		// Components
 		[SerializeField] private RectTransform myRectTransform=null;
 		[SerializeField] private Transform tf_boardSpaces=null;
-        //[SerializeField] private MergeSpotViews mergeSpotViews=null;
+        [SerializeField] private MergeSpotViews mergeSpotViews=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
 		public List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
@@ -133,9 +133,9 @@ namespace SlideAndStick {
 //			foreach (BoardOccupantView bov in allOccupantViews) {Note: Disabled this! Doesn't have much of an effect.
 //				bov.SetValues_From_ByCurrentValues();
 //			}
-			areObjectsAnimating = true;
-//			objectsAnimationLoc = 0;
-			objectsAnimationLocTarget = 1;
+//          objectsAnimationLoc = 0;
+            objectsAnimationLocTarget = 1;
+            areObjectsAnimating = true;
 			// Do this for safety.
 			ApplyObjectsAnimationLoc();
 		}
@@ -145,6 +145,7 @@ namespace SlideAndStick {
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
+            mergeSpotViews.UpdateVisualsPostMove();
 		}
 		private void UpdateBoardOccupantViewVisualsMoveStart() {
 			foreach (BoardOccupantView bo in allOccupantViews) {
@@ -211,6 +212,7 @@ namespace SlideAndStick {
             foreach (BoardOccupantView bov in allOccupantViews) {
                 bov.SetValues_To_ByMySimulatedMoveBoardObject();
 			}
+            mergeSpotViews.SetValues_To(simMoveBoard);
         }
 
 
@@ -232,6 +234,7 @@ namespace SlideAndStick {
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.GoToValues(objectsAnimationLoc);
 			}
+            mergeSpotViews.GoToValues(objectsAnimationLoc);
 		}
 
 

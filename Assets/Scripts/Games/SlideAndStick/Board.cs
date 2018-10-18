@@ -164,11 +164,11 @@ namespace SlideAndStick {
 		}
 		private void MergeTiles(Tile tileA, Tile tileB) {
 			AddMergeSpots(tileA, tileB);
-			List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it so we don't modify the original.
+			//List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it so we don't modify the original.
 			// Remove tileB from the board!
 			tileB.RemoveFromPlay();
 			// Append tileA's footprint, yo.
-			tileA.AppendMyFootprint(tileBFootGlobal);
+			tileA.AppendMyFootprint(tileB);
 		}
 		/** For each global footprint of tileA, looks around to see if it's mergin' with tileB. If so, we add a MergeLocation there. */
 		private void AddMergeSpots(Tile tileA, Tile tileB) {
@@ -195,7 +195,8 @@ namespace SlideAndStick {
 			Returns TRUE if we made a successful, legal move, and false if we couldn't move anything. */
 		public MoveResults ExecuteMove (BoardPos boToMovePos, Vector2Int dir) {
 			// Clear out the Objects-added list just before the move.
-			objectsAddedThisMove.Clear ();
+			objectsAddedThisMove.Clear();
+            foreach (Tile t in tiles) { t.DidJustMove = false; } // Reset DidJustMove for all!
 
 			BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
 			MoveResults result = BoardUtils.MoveOccupant (this, boToMove, dir);
@@ -212,14 +213,14 @@ namespace SlideAndStick {
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
 
-		///// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the start of the list, we can count on it always being taken out of play.
-		//public void OnSetTileGrabbing(Tile _tile) {
-		//	// If there's a tileGrabbing, move it to the beginning of the list (so that it'll be merged last).
-		//	if (_tile != null) {
-		//		tiles.Remove(_tile);
-		//		tiles.Insert(0, _tile);
-		//	}
-		//}
+		/// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the start of the list, we can count on it always being taken out of play.
+		public void OnSetTileGrabbing(Tile _tile) {
+			// If there's a tileGrabbing, move it to the beginning of the list (so that it'll be merged last).
+			if (_tile != null) {
+				tiles.Remove(_tile);
+				tiles.Insert(0, _tile);
+			}
+		}
 
 
 

@@ -8,6 +8,7 @@ namespace SlideAndStick {
 		// Properties
 		private List<Vector2Int> footprintLocal; // at least contains Vector2Int.zero.
 		private List<Vector2Int> footprintGlobal; // just footprintLocal, plus my boardPos. Updated when A) boardPos changes, and B) footprintLocal changes.
+        public bool DidJustMove; // set to TRUE when we move, OR if we append my footprint with another Occupant that's just moved!
 
 		// Getters (Public)
 		public List<Vector2Int> FootprintLocal { get { return footprintLocal; } }
@@ -37,11 +38,16 @@ namespace SlideAndStick {
 			}
 		}
 		override public void SetColRow (int _col, int _row) {
+            if (Col!=_col || Row!=_row) { DidJustMove = true; } // Yep, we just moved!
 			base.SetColRow(_col,_row);
 			UpdateFootprintGlobal();
 		}
 
-		public void AppendMyFootprint(List<Vector2Int> newFootGlobal) {
+		public void AppendMyFootprint(BoardOccupant otherOccupant) {
+            List<Vector2Int> newFootGlobal = new List<Vector2Int>(otherOccupant.FootprintGlobal); // note: copy it so we don't modify the original.
+            // Update if I've just moved if the other guy has!
+            DidJustMove = DidJustMove || otherOccupant.DidJustMove;
+            
 			// Remove me from the board, append my footprint, and put me back down.
 			RemoveMyFootprint();
 			// Append footprintLocal!
