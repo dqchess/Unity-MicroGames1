@@ -31,6 +31,7 @@ namespace SlideAndStick {
 		public BoardView BoardView { get { return boardView; } }
 		public GameController GameController { get { return gameController; } }
         public LevelAddress MyAddress { get { return myAddress; } }
+        public LevelUI LevelUI { get { return levelUI; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
         public bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		// Getters (Private)

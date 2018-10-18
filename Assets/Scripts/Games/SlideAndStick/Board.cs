@@ -24,8 +24,7 @@ namespace SlideAndStick {
 
 		// Getters (Private)
 		private bool GetAreGoalsSatisfied() {
-			return false; // QQQ
-//			return tiles.Count <= numTilesToWin;
+			return tiles.Count <= numTilesToWin;
 		}
 
         // Getters (Public)

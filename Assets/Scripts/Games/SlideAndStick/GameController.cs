@@ -78,10 +78,20 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Doers - Loading Level
 		// ----------------------------------------------------------------
-		private IEnumerator Coroutine_StartNextLevel() {
-			yield return new WaitForSecondsRealtime(0.7f);
-			SetCurrentLevel(currentAddress.NextLevel, true);
-		}
+        private IEnumerator Coroutine_JustWonLevel() {
+            yield return new WaitForSecondsRealtime(0.6f);
+
+            // Wait until there's no touch on the screen.
+            while (inputController.IsTouchHold()) { yield return null; }
+            
+            // Show LevelCompletePopup, and wait until we press its Next button!
+            LevelCompletePopup popup = level.LevelUI.LevelCompletePopup;
+            popup.Appear();
+            while (!popup.DidPressNextButton) { yield return null; }
+            
+            SetCurrentLevel(currentAddress.NextLevel, true);
+        }
+        private bool didPressLevelCompletePopupNextButton;
 
         public void RestartLevel() { SetCurrentLevel(currentAddress, false); }
         private void StartPrevLevel() {
@@ -108,14 +118,11 @@ namespace SlideAndStick {
         }
     
         private void SetCurrentLevel(LevelData levelData, bool doAnimate=false) {
-			StopCoroutine("Coroutine_SetCurrentLevel");
-			StartCoroutine(Coroutine_SetCurrentLevel(levelData, doAnimate));
-		}
-		private IEnumerator Coroutine_SetCurrentLevel(LevelData levelData, bool doAnimate) {
+		//	StopCoroutine("Coroutine_SetCurrentLevel");
+		//	StartCoroutine(Coroutine_SetCurrentLevel(levelData, doAnimate));
+		//}
+		//private IEnumerator Coroutine_SetCurrentLevel(LevelData levelData, bool doAnimate) {
 			Level oldLevel = level;
-
-			// Wait until there's no touch on the screen.
-			while (inputController.IsTouchHold()) { yield return null; }
 
 			// Make the new level!
 			InitializeLevel(levelData);
@@ -206,7 +213,7 @@ namespace SlideAndStick {
 //          if (scoreSolidified > bestScore) {
 //              SaveStorage.SetInt(SaveKeys.BestScore(MyGameName(),LevelIndex), scoreSolidified);
 //          }
-            StartCoroutine(Coroutine_StartNextLevel());
+            StartCoroutine(Coroutine_JustWonLevel());
         }
 
 		public void OnBoardGoalsSatisfied() {
