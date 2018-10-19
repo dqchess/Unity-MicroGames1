@@ -13,6 +13,11 @@
 
 	<!-- TESTS! QQQ. -->
     <Level diff="0" name="test" layout="
+    	0..,
+        ...,
+        1.2,
+    " />
+    <Level diff="0" name="test" layout="
     	.0,
         0.,
         00,

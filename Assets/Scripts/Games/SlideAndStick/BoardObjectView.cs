@@ -138,9 +138,9 @@ namespace SlideAndStick {
 		}
 		virtual public void GoToValues (float lerpLoc) {
 			//		if (mySimulatedMoveObject == null) { return; }
-			Pos = Vector2.Lerp (pos_from, pos_to, lerpLoc);
-			Rotation = Mathf.Lerp (rotation_from, rotation_to, lerpLoc);
-			Scale = Mathf.Lerp (scale_from, scale_to, lerpLoc);
+			Pos = Vector2.LerpUnclamped (pos_from, pos_to, lerpLoc);
+			Rotation = Mathf.LerpUnclamped (rotation_from, rotation_to, lerpLoc);
+			Scale = Mathf.LerpUnclamped (scale_from, scale_to, lerpLoc);
 		}
 
 

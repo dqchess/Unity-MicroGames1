@@ -151,9 +151,7 @@ namespace SlideAndStick {
             }
         }
         private void MaybeAddArmpitImage(Vector2Int sourcePos, Vector2Int sourceDir) {
-            // FIRST, convert sourcePos and dir to be the EMPTY pos and dir inward!
             ArmpitPos ap = GetArmpitPos(sourcePos, sourceDir);
-            
             // We HAVEN'T yet added this one?? Add it!!
             if (!armpitPoses.Contains(ap)) {
                 armpitPoses.Add(ap);

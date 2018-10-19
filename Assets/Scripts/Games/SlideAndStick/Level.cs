@@ -19,7 +19,7 @@ namespace SlideAndStick {
 		private Vector2Int mousePosBoard;
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
-        [SerializeField] private LevelUI levelUI;
+        [SerializeField] private LevelUI levelUI=null;
 		private GameController gameController;
 		private Tile tileOver; // the Tile my mouse is over.
 		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
@@ -45,14 +45,6 @@ namespace SlideAndStick {
             if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
             if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
-		}
-		private TileView Temp_GetTileView(Tile _tile) {
-			foreach (BoardOccupantView bov in boardView.allOccupantViews) {
-				if (bov.MyBoardOccupant == _tile) {
-					return bov as TileView;
-				}
-			}
-			return null;
 		}
 		private bool CanUndoMove () {
 			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
@@ -191,8 +183,8 @@ namespace SlideAndStick {
             tileOver = tile;
 			// It's changed!
 			if (prevTileOver != tileOver) {
-				if (prevTileOver!=null && prevTileOver.IsInPlay) { Temp_GetTileView(prevTileOver).OnMouseOut(); }
-				if (tileOver != null) { Temp_GetTileView(tileOver).OnMouseOver(); }
+				if (prevTileOver!=null && prevTileOver.IsInPlay) { boardView.Temp_GetTileView(prevTileOver).OnMouseOut(); }
+				if (tileOver != null) { boardView.Temp_GetTileView(tileOver).OnMouseOver(); }
 			}
 		}
 
@@ -228,11 +220,11 @@ namespace SlideAndStick {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
-				board.OnSetTileGrabbing(tileGrabbing); // tell the Board.
-                MoveTileViewToTop(tileGrabbing); // move the TileView on TOP of all others!
-				// Tell the Tiles!
-				if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
-				if (tileGrabbing!=null) { Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
+				board.OnSetTileGrabbing(tileGrabbing); // tell Board.
+                boardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
+                // Tell the Tiles!
+                if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { boardView.Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
+                if (tileGrabbing!=null) { boardView.Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
 			}
 		}
 		/// Call this after we finish a move: tileGrabbing may now be null (it was destroyed in a merge), so we want to set tileGrabbing to what it LOOKS like we were already grabbing.
@@ -241,12 +233,6 @@ namespace SlideAndStick {
 				SetTileGrabbing(board.GetTile(tileGrabbing.BoardPos));
 			}
 		}
-        private void MoveTileViewToTop(Tile tile) {
-            if (tile == null) { return; } // Check for da obvious.
-            TileView tileView = Temp_GetTileView(tile);
-            if (tileView != null) { tileView.transform.SetAsLastSibling(); }
-            else { Debug.LogError("Whoa, MoveTileViewToTop passed in Tile that doesn't have corresponding TileView??"); }
-        }
 
 
         // ----------------------------------------------------------------

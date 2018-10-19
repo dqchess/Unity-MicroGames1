@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SlideAndStick {
 	public class BoardView : MonoBehaviour {
         // Constants
-        private const float AnimationEasing = 5f; // HIGHER is SLOWER. (1 would be no easing.)
+        //private const float AnimationEasing = 5f; // HIGHER is SLOWER. (1 would be no easing.)
 		// Visual properties
 		private float unitSize; // how big each board space is in pixels
 		// Components
@@ -21,8 +21,9 @@ namespace SlideAndStick {
 		private Level levelRef;
 		// Variable Properties
 		private bool areObjectsAnimating;
-		private float objectsAnimationLoc; // eases to 0 or 1 while we're animating!
-		private float objectsAnimationLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
+		private float animLoc; // eases to 0 or 1 while we're animating!
+        //private float animLocVel;
+		private float animLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
 		private MoveResults simMoveResult;
 		private Vector2Int simMoveDir;
 
@@ -36,7 +37,7 @@ namespace SlideAndStick {
 		public List<BoardOccupantView> AllOccupantViews { get { return allOccupantViews; } }
 		public bool AreObjectsAnimating { get { return areObjectsAnimating; } }
 //		public bool AreGoalsSatisfied { get { return myBoard.AreGoalsSatisfied; } }
-		public float ObjectsAnimationLocTarget { get { return objectsAnimationLocTarget; } }
+		public float ObjectsAnimationLocTarget { get { return animLocTarget; } }
 		// Getters (Private)
 		private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
 		private int numCols { get { return myBoard.NumCols; } }
@@ -135,20 +136,34 @@ namespace SlideAndStick {
 //			foreach (BoardOccupantView bov in allOccupantViews) {Note: Disabled this! Doesn't have much of an effect.
 //				bov.SetValues_From_ByCurrentValues();
 //			}
-//          objectsAnimationLoc = 0;
-            objectsAnimationLocTarget = 1;
+//          animLoc = 0;
+            //animLocVel = 0.08f;
+            animLocTarget = 1;
             areObjectsAnimating = true;
 			// Do this for safety.
 			ApplyObjectsAnimationLoc();
 		}
 		private void UpdateAllViewsMoveEnd() {
 			areObjectsAnimating = false;
-			objectsAnimationLoc = 0; // reset this back to 0, no matter what the target value is.
+			animLoc = 0; // reset this back to 0, no matter what the target value is.
+            //animLocVel = 0;
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
             mergeSpotViews.UpdateVisualsPostMove();
 		}
+        private void OnAnimLocReachTarget() {
+            UpdateAllViewsMoveEnd();
+            
+            if (doBonusAnimBounce) {
+                doBonusAnimBounce = false;
+                BoardOccupant bo = myBoard.GetTile(lastTileGrabbedPos);
+                SetSimMoveDirAndBoard(bo, prevSimMoveDir);
+                //animLocVel = 0.1f;
+                animLoc = 0.2f; // TEMP TEST!
+                animLocTarget = 0;
+            }
+        }
 		private void UpdateBoardOccupantViewVisualsMoveStart() {
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove ();
@@ -170,13 +185,13 @@ namespace SlideAndStick {
             }
         }
         private void UpdateViewsTowardsSimMove(float _simMovePercent) {
-            objectsAnimationLocTarget = _simMovePercent;
-            //objectsAnimationLocTarget *= 0.9f; // don't go all the way to 1.
+            animLocTarget = _simMovePercent;
+            //animLocTarget *= 0.9f; // don't go all the way to 1.
             if (simMoveResult == MoveResults.Fail) {
-                objectsAnimationLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
+                animLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
             }
             // Keep the value locked to the target value.
-            objectsAnimationLoc = objectsAnimationLocTarget;
+            animLoc = animLocTarget;
             areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
             ApplyObjectsAnimationLoc ();
         }
@@ -185,7 +200,8 @@ namespace SlideAndStick {
 			simMoveBoard = null;
 			// Animate all views back to their original positions.
 			areObjectsAnimating = true;
-			objectsAnimationLocTarget = 0;
+            //animLocVel = 0.08f;
+			animLocTarget = 0;
         }
 		public void OnBoardMoveComplete() {
 			ClearSimMoveDirAndBoard();
@@ -201,6 +217,7 @@ namespace SlideAndStick {
 			UpdateAllViewsMoveEnd();
             
             simMoveDir = _simMoveDir;
+            prevSimMoveDir = simMoveDir;
             // Clone our current Board.
             simMoveBoard = myBoard.Clone();
             // Set BoardOCCUPANTs' references within the new, simulated Board! NOTE: We DON'T set any references for BoardObjects. Those don't move (plus, there's currently no way to find the matching references, as BoardObjects aren't added to spaces).
@@ -216,6 +233,42 @@ namespace SlideAndStick {
 			}
             mergeSpotViews.SetValues_To(simMoveBoard);
         }
+        
+        
+        
+        private BoardPos lastTileGrabbedPos;
+        private Vector2Int prevSimMoveDir;
+        private bool doBonusAnimBounce;
+        public TileView Temp_GetTileView(Tile _tile) {
+            foreach (BoardOccupantView bov in allOccupantViews) {
+                if (bov.MyBoardOccupant == _tile) {
+                    return bov as TileView;
+                }
+            }
+            return null;
+        }
+        
+        public void OnSetTileGrabbing(Tile _tile, Tile _prevTileGrabbing) {
+            MoveTileViewToTop(_tile); // move the TileView on TOP of all others!
+            if (_prevTileGrabbing != null) {
+                lastTileGrabbedPos = _prevTileGrabbing.BoardPos;
+            }
+            
+            // We've just RELEASED tileGrabbing...!
+            if (_tile == null) {
+                doBonusAnimBounce = true;
+            }
+            else {
+                lastTileGrabbedPos = _tile.BoardPos;
+                //doBonusAnimBounce = false;
+            }
+        }
+        private void MoveTileViewToTop(Tile tile) {
+            if (tile == null) { return; } // Check for da obvious.
+            TileView tileView = Temp_GetTileView(tile);
+            if (tileView != null) { tileView.transform.SetAsLastSibling(); }
+            else { Debug.LogError("Whoa, MoveTileViewToTop passed in Tile that doesn't have corresponding TileView??"); }
+        }
 
 
 
@@ -225,18 +278,22 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
 			if (areObjectsAnimating) {
-				objectsAnimationLoc += (objectsAnimationLocTarget-objectsAnimationLoc) / AnimationEasing;
+    //            animLocVel *= 0.75f;
+				//animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;
+                //animLoc += animLocVel;
+                
+                animLoc += (animLocTarget-animLoc) * 0.1f;//AnimationEasing;
 				ApplyObjectsAnimationLoc ();
-				if (Mathf.Abs (objectsAnimationLocTarget-objectsAnimationLoc) < 0.01f) {
-					UpdateAllViewsMoveEnd ();
+				if (Mathf.Abs (animLocTarget-animLoc) < 0.01f) {// && Mathf.Abs(animLocVel)<0.01f) {
+					OnAnimLocReachTarget();
 				}
 			}
 		}
 		private void ApplyObjectsAnimationLoc() {
 			foreach (BoardOccupantView bov in allOccupantViews) {
-				bov.GoToValues(objectsAnimationLoc);
+				bov.GoToValues(animLoc);
 			}
-            mergeSpotViews.GoToValues(objectsAnimationLoc);
+            mergeSpotViews.GoToValues(animLoc);
 		}
 
 
