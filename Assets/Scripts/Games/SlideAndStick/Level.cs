@@ -253,7 +253,7 @@ namespace SlideAndStick {
             
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {
-                //gameController.OnBoardGoalsSatisfied();QQQ
+                gameController.OnBoardGoalsSatisfied();
             }
         }
 		public void OnWinLevel() {

@@ -22,7 +22,7 @@ namespace SlideAndStick {
 		// Variable Properties
 		private bool areObjectsAnimating;
 		private float animLoc; // eases to 0 or 1 while we're animating!
-        //private float animLocVel;
+        private float animLocVel;
 		private float animLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
 		private MoveResults simMoveResult;
 		private Vector2Int simMoveDir;
@@ -137,7 +137,7 @@ namespace SlideAndStick {
 //				bov.SetValues_From_ByCurrentValues();
 //			}
 //          animLoc = 0;
-            //animLocVel = 0.08f;
+            animLocVel = 0.08f;
             animLocTarget = 1;
             areObjectsAnimating = true;
 			// Do this for safety.
@@ -146,7 +146,7 @@ namespace SlideAndStick {
 		private void UpdateAllViewsMoveEnd() {
 			areObjectsAnimating = false;
 			animLoc = 0; // reset this back to 0, no matter what the target value is.
-            //animLocVel = 0;
+            animLocVel = 0;
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
@@ -159,8 +159,8 @@ namespace SlideAndStick {
                 doBonusAnimBounce = false;
                 BoardOccupant bo = myBoard.GetTile(lastTileGrabbedPos);
                 SetSimMoveDirAndBoard(bo, prevSimMoveDir);
-                //animLocVel = 0.1f;
-                animLoc = 0.2f; // TEMP TEST!
+                //animLocVel = 0.1f;TODO Maybe flip this?
+                //animLoc = 0.2f; // TEMP TEST!
                 animLocTarget = 0;
             }
         }
@@ -202,6 +202,8 @@ namespace SlideAndStick {
 			areObjectsAnimating = true;
             //animLocVel = 0.08f;
 			animLocTarget = 0;
+            // TODO: Fix this...
+            //prevSimMoveDir = new Vector2Int(prevSimMoveDir.x, -prevSimMoveDir.y); // when we CLEAR the simMove, we wanna "revert" poses, aka "bounce back" in *other* direction.
         }
 		public void OnBoardMoveComplete() {
 			ClearSimMoveDirAndBoard();
@@ -278,13 +280,13 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
 			if (areObjectsAnimating) {
-    //            animLocVel *= 0.75f;
-				//animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;
-                //animLoc += animLocVel;
+                animLocVel *= 0.75f;
+				animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;
+                animLoc += animLocVel;
                 
-                animLoc += (animLocTarget-animLoc) * 0.1f;//AnimationEasing;
+    //            animLoc += (animLocTarget-animLoc) * 0.1f;//AnimationEasing;
 				ApplyObjectsAnimationLoc ();
-				if (Mathf.Abs (animLocTarget-animLoc) < 0.01f) {// && Mathf.Abs(animLocVel)<0.01f) {
+				if (Mathf.Abs (animLocTarget-animLoc) < 0.01f && Mathf.Abs(animLocVel)<0.01f) {
 					OnAnimLocReachTarget();
 				}
 			}

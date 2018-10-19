@@ -29,12 +29,18 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		override public void AddMyFootprint () {
 			for (int i=0; i<FootprintGlobal.Count; i++) {
-				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).SetMyOccupant(this);
+                BoardSpace space = GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y);
+                if (space != null) {
+                    space.SetMyOccupant(this);
+                }
 			}
 		}
 		override public void RemoveMyFootprint () {
 			for (int i=0; i<FootprintGlobal.Count; i++) {
-				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).RemoveMyOccupant(this);
+                BoardSpace space = GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y);
+                if (space != null) {
+                    space.RemoveMyOccupant(this);
+                }
 			}
 		}
 		override public void SetColRow (int _col, int _row) {
