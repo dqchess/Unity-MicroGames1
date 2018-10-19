@@ -5,17 +5,25 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
     public class TileViewBody : MonoBehaviour {
+        // Constants
+        private readonly Vector2Int[] dirsCardinal = {Vector2Int.L, Vector2Int.R, Vector2Int.B, Vector2Int.T};
+        private readonly Vector2Int[] dirsDiagonal = {Vector2Int.TL, Vector2Int.TR, Vector2Int.BL, Vector2Int.BR};
         // Components
-        private List<Image> bodyImages;
-		private List<Image> betweenImages; // SIMPLE way to have flush shapes. These are the squares BETWEEN my footprint images (that hide the inside rounded corners).
+        private List<Image> allImages;
 		private List<MergeSpotView> mergeSpotViews; // only exists when we're animating (aka between loc from and to).
         // References
         [SerializeField] private TileView myTileView=null;
         [SerializeField] private Sprite s_bodyUnitRound=null;
+        [SerializeField] private Sprite s_square=null; // for bw and belly-button images.
+        [SerializeField] private Sprite s_armpitArc=null;
         // Properties
         [SerializeField] internal bool isShadow=false; // a little weird how we handle the shadow here. Not a huge deal tho.
 		public Color BodyColor { get; private set; }
-        private HashSet<Vector2> bwPoses = new HashSet<Vector2>(); // one of each of the poses BETWEEN footprint spaces.
+        private int numBodyUnitImages=0; // bodyUnits are the base round rects (one for every footprint). Round rects. Note: This system is simpler than my other image types; we only need an int (no HashSet required).
+        private HashSet<Vector2> bwPoses = new HashSet<Vector2>(); // if footprints are toes, these are the spaces bw the toes (very common). Square images; they hide inner bodyUnits' round rects.
+        private HashSet<Vector2> armpitPoses = new HashSet<Vector2>(); // armpits are L patterns (somewhat common). Arc images.
+        private HashSet<Vector2> bellyButtonPoses = new HashSet<Vector2>(); // belly buttons are 2x2 patterns (somewhat common). Square images.
+        private float diameter;
         private float highlightAlpha=0;
         
         // Getters (Static)
@@ -32,30 +40,12 @@ namespace SlideAndStick {
             }
         }
         // Getters (Private)
+        private bool HasFPLocal(Vector2Int pos) { return footprintLocal.Contains(pos); }
 		private Color GetAppliedBodyColor() { return Color.Lerp(BodyColor, Color.white, highlightAlpha); }
         private float UnitSize { get { return myTileView.MyBoardView.UnitSize; } }
         private Tile MyTile { get { return myTileView.MyTile; } }
         private List<Vector2Int> footprintLocal { get { return MyTile.FootprintLocal; } }
         
-        /** If footprint is toes, think of this as spaces between the toes. E.g. If I have (0,0), (0,1), (1,0), this'll return (0,0.5), (0.5,0). */
-        private void UpdateBetweenFootprintLocalPosesAndAddImages() {
-            HashSet<Vector2Int> fpLocalHash = new HashSet<Vector2Int>(footprintLocal); // make HashSet for easy accessin'.
-            Vector2Int[] dirs = new Vector2Int[] {Vector2Int.L, Vector2Int.R, Vector2Int.B, Vector2Int.T};
-            //Vector2Int[] dirs = new Vector2Int[] {Vector2Int.L,Vector2Int.R,Vector2Int.B,Vector2Int.T, Vector2Int.BL,Vector2Int.BR,Vector2Int.TL,Vector2Int.TR};
-            foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
-                foreach (Vector2Int dir in dirs) { // For each side...
-                    Vector2Int posInDir = fpLocal + dir;
-                    if (fpLocalHash.Contains(posInDir)) { // I have a footprint here!...
-                        Vector2 bwBoardPos = Vector2.Lerp(fpLocal.ToVector2(), posInDir.ToVector2(), 0.5f);
-                        // This between-pos hasn't been found yet? Add it to list!
-                        if (!bwPoses.Contains(bwBoardPos)) {
-                            bwPoses.Add(bwBoardPos);
-                            AddBetweenImage(bwBoardPos);
-                        }
-                    }
-                }
-            }
-        }
         
 
         // ----------------------------------------------------------------
@@ -64,8 +54,8 @@ namespace SlideAndStick {
         public void Initialize() {
 			BodyColor = GetBodyColor(MyTile.ColorID);
 //			BodyColor = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f)); // DEBUG TEST
-            bodyImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
-            betweenImages = new List<Image>();
+            diameter = GetDiameter(UnitSize);
+            allImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
             
             // Kinda sloppy how we handle the shadow. :P
             if (isShadow) {
@@ -77,31 +67,98 @@ namespace SlideAndStick {
             }
         }
         
-
-        private void AddBodyImage(Vector2Int footPos) {
-			float diameter = GetDiameter(UnitSize);
+        
+        
+        // ----------------------------------------------------------------
+        //  Adding Things
+        // ----------------------------------------------------------------
+        private Image AddImage(Sprite sprite, string _name) {
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
-            newImage.sprite = s_bodyUnitRound;
+            newImage.name = _name;
+            newImage.sprite = sprite;
+            newImage.color = GetAppliedBodyColor();
+            newImage.transform.SetAsFirstSibling(); // put behind everything else.
+            allImages.Add(newImage);
+            return newImage;
+        }
+        
+        private void AddBodyImage(Vector2Int pos) {
+            numBodyUnitImages ++; // note: Instead of adding to a HashSet, we just use a single counter.
+            Image newImage = AddImage(s_bodyUnitRound, "i_BodyUnit");
 			newImage.type = Image.Type.Sliced;
             GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            newImage.color = GetAppliedBodyColor();
-            newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*UnitSize, -footPos.y*UnitSize);
-            newImage.transform.SetAsFirstSibling(); // put behind everything else.
-            newImage.name = "i_FootprintUnit";
-            bodyImages.Add(newImage);
+            newImage.rectTransform.anchoredPosition = new Vector2(pos.x*UnitSize, -pos.y*UnitSize);
         }
-        private void AddBetweenImage(Vector2 bwPos) {
-			float diameter = GetDiameter(UnitSize);
-            Image newImage = new GameObject().AddComponent<Image>();
-            GameUtils.ParentAndReset(newImage.gameObject, this.transform);
-            //newImage.sprite = s_bodyUnitRound;
-            GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            newImage.color = GetAppliedBodyColor();
-            newImage.rectTransform.anchoredPosition = new Vector2(bwPos.x*UnitSize, -bwPos.y*UnitSize);
-            newImage.transform.SetAsFirstSibling(); // put behind everything else.
-            newImage.name = "i_FootprintBetween";
-            betweenImages.Add(newImage);
+        private void MaybeAddBetweenImage(Vector2Int sourcePos, Vector2Int dir) {
+            Vector2 bp = sourcePos.ToVector2() + dir.ToVector2()*0.5f; // Start at source; go halfway in this dir.
+            // We HAVEN'T yet added this one?? Add it!!
+            if (!bwPoses.Contains(bp)) {
+                bwPoses.Add(bp);
+                Image newImage = AddImage(s_square, "i_Between");
+                GameUtils.SizeUIGraphic(newImage, diameter,diameter);
+                newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
+            }
+        }
+        private void MaybeAddArmpitImage(Vector2Int sourcePos, Vector2Int dir) {
+            //Image newImage = AddImage(null);TODO: This
+            //GameUtils.SizeUIGraphic(newImage, diameter,diameter);
+            //newImage.rectTransform.anchoredPosition = new Vector2(pos.x*UnitSize, -pos.y*UnitSize);
+            //newImage.name = "i_Armpit";
+            //i_betweens.Add(newImage);
+            //i_armpits
+        }
+        private void MaybeAddBellyButtonImage(Vector2Int sourcePos, Vector2Int dir) {
+            Vector2 bp = sourcePos.ToVector2() + dir.ToVector2()*0.5f; // Start at source; go halfway in this dir.
+            // We HAVEN'T yet added this one?? Add it!!
+            if (!bellyButtonPoses.Contains(bp)) {
+                bellyButtonPoses.Add(bp);
+                Image newImage = AddImage(s_square, "i_BellyButton");
+                GameUtils.SizeUIGraphic(newImage, diameter,diameter);
+                newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
+            }
+        }
+        
+        
+        
+        private void AddMissingBodyUnitImages() {
+            for (int i=numBodyUnitImages; i<footprintLocal.Count; i++) {
+                AddBodyImage(footprintLocal[i]);
+            }
+        }
+        private void AddMissingBetweenImages() {
+            HashSet<Vector2Int> fpLocalHash = new HashSet<Vector2Int>(footprintLocal); // make HashSet for easy accessin'.
+            foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
+                foreach (Vector2Int dir in dirsCardinal) { // For each side...
+                    Vector2Int posInDir = fpLocal + dir;
+                    if (fpLocalHash.Contains(posInDir)) { // I have a footprint here!...
+                        MaybeAddBetweenImage(fpLocal, dir);
+                    }
+                }
+            }
+        }
+        private void AddMissingArmpitAndBellyButtonImages() {
+            foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
+                foreach (Vector2Int dir in dirsDiagonal) { // For each DIAGONAL space around this one...
+                    // We DO have another footprint at this diagonal!
+                    if (HasFPLocal(fpLocal + dir)) {
+                        Vector2Int adjPosA = fpLocal + new Vector2Int(dir.x, 0);
+                        Vector2Int adjPosB = fpLocal + new Vector2Int(0, dir.y);
+                        bool hasFPA = HasFPLocal(adjPosA);
+                        bool hasFPB = HasFPLocal(adjPosB);
+                        // 1) Both adjacent sides (towards the diagonal) ARE mine! It's a belly button!
+                        if (hasFPA && hasFPB) {
+                            MaybeAddBellyButtonImage(fpLocal, dir);
+                        }
+                        // 2) ONE of the adjacent sides is mine and one isn't. It's an armpit!
+                        else if (hasFPA ^ hasFPB) {
+                            MaybeAddArmpitImage(fpLocal, dir);
+                        }
+                        // 3) Both adjacent sides (towards the diagonal) aren't mine? Do nothing.
+                        else { }
+                    }
+                }
+            }
         }
         
         
@@ -109,11 +166,8 @@ namespace SlideAndStick {
         //  Doers
         // ----------------------------------------------------------------
         private void ApplyBodyColor() {
-            // FOR NOW, just color my body sprites instead of showing separate image(s).
             Color color = GetAppliedBodyColor();
-            
-            for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = color; }
-            for (int i=0; i<betweenImages.Count; i++) { betweenImages[i].color = color; }
+            for (int i=0; i<allImages.Count; i++) { allImages[i].color = color; }
         }
         public void SetHighlightAlpha(float alpha) {
             highlightAlpha = alpha;
@@ -122,18 +176,9 @@ namespace SlideAndStick {
         
 		public void UpdateVisualsPostMove() {
 			DestroyMergeSpotViews(); // We wanna nix any MergeSpotViews for finished-animation.
-            // Add images to fit my footprint!
-            if (bodyImages.Count != footprintLocal.Count) {
-                for (int i=bodyImages.Count; i<footprintLocal.Count; i++) {
-                    AddBodyImage(footprintLocal[i]);
-                }
-            }
-            UpdateBetweenFootprintLocalPosesAndAddImages();
-            //Vector2[] bwPoses = GetBetweenFootprintLocalPoses();
-            //if (betweenImages.Count != bwPoses.Length) {
-            //    for (int i=betweenImages.Count; i<bwPoses.Length; i++) {
-            //    }
-            //}
+            AddMissingBodyUnitImages();
+            AddMissingBetweenImages();
+            AddMissingArmpitAndBellyButtonImages();
 		}
 
 		public void GoToValues(float loc) {
