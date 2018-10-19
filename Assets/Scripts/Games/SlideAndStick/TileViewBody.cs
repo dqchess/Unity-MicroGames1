@@ -4,10 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SlideAndStick {
+    public struct ArmpitPos {
+        public Vector2Int emptyPos; // the only EMPTY space in the 2x2.
+        public Vector2Int dir; // always diagonal. Points from empty space DIRECTLY into the armpit (careful; it's ticklish).
+        // Getters (Public)
+        /** Returns the vertex (in between 4 board spaces) where I sit. */
+        public Vector2 CenterPos() { return emptyPos.ToVector2() + dir.ToVector2()*0.5f; } // Start at source; go halfway in this dir.
+    }
+    
+    
     public class TileViewBody : MonoBehaviour {
         // Constants
         private readonly Vector2Int[] dirsCardinal = {Vector2Int.L, Vector2Int.R, Vector2Int.B, Vector2Int.T};
-        private readonly Vector2Int[] dirsDiagonal = {Vector2Int.TL, Vector2Int.TR, Vector2Int.BL, Vector2Int.BR};
+        //private readonly Vector2Int[] dirsDiagonal = {Vector2Int.TL, Vector2Int.TR, Vector2Int.BL, Vector2Int.BR};
         // Components
         private List<Image> allImages;
 		private List<MergeSpotView> mergeSpotViews; // only exists when we're animating (aka between loc from and to).
@@ -21,7 +30,7 @@ namespace SlideAndStick {
 		public Color BodyColor { get; private set; }
         private int numBodyUnitImages=0; // bodyUnits are the base round rects (one for every footprint). Round rects. Note: This system is simpler than my other image types; we only need an int (no HashSet required).
         private HashSet<Vector2> bwPoses = new HashSet<Vector2>(); // if footprints are toes, these are the spaces bw the toes (very common). Square images; they hide inner bodyUnits' round rects.
-        private HashSet<Vector2> armpitPoses = new HashSet<Vector2>(); // armpits are L patterns (somewhat common). Arc images.
+        private HashSet<ArmpitPos> armpitPoses = new HashSet<ArmpitPos>(); // armpits are L patterns (somewhat common). Arc images.
         private HashSet<Vector2> bellyButtonPoses = new HashSet<Vector2>(); // belly buttons are 2x2 patterns (somewhat common). Square images.
         private float diameter;
         private float highlightAlpha=0;
@@ -45,6 +54,37 @@ namespace SlideAndStick {
         private float UnitSize { get { return myTileView.MyBoardView.UnitSize; } }
         private Tile MyTile { get { return myTileView.MyTile; } }
         private List<Vector2Int> footprintLocal { get { return MyTile.FootprintLocal; } }
+        
+        private ArmpitPos GetArmpitPos(Vector2Int sourcePos, Vector2Int sourceDir) {
+            ArmpitPos ap = new ArmpitPos();
+            if (!HasFPLocal(sourcePos + new Vector2Int(sourceDir.x,0))) { // X-adjacent space is empty?
+                ap.emptyPos = sourcePos + new Vector2Int(sourceDir.x,0);
+                ap.dir = new Vector2Int(-sourceDir.x, sourceDir.y); // simply flip the X!
+            }
+            else { // Right space is empty?
+                ap.emptyPos = sourcePos + new Vector2Int(0,sourceDir.y);
+                ap.dir = new Vector2Int(sourceDir.x, -sourceDir.y); // simply flip the Y!
+            }
+            if (HasFPLocal(ap.emptyPos)) { // Safety check.
+                Debug.LogError("Uh-oh! We're saying an armpitPos is in a space where the Tile DOES have a footprint! Hmm.");
+            }
+            return ap;
+        }
+        private float GetArmpitImageRotation(ArmpitPos ap) {
+            if (ap.dir == Vector2Int.BL) { return 0; }
+            if (ap.dir == Vector2Int.BR) { return 90; }
+            if (ap.dir == Vector2Int.TR) { return 180; }
+            if (ap.dir == Vector2Int.TL) { return -90; }
+            return 0; // Hmmm.
+        }
+        private Vector2 GetArmpitImagePos(ArmpitPos ap) {
+            Vector2 cp = ap.CenterPos();
+            Vector2 pos = new Vector2(cp.x*UnitSize, -cp.y*UnitSize);
+            // Offset so it's flush with my actual diameter.
+            float diameterGap = (UnitSize - diameter) * 0.5f;
+            pos += new Vector2(diameterGap*ap.dir.x, -diameterGap*ap.dir.y);
+            return pos;
+        }
         
         
 
@@ -79,6 +119,7 @@ namespace SlideAndStick {
             newImage.sprite = sprite;
             newImage.color = GetAppliedBodyColor();
             newImage.transform.SetAsFirstSibling(); // put behind everything else.
+            GameUtils.SizeUIGraphic(newImage, diameter,diameter); // default size it to my diameter.
             allImages.Add(newImage);
             return newImage;
         }
@@ -87,7 +128,6 @@ namespace SlideAndStick {
             numBodyUnitImages ++; // note: Instead of adding to a HashSet, we just use a single counter.
             Image newImage = AddImage(s_bodyUnitRound, "i_BodyUnit");
 			newImage.type = Image.Type.Sliced;
-            GameUtils.SizeUIGraphic(newImage, diameter,diameter);
             newImage.rectTransform.anchoredPosition = new Vector2(pos.x*UnitSize, -pos.y*UnitSize);
         }
         private void MaybeAddBetweenImage(Vector2Int sourcePos, Vector2Int dir) {
@@ -96,17 +136,8 @@ namespace SlideAndStick {
             if (!bwPoses.Contains(bp)) {
                 bwPoses.Add(bp);
                 Image newImage = AddImage(s_square, "i_Between");
-                GameUtils.SizeUIGraphic(newImage, diameter,diameter);
                 newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
             }
-        }
-        private void MaybeAddArmpitImage(Vector2Int sourcePos, Vector2Int dir) {
-            //Image newImage = AddImage(null);TODO: This
-            //GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            //newImage.rectTransform.anchoredPosition = new Vector2(pos.x*UnitSize, -pos.y*UnitSize);
-            //newImage.name = "i_Armpit";
-            //i_betweens.Add(newImage);
-            //i_armpits
         }
         private void MaybeAddBellyButtonImage(Vector2Int sourcePos, Vector2Int dir) {
             Vector2 bp = sourcePos.ToVector2() + dir.ToVector2()*0.5f; // Start at source; go halfway in this dir.
@@ -114,13 +145,75 @@ namespace SlideAndStick {
             if (!bellyButtonPoses.Contains(bp)) {
                 bellyButtonPoses.Add(bp);
                 Image newImage = AddImage(s_square, "i_BellyButton");
-                GameUtils.SizeUIGraphic(newImage, diameter,diameter);
                 newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
+                // Extra step: Maybe remove an armpit image, if there was one here!
+                RemoveArmpitImageAtCenter(bp);
             }
+        }
+        private void MaybeAddArmpitImage(Vector2Int sourcePos, Vector2Int sourceDir) {
+            // FIRST, convert sourcePos and dir to be the EMPTY pos and dir inward!
+            ArmpitPos ap = GetArmpitPos(sourcePos, sourceDir);
+            
+            // We HAVEN'T yet added this one?? Add it!!
+            if (!armpitPoses.Contains(ap)) {
+                armpitPoses.Add(ap);
+                Image newImage = AddImage(s_armpitArc, "i_Armpit");
+                RectTransform rt = newImage.rectTransform;
+                rt.pivot = Vector2.zero;
+                rt.anchoredPosition = GetArmpitImagePos(ap);
+                float d = Mathf.Min(30, diameter); // Note: All armpit images are the same curviness, because our roundRects are sliced! Also, use Min in extreme case this would be bigger than the Tile.
+                GameUtils.SizeUIGraphic(newImage, d,d);
+                rt.localEulerAngles = new Vector3(0,0,GetArmpitImageRotation(ap));
+            }
+        }
+        // ----------------------------------------------------------------
+        //  Removing Things
+        // ----------------------------------------------------------------
+        //private void MaybeRemoveArmpitImage(Vector2Int sourcePos, Vector2Int sourceDir) {
+        //    ArmpitPos ap = GetArmpitPos(sourcePos, sourceDir);
+        //    if (armpitPoses.Contains(ap)) { // yeah, there's an armpit here!
+        //        armpitPoses.Remove(ap);
+        //        // Brute-force look through all my images; find the one that matches this armpit.
+        //        Vector2 imagePos = GetArmpitImagePos(ap);
+        //        foreach (Image image in allImages) {
+        //            // Armpit sprite, AND in this position? It's the image we're looking for!
+        //            if (image.sprite==s_armpitArc && image.rectTransform.anchoredPosition==imagePos) {
+        //                allImages.Remove(image);
+        //                Destroy(image.gameObject);
+        //                return;
+        //            }
+        //        }
+        //    }
+        //    Debug.LogError("Whoa, couldn't find armpit image to remove!");
+        //}
+        private void RemoveArmpitImageAtCenter(Vector2 centerPos) {
+            foreach (ArmpitPos ap in armpitPoses) {
+                if (ap.CenterPos() == centerPos) {
+                    RemoveArmpitImage(ap);
+                    return; // There should only be one, so we're good to stop looking.
+                }
+            }
+        }
+        private void RemoveArmpitImage(ArmpitPos armpitPos) {
+            armpitPoses.Remove(armpitPos);
+            // Brute-force look through all my images; find the one that matches this armpit.
+            Vector2 imagePos = GetArmpitImagePos(armpitPos);
+            foreach (Image image in allImages) {
+                // Armpit sprite, AND in this position? It's the image we're looking for!
+                if (image.sprite==s_armpitArc && image.rectTransform.anchoredPosition==imagePos) {
+                    allImages.Remove(image);
+                    Destroy(image.gameObject);
+                    return;
+                }
+            }
+            Debug.LogError("Whoa, couldn't find armpit image to remove!");
         }
         
         
         
+        // ----------------------------------------------------------------
+        //  Adding Doers
+        // ----------------------------------------------------------------
         private void AddMissingBodyUnitImages() {
             for (int i=numBodyUnitImages; i<footprintLocal.Count; i++) {
                 AddBodyImage(footprintLocal[i]);
@@ -138,8 +231,9 @@ namespace SlideAndStick {
             }
         }
         private void AddMissingArmpitAndBellyButtonImages() {
+            Vector2Int[] _dirs = { Vector2Int.TR, Vector2Int.TL }; // NOTE: We only need to look in TWO directions, not all 4.
             foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
-                foreach (Vector2Int dir in dirsDiagonal) { // For each DIAGONAL space around this one...
+                foreach (Vector2Int dir in _dirs) { // For each DIAGONAL space around this one...
                     // We DO have another footprint at this diagonal!
                     if (HasFPLocal(fpLocal + dir)) {
                         Vector2Int adjPosA = fpLocal + new Vector2Int(dir.x, 0);

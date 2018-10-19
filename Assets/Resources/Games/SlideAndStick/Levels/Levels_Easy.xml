@@ -13,8 +13,33 @@
 
 	<!-- TESTS! QQQ. -->
     <Level diff="0" name="test" layout="
+    	.0,
+        0.,
         00,
+    " />
+    <Level diff="0" name="test" layout="
+        0.0,
+        .00,
+    " />
+    <Level diff="0" name="test" layout="
+        .00,
+        0.0,
+    " />
+    <Level diff="0" name="test" layout="
+        .0,
         00,
+    " />
+    <Level diff="0" name="test" layout="
+        0.,
+        00,
+    " />
+    <Level diff="0" name="test" layout="
+        00,
+        0.,
+    " />
+    <Level diff="0" name="test" layout="
+        00,
+        .0,
     " />
     <Level diff="0" name="test" layout="
         0.0,
@@ -22,14 +47,14 @@
     <Level diff="0" name="test" layout="
         ........,
         .0.0....,
+        .......0,
+        ..0..0..,
         ........,
+        ..0..0..,
+        .......0,
+        0..0....,
         ........,
-        ........,
-        ........,
-        ........,
-        ........,
-        ........,
-        ........,
+        0.0...0.,
     " />
     <Level diff="0" name="test" layout="
         .....,
