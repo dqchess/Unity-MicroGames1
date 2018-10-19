@@ -215,6 +215,7 @@ namespace SlideAndStick {
             if (_simMoveDir == Vector2Int.zero) { ClearSimMoveDirAndBoard (); return; }
             // Oh, NO boToMove? Ok, no simulated move.
 			if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
+            print(Time.frameCount + "  set simmovedirandboard. dir: " + _simMoveDir.ToString());
 			// Make sure we FINISH how things were supposed to look before we set new to/from states!
 			UpdateAllViewsMoveEnd();
             

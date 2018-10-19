@@ -33,14 +33,14 @@ namespace SlideAndStick {
         public LevelAddress MyAddress { get { return myAddress; } }
         public LevelUI LevelUI { get { return levelUI; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
-        public bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
-		// Getters (Private)
-		private InputController inputController { get { return InputController.Instance; } }
-		private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
-		private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
-		private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
-		private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
-		private bool CanMakeAnyMove() {
+        // Getters (Private)
+        private InputController inputController { get { return InputController.Instance; } }
+        private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
+        private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
+        private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
+        private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
+        private bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
+        private bool CanMakeAnyMove() {
             if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
             if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
             if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
@@ -256,10 +256,13 @@ namespace SlideAndStick {
                 gameController.OnBoardGoalsSatisfied();
             }
         }
-		public void OnWinLevel() {
-			IsLevelOver = true;
-			// Make sure to let go of any tileGrabbing for visuals.
-			SetTileGrabbing(null);
+        public void OnWinLevel() {
+            IsLevelOver = true;
+            // Make sure to let go of any tileGrabbing for visuals.
+            SetTileGrabbing(null);//TODO: Fix the wonkiness this causes!
+            //boardView.Clear
+            // Tell ppl.
+            levelUI.OnWinLevel();
 		}
 
 

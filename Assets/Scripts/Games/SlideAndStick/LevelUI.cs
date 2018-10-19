@@ -32,6 +32,9 @@ namespace SlideAndStick {
             // Center levelName text between top of screen and board.
             t_levelName.rectTransform.anchoredPosition = new Vector2(0, level.BoardView.MyRectTransform.anchoredPosition.y*0.5f);
 		}
+        public void OnWinLevel() {
+            // TODO: Disable buttons!
+        }
 
 
 	}
