@@ -11,7 +11,7 @@
 <LevelPack packName="Easy">
 <Levels>
 
-	<!-- TESTS! QQQ. -->
+	<!-- TESTS! - - >
     <Level diff="0" name="test" layout="
     	0..,
         ...,
@@ -103,6 +103,7 @@
         .....,
         0....,
     " />
+-->
 
 
     <Level diff="1" name="IntroGame1" fueID="1" layout="

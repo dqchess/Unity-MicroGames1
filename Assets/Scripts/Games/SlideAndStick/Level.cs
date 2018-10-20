@@ -259,7 +259,7 @@ namespace SlideAndStick {
         public void OnWinLevel() {
             IsLevelOver = true;
             // Make sure to let go of any tileGrabbing for visuals.
-            SetTileGrabbing(null);//TODO: Fix the wonkiness this causes!
+            //SetTileGrabbing(null);//TODO: Fix the wonkiness this causes!
             //boardView.Clear
             // Tell ppl.
             levelUI.OnWinLevel();
@@ -306,7 +306,7 @@ namespace SlideAndStick {
 		private void Debug_PrintLevelLayout() {
 			string str = "\n";//\nLEVEL - \n";
 			str += board.Debug_GetBoardLayout();
-			UnityEditor.EditorGUIUtility.systemCopyBuffer = str;
+            GameUtils.CopyToClipboard(str);
 		}
 
 	}
