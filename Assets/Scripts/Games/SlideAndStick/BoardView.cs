@@ -28,6 +28,7 @@ namespace SlideAndStick {
 		private Vector2Int simMoveDir;
 
 		// Getters (Public)
+		public bool CanExecuteSimMove { get { return simMoveResult==MoveResults.Success; } }
 		public Board MyBoard { get { return myBoard; } }
 		public Level MyLevel { get { return levelRef; } }
 		public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
@@ -130,7 +131,9 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void UpdateAllViewsMoveStart() {
 			AddViewsForAddedObjects();
-			UpdateBoardOccupantViewVisualsMoveStart();
+			foreach (BoardOccupantView bo in allOccupantViews) {
+				bo.UpdateVisualsPreMove();
+			}
 			// Note that destroyed Objects' views will be removed by the view in the UpdateVisualsMoveEnd.
 			// Reset our BoardOccupantView' "from" values to where they *currently* are! Animate from there.
 //			foreach (BoardOccupantView bov in allOccupantViews) {Note: Disabled this! Doesn't have much of an effect.
@@ -164,11 +167,6 @@ namespace SlideAndStick {
                 animLocTarget = 0;
             }
         }
-		private void UpdateBoardOccupantViewVisualsMoveStart() {
-			foreach (BoardOccupantView bo in allOccupantViews) {
-				bo.UpdateVisualsPreMove ();
-			}
-		}
 
 		private void AddViewsForAddedObjects() {
 			foreach (BoardObject bo in myBoard.objectsAddedThisMove) {
@@ -176,7 +174,10 @@ namespace SlideAndStick {
 			}
 		}
 
-        public void UpdateSimMove(BoardOccupant boToMove, Vector2Int _simMoveDir, float _simMovePercent) {
+		public void UpdateSimMove(BoardOccupant boToMove, SimMoveController smc) {
+			UpdateSimMove(boToMove, smc.SimMoveDir, smc.SimMovePercent);
+		}
+		public void UpdateSimMove(BoardOccupant boToMove, Vector2Int _simMoveDir, float _simMovePercent) {
             if (simMoveDir != _simMoveDir) { // If the proposed simulated moveDir is *different* from the current one...!
                 SetSimMoveDirAndBoard(boToMove, _simMoveDir);
             }
@@ -186,8 +187,7 @@ namespace SlideAndStick {
         }
         private void UpdateViewsTowardsSimMove(float _simMovePercent) {
             animLocTarget = _simMovePercent;
-            //animLocTarget *= 0.9f; // don't go all the way to 1.
-            if (simMoveResult == MoveResults.Fail) {
+			if (!CanExecuteSimMove) {
                 animLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
             }
             // Keep the value locked to the target value.
@@ -205,6 +205,9 @@ namespace SlideAndStick {
             // TODO: Fix this...
             //prevSimMoveDir = new Vector2Int(prevSimMoveDir.x, -prevSimMoveDir.y); // when we CLEAR the simMove, we wanna "revert" poses, aka "bounce back" in *other* direction.
         }
+		public void OnCancelSimMove() {
+			ClearSimMoveDirAndBoard();
+		}
 		public void OnBoardMoveComplete() {
 			ClearSimMoveDirAndBoard();
 			UpdateAllViewsMoveStart();
@@ -212,10 +215,8 @@ namespace SlideAndStick {
         /** Clones our current Board, and applies the move to it! */
         private void SetSimMoveDirAndBoard(BoardOccupant boToMove, Vector2Int _simMoveDir) {
             // If we accidentally used this function incorrectly, simply do the correct function instead.
-            if (_simMoveDir == Vector2Int.zero) { ClearSimMoveDirAndBoard (); return; }
-            // Oh, NO boToMove? Ok, no simulated move.
-			if (boToMove == null) { ClearSimMoveDirAndBoard(); return; }
-            print(Time.frameCount + "  set simmovedirandboard. dir: " + _simMoveDir.ToString());
+			if (_simMoveDir == Vector2Int.zero) { ClearSimMoveDirAndBoard (); return; } // TO DO: Clean this up. Have SimMoveController mandate calling my ClearSim().
+
 			// Make sure we FINISH how things were supposed to look before we set new to/from states!
 			UpdateAllViewsMoveEnd();
             
@@ -251,20 +252,25 @@ namespace SlideAndStick {
             return null;
         }
         
-        public void OnSetTileGrabbing(Tile _tile, Tile _prevTileGrabbing) {
-            MoveTileViewToTop(_tile); // move the TileView on TOP of all others!
+        public void OnSetTileGrabbing(Tile _tileGrabbing, Tile _prevTileGrabbing) {
+            MoveTileViewToTop(_tileGrabbing); // move the TileView on TOP of all others!
             if (_prevTileGrabbing != null) {
                 lastTileGrabbedPos = _prevTileGrabbing.BoardPos;
             }
             
             // We've just RELEASED tileGrabbing...!
-            if (_tile == null) {
+            if (_tileGrabbing == null) {
                 doBonusAnimBounce = true;
             }
             else {
-                lastTileGrabbedPos = _tile.BoardPos;
+                lastTileGrabbedPos = _tileGrabbing.BoardPos;
                 //doBonusAnimBounce = false;
             }
+
+//			// No tileGrabbing? Clear simMoveBoard!
+//			if (_tileGrabbing == null) {
+//				ClearSimMoveDirAndBoard();
+//			}
         }
         private void MoveTileViewToTop(Tile tile) {
             if (tile == null) { return; } // Check for da obvious.
@@ -280,6 +286,7 @@ namespace SlideAndStick {
 		//  Update
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
+//			print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
 			if (areObjectsAnimating) {
                 animLocVel *= 0.75f;
 				animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;

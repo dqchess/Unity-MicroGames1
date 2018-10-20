@@ -12,11 +12,11 @@
 <Levels>
 
     <!-- 4x4, MEDIUM, 2 COLORS -->
-    <Level diff="4" layout="
-        .101,
-        0.00,
-        1.1.,
-        1011,
+    <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
+        0011,
+        ....,
+        ....,
+        1100,
     " />
     <Level diff="4" layout="
         1001,
@@ -348,6 +348,12 @@
         1000,
         0101,
         0.11,
+    " />
+    <Level diff="5" desc="IS THIS POSSIBLE?" layout="
+        .101,
+        0.00,
+        1.1.,
+        1011,
     " />
     <Level diff="5" layout="
 		1.22,

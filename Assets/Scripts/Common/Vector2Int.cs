@@ -46,7 +46,7 @@ public struct Vector2Int {
         if (this == Vector2Int.R) { return Vector2Int.B; }
         if (this == Vector2Int.B) { return Vector2Int.L; }
         if (this == Vector2Int.L) { return Vector2Int.T; }
-        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TODO: Use sin/cos to rotate these properly.");
+        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TO DO: Use sin/cos to rotate these properly.");
         return this;
     }
     public Vector2Int RotatedCounterClockwise() {
@@ -54,7 +54,7 @@ public struct Vector2Int {
         if (this == Vector2Int.R) { return Vector2Int.T; }
         if (this == Vector2Int.B) { return Vector2Int.R; }
         if (this == Vector2Int.L) { return Vector2Int.B; }
-        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TODO: Use sin/cos to rotate these properly.");
+        Debug.LogError("Whoa! Rotating a Vector2Int that ISN'T TLBR. TO DO: Use sin/cos to rotate these properly.");
         return this;
     }
 }

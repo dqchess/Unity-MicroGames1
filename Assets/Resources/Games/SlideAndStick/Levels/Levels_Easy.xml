@@ -11,7 +11,7 @@
 <LevelPack packName="Easy">
 <Levels>
 
-	<!-- TESTS! - - >
+	<!-- TESTS! -->
     <Level diff="0" name="test" layout="
     	0..,
         ...,
@@ -177,12 +177,6 @@
         000.,
     " />
     <Level diff="2" layout="
-        2.20,
-        2.00,
-        00..,
-        2200,
-    " />
-    <Level diff="2" layout="
         0.00,
         01.1,
         .100,
@@ -211,12 +205,6 @@
         .0..,
         01.1,
         0011,
-    " />
-    <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
-        0011,
-        ....,
-        ....,
-        1100,
     " />
     <Level diff="2" layout="
         1111,
@@ -247,6 +235,12 @@
         1.01,
         11.0,
         100.,
+    " />
+    <Level diff="2" layout="
+        2.20,
+        2.00,
+        00..,
+        2200,
     " />
 
     <Level diff="3" layout="

@@ -33,19 +33,15 @@ namespace SlideAndStick {
         public LevelAddress MyAddress { get { return myAddress; } }
         public LevelUI LevelUI { get { return levelUI; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
-        // Getters (Private)
-        private InputController inputController { get { return InputController.Instance; } }
-        private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
-        private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
-        private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
-        private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
-        private bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
-        private bool CanMakeAnyMove() {
-            if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
-            if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
-            if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
+		public bool CanMakeAnyMove() {
+			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
+			if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+			if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
 		}
+        // Getters (Private)
+        private InputController inputController { get { return InputController.Instance; } }
+        private bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		private bool CanUndoMove () {
 			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
 			if (NumMovesMade <= 0) { return false; } // Can't go before time started, duhh.
@@ -110,36 +106,6 @@ namespace SlideAndStick {
 			tileOver = null;
 			tileGrabbing = null;
 		}
-        /*
-		override protected void AddLevelComponents() {
-			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
-
-			string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
-			if (!string.IsNullOrEmpty(levelString)) {
-				MakeLevelFromString(levelString);
-			}
-			else {
-//				DestroyLevelComponents();
-//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
-				Debug.LogWarning("No level data available for level: " + LevelIndex);
-			}
-//			if (LevelIndex > LastLevelIndex) {
-//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
-//			}
-		}
-		private void MakeLevelFromString(string _str) {
-			try {
-				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
-				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
-				string[] boardLayout = lines.Skip(1).ToArray(); // skip the descrpition string. The rest is the board layout! :)
-				BoardData boardData = new BoardData(boardLayout);
-				RemakeModelAndViewFromData(boardData);
-			}
-			catch (System.Exception e) {
-				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
-			}
-		}
-        */
 
 
 
@@ -157,7 +123,9 @@ namespace SlideAndStick {
             RegisterTouchInput();
             RegisterButtonInput();
 
-            boardView.UpdateSimMove(tileGrabbing, simMoveController.SimMoveDir, simMoveController.SimMovePercent);
+			if (tileGrabbing != null) {
+            	boardView.UpdateSimMove(tileGrabbing, simMoveController);
+			}
 		}
 
 		private void UpdateMousePosBoard() {
@@ -195,14 +163,9 @@ namespace SlideAndStick {
 
 		private void RegisterTouchInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
-            
-			if 		(IsPlayerMove_L())  { MoveTileAttempt(tileGrabbing, Vector2Int.L); }
-			else if (IsPlayerMove_R())  { MoveTileAttempt(tileGrabbing, Vector2Int.R); }
-			else if (IsPlayerMove_D())  { MoveTileAttempt(tileGrabbing, Vector2Int.B); }
-			else if (IsPlayerMove_U())  { MoveTileAttempt(tileGrabbing, Vector2Int.T); }
 
 			if (inputController.IsTouchUp()) { OnTouchUp(); }
-			else if (inputController.IsTouchDown()) { OnTouchDown(); }
+			if (inputController.IsTouchDown()) { OnTouchDown(); }
         }
 
 		private void OnTouchDown() {
@@ -214,6 +177,14 @@ namespace SlideAndStick {
 		private void OnTouchUp() {
 			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			SetTileGrabbing(null);
+		}
+
+		public void ExecuteMoveAttempt(Vector2Int dir) {
+			MoveTileAttempt(tileGrabbing, dir);
+		}
+		public void OnCancelSimMove() {
+			SetTileGrabbing(null);
+			boardView.OnCancelSimMove();
 		}
 
 		private void SetTileGrabbing(Tile _tile) {
@@ -256,13 +227,13 @@ namespace SlideAndStick {
                 gameController.OnBoardGoalsSatisfied();
             }
         }
-        public void OnWinLevel() {
-            IsLevelOver = true;
-            // Make sure to let go of any tileGrabbing for visuals.
-            //SetTileGrabbing(null);//TODO: Fix the wonkiness this causes!
-            //boardView.Clear
+		public void OnWinLevel() {
+			IsLevelOver = true;
+			// Force a touch-up so that we reset the simBoard and stuff.
+			boardView.UpdateSimMove(tileGrabbing, simMoveController); // FIRST, update the simMove so things don't look veird when we (force) release tileGrabbing.
+			simMoveController.ForceCancelSimMove();
             // Tell ppl.
-            levelUI.OnWinLevel();
+			levelUI.OnWinLevel();
 		}
 
 
@@ -311,5 +282,40 @@ namespace SlideAndStick {
 
 	}
 
-
 }
+
+
+//        private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
+//        private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
+//        private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
+//        private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
+/*
+		override protected void AddLevelComponents() {
+			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
+
+			string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
+			if (!string.IsNullOrEmpty(levelString)) {
+				MakeLevelFromString(levelString);
+			}
+			else {
+//				DestroyLevelComponents();
+//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
+				Debug.LogWarning("No level data available for level: " + LevelIndex);
+			}
+//			if (LevelIndex > LastLevelIndex) {
+//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
+//			}
+		}
+		private void MakeLevelFromString(string _str) {
+			try {
+				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
+				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
+				string[] boardLayout = lines.Skip(1).ToArray(); // skip the descrpition string. The rest is the board layout! :)
+				BoardData boardData = new BoardData(boardLayout);
+				RemakeModelAndViewFromData(boardData);
+			}
+			catch (System.Exception e) {
+				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
+			}
+		}
+        */
