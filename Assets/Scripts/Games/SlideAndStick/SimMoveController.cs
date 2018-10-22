@@ -8,14 +8,7 @@ namespace SlideAndStick {
         // Constants
         private float minDragOffset; // In screen space. Any drag less than this will be ignored.
         // Properties
-//        private bool isTouch, isTouchDown, isTouchUp; // updated at the beginning of every frame.
-//        private bool pisTouch; // isTouch for the previous frame. Used to detect touch-downs/ups.
-//		public bool IsSimMoveCancel { get; private set; } // true for one frame, then set back to false.
-//        public bool IsSwipe_L { get; private set; } // these are true only for one frame, and then set back to false.
-//        public bool IsSwipe_R { get; private set; } // these are true only for one frame, and then set back to false.
-//        public bool IsSwipe_D { get; private set; } // these are true only for one frame, and then set back to false.
-//        public bool IsSwipe_U { get; private set; } // these are true only for one frame, and then set back to false.
-        private float unitSize;
+        private readonly float unitSize;
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
         private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
@@ -35,12 +28,10 @@ namespace SlideAndStick {
         private Vector2Int GetSimMoveDir() {
             if (dragAxes.magnitude > minDragOffset) {
                 if (Mathf.Abs(dragAxes.x) > Mathf.Abs(dragAxes.y)) {
-                    if (dragAxes.x<0) { return new Vector2Int (-1,0); }
-                    return new Vector2Int ( 1,0);
+                    return dragAxes.x<0 ? Vector2Int.L : Vector2Int.R;
                 }
                 else {
-                    if (dragAxes.y<0) { return new Vector2Int (0, 1); }
-                    return new Vector2Int (0,-1);
+                    return dragAxes.y<0 ? Vector2Int.B : Vector2Int.T;
                 }
             }
             else {
@@ -74,9 +65,6 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void Update() {
 			if (InputController.Instance == null) { return; } // For runtime compile.
-//            // Reset swipe truthiness!
-//			IsSimMoveCancel = false;
-//            IsSwipe_L = IsSwipe_R = IsSwipe_D = IsSwipe_U = false;
 
 			if (InputController.Instance.IsTouchDown()) { OnTouchDown(); }
 			if (InputController.Instance.IsTouchUp())   { OnTouchUp();   }
@@ -91,6 +79,7 @@ namespace SlideAndStick {
             dragAnchorPos = GetTouchPos();
         }
         private void OnTouchUp() {
+            Debug.Log(Time.frameCount + " OnTouchUp.");
             UpdateDragAxes();
 
 			if (level.CanMakeAnyMove()) {
@@ -102,11 +91,9 @@ namespace SlideAndStick {
 				else {
 					CancelSimMove();
 				}
+                level.ReleaseTileGrabbing();
 			}
         }
-//		public void ForceTouchUp() {
-//			OnTouchUp();
-//		}
 
         private void UpdateDragAxes() {
             //// TEST
@@ -134,6 +121,7 @@ namespace SlideAndStick {
                 SimMovePercent = GetSimMovePercent();
                 // We've gone all the way with the simulated move? Commit to it!!
                 if (SimMovePercent >= 1) {
+                    Debug.Log(Time.frameCount + " made it alllll the way. Touch held: " + InputController.Instance.IsTouchHold());
                     ExecuteSimMove();
                 }
             }
@@ -148,10 +136,12 @@ namespace SlideAndStick {
 			dragAnchorPos = GetTouchPos();
 			// Nix any sim move.
 			SetSimMoveDir(Vector2Int.zero);
+            Debug.Log(Time.frameCount + " ExecuteSimMoveExecuteSimMoveExecuteSimMoveExecuteSimMove!");
         }
 		private void CancelSimMove() {
 			SetSimMoveDir(Vector2Int.zero);
 			level.OnCancelSimMove();
+            Debug.Log(Time.frameCount + " CANCEL sim move!");
 		}
 		public void ForceCancelSimMove() {
 			CancelSimMove();

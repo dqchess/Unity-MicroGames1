@@ -210,12 +210,13 @@ namespace SlideAndStick {
 			// Animate all views back to their original positions.
 			areObjectsAnimating = true;
             //animLocVel = 0.08f;
-			animLocTarget = 0;
+			//animLocTarget = 0;
             // TODO: Fix this...
             //prevSimMoveDir = new Vector2Int(prevSimMoveDir.x, -prevSimMoveDir.y); // when we CLEAR the simMove, we wanna "revert" poses, aka "bounce back" in *other* direction.
         }
 		public void OnCancelSimMove() {
 			ClearSimMoveDirAndBoard();
+            animLocTarget = 0;
 		}
 		public void OnBoardMoveComplete() {
 			ClearSimMoveDirAndBoard();
@@ -295,7 +296,7 @@ namespace SlideAndStick {
 		//  Update
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
-//			print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
+			print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
 			if (areObjectsAnimating) {
                 animLocVel *= 0.75f;
 				animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;

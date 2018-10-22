@@ -164,7 +164,7 @@ namespace SlideAndStick {
 		private void RegisterTouchInput() {
 			if (inputController == null) { return; } // For compiling during runtime.
 
-			if (inputController.IsTouchUp()) { OnTouchUp(); }
+			//if (inputController.IsTouchUp()) { OnTouchUp(); }
 			if (inputController.IsTouchDown()) { OnTouchDown(); }
         }
 
@@ -174,19 +174,22 @@ namespace SlideAndStick {
 				SetTileGrabbing(tileOver);
 			}
 		}
-		private void OnTouchUp() {
-			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
-			SetTileGrabbing(null);
-		}
+		//private void OnTouchUp() {
+		//	if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
+		//	SetTileGrabbing(null);
+		//}
 
 		public void ExecuteMoveAttempt(Vector2Int dir) {
 			MoveTileAttempt(tileGrabbing, dir);
 		}
 		public void OnCancelSimMove() {
-			SetTileGrabbing(null);
+			ReleaseTileGrabbing();
 			boardView.OnCancelSimMove();
 		}
-
+        
+        public void ReleaseTileGrabbing() {
+            SetTileGrabbing(null);
+        }
 		private void SetTileGrabbing(Tile _tile) {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
@@ -219,7 +222,7 @@ namespace SlideAndStick {
             // In fail scenario? Nullify tileOver and tileGrabbing.
             if (board.IsInKnownFailState) {
                 SetTileOver(null);
-                SetTileGrabbing(null);
+                ReleaseTileGrabbing();
             }
             
             // If our goals are satisfied, win!!
