@@ -18,6 +18,7 @@ namespace SlideAndStick {
 
 
         public static BoardSpace GetSpace(Board b, BoardPos pos) { return GetSpace(b, pos.col,pos.row); }
+        public static BoardSpace GetSpace(Board b, Vector2Int pos) { return GetSpace(b, pos.x,pos.y); }
         public static BoardSpace GetSpace(Board b, int col, int row) {
 			if (col<0 || row<0  ||  col>=b.NumCols || row>=b.NumRows) return null;
 			return b.Spaces[col,row];
@@ -98,15 +99,26 @@ namespace SlideAndStick {
 		}
 
         private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal) {
-            for (int i=0; i<footprintGlobal.Count; i++) {
-                if (!IsSpacePlayable(b, footprintGlobal[i])) { return false; }
-            }
-            return true;
+            return AreSpacesPlayable(b, footprintGlobal, Vector2Int.zero);
         }
         private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal, Vector2Int posOffset) {
             for (int i=0; i<footprintGlobal.Count; i++) {
                 if (!IsSpacePlayable(b, footprintGlobal[i]+posOffset)) { return false; }
             }
+            return true;
+        }
+        private static bool CanPassThroughSpaces(Board b, List<Vector2Int> fpGlobal, Vector2Int dir, Vector2Int posOffset) {
+            for (int i=0; i<fpGlobal.Count; i++) {
+                if (!CanOccupantEverExit(b, fpGlobal[i]+posOffset, dir)) { return false; }
+            }
+            return true;
+        }
+        public static bool CanOccupantEverExit(Board b, Vector2Int pos, Vector2Int dir) {
+            BoardSpace spaceFrom = GetSpace(b, pos);
+            BoardSpace spaceTo   = GetSpace(b, pos+dir);
+            if (spaceFrom==null || spaceTo==null) { return false; }
+            if (!spaceFrom.CanOccupantEverExit(MathUtils.GetSide(dir))) { return false; }
+            if (!spaceTo.CanOccupantEverEnterMe(MathUtils.GetOppositeSide(dir))) { return false; }
             return true;
         }
 
@@ -120,10 +132,6 @@ namespace SlideAndStick {
 			//if (!AreSpacesPlayable(b, bo.FootprintGlobal,dir)) {
 			//	return MoveResults.Fail;
 			//}
-			// Are we trying to pass through a Wall? Return Fail.
-//			if (bo.MySpace!=null && !bo.MySpace.CanOccupantEverExit(GetSide(dir))) {
-//				return MoveResults.Fail;
-//			}
 
 			// Always remove its footprint first. We're about to move it!
 			bo.RemoveMyFootprint ();
@@ -149,6 +157,10 @@ namespace SlideAndStick {
 
             // Is this outside the board? Oops! Return Fail.
             if (!AreSpacesPlayable(b, bo.FootprintGlobal)) {
+                return MoveResults.Fail;
+            }
+            // Did we pass through a Wall? Return Fail.
+            if (!CanPassThroughSpaces(b, bo.FootprintGlobal, dir, MathUtils.GetOppositeDir(dir))) {
                 return MoveResults.Fail;
             }
 

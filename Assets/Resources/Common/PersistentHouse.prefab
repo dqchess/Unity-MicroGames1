@@ -357,6 +357,8 @@ MonoBehaviour:
     type: 2}
   slideAndStick_tileView: {fileID: 1647619775195882, guid: c44131899001147ba98a0baf8a047802,
     type: 2}
+  slideAndStick_wallView: {fileID: 1334356613339156, guid: 659fa689c3d6746dab8933f2c8301783,
+    type: 2}
   waveTap_level: {fileID: 1479912835452602, guid: 59ab38c13237eab41b9569cd8d67943d,
     type: 2}
   waveTap_bar: {fileID: 1691589418277400, guid: e9735740c59a21f4dbfc0787fd20938e,

@@ -16,9 +16,9 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
-        public void Initialize (BoardView _myBoardView, Tile _myObj) {
+        public void Initialize (BoardView _myBoardView, Transform tf_parent, Tile _myObj) {
 			MyTile = _myObj;
-			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
+			base.InitializeAsBoardOccupantView (_myBoardView, tf_parent, _myObj);
             body.Initialize();
             bodyShadow.Initialize();
 		}

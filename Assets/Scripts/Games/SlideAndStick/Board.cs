@@ -19,6 +19,7 @@ namespace SlideAndStick {
 		// Objects
 		public BoardSpace[,] spaces;
         public List<Tile> tiles;
+        public List<Wall> walls;
         // Reference Lists
 		public List<BoardObject> objectsAddedThisMove;
 
@@ -49,7 +50,8 @@ namespace SlideAndStick {
             bd.devRating = DevRating;
             bd.difficulty = Difficulty;
             bd.fueID = FUEID;
-			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
+            foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
+            foreach (Wall p in walls) { bd.wallDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<NumCols; col++) {
 				for (int row=0; row<NumRows; row++) {
 					bd.spaceDatas[col,row] = GetSpace(col,row).SerializeAsData();
@@ -91,11 +93,12 @@ namespace SlideAndStick {
 		}
 		private void MakeEmptyPropLists() {
 			tiles = new List<Tile>();
+            walls = new List<Wall>();
 			objectsAddedThisMove = new List<BoardObject>();
 		}
 		private void AddPropsFromBoardData (BoardData bd) {
-			// Add Props to the lists!
-			foreach (TileData data in bd.tileDatas) { AddTile (data); }
+            foreach (TileData data in bd.tileDatas) { AddTile (data); }
+            foreach (WallData data in bd.wallDatas) { AddWall (data); }
 		}
 		private void CalculateNumTilesToWin() {
 			numTilesToWin = 0; // We increment next.
@@ -115,11 +118,16 @@ namespace SlideAndStick {
 		private Tile AddTile(BoardPos pos, int colorID) {
             return AddTile(new TileData(pos, colorID));
 		}
-		private Tile AddTile (TileData data) {
-			Tile prop = new Tile (this, data);
-			tiles.Add (prop);
-			return prop;
-		}
+        private Tile AddTile (TileData data) {
+            Tile prop = new Tile (this, data);
+            tiles.Add (prop);
+            return prop;
+        }
+        private Wall AddWall(WallData data) {
+            Wall prop = new Wall(this, data);
+            walls.Add (prop);
+            return prop;
+        }
 
 		public void OnObjectRemovedFromPlay (BoardObject bo) {
 			// Remove it from its lists!
@@ -141,10 +149,14 @@ namespace SlideAndStick {
 				Tile t = tiles[i];
                 for (int j=0; j<t.FootprintGlobal.Count; j++) {
                     Vector2Int fpPos = t.FootprintGlobal[j];
-    				MergeTilesAttempt(t, GetTile(fpPos.x-1, fpPos.y));
-    				MergeTilesAttempt(t, GetTile(fpPos.x+1, fpPos.y));
-    				MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y-1));
-    				MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y+1));
+                    MergeTilesAttempt(t, fpPos, Vector2Int.L);
+                    MergeTilesAttempt(t, fpPos, Vector2Int.R);
+                    MergeTilesAttempt(t, fpPos, Vector2Int.B);
+                    MergeTilesAttempt(t, fpPos, Vector2Int.T);
+        //             GetTile(fpPos.x-1, fpPos.y));
+    				//MergeTilesAttempt(t, GetTile(fpPos.x+1, fpPos.y));
+    				//MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y-1));
+    				//MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y+1));
                 }
             }
 		}
@@ -156,10 +168,12 @@ namespace SlideAndStick {
 			if (tileA == tileB) { return false; } // Oh, we just merged and now it's looking at itself? Nah.
 			return true; // Sure!
 		}
-		private void MergeTilesAttempt(Tile tileA, Tile tileB) {
-			if (CanMergeTiles(tileA,tileB)) {
-				MergeTiles(tileA,tileB);
-			}
+        private void MergeTilesAttempt(Tile tileA, Vector2Int tileAFPPos, Vector2Int tileBDir) {
+            if (!BoardUtils.CanOccupantEverExit(this, tileAFPPos, tileBDir)) { return; } // Can't travel between these spaces (there's a wall)? No merge.
+            Tile tileB = GetTile(tileAFPPos+tileBDir);
+            if (CanMergeTiles(tileA,tileB)) {
+                MergeTiles(tileA,tileB);
+            }
 		}
 		private void MergeTiles(Tile tileA, Tile tileB) {
 			AddMergeSpots(tileA, tileB);

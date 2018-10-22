@@ -22,15 +22,21 @@ namespace SlideAndStick {
     }
 
     public class TileData : BoardOccupantData {
-		public int colorID;
-		public TileData (BoardPos _boardPos, int _colorID) { // TEMP FOR debugging
-			boardPos = _boardPos;
-			colorID = _colorID;
-		}
-		public TileData (BoardPos _boardPos, int _colorID, List<Vector2Int> _footprintLocal) {
-    		boardPos = _boardPos;
-    		colorID = _colorID;
-			footprintLocal = _footprintLocal;
-    	}
+        public int colorID;
+        public TileData (BoardPos _boardPos, int _colorID) { // TEMP FOR debugging
+            boardPos = _boardPos;
+            colorID = _colorID;
+        }
+        public TileData (BoardPos _boardPos, int _colorID, List<Vector2Int> _footprintLocal) {
+            boardPos = _boardPos;
+            colorID = _colorID;
+            footprintLocal = _footprintLocal;
+        }
+    }
+
+    public class WallData : BoardObjectData {
+        public WallData(BoardPos _boardPos) {
+            boardPos = _boardPos;
+        }
     }
 }

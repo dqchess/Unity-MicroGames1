@@ -74,13 +74,13 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
-		protected void InitializeAsBoardObjectView (BoardView _myBoardView, BoardObject _myObject) {
+		protected void InitializeAsBoardObjectView (BoardView _myBoardView, Transform tf_parent, BoardObject _myObject) {
 			myBoardView = _myBoardView;
 			myObject = _myObject;
 			myRectTransform = this.GetComponent<RectTransform>();
 
 			// Parent me!
-			GameUtils.ParentAndReset(this.gameObject, myBoardView.transform);
+			GameUtils.ParentAndReset(this.gameObject, tf_parent.transform);
 			myRectTransform.sizeDelta = new Vector2(myBoardView.UnitSize, myBoardView.UnitSize); // NOTE: There's no code pattern to follow here with this! TileView totally does its own thing.
 
 			// Start me in the right spot!

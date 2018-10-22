@@ -13,7 +13,8 @@ namespace SlideAndStick {
         public string fueID; // which tutorial this is gonna be!
 		// BoardObjects
 		public BoardSpaceData[,] spaceDatas;
-		public List<TileData> tileDatas;
+        public List<TileData> tileDatas;
+        public List<WallData> wallDatas;
 
 		// Getters (Private)
 		private BoardSpaceData GetSpaceData (int col,int row) { return spaceDatas[col,row]; }
@@ -68,7 +69,9 @@ namespace SlideAndStick {
 					char c = layoutArray[actualRow][col];
 					switch (c) {
 						case '#': spaceDatas[col,row].isPlayable = false; break;
-						case '0': AddTileData(col,row, 0); break;
+                        case '_': AddWallData (col,row+1, Sides.T); break; // note: because the underscore looks lower, consider it in the next row (so layout text file looks more intuitive).
+                        case '|': AddWallData (col,row, Sides.L); break;
+                        case '0': AddTileData(col,row, 0); break;
 						case '1': AddTileData(col,row, 1); break;
 						case '2': AddTileData(col,row, 2); break;
 						case '3': AddTileData(col,row, 3); break;
@@ -90,14 +93,19 @@ namespace SlideAndStick {
 			}
 			// Props
 			tileDatas = new List<TileData>();
+            wallDatas = new List<WallData>();
 		}
 
 
 
-		void AddTileData (int col,int row, int colorID) {
-			TileData newData = new TileData (new BoardPos(col,row), colorID);
-			tileDatas.Add (newData);
-		}
+        void AddTileData(int col,int row, int colorID) {
+            TileData newData = new TileData(new BoardPos(col,row), colorID);
+            tileDatas.Add(newData);
+        }
+        void AddWallData(int col,int row, int sideFacing) {
+            WallData newData = new WallData(new BoardPos(col,row, sideFacing));
+            wallDatas.Add(newData);
+        }
 
 
 

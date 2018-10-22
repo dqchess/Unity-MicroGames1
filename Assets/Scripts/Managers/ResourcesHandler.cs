@@ -42,6 +42,7 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject slideAndStick_level;
 	[SerializeField] public GameObject slideAndStick_mergeSpotView;
     [SerializeField] public GameObject slideAndStick_tileView;
+    [SerializeField] public GameObject slideAndStick_wallView;
 
 	[SerializeField] public GameObject waveTap_level;
 	[SerializeField] public GameObject waveTap_bar;

@@ -10,11 +10,14 @@ namespace SlideAndStick {
 		private float unitSize; // how big each board space is in pixels
 		// Components
 		[SerializeField] private RectTransform myRectTransform=null;
-		[SerializeField] private Transform tf_boardSpaces=null;
+        [SerializeField] private Transform tf_boardSpaces=null;
+        [SerializeField] private Transform tf_tiles=null;
+        [SerializeField] private Transform tf_walls=null;
         [SerializeField] private MergeSpotViews mergeSpotViews=null;
 		// Objects
 		private BoardSpaceView[,] spaceViews;
-		public List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
+		private List<BoardOccupantView> allOccupantViews; // includes EVERY single BoardOccupantView!
+        private List<WallView> wallViews;
 		// References
 		private Board myBoard; // this reference does NOT change during our existence! (If we undo a move, I'm destroyed completely and a new BoardView is made along with a new Board.)
         private Board simMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
@@ -35,9 +38,7 @@ namespace SlideAndStick {
 		public float UnitSize { get { return unitSize; } }
         public RectTransform MyRectTransform { get { return myRectTransform; } }
 		public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
-		public List<BoardOccupantView> AllOccupantViews { get { return allOccupantViews; } }
 		public bool AreObjectsAnimating { get { return areObjectsAnimating; } }
-//		public bool AreGoalsSatisfied { get { return myBoard.AreGoalsSatisfied; } }
 		public float ObjectsAnimationLocTarget { get { return animLocTarget; } }
 		// Getters (Private)
 		private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
@@ -79,7 +80,9 @@ namespace SlideAndStick {
 			}
 			// Clear out all my lists!
 			allOccupantViews = new List<BoardOccupantView>();
-			foreach (Tile bo in myBoard.tiles) { AddTileView (bo); }
+            wallViews = new List<WallView>();
+            foreach (Tile bo in myBoard.tiles) { AddTileView (bo); }
+            foreach (Wall bo in myBoard.walls) { AddWallView (bo); }
 
 			// Start off with all the right visual bells and whistles!
 			UpdateAllViewsMoveEnd ();
@@ -103,12 +106,18 @@ namespace SlideAndStick {
 			myRectTransform.anchoredPosition = new Vector2(posX,posY);
 		}
 
-		TileView AddTileView(Tile data) {
-			TileView newObj = Instantiate(resourcesHandler.slideAndStick_tileView).GetComponent<TileView>();
-			newObj.Initialize (this, data);
-			allOccupantViews.Add (newObj);
-			return newObj;
-		}
+        TileView AddTileView(Tile data) {
+            TileView newObj = Instantiate(resourcesHandler.slideAndStick_tileView).GetComponent<TileView>();
+            newObj.Initialize (this, tf_tiles, data);
+            allOccupantViews.Add (newObj);
+            return newObj;
+        }
+        WallView AddWallView(Wall data) {
+            WallView newObj = Instantiate(resourcesHandler.slideAndStick_wallView).GetComponent<WallView>();
+            newObj.Initialize (this, tf_walls, data);
+            wallViews.Add (newObj);
+            return newObj;
+        }
 
 		private void AddObjectView (BoardObject sourceObject) {
 			if (sourceObject is Tile) { AddTileView (sourceObject as Tile); }
