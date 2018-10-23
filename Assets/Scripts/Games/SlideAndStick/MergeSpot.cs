@@ -7,19 +7,29 @@ namespace SlideAndStick {
 	public class MergeSpot {
 		// Properties
 		public Vector2Int dir { get; private set; }
-		public Vector2Int pos { get; private set; }
+		public Vector2 pos { get; private set; }
+        
+        // Getters
+        public Vector2Int PosPlusDir() {
+            //return pos + dir;
+            return new Vector2Int(pos.x+dir.x, pos.y+dir.y);
+        }
         
         
-		public MergeSpot(Tile tileA, Tile tileB, Vector2Int pos, Vector2Int dir) {
-			this.pos = pos;
-			this.dir = dir;
+        public MergeSpot(Vector2 pos, Vector2Int dir) {
+            this.pos = pos;
+            this.dir = dir;
+        }
+        public MergeSpot(Tile tileA, Vector2Int pos, Vector2Int dir) {
+            this.pos = pos.ToVector2();
+            this.dir = dir;
             if (tileA.DidJustMove) {
                 ReverseDir();
             }
-		}
+        }
         
         private void ReverseDir() {
-            pos += dir;
+            pos += dir.ToVector2();
             dir = new Vector2Int(-dir.x, -dir.y);
         }
 	}

@@ -10,8 +10,16 @@ namespace SlideAndStick {
 		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
         [SerializeField] private AnimationCurve ac_locMovement=null;
-		private Vector2 sizeA;
-		private Vector2 sizeB;
+        private float unitSize;
+        private float diameter;
+        private Vector2 sizeA;
+        private Vector2 sizeB;
+        // References
+        public MergeSpot MyMergeSpot { get; private set; }
+        
+        public bool IsMergeSpot(Vector2 pos) {
+            return MyMergeSpot.pos == pos;
+        }
 
         // ----------------------------------------------------------------
         //  Initialize
@@ -19,13 +27,14 @@ namespace SlideAndStick {
         public void Initialize(TileView myTileView, TileViewBody myTileViewBody, MergeSpot myMergeSpot) {
             BoardView boardView = myTileView.MyBoardView;
             Tile myTile = myTileView.MyTile;
+            this.MyMergeSpot = myMergeSpot;
 
             // Parent jazz.
             GameUtils.ParentAndReset(this.gameObject, myTileViewBody.transform);
 
             // Size and color me, Ayla.
-            float unitSize = boardView.UnitSize;
-            float diameter = TileViewBody.GetDiameter(unitSize);
+            unitSize = boardView.UnitSize;
+            diameter = TileViewBody.GetDiameter(unitSize);
             myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
             myImage.color = myTileViewBody.BodyColor;
             

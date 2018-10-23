@@ -196,7 +196,7 @@ namespace SlideAndStick {
 		private void MaybeAddMergeLocation(Tile tileA,Tile tileB, Vector2Int footAPos, Vector2Int dir) {
 			// Yes, tileB has a footprint in this dir!
 			if (tileB.FootprintGlobal.Contains(footAPos+dir)) {
-				lastMergeSpots.Add(new MergeSpot(tileA,tileB, footAPos,dir));
+				lastMergeSpots.Add(new MergeSpot(tileA, footAPos,dir));
 			}
 		}
 

@@ -8,6 +8,8 @@ namespace SlideAndStick {
         private int colorID;
 
         // Getters
+        public bool HasFPLocal(Vector2Int pos) { return FootprintLocal.Contains(pos); }
+        public bool HasFPGlobal(Vector2Int pos) { return FootprintGlobal.Contains(pos); }
         public int ColorID { get { return colorID; } }
 
 		// ----------------------------------------------------------------

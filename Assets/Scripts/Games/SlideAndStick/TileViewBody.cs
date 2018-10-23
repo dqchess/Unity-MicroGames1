@@ -49,7 +49,7 @@ namespace SlideAndStick {
             }
         }
         // Getters (Private)
-        private bool HasFPLocal(Vector2Int pos) { return footprintLocal.Contains(pos); }
+        private bool HasFPLocal(Vector2Int pos) { return MyTile.HasFPLocal(pos); }
 		private Color GetAppliedBodyColor() { return Color.Lerp(BodyColor, Color.white, highlightAlpha); }
         private float UnitSize { get { return myTileView.MyBoardView.UnitSize; } }
         private Tile MyTile { get { return myTileView.MyTile; } }
@@ -84,6 +84,13 @@ namespace SlideAndStick {
             float diameterGap = (UnitSize - diameter) * 0.5f;
             pos += new Vector2(diameterGap*ap.dir.x, -diameterGap*ap.dir.y);
             return pos;
+        }
+        private MergeSpotView GetMergeSpotView(Vector2 bp) {
+            // BRUTE-force. Not a huge deal though.
+            for (int i=0; i<mergeSpotViews.Count; i++) {
+                if (mergeSpotViews[i].IsMergeSpot(bp)) { return mergeSpotViews[i]; }
+            }
+            return null;
         }
         
         
@@ -159,31 +166,16 @@ namespace SlideAndStick {
                 RectTransform rt = newImage.rectTransform;
                 rt.pivot = Vector2.zero;
                 rt.anchoredPosition = GetArmpitImagePos(ap);
-                float d = Mathf.Min(30, diameter); // Note: All armpit images are the same curviness, because our roundRects are sliced! Also, use Min in extreme case this would be bigger than the Tile.
-                GameUtils.SizeUIGraphic(newImage, d,d);
                 rt.localEulerAngles = new Vector3(0,0,GetArmpitImageRotation(ap));
+                // Animate in the armpit (by size)! :)
+                float d = Mathf.Min(30, diameter); // Note: All armpit images are the same curviness, because our roundRects are sliced! Also, use Min in extreme case this would be bigger than the Tile.
+                GameUtils.SizeUIGraphic(newImage, 0,0); // start at no size.
+                LeanTween.size(rt, new Vector2(d,d), 0.4f).setEaseOutQuint();
             }
         }
         // ----------------------------------------------------------------
         //  Removing Things
         // ----------------------------------------------------------------
-        //private void MaybeRemoveArmpitImage(Vector2Int sourcePos, Vector2Int sourceDir) {
-        //    ArmpitPos ap = GetArmpitPos(sourcePos, sourceDir);
-        //    if (armpitPoses.Contains(ap)) { // yeah, there's an armpit here!
-        //        armpitPoses.Remove(ap);
-        //        // Brute-force look through all my images; find the one that matches this armpit.
-        //        Vector2 imagePos = GetArmpitImagePos(ap);
-        //        foreach (Image image in allImages) {
-        //            // Armpit sprite, AND in this position? It's the image we're looking for!
-        //            if (image.sprite==s_armpitArc && image.rectTransform.anchoredPosition==imagePos) {
-        //                allImages.Remove(image);
-        //                Destroy(image.gameObject);
-        //                return;
-        //            }
-        //        }
-        //    }
-        //    Debug.LogError("Whoa, couldn't find armpit image to remove!");
-        //}
         private void RemoveArmpitImageAtCenter(Vector2 centerPos) {
             foreach (ArmpitPos ap in armpitPoses) {
                 if (ap.CenterPos() == centerPos) {
@@ -297,14 +289,37 @@ namespace SlideAndStick {
             // ONLY make MergeSpotViews for Tiles still in play!
             if (simTile.IsInPlay) {
                 Board simBoard = simTile.BoardRef;
+                // BaseUnit MergeSpots.
     			for (int i=0; i<simBoard.LastMergeSpots.Count; i++) {
     				MergeSpot ms = simBoard.LastMergeSpots[i];
-    				if (simTile.FootprintGlobal.Contains(ms.pos+ms.dir)) {
+    				if (simTile.FootprintGlobal.Contains(ms.PosPlusDir())) {
     					AddMergeSpotView(ms);
     				}
     			}
+                // Belly-button (aka between BaseUnits, aka 2x1's) MergeSpots.
+                // 1) Plan which ones we're gonna add.
+                List<MergeSpot> bbSpotsToAdd = new List<MergeSpot>();
+                for (int i=0; i<mergeSpotViews.Count; i++) {
+                    MergeSpotView msv = mergeSpotViews[i];
+                    MergeSpot ms = msv.MyMergeSpot;
+                    Vector2Int msPos = new Vector2Int(ms.pos.x,ms.pos.y);
+                    MaybeAddBetweenMergeSpot(bbSpotsToAdd, msPos,Vector2Int.B);
+                    MaybeAddBetweenMergeSpot(bbSpotsToAdd, msPos,Vector2Int.R);
+                }
+                // 2) Add the ones we planned!
+                for (int i=0; i<bbSpotsToAdd.Count; i++) {
+                    AddMergeSpotView(bbSpotsToAdd[i]);
+                }
             }
 		}
+        private void MaybeAddBetweenMergeSpot(List<MergeSpot> bbSpotsToAdd, Vector2Int msPos, Vector2Int dir) {
+            MergeSpotView msv = GetMergeSpotView((msPos+dir).ToVector2());
+            if (msv != null) {
+                MergeSpot otherMergeSpot = msv.MyMergeSpot;
+                MergeSpot newMergeSpot = new MergeSpot(msPos.ToVector2() + dir.ToVector2()*0.5f, otherMergeSpot.dir);
+                bbSpotsToAdd.Add(newMergeSpot);
+            }
+        }
 
 
 		private void DestroyMergeSpotViews() {
@@ -319,7 +334,6 @@ namespace SlideAndStick {
 			MergeSpotView obj = Instantiate(ResourcesHandler.Instance.slideAndStick_mergeSpotView).GetComponent<MergeSpotView>();
 			obj.Initialize(myTileView, this, mergeSpot);
 			mergeSpotViews.Add(obj);
-			//print(Time.frameCount + "  " + MyTile.BoardRef.tiles.IndexOf(MyTile) + "  add mergeSpot: " + mergeSpot.pos + ", dir: " + mergeSpot.dir + ". footprint size: " + MyTile.FootprintGlobal.Count);
 		}
         
         
