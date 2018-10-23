@@ -95,7 +95,7 @@ namespace SlideAndStick {
             foreach (Wall bo in myBoard.walls) { AddWallView (bo); }
 
 			// Start off with all the right visual bells and whistles!
-			UpdateAllViewsMoveEnd ();
+			UpdateAllViewsMoveEnd();
 		}
 		public void DestroySelf() {
 			// Destroy my entire GO.

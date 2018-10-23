@@ -14,6 +14,7 @@ namespace SlideAndStick {
 		// Properties
         [HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
         private bool IsLevelOver;
+        public float TimeSpentThisPlay { get; private set; }
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
         private LevelAddress myAddress;
 		private Vector2Int mousePosBoard;
@@ -76,14 +77,19 @@ namespace SlideAndStick {
 			// Reset easy stuff
 			boardSnapshots = new List<BoardData>();
 			NumMovesMade = 0;
+            ResetTimeSpentThisPlay();
 
 			// Send in the clowns!
 			RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
 		}
+        private void OnDestroy() {
+            // Make sure to increment how long we've spent in me!
+            AddToTimeSpentTotal();
+        }
 
 
-		private void RemakeModelAndViewFromData (BoardData bd) {
+        private void RemakeModelAndViewFromData (BoardData bd) {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
@@ -123,6 +129,7 @@ namespace SlideAndStick {
 
             RegisterTouchInput();
             RegisterButtonInput();
+            UpdateTimeSpentThisPlay();
 
 			if (tileGrabbing != null) {
             	boardView.UpdateSimMove(tileGrabbing, simMoveController);
@@ -208,6 +215,14 @@ namespace SlideAndStick {
 				SetTileGrabbing(board.GetTile(tileGrabbing.BoardPos));
 			}
 		}
+        private void UpdateTimeSpentThisPlay() {
+            if (!IsAnimating && !IsLevelOver) {
+                TimeSpentThisPlay += Mathf.Min(1, Time.unscaledDeltaTime); // ignore any long stretches of time between frames (we were probably inactive).
+            }
+        }
+        public void ResetTimeSpentThisPlay() {
+            TimeSpentThisPlay = 0;
+        }
 
 
         // ----------------------------------------------------------------
@@ -233,9 +248,26 @@ namespace SlideAndStick {
         }
 		public void OnWinLevel() {
 			IsLevelOver = true;
+            AddToTimeSpentTotal();
+            IncrementNumWins();
             // Tell ppl.
 			undoMoveInputController.OnWinLevel();
 		}
+        
+        
+        private void AddToTimeSpentTotal() {
+            string saveKey = SaveKeys.TimeSpentTotal(gameController.MyGameName(), MyAddress);
+            float timeSpentTotal = SaveStorage.GetFloat(saveKey,0);
+            SaveStorage.SetFloat(saveKey, timeSpentTotal+TimeSpentThisPlay);
+            print("Time spent total now: " + (timeSpentTotal+TimeSpentThisPlay));
+            ResetTimeSpentThisPlay(); // we just used it! For safety, clear it out.
+        }
+        private void IncrementNumWins() {//TODO: Check dis worx.
+            string saveKey = SaveKeys.NumWins(gameController.MyGameName(), MyAddress);
+            int numWins = SaveStorage.GetInt(saveKey,0) + 1;
+            SaveStorage.SetInt(saveKey, numWins);
+            print("Num wins now: " + numWins);
+        }
 
 
 

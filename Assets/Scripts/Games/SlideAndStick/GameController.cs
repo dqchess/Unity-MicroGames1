@@ -210,11 +210,7 @@ namespace SlideAndStick {
             levelsManager.OnCompleteLevel(currentAddress);
             level.OnWinLevel();
             fueController.OnCompleteLevel();
-//          // Update best score!
-//          int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
-//          if (scoreSolidified > bestScore) {
-//              SaveStorage.SetInt(SaveKeys.BestScore(MyGameName(),LevelIndex), scoreSolidified);
-//          }
+            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currentAddress);
             StartCoroutine(Coroutine_JustWonLevel());
         }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SlideAndStick {
+//namespace SlideAndStick {
     public struct LevelAddress {
     	// Statics
     	static public readonly LevelAddress undefined = new LevelAddress(-1, -1, -1, -1);
@@ -41,4 +41,4 @@ namespace SlideAndStick {
     		return !a.Equals(b);
     	}
     }
-}
+//}
