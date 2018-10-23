@@ -79,7 +79,6 @@ namespace SlideAndStick {
             dragAnchorPos = GetTouchPos();
         }
         private void OnTouchUp() {
-            Debug.Log(Time.frameCount + " OnTouchUp.");
             UpdateDragAxes();
 
 			if (level.CanMakeAnyMove()) {
@@ -121,7 +120,7 @@ namespace SlideAndStick {
                 SimMovePercent = GetSimMovePercent();
                 // We've gone all the way with the simulated move? Commit to it!!
                 if (SimMovePercent >= 1) {
-                    Debug.Log(Time.frameCount + " made it alllll the way. Touch held: " + InputController.Instance.IsTouchHold());
+                    //Debug.Log(Time.frameCount + " made it alllll the way. Touch held: " + InputController.Instance.IsTouchHold());
                     ExecuteSimMoveSansAnimation();
                 }
             }
@@ -136,15 +135,12 @@ namespace SlideAndStick {
 			dragAnchorPos = GetTouchPos();
 			// Nix any sim move.
 			SetSimMoveDir(Vector2Int.zero);
-            Debug.Log(Time.frameCount + " ExecuteSimMoveExecuteSimMoveExecuteSimMoveExecuteSimMove!");
+            //Debug.Log(Time.frameCount + " ExecuteSimMoveExecuteSimMoveExecuteSimMoveExecuteSimMove!");
         }
 		private void CancelSimMove() {
 			SetSimMoveDir(Vector2Int.zero);
 			level.OnCancelSimMove();
-            Debug.Log(Time.frameCount + " CANCEL sim move!");
-		}
-		public void ForceCancelSimMove() {
-			CancelSimMove();
+            //Debug.Log(Time.frameCount + " CANCEL sim move!");
 		}
         /** 1) Executes the move. 2) Skips animation and tells BoardView to just go to end result. */
         private void ExecuteSimMoveSansAnimation() {

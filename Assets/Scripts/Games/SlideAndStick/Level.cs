@@ -219,22 +219,19 @@ namespace SlideAndStick {
 			ConfirmTileGrabbing();
 			// Tell people!
 			gameController.FUEController.OnBoardMoveComplete();
-            // In fail scenario? Nullify tileOver and tileGrabbing.
-            if (board.IsInKnownFailState) {
-                SetTileOver(null);
-                ReleaseTileGrabbing();
-            }
-            
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {
                 gameController.OnBoardGoalsSatisfied();
             }
+            
+            // In fail scenario, OR the level's over? Nullify tileOver and tileGrabbing.
+            if (board.IsInKnownFailState || IsLevelOver) {
+                SetTileOver(null);
+                ReleaseTileGrabbing();
+            }
         }
 		public void OnWinLevel() {
 			IsLevelOver = true;
-			// Force a touch-up so that we reset the simBoard and stuff.
-			boardView.UpdateSimMove(tileGrabbing, simMoveController); // FIRST, update the simMove so things don't look veird when we (force) release tileGrabbing.
-			simMoveController.ForceCancelSimMove();
             // Tell ppl.
 			levelUI.OnWinLevel();
 		}

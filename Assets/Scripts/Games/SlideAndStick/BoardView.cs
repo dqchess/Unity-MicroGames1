@@ -148,7 +148,7 @@ namespace SlideAndStick {
 		//  Doers
 		// ----------------------------------------------------------------
 		private void UpdateAllViewsMoveStart() {
-            Debug.Log(Time.frameCount + " UpdateAllViewsMoveStart.");
+            //Debug.Log(Time.frameCount + " UpdateAllViewsMoveStart.");
 			AddViewsForAddedObjects();
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove();
@@ -166,7 +166,7 @@ namespace SlideAndStick {
 			ApplyObjectsAnimationLoc();
 		}
 		public void UpdateAllViewsMoveEnd() {
-            Debug.Log(Time.frameCount + " UpdateAllViewsMoveENDDDDDDD.");
+            //Debug.Log(Time.frameCount + " UpdateAllViewsMoveENDDDDDDD.");
 			areObjectsAnimating = false;
 			animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
