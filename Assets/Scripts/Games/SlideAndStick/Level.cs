@@ -195,7 +195,7 @@ namespace SlideAndStick {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
-				board.OnSetTileGrabbing(tileGrabbing); // tell Board.
+				//board.OnSetTileGrabbing(tileGrabbing); // tell Board.
                 boardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
                 // Tell the Tiles!
                 if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { boardView.Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }

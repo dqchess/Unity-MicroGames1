@@ -20,7 +20,7 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
 		private void Start () {
-			t_levelName.text = "LEVEL " + level.MyAddress.level.ToString();
+			t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
             levelCompletePopup.Hide();
         }
         

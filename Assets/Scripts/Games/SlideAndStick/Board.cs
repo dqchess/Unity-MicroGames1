@@ -153,10 +153,6 @@ namespace SlideAndStick {
                     MergeTilesAttempt(t, fpPos, Vector2Int.R);
                     MergeTilesAttempt(t, fpPos, Vector2Int.B);
                     MergeTilesAttempt(t, fpPos, Vector2Int.T);
-        //             GetTile(fpPos.x-1, fpPos.y));
-    				//MergeTilesAttempt(t, GetTile(fpPos.x+1, fpPos.y));
-    				//MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y-1));
-    				//MergeTilesAttempt(t, GetTile(fpPos.x,   fpPos.y+1));
                 }
             }
 		}
@@ -176,6 +172,12 @@ namespace SlideAndStick {
             }
 		}
 		private void MergeTiles(Tile tileA, Tile tileB) {
+            // For animations! If tileA just moved, swap the two.
+            if (tileA.DidJustMove) {
+                Tile tempTile = tileA;
+                tileA = tileB;
+                tileB = tempTile;
+            }
 			AddMergeSpots(tileA, tileB);
 			//List<Vector2Int> tileBFootGlobal = new List<Vector2Int>(tileB.FootprintGlobal); // note: copy it so we don't modify the original.
 			// Remove tileB from the board!
@@ -226,14 +228,14 @@ namespace SlideAndStick {
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);
 		}
 
-		/// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the start of the list, we can count on it always being taken out of play.
-		public void OnSetTileGrabbing(Tile _tile) {
-			// If there's a tileGrabbing, move it to the beginning of the list (so that it'll be merged last).
-			if (_tile != null) {
-				tiles.Remove(_tile);
-				tiles.Insert(0, _tile);
-			}
-		}
+		///// Weird, but MUCH easier to program: This is for the merging animation. If tileGrabbing is always at the start of the list, we can count on it always being taken out of play.
+		//public void OnSetTileGrabbing(Tile _tile) {
+		//	// If there's a tileGrabbing, move it to the beginning of the list (so that it'll be merged last).
+		//	if (_tile != null) {
+		//		tiles.Remove(_tile);
+		//		tiles.Insert(0, _tile);
+		//	}
+		//}
 
 
 
