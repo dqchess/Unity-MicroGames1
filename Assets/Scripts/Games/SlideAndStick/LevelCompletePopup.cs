@@ -6,6 +6,59 @@ using TMPro;
 
 namespace SlideAndStick {
     public class LevelCompletePopup : MonoBehaviour {
+        // Components
+        [SerializeField] private RectTransform rt_complete=null;
+        [SerializeField] private RectTransform rt_nextButton=null;
+        // Properties
+        public bool DidPressNextButton { get; private set; }
+
+
+
+
+        // ----------------------------------------------------------------
+        //  Appear / Disappear!
+        // ----------------------------------------------------------------
+        public void Hide() {
+            this.gameObject.SetActive(false);
+        }
+        public void Appear() {
+            this.gameObject.SetActive(true);
+            
+            DidPressNextButton = false; // We'll set to true when we press Next button!
+            
+            //rt_complete.anchoredPosition = new Vector2(0, rt_complete.anchoredPosition.y);
+            //float centerXPos = rt_complete.transform.localPosition.x;
+            float centerXPos = FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.width*0.5f;//150;
+            rt_complete.localPosition   = new Vector2(centerXPos+800,rt_complete.localPosition.y);
+            rt_nextButton.localPosition = new Vector2(centerXPos-800,rt_nextButton.localPosition.y);
+            LeanTween.moveX(rt_complete.gameObject,   centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0);
+            LeanTween.moveX(rt_nextButton.gameObject, centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0.11f);
+        }
+    
+    
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        public void OnPressNextButton() {
+            DidPressNextButton = true;
+            
+            float centerXPos = rt_complete.transform.localPosition.x;
+            LeanTween.moveX(rt_complete.gameObject,   centerXPos-1000, 0.5f).setEaseInQuad().setDelay(0);
+            LeanTween.moveX(rt_nextButton.gameObject, centerXPos+1000, 0.5f).setEaseInQuad().setDelay(0.1f);
+        }
+    }
+}
+
+
+/*
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+namespace SlideAndStick {
+    public class LevelCompletePopup : MonoBehaviour {
         // Constants
         private const int totalStripes = 50;
         // Components
@@ -34,7 +87,7 @@ namespace SlideAndStick {
                 newObj.transform.SetAsFirstSibling(); // put behind everything
                 newObj.name = "BackingStripe"+i;
                 newObj.rectTransform.anchorMax = newObj.rectTransform.anchorMin = new Vector2(0,1);
-                newObj.rectTransform.sizeDelta = new Vector2(mySize.x, stripeHeight*2); //HACK TEMP TEST give a lil' extra bloat so there's def no empty space.
+                newObj.rectTransform.sizeDelta = new Vector2(mySize.x, stripeHeight*2); // TEMP TEST give a lil' extra bloat so there's def no empty space.
                 newObj.rectTransform.pivot = new Vector2(0, 1);
                 newObj.rectTransform.anchoredPosition = new Vector2(0, -(i*2)*stripeHeight);
                 stripesL[i] = newObj;
@@ -48,7 +101,7 @@ namespace SlideAndStick {
                 newObj.name = "BackingStripe"+i;
                 newObj.rectTransform.anchorMax = newObj.rectTransform.anchorMin = new Vector2(1,1);
                 newObj.rectTransform.pivot = new Vector2(1, 1);
-                newObj.rectTransform.sizeDelta = new Vector2(mySize.x, stripeHeight*2); //HACK TEMP TEST give a lil' extra bloat so there's def no empty space.
+                newObj.rectTransform.sizeDelta = new Vector2(mySize.x, stripeHeight*2); // TEMP TEST give a lil' extra bloat so there's def no empty space.
                 newObj.rectTransform.anchoredPosition = new Vector2(0, -(i*2+1)*stripeHeight);
                 stripesR[i] = newObj;
             }
@@ -103,3 +156,4 @@ namespace SlideAndStick {
         }
     }
 }
+*/

@@ -79,7 +79,7 @@ namespace SlideAndStick {
 		//  Doers - Loading Level
 		// ----------------------------------------------------------------
         private IEnumerator Coroutine_JustWonLevel() {
-            yield return new WaitForSecondsRealtime(0.6f);
+            yield return new WaitForSecondsRealtime(0.32f);
 
             // Wait until there's no touch on the screen.
             while (inputController.IsTouchHold()) { yield return null; }
@@ -89,6 +89,7 @@ namespace SlideAndStick {
             popup.Appear();
             while (!popup.DidPressNextButton) { yield return null; }
             
+            //yield return new WaitForSecondsRealtime(0.1f);
             SetCurrentLevel(currentAddress.NextLevel, true);
         }
         private bool didPressLevelCompletePopupNextButton;
