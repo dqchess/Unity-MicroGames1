@@ -23,6 +23,7 @@ namespace SlideAndStick {
         private Board simMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
 		private Level levelRef;
 		// Variable Properties
+        public bool IsInitializing { get; private set; }
 		private bool areObjectsAnimating;
 		private float animLoc; // eases to 0 or 1 while we're animating!
         private float animLocVel;
@@ -72,6 +73,8 @@ namespace SlideAndStick {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public void Initialize (Level _levelRef, Board _myBoard) {
+            IsInitializing = true;
+        
 			levelRef = _levelRef;
 			myBoard = _myBoard;
 			GameUtils.ParentAndReset(this.gameObject, levelRef.transform);
@@ -96,6 +99,8 @@ namespace SlideAndStick {
 
 			// Start off with all the right visual bells and whistles!
 			UpdateAllViewsMoveEnd();
+            
+            IsInitializing = false;
 		}
 		public void DestroySelf() {
 			// Destroy my entire GO.

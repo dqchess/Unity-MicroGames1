@@ -98,12 +98,13 @@ public class FBAnalyticsController : MonoBehaviour {
         int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelAddress));
         if (numWins > 1) { return; }
 
-        int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelAddress), 0);
+        //int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelAddress), 0);
         float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelAddress), 0);
 
         var parameters = new Dictionary<string, object>();
         parameters["Game"] = gameName;
-        parameters[AppEventParameterName.Level] = levelAddress.ToString();
+        parameters[AppEventParameterName.Level] = levelAddress.level;
+        parameters["Collection"] = levelAddress.collection;
         //parameters["numLosses"] = numLosses;
         parameters["timeSpentTotal"] = timeSpentTotal;
         FB.LogAppEvent(

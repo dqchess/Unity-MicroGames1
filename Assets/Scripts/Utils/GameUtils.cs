@@ -116,7 +116,8 @@ public class GameUtils {
 //		}
 //		mesh.transform.localScale = new Vector3 (desiredWidth/imgW, desiredHeight/imgH);
 //	}
-	static public void SizeUIGraphic (UnityEngine.UI.Graphic uiGraphic, float desiredWidth,float desiredHeight) {//, bool doPreserveRatio=false) {
+    static public void SizeUIGraphic (UnityEngine.UI.Graphic uiGraphic, Vector2 size) { SizeUIGraphic(uiGraphic, size.x,size.y); }
+    static public void SizeUIGraphic (UnityEngine.UI.Graphic uiGraphic, float desiredWidth,float desiredHeight) {//, bool doPreserveRatio=false) {
 //		uiGraphic.rectTransform.localScale = Vector2.one;
 //		float imgW = uiGraphic.rectTransform.sizeDelta.bounds.size.x;
 //		float imgH = sprite.sprite.bounds.size.y;

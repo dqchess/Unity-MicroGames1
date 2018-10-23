@@ -169,8 +169,14 @@ namespace SlideAndStick {
                 rt.localEulerAngles = new Vector3(0,0,GetArmpitImageRotation(ap));
                 // Animate in the armpit (by size)! :)
                 float d = Mathf.Min(30, diameter); // Note: All armpit images are the same curviness, because our roundRects are sliced! Also, use Min in extreme case this would be bigger than the Tile.
-                GameUtils.SizeUIGraphic(newImage, 0,0); // start at no size.
-                LeanTween.size(rt, new Vector2(d,d), 0.4f).setEaseOutQuint();
+                Vector2 finalSize = new Vector2(d,d);
+                if (myTileView.MyBoardView.IsInitializing) { // Initializing? Oh, ok, don't animate.
+                    GameUtils.SizeUIGraphic(newImage, finalSize);
+                }
+                else { // Not initializing? DO animate!
+                    GameUtils.SizeUIGraphic(newImage, 0,0); // start at no size.
+                    LeanTween.size(rt, finalSize, 0.4f).setEaseOutQuint();
+                }
             }
         }
         // ----------------------------------------------------------------
