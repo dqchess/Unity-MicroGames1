@@ -56,6 +56,15 @@ namespace SlideAndStick {
 		public Vector2 BoardToGlobal(BoardPos bp) { return new Vector2(BoardToXGlobal(bp.col), BoardToYGlobal(bp.row)); }
 		//	public float XToBoard(float x) { return Pos.x + col*unitSize; }
 		//	public float YToBoard(float y) { return Pos.y - row*unitSize; }
+        
+        private bool IsAnimLocAtTarget() {
+            return Mathf.Abs (animLocTarget-animLoc) < 0.01f && Mathf.Abs(animLocVel)<0.01f;
+        }
+        private bool IsFinishedAnimating() {
+            // We don't consider an animation finished if animLocTarget is between 0 or 1. (That's mid-move sliding territory.)
+            if (animLocTarget!=0 || animLocTarget!=1) { return false; }
+            return IsAnimLocAtTarget();
+        }
 
 
 		// ----------------------------------------------------------------
@@ -139,6 +148,7 @@ namespace SlideAndStick {
 		//  Doers
 		// ----------------------------------------------------------------
 		private void UpdateAllViewsMoveStart() {
+            Debug.Log(Time.frameCount + " UpdateAllViewsMoveStart.");
 			AddViewsForAddedObjects();
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove();
@@ -155,7 +165,8 @@ namespace SlideAndStick {
 			// Do this for safety.
 			ApplyObjectsAnimationLoc();
 		}
-		private void UpdateAllViewsMoveEnd() {
+		public void UpdateAllViewsMoveEnd() {
+            Debug.Log(Time.frameCount + " UpdateAllViewsMoveENDDDDDDD.");
 			areObjectsAnimating = false;
 			animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
@@ -167,14 +178,14 @@ namespace SlideAndStick {
         private void OnAnimLocReachTarget() {
             UpdateAllViewsMoveEnd();
             
-            if (doBonusAnimBounce) {
-                doBonusAnimBounce = false;
-                BoardOccupant bo = myBoard.GetTile(lastTileGrabbedPos);
-                SetSimMoveDirAndBoard(bo, prevSimMoveDir);
-                //animLocVel = 0.1f;TODO Maybe flip this?
-                //animLoc = 0.2f; // TEMP TEST!
-                animLocTarget = 0;
-            }
+            //if (doBonusAnimBounce) {QQQ
+            //    doBonusAnimBounce = false;
+            //    BoardOccupant bo = myBoard.GetTile(lastTileGrabbedPos);
+            //    SetSimMoveDirAndBoard(bo, prevSimMoveDir);
+            //    //animLocVel = 0.1f;TODO Maybe flip this?
+            //    //animLoc = 0.2f; // TEMP TEST!
+            //    animLocTarget = 0;
+            //}
         }
 
 		private void AddViewsForAddedObjects() {
@@ -207,10 +218,12 @@ namespace SlideAndStick {
         private void ClearSimMoveDirAndBoard() {
             simMoveDir = Vector2Int.zero;
 			simMoveBoard = null;
-			// Animate all views back to their original positions.
-			areObjectsAnimating = true;
-            //animLocVel = 0.08f;
-			//animLocTarget = 0;
+            // Not at target loc? Say we're animating!
+            if (!IsFinishedAnimating()) {
+    			areObjectsAnimating = true;
+                //animLocVel = 0.08f;
+                //animLocTarget = 0;
+            }
             // TODO: Fix this...
             //prevSimMoveDir = new Vector2Int(prevSimMoveDir.x, -prevSimMoveDir.y); // when we CLEAR the simMove, we wanna "revert" poses, aka "bounce back" in *other* direction.
         }
@@ -296,7 +309,7 @@ namespace SlideAndStick {
 		//  Update
 		// ----------------------------------------------------------------
 		private void FixedUpdate() {
-			print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
+			//print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
 			if (areObjectsAnimating) {
                 animLocVel *= 0.75f;
 				animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;
@@ -304,7 +317,7 @@ namespace SlideAndStick {
                 
     //            animLoc += (animLocTarget-animLoc) * 0.1f;//AnimationEasing;
 				ApplyObjectsAnimationLoc ();
-				if (Mathf.Abs (animLocTarget-animLoc) < 0.01f && Mathf.Abs(animLocVel)<0.01f) {
+				if (IsAnimLocAtTarget()) {
 					OnAnimLocReachTarget();
 				}
 			}

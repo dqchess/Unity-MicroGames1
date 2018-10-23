@@ -122,7 +122,7 @@ namespace SlideAndStick {
                 // We've gone all the way with the simulated move? Commit to it!!
                 if (SimMovePercent >= 1) {
                     Debug.Log(Time.frameCount + " made it alllll the way. Touch held: " + InputController.Instance.IsTouchHold());
-                    ExecuteSimMove();
+                    ExecuteSimMoveSansAnimation();
                 }
             }
         }
@@ -146,6 +146,13 @@ namespace SlideAndStick {
 		public void ForceCancelSimMove() {
 			CancelSimMove();
 		}
+        /** 1) Executes the move. 2) Skips animation and tells BoardView to just go to end result. */
+        private void ExecuteSimMoveSansAnimation() {
+            // 1) Execute the move.
+            ExecuteSimMove();
+            // 2) Skip animation to end result.
+            level.BoardView.UpdateAllViewsMoveEnd();
+        }
 
 
         // ----------------------------------------------------------------
