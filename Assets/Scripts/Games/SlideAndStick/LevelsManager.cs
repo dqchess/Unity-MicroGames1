@@ -70,6 +70,15 @@ namespace SlideAndStick {
                 return new LevelAddress(0,0,0,0);
             }
         }
+        
+        public int GetNumLevelsPlayable(int collection) {
+            PackCollectionData packCollectionData = GetPackCollectionData(0, collection);
+            return packCollectionData.PackDatas[0].NumLevelsPlayable;
+        }
+        public int GetNumLevelsCompleted(int collection) {
+            PackCollectionData packCollectionData = GetPackCollectionData(0, collection);
+            return packCollectionData.PackDatas[0].NumLevelsCompleted;
+        }
     
     
         // ----------------------------------------------------------------

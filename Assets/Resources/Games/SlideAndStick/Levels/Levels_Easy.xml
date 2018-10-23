@@ -11,7 +11,7 @@
 <LevelPack packName="Easy">
 <Levels>
 
-	<!-- TESTS! -->
+	<!-- TESTS! - ->
     <Level diff="0" name="test" layout="
     	1.10,
     	..0.,
@@ -662,6 +662,8 @@
 	
 	
 	
+    <Level diff="0" layout="
+    " />
 	
     <Level diff="0" layout="
 		.....,

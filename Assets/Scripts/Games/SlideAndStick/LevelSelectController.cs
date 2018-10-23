@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace SlideAndStick {
     public class LevelSelectController : MonoBehaviour {
+        // Components
+        [SerializeField] private TextMeshProUGUI t_progressEasy=null;
+        [SerializeField] private TextMeshProUGUI t_progressMed=null;
+        [SerializeField] private TextMeshProUGUI t_progressHard=null;
     
         // events
         public void OnClick_Easy() { StartGameAtCollection(0); }
@@ -11,19 +16,32 @@ namespace SlideAndStick {
         public void OnClick_Hard() { StartGameAtCollection(2); }
         
         
-        private void StartGameAtCollection(int collection) {
+        private LevelAddress GetLastPlayedAddress(int collection) {
             LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
             string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(collectionAdd);
-            LevelAddress lastPlayedAdd;
             if (SaveStorage.HasKey(key)) { // We've got it saved! Load 'er up.
-                lastPlayedAdd = LevelAddress.FromString(SaveStorage.GetString(key));
+                return LevelAddress.FromString(SaveStorage.GetString(key));
             }
             else { // Oh, there was no save data. Use collectionAdd to start at the first level in the collection.
-                lastPlayedAdd = collectionAdd;
+                return collectionAdd;
             }
-            LevelsManager.Instance.selectedAddress = lastPlayedAdd; // Setting this is optional. Just keepin' it consistent.
+        }
+        
+        
+        private void Start() {
+            // Update progress texts!
+            LevelsManager lm = LevelsManager.Instance;
+            t_progressEasy.text = lm.GetNumLevelsCompleted(0) + "/" + lm.GetNumLevelsPlayable(0);
+            t_progressMed.text  = lm.GetNumLevelsCompleted(1) + "/" + lm.GetNumLevelsPlayable(1);
+            t_progressHard.text = lm.GetNumLevelsCompleted(2) + "/" + lm.GetNumLevelsPlayable(2);
+        }
+        
+        
+        private void StartGameAtCollection(int collection) {
+            LevelAddress lastPlayedAddress = GetLastPlayedAddress(collection);
+            LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
             
-            LoadLevel(lastPlayedAdd);
+            LoadLevel(lastPlayedAddress);
         }
         
         

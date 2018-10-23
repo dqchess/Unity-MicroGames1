@@ -7,18 +7,18 @@ namespace SlideAndStick {
     public class PackData {
     	// Properties
     	private LevelAddress myAddress;
-    	private int numLevelsCompleted;
+        public int NumLevelsCompleted { get; private set; }
+        public int NumLevelsPlayable { get; private set; }
     	private string packName;
     	private List<LevelData> levelDatas; // by levelIndex. ALL level datas in this world! Loaded up when WE'RE loaded up.
     //	// References
     //	private PackCollectionData myCollectionData;
     
     	// Getters
-    	public bool DidCompleteAllLevels { get { return numLevelsCompleted >= NumLevels; } }
+    	public bool DidCompleteAllLevels { get { return NumLevelsCompleted >= NumLevels; } }
     	public LevelAddress MyAddress { get { return myAddress; } }
     	public int NumLevels { get { return levelDatas.Count; } }
-    	public int NumLevelsCompleted { get { return numLevelsCompleted; } }
-    	public string PackName { get { return packName; } }
+        public string PackName { get { return packName; } }
     	public System.Collections.ObjectModel.ReadOnlyCollection<LevelData> LevelDatas { get { return levelDatas.AsReadOnly(); } }
     	public LevelData GetLevelData (LevelAddress levelAddress) { return GetLevelData (levelAddress.level); }
     	public LevelData GetLevelData (int index) {
@@ -52,6 +52,7 @@ namespace SlideAndStick {
     			levelDatas.Add (newLD);
     		}
     		// Update this value now that we've got our datas.
+            UpdateNumLevelsPlayable();
     		UpdateNumLevelsCompleted();
     	}
     
@@ -67,10 +68,19 @@ namespace SlideAndStick {
     		else { Debug.LogError ("LevelData is null for OnCompleteLevel. Hmm."); } // Hmm.
     		UpdateNumLevelsCompleted ();
     	}
+        private void UpdateNumLevelsPlayable() {
+            NumLevelsPlayable = 0;
+            for (int i=0; i<NumLevels; i++) {
+                if (GetLevelData(i).boardData.tileDatas.Count == 0) {
+                    NumLevelsPlayable = i;
+                    break;
+                }
+            }
+        }
     	public void UpdateNumLevelsCompleted () {
-    		numLevelsCompleted = 0;
+    		NumLevelsCompleted = 0;
     		for (int i=0; i<NumLevels; i++) {
-    			if (GetLevelData(i).DidCompleteLevel) { numLevelsCompleted ++; }
+    			if (GetLevelData(i).DidCompleteLevel) { NumLevelsCompleted ++; }
     		}
     	}
     

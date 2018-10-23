@@ -42,9 +42,9 @@ namespace SlideAndStick {
         public void OnPressNextButton() {
             DidPressNextButton = true;
             
-            float centerXPos = rt_complete.transform.localPosition.x;
-            LeanTween.moveX(rt_complete.gameObject,   centerXPos-1000, 0.5f).setEaseInQuad().setDelay(0);
-            LeanTween.moveX(rt_nextButton.gameObject, centerXPos+1000, 0.5f).setEaseInQuad().setDelay(0.1f);
+            //float centerXPos = rt_complete.transform.localPosition.x;
+            //LeanTween.moveX(rt_complete.gameObject,   centerXPos-1000, 0.5f).setEaseInQuad().setDelay(0);
+            //LeanTween.moveX(rt_nextButton.gameObject, centerXPos+1000, 0.5f).setEaseInQuad().setDelay(0.1f);
         }
     }
 }

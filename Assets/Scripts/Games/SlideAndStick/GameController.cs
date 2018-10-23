@@ -207,6 +207,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
         private void WinLevel() {
             // Tell people!
+            levelsManager.OnCompleteLevel(currentAddress);
             level.OnWinLevel();
             fueController.OnCompleteLevel();
 //          // Update best score!
