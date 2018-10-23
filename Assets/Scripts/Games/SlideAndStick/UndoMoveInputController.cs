@@ -12,9 +12,9 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		private float undoLoc; // when this hits past 1, we say to undo a move (and reset its value)!
 		private float undoVel;
 		// References
-		[SerializeField] private Level level;
-		[SerializeField] private Button restartLevelButton;
-		[SerializeField] private UndoMoveButton undoButton;
+		[SerializeField] private Level level=null;
+		[SerializeField] private Button restartLevelButton=null;
+		[SerializeField] private UndoMoveButton undoButton=null;
 
 		// Getters (Public)
 		public RectTransform rt_undoButton { get { return undoButton.GetComponent<RectTransform>(); } }
@@ -47,7 +47,9 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			}
 		}
 
-		// doers
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
 		public void SetButtonsVisible(bool _isVisible) {
 			undoButton.gameObject.SetActive(_isVisible);
 			restartLevelButton.gameObject.SetActive(_isVisible);
@@ -67,6 +69,12 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		// ----------------------------------------------------------------
 		//  Game Events
 		// ----------------------------------------------------------------
+        public void OnBoardMade() {
+            SetButtonsVisible(true);
+        }
+        public void OnWinLevel() {
+            SetButtonsVisible(false);
+        }
 		public void OnNumMovesMadeChanged(int numMovesMade) {
 			undoButton.interactable = numMovesMade > 0;
 			restartLevelButton.interactable = numMovesMade > 0;

@@ -93,6 +93,7 @@ namespace SlideAndStick {
 			boardView.Initialize (this, board);
             // Tell ppl!
             levelUI.OnBoardMade();
+            undoMoveInputController.OnBoardMade();
 		}
 		private void DestroyBoardModelAndView () {
 			// Nullify the model (there's nothing to destroy).
@@ -233,7 +234,7 @@ namespace SlideAndStick {
 		public void OnWinLevel() {
 			IsLevelOver = true;
             // Tell ppl.
-			levelUI.OnWinLevel();
+			undoMoveInputController.OnWinLevel();
 		}
 
 

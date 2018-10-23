@@ -59,9 +59,11 @@ namespace SlideAndStick {
         }
     
         public LevelAddress GetLastPlayedLevelAddress() {
+            if (selectedAddress == LevelAddress.undefined) { selectedAddress = LevelAddress.zero; } // hacky make sure it's not -1s. (Why do we even have it start at undefined?..)
             // Save data? Use it!
-            if (SaveStorage.HasKey (SaveKeys.SlideAndStick_LastPlayedLevelAddress)) { 
-                return LevelAddress.FromString (SaveStorage.GetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress));
+            string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(selectedAddress);
+            if (SaveStorage.HasKey(key)) { 
+                return LevelAddress.FromString (SaveStorage.GetString (key));
             }
             // No save data. Default to the first level, I guess.
             else {

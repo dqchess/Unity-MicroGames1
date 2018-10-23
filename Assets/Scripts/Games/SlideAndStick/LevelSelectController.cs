@@ -12,10 +12,18 @@ namespace SlideAndStick {
         
         
         private void StartGameAtCollection(int collection) {
-            //LevelAddress lastPlayedAddress = LevelAddress.FromString(SaveStorage.GetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress));
-            //LevelsManager.Instance.selectedAddress = address; // Setting this is optional. Just keepin' it consistent.
+            LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
+            string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(collectionAdd);
+            LevelAddress lastPlayedAdd;
+            if (SaveStorage.HasKey(key)) { // We've got it saved! Load 'er up.
+                lastPlayedAdd = LevelAddress.FromString(SaveStorage.GetString(key));
+            }
+            else { // Oh, there was no save data. Use collectionAdd to start at the first level in the collection.
+                lastPlayedAdd = collectionAdd;
+            }
+            LevelsManager.Instance.selectedAddress = lastPlayedAdd; // Setting this is optional. Just keepin' it consistent.
             
-            LoadLevel(new LevelAddress(0, collection, 0, 0));
+            LoadLevel(lastPlayedAdd);
         }
         
         
@@ -35,7 +43,7 @@ namespace SlideAndStick {
     
         public void LoadLevel (LevelAddress address) {
             LevelsManager.Instance.selectedAddress = address; // Setting this is optional. Just keepin' it consistent.
-            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress, address.ToString()); // Actually save the value! That's what GameController pulls in.
+            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress(address), address.ToString()); // Actually save the value! That's what GameController pulls in.
             OpenScene (SceneNames.Gameplay(GameNames.SlideAndStick));
         }
         private void OpenTutorial() {

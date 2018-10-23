@@ -168,7 +168,7 @@ namespace SlideAndStick {
             // Tell people!
             fueController.OnStartLevel(level);
             // Save values!
-            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress, currentAddress.ToString());
+            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currentAddress), currentAddress.ToString());
         }
         
         
