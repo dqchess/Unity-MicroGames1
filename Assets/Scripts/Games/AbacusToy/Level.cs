@@ -164,7 +164,7 @@ namespace AbacusToy {
 
         private void RegisterButtonInput() {
             // DEBUG
-            if (Input.GetKeyDown(KeyCode.T)) { Debug_PrintLevelLayout(); }
+            if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(); }
         }
 
         private void RegisterTouchInput() {
@@ -301,12 +301,6 @@ namespace AbacusToy {
             //gameController.FUEController.OnUndoMove();
             // Tie up loose ends by "completing" this move!
             OnBoardMoveComplete();
-        }
-
-        private void Debug_PrintLevelLayout() {
-            string str = "\n";//\nLEVEL - \n";
-            str += board.Debug_GetBoardLayout();
-            GameUtils.CopyToClipboard(str);
         }
 
     }

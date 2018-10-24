@@ -11,33 +11,95 @@
 <LevelPack packName="Easy">
 <Levels>
 
+<!--
     <Level diff="1" name="IntroGame1" fueID="1" layout="
         ...,
         0.0,
-        0..,
+        ...,
     " />
-    <Level diff="1" name="IntroGame2" fueID="2" layout="
-        1.1,
-        0.0,
-        0..,
+-->
+
+    <Level diff="2" layout="
+		......,
+		......,
+		..01..,
+		..10..,
+		......,
+		......,
     " />
-    <Level diff="1" name="IntroGame3" layout="
-        2.3,
-        2.2,
-        33.,
+    <Level diff="0" layout="
+		.......,
+		.......,
+		..100..,
+		..000..,
+		..001..,
+		.......,
+		.......,
     " />
-    <Level diff="1" name="IntroToUndo" fueID="introToUndo" layout="
-        1.1,
-        010,
-        0.0,
+
+    <Level diff="0" doTilesTow="false" layout="
+		...,
+		100,
+		000,
+		001,
+    " />
+    <Level diff="0" doTilesTow="false" layout="
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
     " />
 
 
-    <Level diff="1" desc="clearly handmade" layout="
-        ..10,
-        ..11,
-        00..,
-        10..,
+
+
+
+
+    <Level diff="0" layout=" ......., ......., ......., ......., ......., ......., .......," />
+
+    <Level diff="0" randGroupSize="2" layout=" ......., ......., ......., ......., ......., ......., .......," />
+    <Level diff="0" randGroupSize="3" layout=" ......., ......., ......., ......., ......., ......., .......," />
+    <Level diff="0" randGroupSize="2" layout=" ........, ........, ........, ........, ........, ........, ........, ........," />
+    <Level diff="0" randGroupSize="3" layout=" ........, ........, ........, ........, ........, ........, ........, ........," />
+    <Level diff="0" randGroupSize="2" layout=" ........., ........., ........., ........., ........., ........., ........., ........., ........., " />
+    <Level diff="0" randGroupSize="3" layout=" ........., ........., ........., ........., ........., ........., ........., ........., ........., " />
+    <Level diff="0" randGroupSize="5" layout=" ........., ........., ........., ........., ........., ........., ........., ........., ........., " />
+
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+	
+
+
+
+    <Level diff="0" layout="
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
+		.......,
+    " />
+    <Level diff="0" layout="
+		........,
+		........,
+		........,
+		........,
+		........,
+		........,
+		........,
+		........,
     " />
 	
 	

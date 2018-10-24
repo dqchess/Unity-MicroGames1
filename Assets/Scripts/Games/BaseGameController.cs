@@ -89,7 +89,7 @@ abstract public class BaseGameController : MonoBehaviour {
 		bool isKey_control = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
 		// T = Toggle slow-mo
-		if (Input.GetKeyDown (KeyCode.T)) {
+		if (Input.GetKeyDown (KeyCode.L)) {
 			ToggleSlowMo();
 		}
 		// ESCAPE or P = Toggle pause

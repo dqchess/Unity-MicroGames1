@@ -9,20 +9,17 @@ namespace AbacusToy {
         [SerializeField] private TileViewBody body=null;
         [SerializeField] private TileViewBody bodyShadow=null;
         [SerializeField] private Text t_debugText=null;
-		// References
-		private Tile myTile;
+        // References
+        public Tile MyTile { get; private set; }
 
-        // Getters (Public)
-        public Tile MyTile { get { return myTile; } }
-        
-        
 
-		// ----------------------------------------------------------------
-		//  Initialize
-		// ----------------------------------------------------------------
-		public void Initialize (BoardView _myBoardView, Transform tf_parent, Tile _myObj) {
+
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public void Initialize (BoardView _myBoardView, Transform tf_parent, Tile _myObj) {
 			base.InitializeAsBoardOccupantView (_myBoardView, tf_parent, _myObj);
-			myTile = _myObj;
+			MyTile = _myObj;
             body.Initialize();
             bodyShadow.Initialize();
 		}
@@ -38,7 +35,7 @@ namespace AbacusToy {
             bodyShadow.UpdateVisualsPostMove();
             
             t_debugText.text = "";//MyTile.GroupID.ToString();
-            t_debugText.text = myTile.ColorID.ToString();
+            //t_debugText.text = MyTile.ColorID.ToString();
 		}
 
 

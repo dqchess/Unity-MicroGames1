@@ -6,8 +6,10 @@ namespace AbacusToy {
 	[System.Serializable]
 	public class Board {
 		// Properties
-		private bool areGoalsSatisfied;
-		private int numCols,numRows;
+        public bool DoTilesTow { get; private set; } // if FALSE, then we just have basic 16-sliding puzzle mechanic. If TRUE, we have our special towing mechanic!
+        private bool areGoalsSatisfied;
+        private int numCols,numRows;
+        private int randGroupSize;
         public int ParMoves { get; private set; }
         public int NumFootprintsDown { get; set; } // For in-progress moves. We don't wanna do groupfinding/islandtugging unless all footprints are down.
 		// Objects
@@ -39,6 +41,8 @@ namespace AbacusToy {
 		public BoardData SerializeAsData() {
 			BoardData bd = new BoardData(numCols,numRows);
             bd.parMoves = ParMoves;
+            bd.doTilesTow = DoTilesTow;
+            bd.randGroupSize = randGroupSize;
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<numCols; col++) {
 				for (int row=0; row<numRows; row++) {
@@ -57,6 +61,8 @@ namespace AbacusToy {
 			numCols = bd.numCols;
 			numRows = bd.numRows;
             ParMoves = bd.parMoves;
+            DoTilesTow = bd.doTilesTow;
+            randGroupSize = bd.randGroupSize;
             NumFootprintsDown = 0;
 
 			// Add all gameplay objects!
@@ -140,22 +146,26 @@ namespace AbacusToy {
         }
 		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
 			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 1);
+				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 2);
                 if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
 				//int colorID = Random.Range(0, numColors);
-                int colorID = Mathf.FloorToInt(i/2f);
+                int colorID = Mathf.FloorToInt(i/(float)randGroupSize);
 				AddTile(randPos, colorID);
 			}
 		}
-        public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
-            string boardString = Debug_GetBoardLayout();
+        public void Debug_PrintLayout(bool isCompact) {
+            string boardString = Debug_GetLayout(isCompact);
             Debug.Log (boardString);
-            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
         }
-        public string Debug_GetBoardLayout() {
+        public void Debug_CopyLayoutToClipboard() {
+            string str = "";//"\n";
+            str += Debug_GetLayout(true);
+            GameUtils.CopyToClipboard(str);
+        }
+        public string Debug_GetLayout(bool isCompact) {
             string str = "";
             for (int row=0; row<NumRows; row++) {
-                str += "        "; // put it on my tab!
+                str += isCompact ? " " : "        "; // put it on my tab!
                 for (int col=0; col<NumCols; col++) {
                     BoardSpace space = GetSpace(col,row);
                     Tile tile = GetTile(col,row);
@@ -164,7 +174,7 @@ namespace AbacusToy {
                     else { str += "."; }
                 }
                 str += ",";
-                if (row<NumRows-1) { str += "\n"; }
+                if (!isCompact && row<NumRows-1) { str += "\n"; }
             }
             return str;
         }

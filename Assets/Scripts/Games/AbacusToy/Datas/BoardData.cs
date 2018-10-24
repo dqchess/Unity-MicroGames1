@@ -7,10 +7,12 @@ namespace AbacusToy {
         // Constants
         private readonly char[] LINE_BREAKS_CHARS = new char[] { ',' }; // our board layouts are comma-separated (because XML's don't encode line breaks).
         // Properties
+        public bool doTilesTow;
         public int devRating;
         public int difficulty;
         public int parMoves;
         public int numCols,numRows;
+        public int randGroupSize;
         public string fueID; // which tutorial this is gonna be!
         // BoardObjects
         public BoardSpaceData[,] spaceDatas;
@@ -47,7 +49,9 @@ namespace AbacusToy {
         public BoardData(BoardDataXML bdxml) {
             difficulty = bdxml.difficulty;
             devRating = bdxml.devRating;
+            doTilesTow = bdxml.doTilesTow;
             parMoves = bdxml.parMoves;
+            randGroupSize = bdxml.randGroupSize;
             fueID = bdxml.fueID;
             string[] layoutArray = GetLevelStringArrayFromLayoutString(bdxml.layout);
         

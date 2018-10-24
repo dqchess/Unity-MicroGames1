@@ -125,7 +125,7 @@ namespace AbacusToy {
 			bo.AddMyFootprint ();
             
             // Are ALL TILES on the Board? Ok! We can check for and tow along any islands!
-            if (b.NumFootprintsDown >= b.tiles.Count) {
+            if (b.DoTilesTow && b.NumFootprintsDown >= b.tiles.Count) {
                 CalculateAndTowIslandGroups(b, bo, dir);
             }
 
@@ -135,7 +135,7 @@ namespace AbacusToy {
         
         /// NOTE: This function doesn't account for bigger footprints! (No need to support that right now.)
         private static void CalculateAndTowIslandGroups(Board b, BoardOccupant boJustMoved, Vector2Int dir) {
-            if (stepSnapshots!=null) { stepSnapshots.Add(b.Debug_GetBoardLayout()); }
+            if (stepSnapshots!=null) { stepSnapshots.Add(b.Debug_GetLayout(false)); }
             
             int numGroups;//List<List<Tile>> groups;
             Vector2Int newlyVacantPos = boJustMoved.BoardPos.ToVector2Int() - dir; // The pos that was just vacated before this function was called.
