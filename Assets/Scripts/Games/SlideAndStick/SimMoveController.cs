@@ -15,9 +15,11 @@ namespace SlideAndStick {
 		// References
 		private Level level;
 
-        // Getters
+        // Getters (Public)
         public float SimMovePercent { get; private set; } // from 0 to 1. BoardView uses this value.
         public Vector2Int SimMoveDir { get; private set; }
+        // Getters (Private)
+        private bool CanExecuteSimMove { get { return level.BoardView.CanExecuteSimMove; } } // NOTE: This access is sloppy. *I* should be managing the whole sim board and move results!!
 
 //        private bool IsTouch() { return (Input.touchSupported && Input.touchCount>0) || Input.GetMouseButton(0); }
         private Vector2 GetTouchPos() {
@@ -83,7 +85,7 @@ namespace SlideAndStick {
 
 			if (level.CanMakeAnyMove()) {
 	            // Far enough into LEGAL simulated move? Execute it!
-				if (SimMovePercent > 0.5f && level.BoardView.CanExecuteSimMove) { // NOTE: This access is sloppy. *I* should be managing the whole sim board and move results!!
+				if (SimMovePercent > 0.5f && CanExecuteSimMove) {
 	                ExecuteSimMove();
 	            }
 				// Otherwise, cancel it.
@@ -118,10 +120,16 @@ namespace SlideAndStick {
             // We have a simMoveDir?? Update simMovePercent!
             if (SimMoveDir != Vector2Int.zero) {
                 SimMovePercent = GetSimMovePercent();
-                // We've gone all the way with the simulated move? Commit to it!!
+                // We've gone all the way with the simulated move??
                 if (SimMovePercent >= 1) {
-                    //Debug.Log(Time.frameCount + " made it alllll the way. Touch held: " + InputController.Instance.IsTouchHold());
-                    ExecuteSimMoveSansAnimation();
+                    // We CAN move?! Do!!
+                    if (CanExecuteSimMove) {
+                        ExecuteSimMoveSansAnimation();
+                    }
+                    // We CAN'T move. Limit the percent a bunch.
+                    else {
+                        SimMovePercent = Mathf.Pow(SimMovePercent, 0.2f);
+                    }
                 }
             }
         }

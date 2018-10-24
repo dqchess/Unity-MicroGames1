@@ -13,6 +13,12 @@
 
 	<!-- TESTS! - ->
     <Level diff="0" name="test" layout="
+        1...,
+        ....,
+        ....,
+        ...1,
+    " />
+    <Level diff="0" name="test" layout="
     	1.10,
     	..0.,
     	1...,

@@ -28,11 +28,11 @@ namespace SlideAndStick {
 		private float animLoc; // eases to 0 or 1 while we're animating!
         private float animLocVel;
 		private float animLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
-		private MoveResults simMoveResult;
-		private Vector2Int simMoveDir;
+        private MoveResults simMoveResult;
+        private Vector2Int simMoveDir;
 
-		// Getters (Public)
-		public bool CanExecuteSimMove { get { return simMoveResult==MoveResults.Success; } }
+        // Getters (Public)
+        public bool CanExecuteSimMove { get { return simMoveResult==MoveResults.Success; } }
 		public Board MyBoard { get { return myBoard; } }
 		public Level MyLevel { get { return levelRef; } }
 		public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
@@ -271,7 +271,7 @@ namespace SlideAndStick {
         
         private BoardPos lastTileGrabbedPos;
         private Vector2Int prevSimMoveDir;
-        private bool doBonusAnimBounce;
+        //private bool doBonusAnimBounce;
         public TileView Temp_GetTileView(Tile _tile) {
             foreach (BoardOccupantView bov in allOccupantViews) {
                 if (bov.MyBoardOccupant == _tile) {
@@ -287,14 +287,14 @@ namespace SlideAndStick {
                 lastTileGrabbedPos = _prevTileGrabbing.BoardPos;
             }
             
-            // We've just RELEASED tileGrabbing...!
-            if (_tileGrabbing == null) {
-                doBonusAnimBounce = true;
-            }
-            else {
-                lastTileGrabbedPos = _tileGrabbing.BoardPos;
-                //doBonusAnimBounce = false;
-            }
+            //// We've just RELEASED tileGrabbing...!
+            //if (_tileGrabbing == null) {
+            //    doBonusAnimBounce = true;
+            //}
+            //else {
+            //    lastTileGrabbedPos = _tileGrabbing.BoardPos;
+            //    //doBonusAnimBounce = false;
+            //}
 
 //			// No tileGrabbing? Clear simMoveBoard!
 //			if (_tileGrabbing == null) {
