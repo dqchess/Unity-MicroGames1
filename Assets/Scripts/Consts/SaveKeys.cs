@@ -43,6 +43,17 @@ public static class SaveKeys {
     // ExtrudeMatch
     public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
     
+    // AbacusToy
+    public const string AbacusToy_RandGenPercentTiles = "AbacusToy_RandGenPercentTiles";
+    public const string AbacusToy_NumColors = "AbacusToy_NumColors";
+    public const string AbacusToy_RandGenStickiness = "AbacusToy_RandGenStickiness";
+    static public string AbacusToy_LastPlayedLevelAddress(LevelAddress curAdd) {
+        return "AbacusToy_LastPlayedLevelAddress_" + curAdd.mode + "," + curAdd.collection + "," + curAdd.pack;
+    }
+    static public string AbacusToy_DidCompleteLevel(LevelAddress address) {
+        return "AbacusToy_DidCompleteLevel_" + address.ToString();
+    }
+    
     // SlideAndStick
     public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";
     public const string SlideAndStick_NumColors = "SlideAndStick_NumColors";

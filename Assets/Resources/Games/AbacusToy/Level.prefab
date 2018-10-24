@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83cbc649d932a4745ac5931d03fdb8b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rt_levelName: {fileID: 224628268069238682}
   t_levelName: {fileID: 114739822531401484}
   t_numMovesMade: {fileID: 114090372410547854}
   t_par: {fileID: 114643072266759290}
@@ -252,8 +253,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d040533feb40451d897cbe7cb44d9ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAnimating: 0
   myRectTransform: {fileID: 224753618728664278}
+  undoMoveInputController: {fileID: 114467609583972670}
+  IsAnimating: 0
   levelUI: {fileID: 114230596771480886}
 --- !u!114 &114467609583972670
 MonoBehaviour:
@@ -267,6 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: {fileID: 114332173811497258}
+  restartLevelButton: {fileID: 0}
   undoButton: {fileID: 114538138163944948}
 --- !u!114 &114538138163944948
 MonoBehaviour:

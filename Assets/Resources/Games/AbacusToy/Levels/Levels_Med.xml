@@ -1,0 +1,462 @@
+<LevelsCollection collectionName="Medium" gameMode="SlideAndStick">
+<Packs>
+
+
+
+<!--
+    ================================================================
+    Medium
+    ================================================================
+-->
+<LevelPack packName="Medium">
+<Levels>
+
+    <!-- 4x4, MEDIUM, 2 COLORS -->
+    <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
+        0011,
+        ....,
+        ....,
+        1100,
+    " />
+    <Level diff="4" layout="
+        010.,
+        1.11,
+        0111,
+        ..0.,
+    " />
+    <Level diff="4" desc="more tricky than satisfying" layout="
+        011.,
+        1010,
+        1.10,
+        .0..,
+    " />
+    <Level diff="4" layout="
+        1001,
+        0...,
+        00.1,
+        0110,
+    " />
+    <Level diff="4" layout="
+        .010,
+        .01.,
+        01.0,
+        0100,
+    " />
+    <Level diff="4" layout="
+        00..,
+        0.10,
+        .00.,
+        1011,
+    " />
+    <Level diff="4" desc="fine" layout="
+        0100,
+        1.01,
+        .0.0,
+        0.11,
+    " />
+    <Level diff="4" layout="
+        1110,
+        0.00,
+        .1.0,
+        110.,
+    " />
+    <Level diff="4" layout="
+        0010,
+        10..,
+        1..1,
+        1010,
+    " />
+
+
+
+
+    <!-- 4x4, MEDIUM, 3 COLORS -->
+    <Level diff="4" desc="fine" layout="
+        1.0.,
+        .2..,
+        2011,
+        1.12,
+    " />
+    <Level diff="4" layout="
+        2220,
+        011.,
+        20.1,
+        12..,
+    " />
+    <Level diff="4" desc="lots of single drags tho" layout="
+        12..,
+        00..,
+        .010,
+        2201,
+    " />
+    <Level diff="4" desc="pretty good" layout="
+        1..0,
+        10.2,
+        222.,
+        12.0,
+    " />
+    <Level diff="4" layout="
+        22.1,
+        022.,
+        ..12,
+        201.,
+    " />
+    <Level diff="4" desc="nice" layout="
+        .220,
+        1.1.,
+        1220,
+        .002,
+    " />
+    <Level diff="4" layout="
+		0.00,
+		.2.0,
+		11..,
+		0020,
+    " />
+    <Level diff="4" desc="great" layout="
+		2...,
+		21.1,
+		0100,
+		.2.1,
+    " />
+    <Level diff="4" layout="
+		0.02,
+		0100,
+		12.0,
+		1.12,
+    " />
+    <Level diff="4" layout="
+		1...,
+		.221,
+		2111,
+		..12,
+    " />
+	
+	
+	
+
+
+
+    <!-- 5x5, EASY-MEDIUM, 2 COLORS -->
+    <Level diff="3" layout="
+        00.00,
+        00..0,
+        ..010,
+        0101.,
+        0.0.0,
+    " />
+    <Level diff="3" desc="pretty neat" layout="
+        11...,
+        ..011,
+        .11.1,
+        .1110,
+        00111,
+    " />
+    <Level diff="3" layout="
+        0000.,
+        0100.,
+        ..11.,
+        00110,
+        10..0,
+    " />
+    <Level diff="3" desc="effin cool" layout="
+        111..,
+        10..0,
+        10.10,
+        11011,
+        .10..,
+    " />
+    <Level diff="3" desc="excellent. fun!" layout="
+        110.1,
+        1100.,
+        .000.,
+        10..1,
+        11..1,
+    " />
+    <Level diff="3" layout="
+        ..01.,
+        ..01.,
+        00.0.,
+        01.1.,
+        00.10,
+    " />
+    <Level diff="3" layout="
+        ...11,
+        1.10.,
+        1.001,
+        0011.,
+        00..0,
+    " />
+    <Level diff="3" layout="
+        .11.0,
+        00..0,
+        11000,
+        110..,
+        1.11.,
+    " />
+    <Level diff="3" layout="
+        0011.,
+        0.1..,
+        1..0.,
+        1.110,
+        1.110,
+    " />
+    <Level diff="3" layout="
+        011.1,
+        0.110,
+        ..000,
+        1.001,
+        .1..0,
+    " />
+    <Level diff="3" layout="
+        1011.,
+        110..,
+        11010,
+        0..0.,
+        10.0.,
+    " />
+    <Level diff="3" layout="
+        .1001,
+        01000,
+        0.1.0,
+        1.1.0,
+        11...,
+    " />
+    <Level diff="3" layout="
+        111.0,
+        ...00,
+        0.1.0,
+        00...,
+        .0011,
+    " />
+    <Level diff="3" layout="
+        100.1,
+        10.0.,
+        .0100,
+        111..,
+        .11..,
+    " />
+    <Level diff="3" layout="
+        1.001,
+        11...,
+        110.1,
+        ..001,
+        1..01,
+    " />
+    <Level diff="3" layout="
+        .1..1,
+        01000,
+        ..0.0,
+        .110.,
+        0.100,
+    " />
+    <Level diff="3" layout="
+        11..1,
+        01.10,
+        11.1.,
+        11..1,
+        .0101,
+    " />
+
+
+
+
+    <Level diff="4" layout="
+        00.0.,
+        .0.00,
+        00.00,
+        1011.,
+        0..01,
+    " />
+    <Level diff="4" layout="
+        11101,
+        11101,
+        ..0..,
+        01.1.,
+        0.00.,
+    " />
+    <Level diff="4" layout="
+        0..12,
+        0.111,
+        ..112,
+        011.2,
+        0....,
+    " />
+    <Level diff="4" layout="
+        .00.0,
+        000..,
+        01.1.,
+        010.1,
+        0.01.,
+    " />
+    <Level diff="4" layout="
+        0101.,
+        0101.,
+        .1100,
+        ....1,
+        1..11,
+    " />
+    <Level diff="4" layout="
+        1....,
+        01..0,
+        11010,
+        100.1,
+        .0001,
+    " />
+    <Level diff="4" layout="
+        10..1,
+        100..,
+        011.1,
+        011.1,
+        .11.1,
+    " />
+    <Level diff="4" desc="great" layout="
+        .0100,
+        .0000,
+        1...1,
+        0....,
+        00100,
+    " />
+    <Level diff="4" layout="
+        01.01,
+        01.0.,
+        10011,
+        .0..1,
+        .1.00,
+    " />
+    <Level diff="4" desc="neat" layout="
+        0011.,
+        10..0,
+        11...,
+        0..01,
+        11100,
+    " />
+    <Level diff="4" layout="
+        .0000,
+        00011,
+        ..100,
+        .1000,
+        0....,
+    " />
+
+
+    
+	
+	
+    <Level diff="5" layout="
+        ...1,
+        1000,
+        0101,
+        0.11,
+    " />
+    <Level diff="5" desc="IS THIS POSSIBLE?" layout="
+        .101,
+        0.00,
+        1.1.,
+        1011,
+    " />
+    <Level diff="5" layout="
+		1.22,
+		2.1.,
+		.12.,
+		0100,
+    " />
+    <Level diff="5" layout="
+		.1.0,
+		10..,
+		2011,
+		2101,
+    " />
+    <Level diff="5" layout="
+		..2.,
+		1.00,
+		2.2.,
+		0001,
+    " />
+    <Level diff="5" layout="
+		0..0,
+		202.,
+		..22,
+		1100,
+    " />
+    <Level diff="5" desc="great" layout="
+        .100.,
+        00111,
+        1001.,
+        ..0..,
+        0.11.,
+    " />
+
+
+
+
+
+
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+    ================================================================
+    PACK
+    ================================================================
+-->
+<!--
+<LevelPack packName="?">
+<Levels>
+    <Level layout=" ..., ..., ..., " />
+    <Level layout=" ..., ..., ..., ..., " />
+    <Level layout=" ...., ...., ...., ...., " />
+    <Level layout=" ...., ...., ...., ...., ...., " />
+
+    <Level layout="
+        ...,
+        ...,
+        ...,
+    " />
+    <Level layout="
+        ...,
+        ...,
+        ...,
+        ...,
+    " />
+    <Level layout="
+        ....,
+        ....,
+        ....,
+        ....,
+    " />
+</Levels>
+</LevelPack>
+-->
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

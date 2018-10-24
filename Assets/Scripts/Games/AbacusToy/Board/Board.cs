@@ -63,9 +63,6 @@ namespace AbacusToy {
 			MakeEmptyPropLists ();
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
-
-			// TEMP TESTING
-			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(numCols*numRows*0.65f), Random.Range(3,5)); }
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
@@ -131,9 +128,16 @@ namespace AbacusToy {
 		}
 
 
-		// ----------------------------------------------------------------
-		//  Debug
-		// ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        //  Debug
+        // ----------------------------------------------------------------
+        public void Debug_AddTilesIfNone(GameController gameController) {
+            if (tiles.Count > 0) { return; } // Nah, we've got some.
+            int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
+            int numColors = gameController.NumColors;
+            Debug_AddRandomTiles(numToAdd, numColors);
+            OnMoveComplete();
+        }
 		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
 			for (int i=0; i<numToAdd; i++) {
 				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 1);
@@ -143,22 +147,26 @@ namespace AbacusToy {
 				AddTile(randPos, colorID);
 			}
 		}
-		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
-            string layoutString = LayoutString();
-			Debug.Log (layoutString);
-            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(layoutString); }
-		}
-        public string LayoutString() {
-            string layoutString = "";
+        public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
+            string boardString = Debug_GetBoardLayout();
+            Debug.Log (boardString);
+            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
+        }
+        public string Debug_GetBoardLayout() {
+            string str = "";
             for (int row=0; row<NumRows; row++) {
+                str += "        "; // put it on my tab!
                 for (int col=0; col<NumCols; col++) {
+                    BoardSpace space = GetSpace(col,row);
                     Tile tile = GetTile(col,row);
-                    if (tile!=null) { layoutString += tile.ColorID.ToString(); }
-                    else { layoutString += GetSpace(col,row).IsPlayable ? "." : "#"; }
+                    if (tile!=null) { str += tile.ColorID.ToString(); }
+                    else if (!space.IsPlayable) { str += "#"; }
+                    else { str += "."; }
                 }
-                layoutString += "\n";
+                str += ",";
+                if (row<NumRows-1) { str += "\n"; }
             }
-            return layoutString;
+            return str;
         }
 
 

@@ -15,8 +15,8 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
-		protected void InitializeAsBoardOccupantView (BoardView _myBoardView, BoardOccupant _myOccupant) {
-			base.InitializeAsBoardObjectView (_myBoardView, _myOccupant);
+		protected void InitializeAsBoardOccupantView (BoardView _myBoardView, Transform tf_parent, BoardOccupant _myOccupant) {
+			base.InitializeAsBoardObjectView (_myBoardView, tf_parent, _myOccupant);
 			myOccupant = _myOccupant;
 		}
 

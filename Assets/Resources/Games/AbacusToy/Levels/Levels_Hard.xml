@@ -1,0 +1,123 @@
+<LevelsCollection collectionName="Hard" gameMode="SlideAndStick">
+<Packs>
+
+
+
+<!--
+    ================================================================
+    Hard
+    ================================================================
+-->
+<LevelPack packName="Hard">
+<Levels>
+
+    <!-- 4x4, HARD -->
+    <Level diff="5" layout="
+        0001,
+        1.10,
+        0.00,
+        11..,
+    " />
+    <Level diff="5" desc="smart req moment" layout="
+        00.1,
+        0101,
+        100.,
+        ....,
+    " />
+
+    <Level diff="5" desc="smart. requires planning on first move." layout="
+        21121,
+        ..111,
+        .1.01,
+        1.00.,
+        ...00,
+    " />
+
+
+    <Level diff="6" layout="
+        1.00,
+        00.1,
+        1101,
+        0.1.,
+    " />
+    <Level diff="6" layout="
+        00.0,
+        1.11,
+        100.,
+        011.,
+    " />
+    <Level diff="6" layout="
+        ..11,
+        010.,
+        1.01,
+        1101,
+    " />
+	
+    <Level diff="6" layout="
+		1120,
+		2..0,
+		.02.,
+		221.,
+    " />
+    <Level diff="6" layout="
+		2...,
+		00.0,
+		20..,
+		1021,
+    " />
+    <Level diff="6" layout="
+		...2,
+		2.0.,
+		1211,
+		12.0,
+    " />
+	
+	
+    <Level diff="7" desc="can lose easily on first move :P" layout="
+		0.20,
+		22.2,
+		1.0.,
+		2201,
+    " />
+    <Level diff="7" layout="
+		.00.,
+		.01.,
+		0.02,
+		1022,
+    " />
+    <Level diff="7" desc="IDK if possible!" layout="
+        11.22,
+        1.01.,
+        .0011,
+        0010.,
+        .1.0.,
+    " />
+
+
+    
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+    <Level diff="0" layout="
+    " />
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

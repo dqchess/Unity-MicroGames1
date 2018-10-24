@@ -20,8 +20,8 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
-		public void Initialize (BoardView _myBoardView, Tile _myObj) {
-			base.InitializeAsBoardOccupantView (_myBoardView, _myObj);
+		public void Initialize (BoardView _myBoardView, Transform tf_parent, Tile _myObj) {
+			base.InitializeAsBoardOccupantView (_myBoardView, tf_parent, _myObj);
 			myTile = _myObj;
             body.Initialize();
             bodyShadow.Initialize();

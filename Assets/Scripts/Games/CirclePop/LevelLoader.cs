@@ -23,7 +23,7 @@ public class LevelLoader : MonoBehaviour {
 	public string GetLevelString(int levelIndex) {
 		if (levelIndex<0 || levelIndex>=levelStrings.Length) {
 			Debug.LogError("LevelIndex out of range: " + levelIndex);
-			return "";
+			return "LEVEL - \n."; // just an empty level.
 		}
 		return levelStrings[levelIndex];
 	}
