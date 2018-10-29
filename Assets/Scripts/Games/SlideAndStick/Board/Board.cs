@@ -121,6 +121,7 @@ namespace SlideAndStick {
         private Tile AddTile (TileData data) {
             Tile prop = new Tile (this, data);
             tiles.Add (prop);
+            objectsAddedThisMove.Add(prop);
             return prop;
         }
         private Wall AddWall(WallData data) {
@@ -212,20 +213,56 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Tile Splitting
         // ----------------------------------------------------------------
-        private void SplitTiles() {
-            for (int i=0; i<walls.Count; i++) {
-                Tile tileStraddlingWall = walls[i].GetTileStraddlingMe();
-                if (tileStraddlingWall != null) {
-                    SplitTile(tileStraddlingWall, walls[i].BetweenPos);
-                }
+        private void SeparateSplitTiles() {
+            //for (int i=0; i<walls.Count; i++) {
+            //    Tile tileStraddlingWall = walls[i].GetTileStraddlingMe();
+            //    if (tileStraddlingWall != null) {
+            //        SplitTile(tileStraddlingWall, walls[i].BetweenPos);
+            //    }
+            //}
+            for (int i=tiles.Count-1; i>=0; --i) {
+                MaybeSeparateSplitTile(tiles[i]);
             }
         }
-        private void SplitTile(Tile tile, Vector2 betweenPos) {
-            //if (tile.NumMergeSpots == 0) {
-                
-            //}
+        private void MaybeSeparateSplitTile(Tile tile) {
+            tile.RemakeInnerClusters();
+            if (tile.InnerClusters.Count > 1) {
+                SeparateTile(tile);
+            }
+        }
+        private void SeparateTile(Tile tile) {
+            // What properties do we want?
+            List<List<Vector2Int>> fpsGlobals = GetFootprintsGlobalsFromInnerClusters(tile);
+            int colorID = tile.ColorID;
+            // Destroy the original Tile.
+            tile.RemoveFromPlay();
+            // Add the new Tiles!
+            for (int i=0; i<fpsGlobals.Count; i++) {
+                Vector2Int bpV2 = fpsGlobals[i][0]; // make the BoardPos be the first footprint pos.
+                List<Vector2Int> fpsLocal = OffsetFootprints(fpsGlobals[i], bpV2*-1);
+                TileData tileData = new TileData(new BoardPos(bpV2), colorID, fpsLocal);
+                AddTile(tileData);
+            }
+        }
+        private List<List<Vector2Int>> GetFootprintsGlobalsFromInnerClusters(Tile tile) {
+            List<List<Vector2Int>> ics = tile.InnerClusters;
+            List<List<Vector2Int>> fpsGlobal = new List<List<Vector2Int>>();
+            for (int i=0; i<ics.Count; i++) {
+                fpsGlobal.Add(new List<Vector2Int>());
+                for (int j=0; j<ics[i].Count; j++) {
+                    fpsGlobal[i].Add(ics[i][j] + tile.BoardPos.ToVector2Int());
+                }
+            }
+            return fpsGlobal;
         }
         
+        private List<Vector2Int> OffsetFootprints(List<Vector2Int> fpsGlobal, Vector2Int offset) {
+            List<Vector2Int> list = new List<Vector2Int>();
+            for (int i=0; i<fpsGlobal.Count; i++) {
+                list.Add(fpsGlobal[i] + offset);
+            }
+            return list;
+        }
 
 
 		// ----------------------------------------------------------------
@@ -249,7 +286,7 @@ namespace SlideAndStick {
 		private void OnMoveComplete () {
             MergeAdjacentTiles();
             UpdateTilesMergePoses();
-            SplitTiles();
+            SeparateSplitTiles();
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
             // Update IsInKnownFailState!
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);

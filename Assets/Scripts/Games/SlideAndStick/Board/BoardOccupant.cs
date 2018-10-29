@@ -6,11 +6,11 @@ namespace SlideAndStick {
 	[System.Serializable]
 	abstract public class BoardOccupant : BoardObject {
         // Properties
+        public bool DidJustMove; // set to TRUE when we move, OR if we append my footprint with another Occupant that's just moved!
         public List<Vector2Int> FootprintLocal { get; private set; } // at least contains Vector2Int.zero.
         public List<Vector2Int> FootprintGlobal { get; private set; } // just footprintLocal, plus my boardPos. Updated when A) boardPos changes, and B) footprintLocal changes.
-        public bool DidJustMove; // set to TRUE when we move, OR if we append my footprint with another Occupant that's just moved!
-        // Properties
         public List<Vector2> MergePosesLocal { get; private set; } // the BETWEEN-space poses where I connect to myself.
+        public List<List<Vector2Int>> InnerClusters { get; private set; } // for splitting Occupants.
 
         // Getters (Public)
         public bool HasMergePosLocal(Vector2 mpLocal) {
@@ -107,7 +107,48 @@ namespace SlideAndStick {
         //        Debug.LogError("Whoa! Trying to remove a mergePosLocal from a Tile, but it doesn't have that mergePos!");
         //    }
         //}
+        
+        private List<Vector2Int> LastInnerCluster { get { return InnerClusters[InnerClusters.Count-1]; } }
+        
+        public void RemakeInnerClusters() {
+            InnerClusters = new List<List<Vector2Int>>();
+            // for now, convert our footprints into TempTileFPs.
+            Dictionary<Vector2Int, TempTileFP> fPs = new Dictionary<Vector2Int, TempTileFP>();
+            for (int i=0; i<FootprintLocal.Count; i++) {
+                Vector2Int fpLocal = FootprintLocal[i];
+                fPs[fpLocal] = new TempTileFP(fpLocal);
+            }
+            // Do some recursive searchin'!
+            foreach (TempTileFP fP in fPs.Values) {
+                if (fP.clusterIndex == -1) {
+                    InnerClusters.Add(new List<Vector2Int>());
+                    RecursivelyFindClusters(fPs, fP.Pos, Vector2Int.zero);
+                }
+            }
+        }
+        private void RecursivelyFindClusters(Dictionary<Vector2Int, TempTileFP> fPs, Vector2Int originPos, Vector2Int dir) {
+            Vector2Int pos = originPos + dir;
+            TempTileFP fp = fPs.ContainsKey(pos) ? fPs[pos] : null;
+            if (fp==null || fp.clusterIndex!=-1) { return; } // no footprint here? Stop.
+            if (dir!=Vector2Int.zero && !MergePosesLocal.Contains(originPos.ToVector2()+dir.ToVector2()*0.5f)) { return; } // No connecting mergePos? Stop.
+            
+            fp.clusterIndex = InnerClusters.Count;
+            LastInnerCluster.Add(pos);
+            // Recurse!
+            RecursivelyFindClusters(fPs, pos, Vector2Int.L);
+            RecursivelyFindClusters(fPs, pos, Vector2Int.R);
+            RecursivelyFindClusters(fPs, pos, Vector2Int.B);
+            RecursivelyFindClusters(fPs, pos, Vector2Int.T);
+        }
 
 
 	}
+    
+    class TempTileFP {
+        public int clusterIndex=-1;
+        public Vector2Int Pos { get; private set; }
+        public TempTileFP(Vector2Int pos) {
+            this.Pos = pos;
+        }
+    }
 }

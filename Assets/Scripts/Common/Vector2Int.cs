@@ -34,6 +34,9 @@ public struct Vector2Int {
     public static Vector2Int operator - (Vector2Int a, Vector2Int b) {
         return new Vector2Int(a.x-b.x, a.y-b.y);
     }
+    public static Vector2Int operator * (Vector2Int a, float m) {
+        return new Vector2Int(a.x*m, a.y*m);
+    }
 	public static bool operator == (Vector2Int a, Vector2Int b) {
 		return a.Equals(b);
 	}
