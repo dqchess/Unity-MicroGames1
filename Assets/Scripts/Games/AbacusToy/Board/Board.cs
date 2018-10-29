@@ -129,7 +129,7 @@ namespace AbacusToy {
 			objectsAddedThisMove.Clear ();
 
             BoardOccupant boToMove = BoardUtils.GetOccupant(this, boToMovePos);
-            MoveResults result = BoardUtils.MoveOccupant(this, boToMove, dir);
+            MoveResults result = BoardUtils.ExecuteMove(this, boToMove, dir);
             
             // ONLY if this move was a success, do the OnMoveComplete paperwork!
             if (result == MoveResults.Success) {

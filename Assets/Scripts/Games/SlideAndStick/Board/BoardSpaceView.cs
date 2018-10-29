@@ -30,30 +30,28 @@ namespace SlideAndStick {
 			this.transform.localScale = Vector3.one;
 			this.transform.localEulerAngles = Vector3.zero;
 
-			// YES playable? Make visuals nice!
-			if (mySpace.IsPlayable) {
+			//// YES playable? Make visuals nice!
+			//if (mySpace.IsPlayable) {
 				const float spaceGap = 0f; // make this something between 0 and 5, to taste.
 				float diameter = _boardView.UnitSize-spaceGap;
-				GameUtils.SizeUIGraphic (i_border, _boardView.UnitSize+14,_boardView.UnitSize+14);
+				GameUtils.SizeUIGraphic (i_border, _boardView.UnitSize+26,_boardView.UnitSize+26);
 				GameUtils.SizeUIGraphic (i_backing, diameter,diameter);
-
-    //            float fillS = Random.Range(0.2f, 0.25f);
-    //            float fillB = Random.Range(0.9f, 0.98f); //Random.Range(0.01f, 0.06f);
-				//fillColor = new ColorHSB(30/360f, fillS, fillB).ToColor();
-				//i_border.color = new ColorHSB(30/360f, 0.2f, 0.75f).ToColor();
-                i_border.enabled = false; // note: DISABLED borders!
-                
                 
                 float b = BoardUtils.IsSpaceEven(col,row) ? 0.92f : 0.98f;
                 fillColor = new Color(b,b,b);
                 i_backing.color = fillColor;
-                //i_border.color = fillColor;
-			}
-			// NOT playable? Destroy my sprites and do nothing.
-			else {
-                Destroy(i_border.gameObject);
-                Destroy(i_backing.gameObject);
-			}
+                //i_border.color = new Color(0.95f,0.95f,0.95f);
+                i_border.enabled = false;
+                
+                if (!mySpace.IsPlayable) {
+                    i_backing.color = new Color(0.2f,0.2f,0.2f);
+                }
+			//}
+			//// NOT playable? Destroy my sprites and do nothing.
+			//else {
+   //             Destroy(i_border.gameObject);
+   //             Destroy(i_backing.gameObject);
+			//}
 		}
 
 

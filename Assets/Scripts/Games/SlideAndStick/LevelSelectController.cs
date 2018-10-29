@@ -10,12 +10,7 @@ namespace SlideAndStick {
         [SerializeField] private TextMeshProUGUI t_progressMed=null;
         [SerializeField] private TextMeshProUGUI t_progressHard=null;
     
-        // events
-        public void OnClick_Easy() { StartGameAtCollection(0); }
-        public void OnClick_Med() { StartGameAtCollection(1); }
-        public void OnClick_Hard() { StartGameAtCollection(2); }
-        
-        
+        // Getters (Private)
         private LevelAddress GetLastPlayedAddress(int collection) {
             LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
             string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(collectionAdd);
@@ -28,6 +23,9 @@ namespace SlideAndStick {
         }
         
         
+        // ----------------------------------------------------------------
+        //  Start
+        // ----------------------------------------------------------------
         private void Start() {
             // Update progress texts!
             LevelsManager lm = LevelsManager.Instance;
@@ -37,11 +35,24 @@ namespace SlideAndStick {
         }
         
         
+        // ----------------------------------------------------------------
+        //  Events
+        // ----------------------------------------------------------------
+        public void OnClickCollectionButton(int collectionIndex) { StartGameAtCollection(collectionIndex); }
+        
+        
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
         private void StartGameAtCollection(int collection) {
             LevelAddress lastPlayedAddress = GetLastPlayedAddress(collection);
             LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
             
             LoadLevel(lastPlayedAddress);
+        }
+        public void ClearAllSaveData() {
+            GameManagers.Instance.DataManager.ClearAllSaveData ();
+            ReloadScene ();
         }
         
         
@@ -58,7 +69,6 @@ namespace SlideAndStick {
             UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName);
         }
     
-    
         public void LoadLevel (LevelAddress address) {
             LevelsManager.Instance.selectedAddress = address; // Setting this is optional. Just keepin' it consistent.
             SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress(address), address.ToString()); // Actually save the value! That's what GameController pulls in.
@@ -66,11 +76,6 @@ namespace SlideAndStick {
         }
         private void OpenTutorial() {
             LoadLevel(new LevelAddress(GameModes.TutorialIndex, 0,0, -1));
-        }
-    
-        public void ClearAllSaveData() {
-            GameManagers.Instance.DataManager.ClearAllSaveData ();
-            ReloadScene ();
         }
     
     

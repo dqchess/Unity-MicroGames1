@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 222405502697151208}
   - component: {fileID: 114338642713201362}
   m_Layer: 5
-  m_Name: t_CollectionName
+  m_Name: t_PackName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -374,7 +374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rt_levelName: {fileID: 224962923939308570}
   t_levelName: {fileID: 114087574234903176}
-  t_collectionName: {fileID: 114338642713201362}
+  t_packName: {fileID: 114338642713201362}
   levelCompletePopup: {fileID: 114043403786649930}
   level: {fileID: 114442891133599414}
 --- !u!114 &114039489207007708

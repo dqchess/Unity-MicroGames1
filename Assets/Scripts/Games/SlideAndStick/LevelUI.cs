@@ -9,7 +9,7 @@ namespace SlideAndStick {
         // Components
         [SerializeField] private RectTransform rt_levelName=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
-        [SerializeField] private TextMeshProUGUI t_collectionName=null;
+        [SerializeField] private TextMeshProUGUI t_packName=null;
         [SerializeField] private LevelCompletePopup levelCompletePopup=null;
 		// References
 		[SerializeField] private Level level=null;
@@ -17,13 +17,16 @@ namespace SlideAndStick {
         // Getters (Public)
         public LevelCompletePopup LevelCompletePopup { get { return levelCompletePopup; } }
         // Getters (Private)
-        private string GetCollectionName(int collectionIndex) {
-            switch (collectionIndex) {
-                case 0: return "easy";
-                case 1: return "medium";
-                case 2: return "hard";
-                default: return "undefined";
-            }
+        private string GetPackName() {
+            PackData packData = LevelsManager.Instance.GetPackData(level.MyAddress);
+            return packData.PackName;
+            //switch (collectionIndex) {
+            //    case 0: return "TESTS";
+            //    case 1: return "easy";
+            //    case 2: return "medium";
+            //    case 3: return "hard";
+            //    default: return "undefined";
+            //}
         }
 
 
@@ -32,7 +35,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
 		private void Start () {
 			t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
-            t_collectionName.text = GetCollectionName(level.MyAddress.collection);
+            t_packName.text = GetPackName();
             
             levelCompletePopup.Hide();
         }

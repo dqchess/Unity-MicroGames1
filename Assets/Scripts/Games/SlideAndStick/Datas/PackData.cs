@@ -9,8 +9,8 @@ namespace SlideAndStick {
     	private LevelAddress myAddress;
         public int NumLevelsCompleted { get; private set; }
         public int NumLevelsPlayable { get; private set; }
-    	private string packName;
-    	private List<LevelData> levelDatas; // by levelIndex. ALL level datas in this world! Loaded up when WE'RE loaded up.
+        public string PackName { get; private set; }
+        private List<LevelData> levelDatas; // by levelIndex. ALL level datas in this world! Loaded up when WE'RE loaded up.
     //	// References
     //	private PackCollectionData myCollectionData;
     
@@ -18,8 +18,7 @@ namespace SlideAndStick {
     	public bool DidCompleteAllLevels { get { return NumLevelsCompleted >= NumLevels; } }
     	public LevelAddress MyAddress { get { return myAddress; } }
     	public int NumLevels { get { return levelDatas.Count; } }
-        public string PackName { get { return packName; } }
-    	public System.Collections.ObjectModel.ReadOnlyCollection<LevelData> LevelDatas { get { return levelDatas.AsReadOnly(); } }
+        public System.Collections.ObjectModel.ReadOnlyCollection<LevelData> LevelDatas { get { return levelDatas.AsReadOnly(); } }
     	public LevelData GetLevelData (LevelAddress levelAddress) { return GetLevelData (levelAddress.level); }
     	public LevelData GetLevelData (int index) {
     		if (index<0 || index>=levelDatas.Count) { return null; } // Outta bounds.
@@ -33,7 +32,7 @@ namespace SlideAndStick {
     	public PackData (LevelAddress myAddress, PackDataXML packDataXML) {//PackCollectionData myCollectionData, 
     //		this.myCollectionData = myCollectionData;
     		this.myAddress = myAddress;
-    		this.packName = packDataXML.packName;
+    		this.PackName = packDataXML.packName;
     
     		LoadAllLevelDatas(packDataXML);
     	}

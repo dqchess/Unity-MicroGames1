@@ -27,18 +27,24 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		//  Doers
 		// ----------------------------------------------------------------
-		override public void AddMyFootprint () {
-			for (int i=0; i<FootprintGlobal.Count; i++) {
-				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).SetMyOccupant(this);
-			}
+        override public void AddMyFootprint () {
+            for (int i=0; i<FootprintGlobal.Count; i++) {
+                BoardSpace space = GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y);
+                if (space != null) {
+                    space.SetMyOccupant(this);
+                }
+            }
             boardRef.NumFootprintsDown ++;
-		}
-		override public void RemoveMyFootprint () {
-			for (int i=0; i<FootprintGlobal.Count; i++) {
-				GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y).RemoveMyOccupant(this);
-			}
+        }
+        override public void RemoveMyFootprint () {
+            for (int i=0; i<FootprintGlobal.Count; i++) {
+                BoardSpace space = GetSpace(FootprintGlobal[i].x, FootprintGlobal[i].y);
+                if (space != null) {
+                    space.RemoveMyOccupant(this);
+                }
+            }
             boardRef.NumFootprintsDown --;
-		}
+        }
 		override public void SetColRow (int _col, int _row) {
 			base.SetColRow(_col,_row);
 			UpdateFootprintGlobal();

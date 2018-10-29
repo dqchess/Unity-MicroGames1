@@ -80,27 +80,46 @@ namespace AbacusToy {
 		public static bool CanOccupantMoveInDir(Board originalBoard, BoardOccupant originalBO, Vector2Int moveDir) {
 			Board testBoard = originalBoard.Clone();
 			BoardOccupant testBO = GetOccupant(testBoard, originalBO.BoardPos.col,originalBO.BoardPos.row);
-			MoveResults moveResult = MoveOccupant(testBoard, testBO, moveDir);
+			MoveResults moveResult = ExecuteMove(testBoard, testBO, moveDir);
 			return moveResult == MoveResults.Success;
 		}
 
-		private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal, Vector2Int posOffset) {
-			for (int i=0; i<footprintGlobal.Count; i++) {
-				if (!IsSpacePlayable(b, footprintGlobal[i]+posOffset)) { return false; }
-			}
-			return true;
-		}
+        private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal) {
+            return AreSpacesPlayable(b, footprintGlobal, Vector2Int.zero);
+        }
+        private static bool AreSpacesPlayable(Board b, List<Vector2Int> footprintGlobal, Vector2Int posOffset) {
+            for (int i=0; i<footprintGlobal.Count; i++) {
+                if (!IsSpacePlayable(b, footprintGlobal[i]+posOffset)) { return false; }
+            }
+            return true;
+        }
+        //private static bool CanPassThroughSpaces(Board b, List<Vector2Int> fpGlobal, Vector2Int dir, Vector2Int posOffset) {
+        //    for (int i=0; i<fpGlobal.Count; i++) {
+        //        if (!CanOccupantEverExit(b, fpGlobal[i]+posOffset, dir)) { return false; }
+        //    }
+        //    return true;
+        //}
+        //public static bool CanOccupantEverExit(Board b, Vector2Int pos, Vector2Int dir) {
+        //    BoardSpace spaceFrom = GetSpace(b, pos);
+        //    BoardSpace spaceTo   = GetSpace(b, pos+dir);
+        //    if (spaceFrom==null || spaceTo==null) { return false; }
+        //    if (!spaceFrom.CanOccupantEverExit(MathUtils.GetSide(dir))) { return false; }
+        //    if (!spaceTo.CanOccupantEverEnterMe(MathUtils.GetOppositeSide(dir))) { return false; }
+        //    return true;
+        //}
 
-		public static MoveResults MoveOccupant(Board b, BoardOccupant bo, Vector2Int dir) {
+        private static bool DidMoveFail = false;
+        public static MoveResults ExecuteMove(Board b, BoardOccupant bo, Vector2Int dir) {
+            DidMoveFail = false; // I'll say otherwise at some point.
+            MoveOccupant(b, bo, dir);
+            return DidMoveFail ? MoveResults.Fail : MoveResults.Success;
+        }
+        private static void MoveOccupant(Board b, BoardOccupant bo, Vector2Int dir) {
 			if (bo == null) {
 				Debug.LogError ("Oops! We're trying to move a null Occupant! dir: " + dir.ToString());
-				return MoveResults.Fail;
+                DidMoveFail = true;
+				return;
 			}
-
-			// Is this outside the board? Oops! Return Fail.
-			if (!AreSpacesPlayable(b, bo.FootprintGlobal,dir)) { return MoveResults.Fail; }
-			// Are we trying to pass through a Wall? Return Fail.
-//			if (bo.MySpace!=null && !bo.MySpace.CanOccupantEverExit(GetSide(dir))) { return MoveResults.Fail; }
 
 			// Always remove its footprint first. We're about to move it!
 			bo.RemoveMyFootprint ();
@@ -113,11 +132,7 @@ namespace AbacusToy {
 				BoardOccupant nextBO_touching = GetOccupant(b, footGlobal.x,footGlobal.y);
 				if (nextBO_touching != null) {
 					// PUSH the next guy! Interrupt this function with a recursive call! (And we'll add everyone back to the board at the end.)
-					MoveResults nextResult = MoveOccupant(b, nextBO_touching, dir);
-					// Whoa, if the recursive move we just made DIDN'T work, then stop here and return that info.
-					if (nextResult != MoveResults.Success) {
-						return nextResult;
-					}
+					MoveOccupant(b, nextBO_touching, dir);
 				}
 			}
 
@@ -129,8 +144,17 @@ namespace AbacusToy {
                 CalculateAndTowIslandGroups(b, bo, dir);
             }
 
-			// Success!
-			return MoveResults.Success;
+            // Is this outside the board? Oops! Return Fail.
+            if (!AreSpacesPlayable(b, bo.FootprintGlobal)) {
+                DidMoveFail = true;
+            }
+            //// Did we pass through a Wall? Return Fail.
+            //if (!CanPassThroughSpaces(b, bo.FootprintGlobal, dir, MathUtils.GetOppositeDir(dir))) {
+            //    return MoveResults.Fail;
+            //}
+
+			//// Success!
+			//return MoveResults.Success;
 		}
         
         /// NOTE: This function doesn't account for bigger footprints! (No need to support that right now.)
@@ -167,6 +191,8 @@ namespace AbacusToy {
                 MoveOccupant(b, t, dir);
             }
         }
+        
+        
         private static int CalculateTileGroups(Board b) {
             // Reset GroupIDs.
             for (int i=0; i<b.tiles.Count; i++) { b.tiles[i].GroupID = -1; }
