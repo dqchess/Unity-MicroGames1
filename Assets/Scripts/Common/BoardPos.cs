@@ -1,4 +1,6 @@
-﻿public struct BoardPos {
+﻿using UnityEngine;
+
+public struct BoardPos {
 	static public BoardPos undefined { get { return new BoardPos(-1,-1, -1); } }
 
 	public int col;
@@ -31,6 +33,7 @@
 		this._sideFacing = Sides.T;
 	}
 
+    public Vector2 ToVector2() { return new Vector2(col,row); }
 	public Vector2Int ToVector2Int() { return new Vector2Int(col,row); }
 
     public override string ToString() { return col + "," + row; }

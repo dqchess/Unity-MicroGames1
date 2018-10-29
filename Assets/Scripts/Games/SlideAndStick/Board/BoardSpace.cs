@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace SlideAndStick {
 	public class BoardSpace {
-		// Properties
-		private BoardPos boardPos;
-		private bool isPlayable = true;
+        // Properties
+        public BoardPos BoardPos { get; private set; }
+        private bool isPlayable = true;
         // References
         public BoardOccupant MyOccupant { get; private set; } // Occupants sit on my face. Only one Occupant occupies each space.
         private Wall[] myWalls; // references to the walls around me! Index = side (T, R, B, L).
 
-		// Getters
-		public bool IsPlayable { get { return isPlayable; } }
-		public bool IsPos(Vector2Int _pos) { return _pos.x==Col && _pos.y==Row; }
-		public int Col { get { return boardPos.col; } }
-		public int Row { get { return boardPos.row; } }
+        // Getters
+        public bool IsPlayable { get { return isPlayable; } }
+        public bool IsPos(Vector2Int _pos) { return _pos.x == Col && _pos.y == Row; }
+        public int Col { get { return BoardPos.col; } }
+        public int Row { get { return BoardPos.row; } }
         public bool IsOpen() {
 			return isPlayable && MyOccupant==null;
 		}
@@ -39,7 +39,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		public BoardSpace (Board _boardRef, BoardSpaceData _data) {
 //			myBoard = _boardRef;
-			boardPos = _data.boardPos;
+			BoardPos = _data.boardPos;
 			isPlayable = _data.isPlayable;
             myWalls = new Wall[4];
 		}

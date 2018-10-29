@@ -85,6 +85,9 @@ namespace SlideAndStick {
             pos += new Vector2(diameterGap*ap.dir.x, -diameterGap*ap.dir.y);
             return pos;
         }
+        private Vector2 GetBetweenImagePos(Vector2 bwPosBoard) {
+            return new Vector2(bwPosBoard.x*UnitSize, -bwPosBoard.y*UnitSize);
+        }
         private MergeSpotView GetMergeSpotView(Vector2 bp) {
             // BRUTE-force. Not a huge deal though.
             for (int i=0; i<mergeSpotViews.Count; i++) {
@@ -137,13 +140,13 @@ namespace SlideAndStick {
 			newImage.type = Image.Type.Sliced;
             newImage.rectTransform.anchoredPosition = new Vector2(pos.x*UnitSize, -pos.y*UnitSize);
         }
-        private void MaybeAddBetweenImage(Vector2Int sourcePos, Vector2Int dir) {
-            Vector2 bp = sourcePos.ToVector2() + dir.ToVector2()*0.5f; // Start at source; go halfway in this dir.
+        private void MaybeAddBetweenImage(Vector2 bp) {//Vector2Int sourcePos, Vector2Int dir) {
+            //Vector2 bp = sourcePos.ToVector2() + dir.ToVector2()*0.5f; // Start at source; go halfway in this dir.
             // We HAVEN'T yet added this one?? Add it!!
             if (!bwPoses.Contains(bp)) {
                 bwPoses.Add(bp);
                 Image newImage = AddImage(s_square, "i_Between");
-                newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
+                newImage.rectTransform.anchoredPosition = GetBetweenImagePos(bp);
             }
         }
         private void MaybeAddBellyButtonImage(Vector2Int sourcePos, Vector2Int dir) {
@@ -153,6 +156,7 @@ namespace SlideAndStick {
                 bellyButtonPoses.Add(bp);
                 Image newImage = AddImage(s_square, "i_BellyButton");
                 newImage.rectTransform.anchoredPosition = new Vector2(bp.x*UnitSize, -bp.y*UnitSize);
+                newImage.rectTransform.sizeDelta = new Vector2(UnitSize*0.15f,UnitSize*0.15f);
                 // Extra step: Maybe remove an armpit image, if there was one here!
                 RemoveArmpitImageAtCenter(bp);
             }
@@ -182,6 +186,16 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Removing Things
         // ----------------------------------------------------------------
+        private void RemoveExBetweenImages() {
+            List<Vector2> bwPosesToRemove = new List<Vector2>(); // make a separate list FIRST (so we don't remove items as we loop).
+            foreach (Vector2 bwPos in bwPoses) {
+                if (!MyTile.HasMergePosLocal(bwPos)) { // my Tile no longer has this between-pos?? Remove the corresponding image!
+                    bwPosesToRemove.Add(bwPos);
+                }
+            }
+            // Now actually remove 'em.
+            foreach (Vector2 bwPos in bwPosesToRemove) { RemoveBetweenImage(bwPos); }
+        }
         private void RemoveArmpitImageAtCenter(Vector2 centerPos) {
             foreach (ArmpitPos ap in armpitPoses) {
                 if (ap.CenterPos() == centerPos) {
@@ -189,6 +203,20 @@ namespace SlideAndStick {
                     return; // There should only be one, so we're good to stop looking.
                 }
             }
+        }
+        private void RemoveBetweenImage(Vector2 bwPos) {
+            bwPoses.Remove(bwPos);
+            // Brute-force look through all my images; find the one that matches.
+            Vector2 imagePos = GetBetweenImagePos(bwPos);
+            foreach (Image image in allImages) {
+                // Correct sprite AND pos? It's the image we're looking for!
+                if (image.sprite==s_square && image.rectTransform.anchoredPosition==imagePos) {
+                    allImages.Remove(image);
+                    Destroy(image.gameObject);
+                    return;
+                }
+            }
+            Debug.LogError("Whoa, couldn't find between image to remove!");
         }
         private void RemoveArmpitImage(ArmpitPos armpitPos) {
             armpitPoses.Remove(armpitPos);
@@ -216,14 +244,17 @@ namespace SlideAndStick {
             }
         }
         private void AddMissingBetweenImages() {
-            HashSet<Vector2Int> fpLocalHash = new HashSet<Vector2Int>(footprintLocal); // make HashSet for easy accessin'.
-            foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
-                foreach (Vector2Int dir in dirsCardinal) { // For each side...
-                    Vector2Int posInDir = fpLocal + dir;
-                    if (fpLocalHash.Contains(posInDir)) { // I have a footprint here!...
-                        MaybeAddBetweenImage(fpLocal, dir);
-                    }
-                }
+            //HashSet<Vector2Int> fpLocalHash = new HashSet<Vector2Int>(footprintLocal); // make HashSet for easy accessin'.
+            //foreach (Vector2Int fpLocal in footprintLocal) { // For each footprint space...
+            //    foreach (Vector2Int dir in dirsCardinal) { // For each side...
+            //        Vector2Int posInDir = fpLocal + dir;
+            //        if (fpLocalHash.Contains(posInDir)) { // I have a footprint here!...
+            //            MaybeAddBetweenImage(fpLocal, dir);
+            //        }
+            //    }
+            //}
+            foreach (Vector2 mergePosLocal in MyTile.MergePosesLocal) {
+                MaybeAddBetweenImage(mergePosLocal);
             }
         }
         private void AddMissingArmpitAndBellyButtonImages() {
@@ -266,6 +297,7 @@ namespace SlideAndStick {
         
 		public void UpdateVisualsPostMove() {
 			DestroyMergeSpotViews(); // We wanna nix any MergeSpotViews for finished-animation.
+            RemoveExBetweenImages(); // Remove between images that have been removed from a Tile-split.
             AddMissingBodyUnitImages();
             AddMissingBetweenImages();
             AddMissingArmpitAndBellyButtonImages();

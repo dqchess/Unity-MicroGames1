@@ -78,7 +78,7 @@ namespace SlideAndStick {
 			AddPropsFromBoardData (bd);
 
 			// Start our solo bubbas out merged, goro!
-			MergeAdjacentTiles();
+			OnMoveComplete();
 
 			CalculateNumTilesToWin();
 		}
@@ -139,7 +139,7 @@ namespace SlideAndStick {
 		}
 
         // ----------------------------------------------------------------
-        //  Tile Group-Finding
+        //  Tile Merging
         // ----------------------------------------------------------------
 		private void MergeAdjacentTiles() {
 			lastMergeSpots = new List<MergeSpot>();
@@ -201,6 +201,31 @@ namespace SlideAndStick {
 				lastMergeSpots.Add(new MergeSpot(tileA, footAPos,dir));
 			}
 		}
+        
+        private void UpdateTilesMergePoses() {
+            for (int i=0; i<tiles.Count; i++) {
+                tiles[i].RemakeMergePoses();
+            }
+        }
+        
+        
+        // ----------------------------------------------------------------
+        //  Tile Splitting
+        // ----------------------------------------------------------------
+        private void SplitTiles() {
+            for (int i=0; i<walls.Count; i++) {
+                Tile tileStraddlingWall = walls[i].GetTileStraddlingMe();
+                if (tileStraddlingWall != null) {
+                    SplitTile(tileStraddlingWall, walls[i].BetweenPos);
+                }
+            }
+        }
+        private void SplitTile(Tile tile, Vector2 betweenPos) {
+            //if (tile.NumMergeSpots == 0) {
+                
+            //}
+        }
+        
 
 
 		// ----------------------------------------------------------------
@@ -222,7 +247,9 @@ namespace SlideAndStick {
 			return result;
 		}
 		private void OnMoveComplete () {
-			MergeAdjacentTiles();
+            MergeAdjacentTiles();
+            UpdateTilesMergePoses();
+            SplitTiles();
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
             // Update IsInKnownFailState!
             IsInKnownFailState = BoardUtils.IsInHardcodedFailState(this);

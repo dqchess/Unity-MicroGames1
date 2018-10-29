@@ -259,14 +259,14 @@ namespace SlideAndStick {
             string saveKey = SaveKeys.TimeSpentTotal(gameController.MyGameName(), MyAddress);
             float timeSpentTotal = SaveStorage.GetFloat(saveKey,0);
             SaveStorage.SetFloat(saveKey, timeSpentTotal+TimeSpentThisPlay);
-            print("Time spent total now: " + (timeSpentTotal+TimeSpentThisPlay));
+            //print("Time spent total now: " + (timeSpentTotal+TimeSpentThisPlay));
             ResetTimeSpentThisPlay(); // we just used it! For safety, clear it out.
         }
-        private void IncrementNumWins() {//TODO: Check dis worx.
+        private void IncrementNumWins() {
             string saveKey = SaveKeys.NumWins(gameController.MyGameName(), MyAddress);
             int numWins = SaveStorage.GetInt(saveKey,0) + 1;
             SaveStorage.SetInt(saveKey, numWins);
-            print("Num wins now: " + numWins);
+            //print("Num wins now: " + numWins);
         }
 
 

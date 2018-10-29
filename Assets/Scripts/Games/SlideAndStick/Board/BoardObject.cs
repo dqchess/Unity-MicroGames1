@@ -17,7 +17,8 @@ namespace SlideAndStick {
 		public int Row { get { return boardPos.row; } }
 		public int SideFacing { get { return boardPos.sideFacing; } }
 		public Board BoardRef { get { return boardRef; } }
-		protected BoardSpace GetSpace (int _col,int _row) { return BoardUtils.GetSpace (boardRef, _col,_row); }
+        protected BoardSpace GetSpace (Vector2Int _boardPos) { return GetSpace(_boardPos.x,_boardPos.y); }
+        protected BoardSpace GetSpace (int _col,int _row) { return BoardUtils.GetSpace (boardRef, _col,_row); }
 //		public BoardSpace MySpace { get { return GetSpace (Col,Row); } }
 
 		// ----------------------------------------------------------------
