@@ -250,7 +250,7 @@ namespace SlideAndStick {
 			UpdateAllViewsMoveEnd();
             
             simMoveDir = _simMoveDir;
-            prevSimMoveDir = simMoveDir;
+            //prevSimMoveDir = simMoveDir;
             // Clone our current Board.
             simMoveBoard = myBoard.Clone();
             // Set BoardOCCUPANTs' references within the new, simulated Board! NOTE: We DON'T set any references for BoardObjects. Those don't move (plus, there's currently no way to find the matching references, as BoardObjects aren't added to spaces).
@@ -269,8 +269,8 @@ namespace SlideAndStick {
         
         
         
-        private BoardPos lastTileGrabbedPos;
-        private Vector2Int prevSimMoveDir;
+        //private BoardPos lastTileGrabbedPos;
+        //private Vector2Int prevSimMoveDir;
         //private bool doBonusAnimBounce;
         public TileView Temp_GetTileView(Tile _tile) {
             foreach (BoardOccupantView bov in allOccupantViews) {
@@ -283,9 +283,9 @@ namespace SlideAndStick {
         
         public void OnSetTileGrabbing(Tile _tileGrabbing, Tile _prevTileGrabbing) {
             MoveTileViewToTop(_tileGrabbing); // move the TileView on TOP of all others!
-            if (_prevTileGrabbing != null) {
-                lastTileGrabbedPos = _prevTileGrabbing.BoardPos;
-            }
+            //if (_prevTileGrabbing != null) {
+            //    lastTileGrabbedPos = _prevTileGrabbing.BoardPos;
+            //}
             
             //// We've just RELEASED tileGrabbing...!
             //if (_tileGrabbing == null) {

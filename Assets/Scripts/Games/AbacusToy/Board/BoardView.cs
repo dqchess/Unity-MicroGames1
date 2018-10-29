@@ -17,10 +17,10 @@ namespace AbacusToy {
         private Board simMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
         // Properties
         public float UnitSize { get; private set; } // how big each board space is in pixels
-        private bool areObjectsAnimating;
+        public bool AreObjectsAnimating { get; private set; }
         private float animLoc; // eases to 0 or 1 while we're animating!
         private float animLocVel;
-        private float animLocTarget; // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
+        public float AnimLocTarget { get; private set; } // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
         private MoveResults simMoveResult;
         private Vector2Int simMoveDir;
 
@@ -29,8 +29,6 @@ namespace AbacusToy {
         public Transform tf_BoardSpaces { get { return tf_boardSpaces; } }
         public RectTransform MyRectTransform { get { return myRectTransform; } }
         public Vector2 Pos { get { return myRectTransform.anchoredPosition; } }
-        public bool AreObjectsAnimating { get { return areObjectsAnimating; } }
-        public float ObjectsAnimationLocTarget { get { return animLocTarget; } }
         // Getters (Private)
         private ResourcesHandler resourcesHandler { get { return ResourcesHandler.Instance; } }
         private int numCols { get { return MyBoard.NumCols; } }
@@ -48,11 +46,11 @@ namespace AbacusToy {
         //  public float YToBoard(float y) { return Pos.y - row*unitSize; }
         
         private bool IsAnimLocAtTarget() {
-            return Mathf.Abs (animLocTarget-animLoc) < 0.01f && Mathf.Abs(animLocVel)<0.01f;
+            return Mathf.Abs (AnimLocTarget-animLoc) < 0.01f && Mathf.Abs(animLocVel)<0.01f;
         }
         private bool IsFinishedAnimating() {
             // We don't consider an animation finished if animLocTarget is between 0 or 1. (That's mid-move sliding territory.)
-            if (animLocTarget!=0 || animLocTarget!=1) { return false; }
+            if (AnimLocTarget!=0 || AnimLocTarget!=1) { return false; }
             return IsAnimLocAtTarget();
         }
 
@@ -149,13 +147,13 @@ namespace AbacusToy {
 //          }
 //          animLoc = 0;
             animLocVel = 0.08f;
-            animLocTarget = 1;
-            areObjectsAnimating = true;
+            AnimLocTarget = 1;
+            AreObjectsAnimating = true;
             // Do this for safety.
             ApplyObjectsAnimationLoc();
         }
         public void UpdateAllViewsMoveEnd() {
-            areObjectsAnimating = false;
+            AreObjectsAnimating = false;
             animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
             for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
@@ -184,13 +182,13 @@ namespace AbacusToy {
             }
         }
         private void UpdateViewsTowardsSimMove(float _simMovePercent) {
-            animLocTarget = _simMovePercent;
+            AnimLocTarget = _simMovePercent;
             if (!CanExecuteSimMove) {
-                animLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
+                AnimLocTarget *= 0.1f; // Can't make the move?? Allow views to move a liiiitle, but barely (so user intuits it's illegal, and why).
             }
             // Keep the value locked to the target value.
-            animLoc = animLocTarget;
-            areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
+            animLoc = AnimLocTarget;
+            AreObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
             ApplyObjectsAnimationLoc ();
         }
         private void ClearSimMoveDirAndBoard() {
@@ -198,14 +196,14 @@ namespace AbacusToy {
             simMoveBoard = null;
             // Not at target loc? Say we're animating!
             if (!IsFinishedAnimating()) {
-                areObjectsAnimating = true;
+                AreObjectsAnimating = true;
                 //animLocVel = 0.08f;
                 //animLocTarget = 0;
             }
         }
         public void OnCancelSimMove() {
             ClearSimMoveDirAndBoard();
-            animLocTarget = 0;
+            AnimLocTarget = 0;
         }
         public void OnBoardMoveComplete() {
             ClearSimMoveDirAndBoard();
@@ -254,9 +252,9 @@ namespace AbacusToy {
         //  Update
         // ----------------------------------------------------------------
         private void FixedUpdate() {
-            if (areObjectsAnimating) {
+            if (AreObjectsAnimating) {
                 animLocVel *= 0.75f;
-                animLocVel += (animLocTarget-animLoc) * 0.05f;//AnimationEasing;
+                animLocVel += (AnimLocTarget-animLoc) * 0.05f;//AnimationEasing;
                 animLoc += animLocVel;
                 
     //            animLoc += (animLocTarget-animLoc) * 0.1f;//AnimationEasing;

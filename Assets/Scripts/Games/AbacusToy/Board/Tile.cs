@@ -6,6 +6,8 @@ namespace AbacusToy {
 	public class Tile : BoardOccupant {
         // Properties
         public int ColorID { get; private set; }
+        public bool IsInOnlyGroup { get; private set; } // true for all Tiles of my colorID when we're all touchin' each other!
+        public bool WasUsedInSearchAlgorithm;
 
 
         // ----------------------------------------------------------------
@@ -19,6 +21,12 @@ namespace AbacusToy {
 			TileData data = new TileData(BoardPos, ColorID, new List<Vector2Int>(FootprintLocal)); // note: COPY the Vector2Int list. DEF don't want a reference.
 			return data;
 		}
+        
+        
+        // Doers
+        public void UpdateIsInOnlyGroup(int numGroupsOfColorID) {
+            IsInOnlyGroup = numGroupsOfColorID <= 1;
+        }
 
 	}
 }

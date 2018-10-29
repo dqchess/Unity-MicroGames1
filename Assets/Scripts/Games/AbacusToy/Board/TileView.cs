@@ -10,7 +10,14 @@ namespace AbacusToy {
         [SerializeField] private TileViewBody bodyShadow=null;
         [SerializeField] private Text t_debugText=null;
         // References
+        [SerializeField] private Sprite[] iconSprites=null;
         public Tile MyTile { get; private set; }
+        
+        // Getters (Public)
+        public Sprite GetIconSprite(int _colorID) {
+            if (_colorID<0 || _colorID>=iconSprites.Length) { return null; }
+            return iconSprites[_colorID];
+        }
 
 
 
@@ -28,7 +35,12 @@ namespace AbacusToy {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-		override public void UpdateVisualsPostMove() {
+        public override void UpdateVisualsPreMove() {
+            base.UpdateVisualsPreMove();
+            body.UpdateVisualsPreMove();
+            bodyShadow.UpdateVisualsPreMove();
+        }
+        override public void UpdateVisualsPostMove() {
 			base.UpdateVisualsPostMove();
             
             body.UpdateVisualsPostMove();

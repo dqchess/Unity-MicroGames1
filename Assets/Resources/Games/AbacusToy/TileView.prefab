@@ -105,6 +105,18 @@ MonoBehaviour:
   body: {fileID: 114152129582973850}
   bodyShadow: {fileID: 114701499322176954}
   t_debugText: {fileID: 114462379040502972}
+  iconSprites:
+  - {fileID: 21300000, guid: ce7398108473646fcb52a218d5a73de0, type: 3}
+  - {fileID: 21300000, guid: 1091d3c6afa8b4e6d9c996c9f334f748, type: 3}
+  - {fileID: 21300000, guid: 316ec8c87efc342f88e371eb869e1522, type: 3}
+  - {fileID: 21300000, guid: d39ffa98d61ca431e96e45432875bf98, type: 3}
+  - {fileID: 21300000, guid: f0e05ffe63cc947dc82a5f09a320d07f, type: 3}
+  - {fileID: 21300000, guid: aebfe205528f94c97821fdb38cc17f89, type: 3}
+  - {fileID: 21300000, guid: 710dd4f1444e340b582d372fc578f1de, type: 3}
+  - {fileID: 21300000, guid: 1b06ef4c8fec1401d867ce7d32d4d93d, type: 3}
+  - {fileID: 21300000, guid: 600ffb9ff3135401ea3d81282121a9e6, type: 3}
+  - {fileID: 21300000, guid: 32c3f5d433b3b49bfb1fd8cad990a525, type: 3}
+  - {fileID: 21300000, guid: 81d293a5739d142b4b88da18967321c9, type: 3}
 --- !u!114 &114462379040502972
 MonoBehaviour:
   m_ObjectHideFlags: 1

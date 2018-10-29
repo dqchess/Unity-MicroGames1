@@ -8,6 +8,7 @@ namespace AbacusToy {
         // Components
         private List<Image> bodyImages;
         private List<Image> betweenImages; // SIMPLE way to have flush shapes. These are the squares BETWEEN my footprint images (that hide the inside rounded corners).
+        private List<Image> iconImages; // one for every bodyImage.
         // References
         [SerializeField] private TileView myTileView=null;
         [SerializeField] private Sprite s_bodyUnitRound=null;
@@ -35,7 +36,12 @@ namespace AbacusToy {
             }
         }
         // Getters (Private)
-        private Color GetAppliedBodyColor() { return Color.Lerp(bodyColor, Color.white, highlightAlpha); }
+        private Color GetAppliedBodyColor() {
+            Color color = bodyColor;
+            //if (MyTile.IsInOnlyGroup) { color = Color.Lerp(color, Color.black, 0.3f); }
+            color = Color.Lerp(color, Color.white, highlightAlpha);
+            return color;
+        }
         private float UnitSize { get { return myTileView.MyBoardView.UnitSize; } }
         private Tile MyTile { get { return myTileView.MyTile; } }
         private List<Vector2Int> footprintLocal { get { return MyTile.FootprintLocal; } }
@@ -58,10 +64,6 @@ namespace AbacusToy {
                     }
                 }
             }
-            //// Return!
-            //Vector2[] returnArray = new Vector2[bwPoses.Count];
-            //bwPoses.CopyTo(returnArray);
-            //return returnArray;
         }
         
 
@@ -72,6 +74,7 @@ namespace AbacusToy {
             bodyColor = GetBodyColor(MyTile.ColorID);
             bodyImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
             betweenImages = new List<Image>();
+            iconImages = new List<Image>();
             
             // Kinda sloppy how we handle the shadow. :P
             if (isShadow) {
@@ -85,28 +88,31 @@ namespace AbacusToy {
         
 
         private void AddBodyImage(Vector2Int footPos) {
-            float diameter = UnitSize*1;//0.9f;
-            Image newImage = new GameObject().AddComponent<Image>();
-            GameUtils.ParentAndReset(newImage.gameObject, this.transform);
-            newImage.sprite = s_bodyUnitRound;
-            GameUtils.SizeUIGraphic(newImage, diameter,diameter);
+            Image newImage = AddImage(footPos, "i_FootprintUnit", s_bodyUnitRound);
             newImage.color = GetAppliedBodyColor();
-            newImage.rectTransform.anchoredPosition = new Vector2(footPos.x*UnitSize, -footPos.y*UnitSize);
             newImage.transform.SetAsFirstSibling(); // put behind everything else.
-            newImage.name = "i_FootprintUnit";
             bodyImages.Add(newImage);
         }
+        private void AddIconImage(Vector2Int footPos) {
+            Image newImage = AddImage(footPos, "i_Icon", myTileView.GetIconSprite(MyTile.ColorID));
+            newImage.color = new Color(1,1,1, 0.8f);
+            iconImages.Add(newImage);
+        }
         private void AddBetweenImage(Vector2 bwPos) {
-            float diameter = UnitSize*1;//0.9f;
+            Image newImage = AddImage(bwPos, "i_FootprintBetween", null);
+            newImage.color = GetAppliedBodyColor();
+            newImage.transform.SetAsFirstSibling(); // put behind everything else.
+            betweenImages.Add(newImage);
+        }
+        private Image AddImage(Vector2Int boardPos, string _name, Sprite sprite) { return AddImage(boardPos.ToVector2(), _name, sprite); }
+        private Image AddImage(Vector2 boardPos, string _name, Sprite sprite) {
             Image newImage = new GameObject().AddComponent<Image>();
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
-            //newImage.sprite = s_bodyUnitRound;
-            GameUtils.SizeUIGraphic(newImage, diameter,diameter);
-            newImage.color = GetAppliedBodyColor();
-            newImage.rectTransform.anchoredPosition = new Vector2(bwPos.x*UnitSize, -bwPos.y*UnitSize);
-            newImage.transform.SetAsFirstSibling(); // put behind everything else.
-            newImage.name = "i_FootprintBetween";
-            betweenImages.Add(newImage);
+            newImage.name = _name;
+            newImage.sprite = sprite;
+            GameUtils.SizeUIGraphic(newImage, UnitSize,UnitSize);
+            newImage.rectTransform.anchoredPosition = new Vector2(boardPos.x*UnitSize, -boardPos.y*UnitSize);
+            return newImage;
         }
         
         
@@ -119,25 +125,28 @@ namespace AbacusToy {
             
             for (int i=0; i<bodyImages.Count; i++) { bodyImages[i].color = color; }
             for (int i=0; i<betweenImages.Count; i++) { betweenImages[i].color = color; }
+            
+            Color iconColor = MyTile.IsInOnlyGroup ? new Color(0,0,0, 0.16f) : new Color(1,1,1, 0.7f);
+            for (int i=0; i<iconImages.Count; i++) { iconImages[i].color = iconColor; }
         }
         public void SetHighlightAlpha(float alpha) {
             highlightAlpha = alpha;
             ApplyBodyColor();
         }
         
+        public void UpdateVisualsPreMove() {
+            ApplyBodyColor();
+        }
         public void UpdateVisualsPostMove() {
             // Add images to fit my footprint!
             if (bodyImages.Count != footprintLocal.Count) {
                 for (int i=bodyImages.Count; i<footprintLocal.Count; i++) {
                     AddBodyImage(footprintLocal[i]);
+                    if (!isShadow) { AddIconImage(footprintLocal[i]); }
                 }
             }
             UpdateBetweenFootprintLocalPosesAndAddImages();
-            //Vector2[] bwPoses = GetBetweenFootprintLocalPoses();
-            //if (betweenImages.Count != bwPoses.Length) {
-            //    for (int i=betweenImages.Count; i<bwPoses.Length; i++) {
-            //    }
-            //}
+            ApplyBodyColor();
         }
         
         

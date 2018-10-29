@@ -5,6 +5,8 @@ using UnityEngine;
 namespace AbacusToy {
 	[System.Serializable]
 	public class Board {
+        // Constants
+        private const int MaxColorID = 9; // TODO: Set this per level, yo!
 		// Properties
         public bool DoTilesTow { get; private set; } // if FALSE, then we just have basic 16-sliding puzzle mechanic. If TRUE, we have our special towing mechanic!
         private bool areGoalsSatisfied;
@@ -12,15 +14,21 @@ namespace AbacusToy {
         private int randGroupSize;
         public int ParMoves { get; private set; }
         public int NumFootprintsDown { get; set; } // For in-progress moves. We don't wanna do groupfinding/islandtugging unless all footprints are down.
-		// Objects
-		public BoardSpace[,] spaces;
+        private int[] numGroupsOfColorID; // index is colorID. Value is how many groups there are of this colorID.
+        // Objects
+        public BoardSpace[,] spaces;
         public List<Tile> tiles;
         // Reference Lists
-		public List<BoardObject> objectsAddedThisMove;
+        public List<BoardObject> objectsAddedThisMove;
+        private List<List<Tile>> tileGroups;
 
 		// Getters (Private)
 		private bool GetAreGoalsSatisfied() {
-			return false; // FOR NOW, I'm never satisfied.
+            // If ANY colorIDs have more than 1 group, return false.
+            for (int i=0; i<numGroupsOfColorID.Length; i++) {
+                if (numGroupsOfColorID[i] > 1) { return false; }
+            }
+            return true;
 		}
 
 		// Getters (Public)
@@ -69,6 +77,7 @@ namespace AbacusToy {
 			MakeEmptyPropLists ();
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
+            OnMoveComplete();
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
@@ -84,7 +93,6 @@ namespace AbacusToy {
 			objectsAddedThisMove = new List<BoardObject>();
 		}
 		private void AddPropsFromBoardData (BoardData bd) {
-			// Add Props to the lists!
 			foreach (TileData data in bd.tileDatas) { AddTile (data); }
 		}
 
@@ -130,8 +138,50 @@ namespace AbacusToy {
 			return result;
 		}
 		private void OnMoveComplete () {
+            CalculateTileGroups();
 			areGoalsSatisfied = GetAreGoalsSatisfied();
 		}
+        
+        // ----------------------------------------------------------------
+        //  Tile Group-Finding
+        // ----------------------------------------------------------------
+        private void CalculateTileGroups() {
+            // Reset all tiles' WasUsedInSearchAlgorithm.
+            for (int i=0; i<tiles.Count; i++) {
+                tiles[i].WasUsedInSearchAlgorithm = false;
+            }
+            // Find da groups!
+            tileGroups = new List<List<Tile>>();
+            for (int i=tiles.Count-1; i>=0; --i) {
+                if (!tiles[i].WasUsedInSearchAlgorithm) {
+                    tileGroups.Add(new List<Tile>());
+                    RecursiveTileFinding(tiles[i].Col,tiles[i].Row, tiles[i].ColorID);
+                }
+            }
+            // Update how many of each group there are!
+            numGroupsOfColorID = new int[MaxColorID];
+            for (int i=0; i<tileGroups.Count; i++) {
+                int colorID = tileGroups[i][0].ColorID; // use the first Tile's colorID (they're all the same).
+                numGroupsOfColorID[colorID] ++;
+            }
+            // Finally, tell the Tiles what's up!
+            for (int i=0; i<tiles.Count; i++) {
+                int colorID = tiles[i].ColorID;
+                int numGroups = numGroupsOfColorID[colorID];
+                tiles[i].UpdateIsInOnlyGroup(numGroups);
+            }
+        }
+        private void RecursiveTileFinding(int col,int row, int colorID) {
+            Tile tileHere = GetTile(col,row);
+            if (tileHere==null || tileHere.WasUsedInSearchAlgorithm) { return; } // No unused tile here? Stop.
+            if (tileHere.ColorID != colorID) { return; } // Not a match? Stop.
+            tileHere.WasUsedInSearchAlgorithm = true;
+            tileGroups[tileGroups.Count-1].Add(tileHere);
+            if (col>0) { RecursiveTileFinding(col-1,row, colorID); }
+            if (row>0) { RecursiveTileFinding(col,row-1, colorID); }
+            if (col<numCols-1) { RecursiveTileFinding(col+1,row, colorID); }
+            if (row<numRows-1) { RecursiveTileFinding(col,row+1, colorID); }
+        }
 
 
         // ----------------------------------------------------------------
@@ -182,4 +232,5 @@ namespace AbacusToy {
 
 
 	}
+    
 }

@@ -86,7 +86,7 @@ namespace AbacusToy {
 			// Start me in the right spot!
 			SetValues_From (_myObject);
 			SetValues_To (_myObject); // For safety, default my "to" values to where I already am.
-			GoToValues (myBoardView.ObjectsAnimationLocTarget);
+			GoToValues (myBoardView.AnimLocTarget);
 		}
 
 
@@ -101,7 +101,7 @@ namespace AbacusToy {
 		/** This is called once all the animation is finished! */
 		virtual public void UpdateVisualsPostMove () {
 			SetValues_From (myObject);
-			GoToValues (myBoardView.ObjectsAnimationLocTarget); // go 100% to the target values, of course! (This could be either 1 *or* 0.)
+			GoToValues (myBoardView.AnimLocTarget); // go 100% to the target values, of course! (This could be either 1 *or* 0.)
 		}
 		public void SetValues_To (BoardObject _bo) {
 			if (_bo == null) { return; }
@@ -135,7 +135,7 @@ namespace AbacusToy {
 		// ----------------------------------------------------------------
 		public void OnGoToPrevBoardPos () {
 			// No animating in an undo. It's simply more professional.
-			GoToValues (myBoardView.ObjectsAnimationLocTarget);
+			GoToValues (myBoardView.AnimLocTarget);
 		}
 		public void GoToValues (float lerpLoc) {
 			//		if (mySimulatedMoveObject == null) { return; }
