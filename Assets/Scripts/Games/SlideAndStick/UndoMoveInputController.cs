@@ -86,7 +86,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		//  Button Events
 		// ----------------------------------------------------------------
 		public void OnRestartLevelButtonClick() {
-			level.GameController.RestartLevel();//ReloadScene();
+			level.UndoAllMoves();//.GameController.RestartLevel();//ReloadScene();
 		}
 
 		public void OnButton_Undo_Held () {

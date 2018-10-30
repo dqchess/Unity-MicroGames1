@@ -11,6 +11,35 @@
 <LevelPack packName="Tests">
 <Levels>
 
+    <Level diff="0" layout=" .., .., " />
+	
+	
+    <Level diff="0" layout=" ....., ....., ....., ....., ....., " />
+    <Level diff="4" layout=" .0.11, .1.10, 1.001, 1.10., .0000, , ..._., ....., ....., ....., ....|," />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+	
+	
+        
+	
+	
+
+	
+	
     <Level diff="0" name="test" layout="
         00.,
         00.,

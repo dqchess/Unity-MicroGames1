@@ -18,6 +18,7 @@ namespace SlideAndStick {
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
         private LevelAddress myAddress;
 		private Vector2Int mousePosBoard;
+		private Vector2Int tileGrabbingClickBoardOffset; // when we set tileGrabbing, this is the boardPos difference between our mouse and the Tile. For retaining tileGrabbing for split tiles.
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
         [SerializeField] private LevelUI levelUI=null;
@@ -48,17 +49,18 @@ namespace SlideAndStick {
 			if (NumMovesMade <= 0) { return false; } // Can't go before time started, duhh.
 			return true;
 		}
-
 		public int NumMovesMade {
 			get { return numMovesMade; }
 			private set {
 				numMovesMade = value;
 				undoMoveInputController.OnNumMovesMadeChanged(numMovesMade);
-				// Dispatch event!
-//				GameManagers.Instance.EventManager.OnNumMovesMadeChanged(numMovesMade);
 			}
-		
-        }
+		}
+		private Vector2Int GetMousePosOffset(BoardOccupant bo) {
+			if (bo == null) { return Vector2Int.zero; }
+			return mousePosBoard - bo.BoardPos.ToVector2Int();
+		}
+
 
 		// ----------------------------------------------------------------
 		//  Initialize / Destroy
@@ -75,9 +77,8 @@ namespace SlideAndStick {
 			myRectTransform.offsetMax = myRectTransform.offsetMin = Vector2.zero;
 
 			// Reset easy stuff
-			boardSnapshots = new List<BoardData>();
-			NumMovesMade = 0;
-            ResetTimeSpentThisPlay();
+			ResetTimeSpentThisPlay();
+			ResetSnapshotsAndMovesMade();
 
 			// Send in the clowns!
 			RemakeModelAndViewFromData(_levelData.boardData);
@@ -89,12 +90,16 @@ namespace SlideAndStick {
         }
 
 
+		private void ResetSnapshotsAndMovesMade() {
+			boardSnapshots = new List<BoardData>();
+			NumMovesMade = 0;
+		}
         private void RemakeModelAndViewFromData (BoardData bd) {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
 			board = new Board(bd);
-			board.Debug_AddTilesIfNone(gameController); // For rando layout generating!
+			board.Debug_AddTilesIfNone(gameController.randGenParams); // For rando layout generating!
 			boardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
 			boardView.Initialize (this, board);
             // Tell ppl!
@@ -121,6 +126,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void Update() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
+			if (simMoveController == null) { return; } // Safety check.
 
             simMoveController.Update();
 
@@ -166,7 +172,8 @@ namespace SlideAndStick {
 
 		private void RegisterButtonInput() {
 			// DEBUG
-			if (Input.GetKeyDown(KeyCode.T)) { Debug_PrintLevelLayout(); }
+			if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
+			if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
 		}
 
 		private void RegisterTouchInput() {
@@ -202,6 +209,7 @@ namespace SlideAndStick {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
+				tileGrabbingClickBoardOffset = GetMousePosOffset(tileGrabbing);
 				//board.OnSetTileGrabbing(tileGrabbing); // tell Board.
                 boardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
                 // Tell the Tiles!
@@ -212,7 +220,8 @@ namespace SlideAndStick {
 		/// Call this after we finish a move: tileGrabbing may now be null (it was destroyed in a merge), so we want to set tileGrabbing to what it LOOKS like we were already grabbing.
 		private void ConfirmTileGrabbing() {
 			if (tileGrabbing != null) {
-				SetTileGrabbing(board.GetTile(tileGrabbing.BoardPos));
+				Vector2Int boardPos = tileGrabbing.BoardPos.ToVector2Int() + tileGrabbingClickBoardOffset;
+				SetTileGrabbing(board.GetTile(boardPos));
 			}
 		}
         private void UpdateTimeSpentThisPlay() {
@@ -297,20 +306,23 @@ namespace SlideAndStick {
 		public void UndoMoveAttempt() {
 			if (!CanUndoMove()) { return; }
 			// Get the snapshot to restore to, restore, and decrement moves made!
-			BoardData boardSnapshotData = boardSnapshots[boardSnapshots.Count-1];
+			BoardData snapshotData = boardSnapshots[boardSnapshots.Count-1];
 			// Remake my model and view from scratch!
-			RemakeModelAndViewFromData(boardSnapshotData);
-			boardSnapshots.Remove(boardSnapshotData);
+			RemakeModelAndViewFromData(snapshotData);
+			boardSnapshots.Remove(snapshotData);
 			NumMovesMade --; // decrement this here!
 			gameController.FUEController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!
 			OnBoardMoveComplete();
 		}
-
-		private void Debug_PrintLevelLayout() {
-			string str = "\n";//\nLEVEL - \n";
-			str += board.Debug_GetBoardLayout();
-            GameUtils.CopyToClipboard(str);
+		public void UndoAllMoves() {
+			if (!CanUndoMove()) { return; }
+			// Restore from the first snapshot, and reset 'em!
+			BoardData snapshotData = boardSnapshots[0];
+			ResetSnapshotsAndMovesMade();
+			RemakeModelAndViewFromData(snapshotData);
+//			// Tie up loose ends by "completing" this move!
+//			OnBoardMoveComplete();
 		}
 
 	}

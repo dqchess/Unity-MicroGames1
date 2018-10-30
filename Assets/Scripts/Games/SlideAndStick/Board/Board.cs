@@ -214,12 +214,6 @@ namespace SlideAndStick {
         //  Tile Splitting
         // ----------------------------------------------------------------
         private void SeparateSplitTiles() {
-            //for (int i=0; i<walls.Count; i++) {
-            //    Tile tileStraddlingWall = walls[i].GetTileStraddlingMe();
-            //    if (tileStraddlingWall != null) {
-            //        SplitTile(tileStraddlingWall, walls[i].BetweenPos);
-            //    }
-            //}
             for (int i=tiles.Count-1; i>=0; --i) {
                 MaybeSeparateSplitTile(tiles[i]);
             }
@@ -255,7 +249,6 @@ namespace SlideAndStick {
             }
             return fpsGlobal;
         }
-        
         private List<Vector2Int> OffsetFootprints(List<Vector2Int> fpsGlobal, Vector2Int offset) {
             List<Vector2Int> list = new List<Vector2Int>();
             for (int i=0; i<fpsGlobal.Count; i++) {
@@ -306,14 +299,25 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Debug
 		// ----------------------------------------------------------------
-		public void Debug_AddTilesIfNone(GameController gameController) {
+		public void Debug_AddTilesIfNone(RandGenParams rgp) {
 			if (tiles.Count > 0) { return; } // Nah, we've got some.
-			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
-			int numColors = gameController.NumColors;
-            int stickiness = gameController.Stickiness;
+			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * rgp.PercentTiles);
+			int numColors = rgp.NumColors;
+			int stickiness = rgp.Stickiness;
 			//			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
+			Debug_AddRandomWalls(rgp.NumWalls);
 			Debug_AddRandomTiles(numToAdd, numColors, stickiness);
 			OnMoveComplete();
+		}
+		private void Debug_AddRandomWalls(int numToAdd) {
+			int safetyCount=0;
+			while (numToAdd > 0 && safetyCount++<99) {
+				BoardPos randPos = BoardUtils.GetRandPosWithoutWall(this);
+				if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+				AddWall(new WallData(randPos));
+				numToAdd --;
+				if (numToAdd <= 0) { break; }
+			}
 		}
 		private void Debug_AddRandomTiles(int numToAdd, int numColors, int stickiness) {
             //for (int i=0; i<numToAdd; i++) {TEST TEMP
@@ -340,22 +344,60 @@ namespace SlideAndStick {
                 }
             }
 		}
-		public void Debug_PrintBoardLayout(bool alsoCopyToClipboard=true) {
-			string boardString = Debug_GetBoardLayout();
-			Debug.Log (boardString);
-            if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
+		public void Debug_CopyLayoutToClipboard(bool isCompact) {
+			string str = "";//"\n";
+			str += Debug_GetLayout(isCompact);
+			GameUtils.CopyToClipboard(str);
 		}
-		public string Debug_GetBoardLayout() {
-			string str = "";
-			for (int row=0; row<NumRows; row++) {
-                str += "        "; // put it on my tab!
-				for (int col=0; col<NumCols; col++) {
-					Tile tile = GetTile(col,row);
-					str += tile==null ? "." : tile.ColorID.ToString();
+		public string Debug_GetLayout(bool isCompact) {
+			// Make empty allChars grid string thing. (E.g. If a space has a tile AND a wall, that string'll be like "0|". We pick it apart later.)
+			string[,] allChars = new string[NumCols,NumRows];
+			for (int i=0; i<NumCols; i++) { for (int j=0; j<NumRows; j++) { allChars[i,j]=""; } }
+			// Populate!
+			foreach (Tile t in tiles) {
+				foreach (Vector2Int fp in t.FootprintGlobal) {
+					allChars[fp.x,fp.y] += t.ColorID.ToString();
 				}
-				str += ",";
-                if (row<NumRows-1) { str += "\n"; }
 			}
+			foreach (Wall w in walls) {
+				int c = w.Col;// + (w.IsVertical ? 1 : 0);
+				int r = w.Row + (w.IsVertical ? 0 : -1);
+				allChars[c,r] += w.IsVertical ? "|" : "_";
+			}
+			// How many layers is that?
+			int numLayers = 0;
+			for (int i=0; i<NumCols; i++) {
+				for (int j=0; j<NumRows; j++) {
+					numLayers = Mathf.Max(numLayers, allChars[i,j].Length);
+				}
+			}
+
+			// Now combine all this into ONE big ol' string!
+			string tab = isCompact ? "" : "        ";
+			string lb = isCompact ? " " : "\n";
+			string str = "" + lb;
+			for (int layer=0; layer<numLayers; layer++) {
+				for (int row=0; row<NumRows; row++) {
+					str += tab;
+					for (int col=0; col<NumCols; col++) {
+						string spaceStr = allChars[col,row];
+						// There IS a thing here!
+						if (layer < spaceStr.Length) {
+							str += spaceStr[layer];
+						}
+						// There is NOT a thing here. Use the info about the BoardSpace then.
+						else {
+							BoardSpace space = GetSpace(col,row);
+							if (!space.IsPlayable) { str += "#"; }
+							else { str += "."; }
+						}
+					}
+					str += ",";
+					if (row < NumRows-1) { str += lb; }
+				}
+				if (layer < numLayers-1) { str += lb+tab+","+lb; }
+			}
+
 			return str;
 		}
 

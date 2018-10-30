@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlideAndStick {
+	/** This class is JUST for finding InnerClusters. We convert our footprints to OccFPClusterDatas, and do recursive fill-finding. */
+	class OccFPClusterData {
+		public int clusterIndex=-1;
+		public Vector2Int Pos { get; private set; }
+		public OccFPClusterData(Vector2Int pos) {
+			this.Pos = pos;
+		}
+	}
+
+
 	[System.Serializable]
 	abstract public class BoardOccupant : BoardObject {
         // Properties
@@ -16,6 +26,8 @@ namespace SlideAndStick {
         public bool HasMergePosLocal(Vector2 mpLocal) {
             return MergePosesLocal.Contains(mpLocal);
         }
+		// Getters (Private)
+		private List<Vector2Int> LastInnerCluster { get { return InnerClusters[InnerClusters.Count-1]; } }
 
 
         // ----------------------------------------------------------------
@@ -68,8 +80,6 @@ namespace SlideAndStick {
 			UpdateFootprintGlobal();
 			// Put me back on the Board!
 			AddMyFootprint();
-            //// Remake my mergePosesLocal!
-            //RemakeMergePosesLocal();
 		}
 		private void UpdateFootprintGlobal() {
 			FootprintGlobal = new List<Vector2Int>(FootprintLocal);
@@ -98,37 +108,26 @@ namespace SlideAndStick {
             }
         }
         
-        //public void RemoveMergePosGlobal(Vector2 mpGlobal) {
-        //    Vector2 mpLocal = mpGlobal - BoardPos.ToVector2();
-        //    if (HasMergePosLocal(mpLocal)) {
-        //        MergePosesLocal.Remove(mpLocal);
-        //    }
-        //    else {
-        //        Debug.LogError("Whoa! Trying to remove a mergePosLocal from a Tile, but it doesn't have that mergePos!");
-        //    }
-        //}
-        
-        private List<Vector2Int> LastInnerCluster { get { return InnerClusters[InnerClusters.Count-1]; } }
         
         public void RemakeInnerClusters() {
             InnerClusters = new List<List<Vector2Int>>();
             // for now, convert our footprints into TempTileFPs.
-            Dictionary<Vector2Int, TempTileFP> fPs = new Dictionary<Vector2Int, TempTileFP>();
+            Dictionary<Vector2Int, OccFPClusterData> fPs = new Dictionary<Vector2Int, OccFPClusterData>();
             for (int i=0; i<FootprintLocal.Count; i++) {
                 Vector2Int fpLocal = FootprintLocal[i];
-                fPs[fpLocal] = new TempTileFP(fpLocal);
+                fPs[fpLocal] = new OccFPClusterData(fpLocal);
             }
             // Do some recursive searchin'!
-            foreach (TempTileFP fP in fPs.Values) {
+            foreach (OccFPClusterData fP in fPs.Values) {
                 if (fP.clusterIndex == -1) {
                     InnerClusters.Add(new List<Vector2Int>());
                     RecursivelyFindClusters(fPs, fP.Pos, Vector2Int.zero);
                 }
             }
         }
-        private void RecursivelyFindClusters(Dictionary<Vector2Int, TempTileFP> fPs, Vector2Int originPos, Vector2Int dir) {
+        private void RecursivelyFindClusters(Dictionary<Vector2Int, OccFPClusterData> fPs, Vector2Int originPos, Vector2Int dir) {
             Vector2Int pos = originPos + dir;
-            TempTileFP fp = fPs.ContainsKey(pos) ? fPs[pos] : null;
+            OccFPClusterData fp = fPs.ContainsKey(pos) ? fPs[pos] : null;
             if (fp==null || fp.clusterIndex!=-1) { return; } // no footprint here? Stop.
             if (dir!=Vector2Int.zero && !MergePosesLocal.Contains(originPos.ToVector2()+dir.ToVector2()*0.5f)) { return; } // No connecting mergePos? Stop.
             
@@ -143,12 +142,4 @@ namespace SlideAndStick {
 
 
 	}
-    
-    class TempTileFP {
-        public int clusterIndex=-1;
-        public Vector2Int Pos { get; private set; }
-        public TempTileFP(Vector2Int pos) {
-            this.Pos = pos;
-        }
-    }
 }
