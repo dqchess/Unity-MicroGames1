@@ -11,11 +11,6 @@ namespace AbacusToy {
         private Level level;
         // References
         //[SerializeField] private FUEController fueController=null;
-        // Editing Levels Stuff
-        [Header ("Random Tile Params")]
-        public float PercentTiles = 0.8f;
-        public int NumColors = 3;
-        public int Stickiness = 3;
 
         // Getters (Public)
         //public FUEController FUEController { get { return fueController; } }
@@ -33,11 +28,6 @@ namespace AbacusToy {
         override protected void Start() {
             base.Start();
             
-            // Load rand tile placement properties!
-            PercentTiles = SaveStorage.GetFloat(SaveKeys.AbacusToy_RandGenPercentTiles, 0.8f);
-            NumColors = SaveStorage.GetInt(SaveKeys.AbacusToy_NumColors, 3);
-            Stickiness = SaveStorage.GetInt(SaveKeys.AbacusToy_RandGenStickiness, 1);
-            
             // In the editor? Reload levels!
             #if UNITY_EDITOR
             AssetDatabase.Refresh();
@@ -52,11 +42,6 @@ namespace AbacusToy {
         }
         override protected void OnDestroy() {
             base.OnDestroy();
-            
-            // Save tile placement properties!
-            SaveStorage.SetFloat(SaveKeys.AbacusToy_RandGenPercentTiles, PercentTiles);
-            SaveStorage.SetInt(SaveKeys.AbacusToy_NumColors, NumColors);
-            SaveStorage.SetInt(SaveKeys.AbacusToy_RandGenStickiness, Stickiness);
             
             // Remove event listeners!
             GameManagers.Instance.EventManager.LevelJumpButtonClickEvent -= OnLevelJumpButtonClick;
@@ -236,103 +221,5 @@ namespace AbacusToy {
 
 
 
-
-/*
-	public class GameController : BaseLevelGameController {
-		// Overrideables
-		override public string MyGameName() { return GameNames.AbacusToy; }
-		// Objects
-		private Level level; // MY game-specific Level class.
-
-
-		override protected void WinLevel() {
-			base.WinLevel();
-			StartCoroutine(Coroutine_StartNextLevel());
-//			// Tell people!
-//			level.OnWinLevel();
-//			// Update best score!
-//			int bestScore = SaveStorage.GetInt(SaveKeys.BestScore(MyGameName(), LevelIndex));
-//			if (scoreSolidified > bestScore) {
-//				SaveStorage.SetInt(SaveKeys.BestScore(MyGameName(),LevelIndex), scoreSolidified);
-//			}
-		}
-
-		private IEnumerator Coroutine_StartNextLevel() {
-			yield return new WaitForSecondsRealtime(0.5f);//1.2f);
-			SetCurrentLevel(LevelIndex+1, true);
-		}
-
-		override protected void SetCurrentLevel(int _levelIndex, bool doAnimate=false) {
-			StopCoroutine("Coroutine_SetCurrentLevel");
-			StartCoroutine(Coroutine_SetCurrentLevel(_levelIndex, doAnimate));
-		}
-		override protected void InitializeLevel(GameObject _levelGO, int _levelIndex) {
-			level = _levelGO.GetComponent<Level>();
-			level.Initialize(this, canvas.transform, _levelIndex);
-			base.OnInitializeLevel(level);
-		}
-		private IEnumerator Coroutine_SetCurrentLevel(int _levelIndex, bool doAnimate) {
-			Level prevLevel = level;
-
-			// Make the new level!
-			InitializeLevel(Instantiate(resourcesHandler.abacusToy_level), _levelIndex);
-
-			// DO animate!
-			if (doAnimate) {
-				float duration = 1.2f;
-
-				level.IsAnimating = true;
-				prevLevel.IsAnimating = true;
-				float height = 1200;
-				Vector3 levelDefaultPos = level.transform.localPosition;
-				level.transform.localPosition += new Vector3(0, height, 0);
-				LeanTween.moveLocal(level.gameObject, levelDefaultPos, duration).setEaseInOutQuart();
-				LeanTween.moveLocal(prevLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
-				yield return new WaitForSeconds(duration);
-
-				level.IsAnimating = false;
-				if (prevLevel!=null) {
-					Destroy(prevLevel.gameObject);
-				}
-			}
-			// DON'T animate? Ok, just destroy the old level.
-			else {
-				if (prevLevel!=null) {
-					Destroy(prevLevel.gameObject);
-				}
-			}
-
-			yield return null;
-		}
-
-		// game events
-		public void OnBoardGoalsSatisfied() {
-			WinLevel();
-		}
-
-
-		// ----------------------------------------------------------------
-		//  Input
-		// ----------------------------------------------------------------
-		override protected void OnTapDown() { }
-		override protected void OnTapUp() { }
-
-
-		// ----------------------------------------------------------------
-		//  Debug
-		// ----------------------------------------------------------------
-		override protected void Debug_WinLevel() {
-			WinLevel();
-		}
-
-
-
-
-
-	}
-
-
-}
-*/
 
 

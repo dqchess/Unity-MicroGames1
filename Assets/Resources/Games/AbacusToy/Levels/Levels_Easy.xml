@@ -3,22 +3,50 @@
 
 
 
-<!--
-    ================================================================
-    Easy
-    ================================================================
--->
-<LevelPack packName="Easy">
+<!-- ================================================================ -->
+<LevelPack packName="Match 2 Tests">
 <Levels>
 
-<!--
-    <Level diff="1" name="IntroGame1" fueID="1" layout="
-        ...,
-        0.0,
-        ...,
-    " />
--->
+    <Level diff="0" randGroupSize="2" doTilesTow="false" layout=" ...., xxxx, xxxx, xxxx, xxxx, " />
+    <Level diff="0" randGroupSize="2" layout=" ........, ........, ..xxxx.., ..xxxx.., ..xxxx.., ..xxxx.., ........, ........, " />
 
+    <Level diff="0" randGroupSize="2" layout=" ......., ......., ..xxx.., ..xxx.., ..xxx.., ......., .......," />
+    <Level diff="0" randGroupSize="2" layout=" ......., ......., ..xxx.., ..x#x.., ..xxx.., ......., .......," />
+    <Level diff="0" randGroupSize="2" layout=" ......., ..#.#.., .#xxx#., ..xxx.., .#xxx#., ..#.#.., .......," />
+    <Level diff="0" randGroupSize="3" layout=" ......., ......., ..xxx.., ..xxx.., ..xxx.., ......., .......," />
+    <Level diff="0" randGroupSize="2" layout=" ........, ........, ..xxxx.., ..xxxx.., ..xxxx.., ..xxxx.., ........, ........," />
+    <Level diff="0" randGroupSize="3" layout=" ........, ........, ..xxxx.., ..xxxx.., ..xxxx.., ..xxxx.., ........, ........," />
+    <Level diff="0" randGroupSize="2" layout=" ........., ........., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ........., ........., " />
+    <Level diff="0" randGroupSize="3" layout=" ........., ........., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ........., ........., " />
+    <Level diff="0" randGroupSize="5" layout=" ........., ........., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ..xxxxx.., ........., ........., " />
+
+
+
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+
+	
+
+	
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+<!-- ================================================================ -->
+<LevelPack packName="Puzzle Tests">
+<Levels>
     <Level diff="2" layout="
 		......,
 		......,

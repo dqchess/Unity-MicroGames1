@@ -76,6 +76,7 @@ namespace AbacusToy {
                         case '#': spaceDatas[col,row].isPlayable = false; break;
                         //case '_': AddWallData (col,row+1, Sides.T); break; // note: because the underscore looks lower, consider it in the next row (so layout text file looks more intuitive).
                         //case '|': AddWallData (col,row, Sides.L); break;
+                        case 'x': AddTileData(col,row, -1); break;
                         case '0': AddTileData(col,row, 0); break;
                         case '1': AddTileData(col,row, 1); break;
                         case '2': AddTileData(col,row, 2); break;

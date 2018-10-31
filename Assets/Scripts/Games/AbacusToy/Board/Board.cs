@@ -9,8 +9,9 @@ namespace AbacusToy {
         private const int MaxColorID = 9; // TODO: Set this per level, yo!
 		// Properties
         public bool DoTilesTow { get; private set; } // if FALSE, then we just have basic 16-sliding puzzle mechanic. If TRUE, we have our special towing mechanic!
-        private bool areGoalsSatisfied;
-        private int numCols,numRows;
+        public bool AreGoalsSatisfied { get; private set; }
+        public int NumCols { get; private set; }
+        public int NumRows { get; private set; }
         private int randGroupSize;
         public int ParMoves { get; private set; }
         public int NumFootprintsDown { get; set; } // For in-progress moves. We don't wanna do groupfinding/islandtugging unless all footprints are down.
@@ -31,12 +32,8 @@ namespace AbacusToy {
             return true;
 		}
 
-		// Getters (Public)
-		public bool AreGoalsSatisfied { get { return areGoalsSatisfied; } }
-		public int NumCols { get { return numCols; } }
-		public int NumRows { get { return numRows; } }
-
-		public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
+        // Getters (Public)
+        public BoardSpace GetSpace(int col,int row) { return BoardUtils.GetSpace(this, col,row); }
 		public BoardSpace[,] Spaces { get { return spaces; } }
         public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
         public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
@@ -47,13 +44,13 @@ namespace AbacusToy {
 			return new Board(data);
 		}
 		public BoardData SerializeAsData() {
-			BoardData bd = new BoardData(numCols,numRows);
+			BoardData bd = new BoardData(NumCols,NumRows);
             bd.parMoves = ParMoves;
             bd.doTilesTow = DoTilesTow;
             bd.randGroupSize = randGroupSize;
 			foreach (Tile p in tiles) { bd.tileDatas.Add (p.SerializeAsData()); }
-			for (int col=0; col<numCols; col++) {
-				for (int row=0; row<numRows; row++) {
+			for (int col=0; col<NumCols; col++) {
+				for (int row=0; row<NumRows; row++) {
 					bd.spaceDatas[col,row] = GetSpace(col,row).SerializeAsData();
 				}
 			}
@@ -66,8 +63,8 @@ namespace AbacusToy {
 		//  Initialize
 		// ----------------------------------------------------------------
 		public Board (BoardData bd) {
-			numCols = bd.numCols;
-			numRows = bd.numRows;
+			NumCols = bd.numCols;
+			NumRows = bd.numRows;
             ParMoves = bd.parMoves;
             DoTilesTow = bd.doTilesTow;
             randGroupSize = bd.randGroupSize;
@@ -81,9 +78,9 @@ namespace AbacusToy {
 		}
 
 		private void MakeBoardSpaces (BoardData bd) {
-			spaces = new BoardSpace[numCols,numRows];
-			for (int i=0; i<numCols; i++) {
-				for (int j=0; j<numRows; j++) {
+			spaces = new BoardSpace[NumCols,NumRows];
+			for (int i=0; i<NumCols; i++) {
+				for (int j=0; j<NumRows; j++) {
 					spaces[i,j] = new BoardSpace (this, bd.spaceDatas[i,j]);
 				}
 			}
@@ -139,7 +136,7 @@ namespace AbacusToy {
 		}
 		private void OnMoveComplete () {
             CalculateTileGroups();
-			areGoalsSatisfied = GetAreGoalsSatisfied();
+			AreGoalsSatisfied = GetAreGoalsSatisfied();
 		}
         
         // ----------------------------------------------------------------
@@ -162,11 +159,13 @@ namespace AbacusToy {
             numGroupsOfColorID = new int[MaxColorID];
             for (int i=0; i<tileGroups.Count; i++) {
                 int colorID = tileGroups[i][0].ColorID; // use the first Tile's colorID (they're all the same).
+                if (colorID == -1) { continue; } // Safety check for undefined Tiles.
                 numGroupsOfColorID[colorID] ++;
             }
             // Finally, tell the Tiles what's up!
             for (int i=0; i<tiles.Count; i++) {
                 int colorID = tiles[i].ColorID;
+                if (colorID == -1) { continue; } // Safety check for undefined Tiles.
                 int numGroups = numGroupsOfColorID[colorID];
                 tiles[i].UpdateIsInOnlyGroup(numGroups);
             }
@@ -179,30 +178,34 @@ namespace AbacusToy {
             tileGroups[tileGroups.Count-1].Add(tileHere);
             if (col>0) { RecursiveTileFinding(col-1,row, colorID); }
             if (row>0) { RecursiveTileFinding(col,row-1, colorID); }
-            if (col<numCols-1) { RecursiveTileFinding(col+1,row, colorID); }
-            if (row<numRows-1) { RecursiveTileFinding(col,row+1, colorID); }
+            if (col<NumCols-1) { RecursiveTileFinding(col+1,row, colorID); }
+            if (row<NumRows-1) { RecursiveTileFinding(col,row+1, colorID); }
         }
 
 
         // ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
-        public void Debug_AddTilesIfNone(GameController gameController) {
-            if (tiles.Count > 0) { return; } // Nah, we've got some.
-            int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
-            int numColors = gameController.NumColors;
-            Debug_AddRandomTiles(numToAdd, numColors);
+        /** In xml layout, use "x" to add an undefined colorID Tile. This function will assign them colors randomly. */
+        public void Debug_RandomizeUndefinedTileColorIDs() {
+            // Prep a list of all the colorIDs we're gonna assign the undefined Tiles, and shuffle it!.
+            List<int> colorIDs = new List<int>();
+            for (int i=0; i<tiles.Count; i++) {
+                if (tiles[i].ColorID==-1) {
+                    int colorID = Mathf.FloorToInt(colorIDs.Count/(float)randGroupSize);
+                    colorIDs.Add(colorID);
+                }
+            }
+            colorIDs = MathUtils.GetShuffledIntArray(colorIDs);
+            
+            int numAssigned = 0; // this is incremented.
+            for (int i=0; i<tiles.Count; i++) {
+                if (tiles[i].ColorID == -1) { // This one's undefined! Let's assign it a color.
+                    tiles[i].Debug_SetColorID(colorIDs[numAssigned++]);
+                }
+            }
             OnMoveComplete();
         }
-		private void Debug_AddRandomTiles(int numToAdd, int numColors) {
-			for (int i=0; i<numToAdd; i++) {
-				BoardPos randPos = BoardUtils.GetRandOpenPos(this, 2);
-                if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-				//int colorID = Random.Range(0, numColors);
-                int colorID = Mathf.FloorToInt(i/(float)randGroupSize);
-				AddTile(randPos, colorID);
-			}
-		}
         public void Debug_PrintLayout(bool isCompact) {
             string boardString = Debug_GetLayout(isCompact);
             Debug.Log (boardString);
@@ -234,3 +237,22 @@ namespace AbacusToy {
 	}
     
 }
+
+/*
+
+        //public void Debug_AddTilesIfNone(GameController gameController) {
+        //    if (tiles.Count > 0) { return; } // Nah, we've got some.
+        //    int numToAdd = Mathf.FloorToInt(NumCols*NumRows * gameController.PercentTiles);
+        //    int numColors = gameController.NumColors;
+        //    Debug_AddRandomTiles(numToAdd);
+        //    OnMoveComplete();
+        //}
+        //private void Debug_AddRandomTiles(int numToAdd) {
+        //  for (int i=0; i<numToAdd; i++) {
+        //      BoardPos randPos = BoardUtils.GetRandOpenPos(this, 2);
+  //              if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+  //              int colorID = Mathf.FloorToInt(i/(float)randGroupSize);
+        //      AddTile(randPos, colorID);
+        //  }
+        //}
+*/

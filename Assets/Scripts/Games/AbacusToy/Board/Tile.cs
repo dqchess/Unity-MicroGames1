@@ -24,6 +24,9 @@ namespace AbacusToy {
         
         
         // Doers
+        public void Debug_SetColorID(int _colorID) {
+            this.ColorID = _colorID;
+        }
         public void UpdateIsInOnlyGroup(int numGroupsOfColorID) {
             IsInOnlyGroup = numGroupsOfColorID <= 1;
         }

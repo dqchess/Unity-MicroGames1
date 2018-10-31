@@ -58,7 +58,10 @@ public class MathUtils {
 		for (int i=0; i<arrayLength; i++) { array[i] = i; }
 		return GetShuffledIntArray(array);
 	}
-	public static int[] GetShuffledIntArray(int[] originalArray) {
+    public static List<int> GetShuffledIntArray(List<int> originalList) {
+        return new List<int>(GetShuffledIntArray(originalList.ToArray()));
+    }
+    public static int[] GetShuffledIntArray(int[] originalArray) {
 		int[] shuffledArray = new int[originalArray.Length];
 		for (int i=0; i<shuffledArray.Length; i++) { shuffledArray[i] = originalArray[i]; }
 		for (int i=0; i<shuffledArray.Length; i++) {

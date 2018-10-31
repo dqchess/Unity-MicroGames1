@@ -44,9 +44,6 @@ public static class SaveKeys {
     public const string ExtrudeMatch_BestScore = "ExtrudeMatch_BestScore";
     
     // AbacusToy
-    public const string AbacusToy_RandGenPercentTiles = "AbacusToy_RandGenPercentTiles";
-    public const string AbacusToy_NumColors = "AbacusToy_NumColors";
-    public const string AbacusToy_RandGenStickiness = "AbacusToy_RandGenStickiness";
     static public string AbacusToy_LastPlayedLevelAddress(LevelAddress curAdd) {
         return "AbacusToy_LastPlayedLevelAddress_" + curAdd.mode + "," + curAdd.collection + "," + curAdd.pack;
     }
