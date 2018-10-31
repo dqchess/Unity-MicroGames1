@@ -22,17 +22,33 @@ namespace AbacusToy {
         private static Color GetBodyColor(int _colorID) {
             //return new Color(.8f,0.8f,0.8f);
             switch (_colorID) {
-            case 0: return new ColorHSB(128/255f,250/255f,180/255f).ToColor();
-            case 1: return new ColorHSB( 58/255f,250/255f,180/255f).ToColor();
-            case 2: return new ColorHSB( 28/255f,250/255f,220/255f).ToColor();
-            case 3: return new ColorHSB(180/255f,250/255f,180/255f).ToColor();
-            case 4: return new ColorHSB(220/255f,210/255f,220/255f).ToColor();
-            case 5: return new ColorHSB(  5/255f,250/255f,220/255f).ToColor();
-            case 6: return new ColorHSB(200/255f,250/255f,220/255f).ToColor();
-            case 7: return new ColorHSB( 80/255f,250/255f,220/255f).ToColor();
-            case 8: return new ColorHSB(100/255f,250/255f,220/255f).ToColor();
-            case 9: return new ColorHSB( 15/255f,180/255f,220/255f).ToColor();
-            default: return Color.red; // Oops! Too many colors.
+            case  0: return ColorUtils.HexToColor("56b2b2");
+            case  1: return ColorUtils.HexToColor("78cb2c");
+            case  2: return ColorUtils.HexToColor("f2b600");
+            case  3: return ColorUtils.HexToColor("3226b2");
+            case  4: return ColorUtils.HexToColor("db3fba");
+            case  5: return ColorUtils.HexToColor("db4c3d");
+            case  6: return ColorUtils.HexToColor("9e3adb");
+            case  7: return ColorUtils.HexToColor("528500");
+            case  8: return ColorUtils.HexToColor("8bf895");
+            case  9: return ColorUtils.HexToColor("d96230");
+            case 10: return ColorUtils.HexToColor("fff247");
+            case 11: return ColorUtils.HexToColor("862055");
+            case 12: return ColorUtils.HexToColor("4c8f57");
+            case 13: return ColorUtils.HexToColor("bf0870");
+            case 14: return ColorUtils.HexToColor("26507b");
+            //case  0: return new CSystem.Windows.Media.olorHSB(128/255f,0.98f,0.7f ).ToColor();
+            //case  1: return new ColorHSB( 58/255f,0.84f,0.7f ).ToColor();
+            //case  2: return new ColorHSB( 28/255f,0.98f,0.86f).ToColor();
+            //case  3: return new ColorHSB(180/255f,0.98f,0.7f ).ToColor();
+            //case  4: return new ColorHSB(220/255f,0.86f,0.86f).ToColor();
+            //case  5: return new ColorHSB( 12/255f,0.98f,0.86f).ToColor();
+            //case  6: return new ColorHSB(200/255f,0.98f,0.86f).ToColor();
+            //case  7: return new ColorHSB( 80/255f,0.98f,0.86f).ToColor();
+            //case  8: return new ColorHSB(108/255f,0.98f,0.86f).ToColor();
+            //case  9: return new ColorHSB( 18/255f,0.94f,0.86f).ToColor();
+            //case 10: return new ColorHSB( 38/255f,0.98f,0.94f).ToColor();
+            default: return Color.black; // Oops! Too many colors.
             }
         }
         // Getters (Private)

@@ -92,7 +92,7 @@ namespace AbacusToy {
             DestroyBoardModelAndView ();
             // Make them afresh!
             board = new Board(bd);
-            board.Debug_RandomizeUndefinedTileColorIDs(); // For rando layout generating!
+            board.Debug_RandomizeUndefinedTileColorIDs(); // Rando layo, maybe!
             boardView = Instantiate (ResourcesHandler.Instance.abacusToy_boardView).GetComponent<BoardView>();
             boardView.Initialize (this, board);
             // Tell ppl!

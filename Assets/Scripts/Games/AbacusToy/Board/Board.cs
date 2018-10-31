@@ -6,8 +6,9 @@ namespace AbacusToy {
 	[System.Serializable]
 	public class Board {
         // Constants
-        private const int MaxColorID = 9; // TODO: Set this per level, yo!
+        //private const int MaxColorID = 99; // anything higher than this would be bananas.
 		// Properties
+        public bool DidRandGen { get; private set; } // TRUE when any Tiles are added randomly.
         public bool DoTilesTow { get; private set; } // if FALSE, then we just have basic 16-sliding puzzle mechanic. If TRUE, we have our special towing mechanic!
         public bool AreGoalsSatisfied { get; private set; }
         public int NumCols { get; private set; }
@@ -69,6 +70,7 @@ namespace AbacusToy {
             DoTilesTow = bd.doTilesTow;
             randGroupSize = bd.randGroupSize;
             NumFootprintsDown = 0;
+            DidRandGen = false; // We'll say otherwise eventually.
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -156,7 +158,7 @@ namespace AbacusToy {
                 }
             }
             // Update how many of each group there are!
-            numGroupsOfColorID = new int[MaxColorID];
+            numGroupsOfColorID = new int[99]; // we won't have more than 99 colorIDs.
             for (int i=0; i<tileGroups.Count; i++) {
                 int colorID = tileGroups[i][0].ColorID; // use the first Tile's colorID (they're all the same).
                 if (colorID == -1) { continue; } // Safety check for undefined Tiles.
@@ -196,14 +198,19 @@ namespace AbacusToy {
                     colorIDs.Add(colorID);
                 }
             }
-            colorIDs = MathUtils.GetShuffledIntArray(colorIDs);
+            // No undefined tiles? We can stop here.
+            if (colorIDs.Count == 0) { return; }
             
+            // Shuffle and assign!
+            colorIDs = MathUtils.GetShuffledIntArray(colorIDs);
             int numAssigned = 0; // this is incremented.
             for (int i=0; i<tiles.Count; i++) {
                 if (tiles[i].ColorID == -1) { // This one's undefined! Let's assign it a color.
                     tiles[i].Debug_SetColorID(colorIDs[numAssigned++]);
                 }
             }
+            // Yes, we did!
+            DidRandGen = true;
             OnMoveComplete();
         }
         public void Debug_PrintLayout(bool isCompact) {
