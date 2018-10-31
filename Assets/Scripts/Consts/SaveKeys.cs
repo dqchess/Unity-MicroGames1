@@ -56,8 +56,9 @@ public static class SaveKeys {
     
     // SlideAndStick
     public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";
-    public const string SlideAndStick_NumColors = "SlideAndStick_NumColors";
-    public const string SlideAndStick_RandGenStickiness = "SlideAndStick_RandGenStickiness";
+	public const string SlideAndStick_RandGenNumColors = "SlideAndStick_RandGenNumColors";
+	public const string SlideAndStick_RandGenNumWalls = "SlideAndStick_RandGenNumWalls";
+	public const string SlideAndStick_RandGenStickiness = "SlideAndStick_RandGenStickiness";
     static public string SlideAndStick_LastPlayedLevelAddress(LevelAddress curAdd) {
         return "SlideAndStick_LastPlayedLevelAddress_" + curAdd.mode + "," + curAdd.collection + "," + curAdd.pack;
     }

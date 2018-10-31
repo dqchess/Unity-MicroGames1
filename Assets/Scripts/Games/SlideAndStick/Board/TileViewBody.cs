@@ -15,7 +15,7 @@ namespace SlideAndStick {
     
     public class TileViewBody : MonoBehaviour {
         // Constants
-        private readonly Vector2Int[] dirsCardinal = {Vector2Int.L, Vector2Int.R, Vector2Int.B, Vector2Int.T};
+//        private readonly Vector2Int[] dirsCardinal = {Vector2Int.L, Vector2Int.R, Vector2Int.B, Vector2Int.T};
         //private readonly Vector2Int[] dirsDiagonal = {Vector2Int.TL, Vector2Int.TR, Vector2Int.BL, Vector2Int.BR};
         // Components
         private List<Image> allImages;

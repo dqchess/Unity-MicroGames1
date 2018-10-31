@@ -22,14 +22,14 @@ namespace SlideAndStick {
         public bool CanOccupantEverEnterMe (Vector2Int dir) { return CanOccupantEverEnterMe (MathUtils.GetSide(dir)); }
         public bool CanOccupantEverEnterMe (int side) {
             if (!IsPlayable) { return false; } // Unplayable? Return false.
-            if (IsWallAtSide (side)) { return false; } // Wall in the way? Return false!
+            if (HasWall(side)) { return false; } // Wall in the way? Return false!
             return true; // Looks good!
         }
         public bool CanOccupantEverExit (int side) {
             // As long as there's no Wall here, we're good!
-            return !IsWallAtSide (side);
+			return !HasWall (side);
         }
-        public bool IsWallAtSide (int side) {
+		public bool HasWall (int side) {
             return myWalls[side] != null;
         }
     

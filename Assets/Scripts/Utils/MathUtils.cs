@@ -13,6 +13,8 @@ public class MathUtils {
 	/// Maps Sin from (-1 to 1) to (a to b).
 	static public float SinRange(float a,float b, float val) { return Mathf.Lerp(a,b, Sin01(val)); }
 
+	static public bool RandBool() { return Random.Range(0f,1f) < 0.5f; }
+
 	static public bool IsSameSign (float a, float b) { return a*b >= 0; }
 	static public bool IsSameSign (double a, double b) { return a*b >= 0; }
 	static public int Sign(float value, bool doAllow0=true) {
