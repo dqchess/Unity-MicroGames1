@@ -6,7 +6,7 @@ namespace SlideAndStick {
     /** Walls are between spaces, at the top or left of their col/row (so a vert. wall at 0,0 would be against the board edge and serve no purpose). */
     public class Wall : BoardObject {
         // Properties
-        private bool isVertical;
+        public bool IsVertical { get; private set; }
         public Vector2 BetweenPos { get; private set; }
         // References
         private BoardSpace spaceA,spaceB; // the space I'm "on", and the adjacent space I'm also spiritually on.
@@ -16,7 +16,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public Wall (Board _boardRef, WallData _data) {
             base.InitializeAsBoardObject (_boardRef, _data.boardPos);
-            isVertical = SideFacing==1 || SideFacing==3; // note that 3 should never be passed in. 0 and 1 only (so we can never have two walls in the same space accidentally).
+            IsVertical = SideFacing==1 || SideFacing==3; // note that 3 should never be passed in. 0 and 1 only (so we can never have two walls in the same space accidentally).
             // Add me to my (two) BoardSpaces!
             Vector2Int adjacentSpaceDir = MathUtils.GetDir(SideFacing);
             BetweenPos = new Vector2(Col+adjacentSpaceDir.x*0.5f, Row+adjacentSpaceDir.y*0.5f);

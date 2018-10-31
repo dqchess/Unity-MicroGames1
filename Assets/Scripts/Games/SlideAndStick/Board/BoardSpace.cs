@@ -29,7 +29,7 @@ namespace SlideAndStick {
             // As long as there's no Wall here, we're good!
             return !IsWallAtSide (side);
         }
-        private bool IsWallAtSide (int side) {
+        public bool IsWallAtSide (int side) {
             return myWalls[side] != null;
         }
     

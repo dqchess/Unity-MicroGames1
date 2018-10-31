@@ -24,11 +24,16 @@ namespace SlideAndStick {
 			return b.Spaces[col,row];
 		}
 		public static BoardOccupant GetOccupant(Board b, BoardPos boardPos) { return GetOccupant(b, boardPos.col,boardPos.row); }
-		public static BoardOccupant GetOccupant(Board b, int col,int row) {
-			BoardSpace space = GetSpace (b, col,row);
-			if (space==null) { return null; }
-			return space.MyOccupant;
-		}
+        public static BoardOccupant GetOccupant(Board b, int col,int row) {
+            BoardSpace space = GetSpace (b, col,row);
+            if (space==null) { return null; }
+            return space.MyOccupant;
+        }
+        //public static Wall GetWall(Board b, int col,int row) {
+        //    BoardSpace space = GetSpace (b, col,row);
+        //    if (space==null) { return null; }
+        //    return space.WallOnMe;
+        //}
 
 		public static bool IsSpaceOpen(Board b, BoardPos pos) { return IsSpaceOpen(b, pos.col,pos.row); }
 		public static bool IsSpaceOpen(Board b, int col,int row) {

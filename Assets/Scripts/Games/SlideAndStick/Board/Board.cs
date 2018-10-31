@@ -363,3 +363,41 @@ namespace SlideAndStick {
 
 	}
 }
+
+/*
+        public void Debug_PrintBoardLayout(bool isCompact) {
+            string boardString = Debug_GetBoardLayout(isCompact);
+            Debug.Log (boardString);
+            //if (alsoCopyToClipboard) { GameUtils.CopyToClipboard(boardString); }
+        }
+        // TODO: Make this robust! Print exactly as many layers as we need.
+        public string Debug_GetBoardLayout(bool isCompact) {
+            string tab = isCompact ? "" : "        "; // put it on my tab!
+            string lineBr = isCompact ? " " : "\n";
+            string str = "" + lineBr;
+            for (int row=0; row<NumRows; row++) {
+                str += tab;
+                for (int col=0; col<NumCols; col++) {
+                    Tile tile = GetTile(col,row);
+                    str += tile==null ? "." : tile.ColorID.ToString();
+                }
+                str += ",";
+                if (row<NumRows-1) { str += lineBr; }
+            }
+            if (walls.Count > 0) {
+                str += lineBr+tab+","+lineBr;
+                for (int row=0; row<NumRows; row++) {
+                    str += tab;
+                    for (int col=0; col<NumCols; col++) {
+                        BoardSpace space = GetSpace(col,row);
+                        if (space.IsWallAtSide(Sides.B)) { str += "_"; }
+                        else if (space.IsWallAtSide(Sides.L)) { str += "|"; }
+                        else { str += "."; }
+                    }
+                    str += ",";
+                    if (row<NumRows-1) { str += lineBr; }
+                }
+            }
+            return str;
+        }
+        */

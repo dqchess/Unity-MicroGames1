@@ -166,7 +166,8 @@ namespace SlideAndStick {
 
 		private void RegisterButtonInput() {
 			// DEBUG
-			if (Input.GetKeyDown(KeyCode.T)) { Debug_PrintLevelLayout(); }
+            if (Input.GetKeyDown(KeyCode.T)) { Debug_CopyBoardLayoutToClipboard(true); }
+            if (Input.GetKeyDown(KeyCode.Y)) { Debug_CopyBoardLayoutToClipboard(false); }
 		}
 
 		private void RegisterTouchInput() {
@@ -307,9 +308,9 @@ namespace SlideAndStick {
 			OnBoardMoveComplete();
 		}
 
-		private void Debug_PrintLevelLayout() {
-			string str = "\n";//\nLEVEL - \n";
-			str += board.Debug_GetBoardLayout();
+		private void Debug_CopyBoardLayoutToClipboard(bool isCompact) {
+			string str = "";
+			str += board.Debug_GetBoardLayout(isCompact);
             GameUtils.CopyToClipboard(str);
 		}
 

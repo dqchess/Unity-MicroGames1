@@ -11,6 +11,74 @@
 <LevelPack packName="Tests">
 <Levels>
 
+    <Level diff="0" layout="
+        00#,
+        #.#,
+        ...,
+        00|,
+    " />
+    <Level diff="0" layout="
+        000..,
+        010..,
+        001..,
+        ...|.,
+        .....,
+    " />
+
+
+
+
+
+
+
+    <Level diff="0" layout="
+        ....,
+        ._..,
+        ....,
+        ....,
+    " />
+    <Level diff="0" layout="
+        ....,
+        ....,
+        _...,
+        ....,
+    " />
+    <Level diff="0" layout="
+        .|..,
+        ....,
+        ....,
+        ..|.,
+    " />
+
+
+
+    <Level diff="1" layout=" 0010, .0.0, 0..0, 0.00, , ...., ._.., ...., ....," />
+    <Level diff="3" layout=" ..11, 110., 1001, 1..1, , ...., ...., _..., ....," />
+    <Level diff="2" layout=" 0101, 0.01, .01., .01., , ...., ...., _..., ....," />
+    <Level diff="5" desc="excellent" layout=" 11.0, 0011, 0.01, 0..., , ...., ._.., ...., ....," />
+    <Level diff="2" layout=" 1100, 111., 00.., 00.0," />
+    <Level diff="6" layout=" 0.0., 1011, ..00, 00.0, , ...., ._.., ...., ....," />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+    <Level diff="0" layout="" />
+
+
+
+
+
+
+
     <Level diff="0" name="test" layout="
         00.,
         00.,
