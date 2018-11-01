@@ -6,6 +6,7 @@ using TMPro;
 namespace SlideAndStick {
     public class LevelSelectController : MonoBehaviour {
         // Components
+        [SerializeField] private TextMeshProUGUI t_deleteLayouts=null;
         [SerializeField] private TextMeshProUGUI t_progressEasy=null;
         [SerializeField] private TextMeshProUGUI t_progressMed=null;
         [SerializeField] private TextMeshProUGUI t_progressHard=null;
@@ -32,6 +33,7 @@ namespace SlideAndStick {
             t_progressEasy.text = lm.GetNumLevelsCompleted(0) + "/" + lm.GetNumLevelsPlayable(0);
             t_progressMed.text  = lm.GetNumLevelsCompleted(1) + "/" + lm.GetNumLevelsPlayable(1);
             t_progressHard.text = lm.GetNumLevelsCompleted(2) + "/" + lm.GetNumLevelsPlayable(2);
+            UpdateDeleteLayoutsText();
         }
         
         
@@ -44,11 +46,24 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
+        private void UpdateDeleteLayoutsText() {
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_SavedLayouts);
+            int numLayouts = RandLayoutHelperUI.GetNumLayouts(savedLayoutsString);
+            t_deleteLayouts.text = "delete " + numLayouts + " saved layouts";
+        }
+        public void CopySavedLayoutsToClipboard() {
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_SavedLayouts);
+            GameUtils.CopyToClipboard(savedLayoutsString);
+        }
         private void StartGameAtCollection(int collection) {
             LevelAddress lastPlayedAddress = GetLastPlayedAddress(collection);
             LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
             
             LoadLevel(lastPlayedAddress);
+        }
+        public void DeleteSavedLayouts() {
+            SaveStorage.DeleteKey(SaveKeys.SlideAndStick_Debug_SavedLayouts);
+            ReloadScene ();
         }
         public void ClearAllSaveData() {
             GameManagers.Instance.DataManager.ClearAllSaveData ();

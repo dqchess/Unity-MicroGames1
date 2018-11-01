@@ -22,6 +22,10 @@ namespace SlideAndStick {
         // References
         [SerializeField] private Level level=null;
         
+        // Getters (Public)
+        static public int GetNumLayouts(string savedLayoutsString) {
+            return TextUtils.CountOccurances(savedLayoutsString, "layout=");
+        }
         // Getters (Private)
         private GameController gameController { get { return level.GameController; } }
         private RandGenParams rgp { get { return gameController.randGenParams; } }
@@ -89,7 +93,7 @@ namespace SlideAndStick {
             // Automatically copy it to our clipboard, Joe.
             GameUtils.CopyToClipboard(savedLayoutXMLs);
             // Show the popup text, mm!
-            int numLayouts = TextUtils.CountOccurances(savedLayoutXMLs, "layout=");
+            int numLayouts = GetNumLayouts(savedLayoutXMLs);
             t_savedPopup.text = numLayouts + " layouts copied to clipboard";
             SetSavedPopupAlpha(1);
             LeanTween.value(gameObject, SetSavedPopupAlpha, 1,0, 1.4f).setDelay(1.5f);
