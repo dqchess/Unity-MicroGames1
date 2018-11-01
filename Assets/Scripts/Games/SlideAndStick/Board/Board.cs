@@ -360,7 +360,7 @@ namespace SlideAndStick {
         }
         public string Debug_GetAsXML(bool isCompact) {
             string layoutStr = Debug_GetLayout(isCompact);
-            string str = "<Level ";
+            string str = "    <Level ";
             str += "diff=\"" + Difficulty +"\" ";
             str += "layout=\"" + layoutStr + "\" />\n";
             return str;

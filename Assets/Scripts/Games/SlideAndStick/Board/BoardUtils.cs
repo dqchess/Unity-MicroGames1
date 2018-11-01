@@ -52,15 +52,17 @@ namespace SlideAndStick {
 
 
 		public static BoardPos GetRandPosWithoutWall(Board b) {
-			int safetyCount = 0;
-			while(safetyCount++ < 99) {
-				int side = MathUtils.RandBool() ? Sides.T : Sides.L;
-				int col = Random.Range(side==Sides.T?0:1, b.NumCols); // note: don't put a wall on the edge of the Board (a-doy)
-				int row = Random.Range(side==Sides.T?1:0, b.NumRows); // note: don't put a wall on the edge of the Board (a-doy)
-				if (!b.GetSpace(col,row).HasWall(side)) {
-					return new BoardPos(col,row, side);
-				}
-			}
+            if (b.NumCols*b.NumRows > 1) { // Safety check (if only one space, we can't fit a wall anywhere).
+    			int safetyCount = 0;
+    			while(safetyCount++ < 99) {
+    				int side = MathUtils.RandBool() ? Sides.T : Sides.L;
+    				int col = Random.Range(side==Sides.T?0:1, b.NumCols); // note: don't put a wall on the edge of the Board (a-doy)
+    				int row = Random.Range(side==Sides.T?1:0, b.NumRows); // note: don't put a wall on the edge of the Board (a-doy)
+    				if (!b.GetSpace(col,row).HasWall(side)) {
+    					return new BoardPos(col,row, side);
+    				}
+    			}
+            }
 			return BoardPos.undefined;
 		}
 		public static BoardPos GetRandOpenPos(Board b) {

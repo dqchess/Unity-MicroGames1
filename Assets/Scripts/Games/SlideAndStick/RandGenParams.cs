@@ -16,7 +16,7 @@ public class RandGenParams : MonoBehaviour {
 		// Load!
 		PercentTiles = SaveStorage.GetFloat(SaveKeys.SlideAndStick_RandGenPercentTiles, 0.8f);
 		NumColors = SaveStorage.GetInt(SaveKeys.SlideAndStick_RandGenNumColors, 3);
-		NumWalls = SaveStorage.GetInt(SaveKeys.SlideAndStick_RandGenNumWalls, 1);
+		NumWalls = SaveStorage.GetInt(SaveKeys.SlideAndStick_RandGenNumWalls, 0);
 		Stickiness = SaveStorage.GetInt(SaveKeys.SlideAndStick_RandGenStickiness, 1);
 	}
 	private void OnDestroy() {

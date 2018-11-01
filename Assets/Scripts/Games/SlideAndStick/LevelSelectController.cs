@@ -5,6 +5,10 @@ using TMPro;
 
 namespace SlideAndStick {
     public class LevelSelectController : MonoBehaviour {
+        // Constants
+        private static int CollIndex_E = 2; // NOTE: We will eventually improve this! It's sloppy as is but functioning and untenable.
+        private static int CollIndex_M = 3;
+        private static int CollIndex_H = 4;
         // Components
         [SerializeField] private TextMeshProUGUI t_deleteLayouts=null;
         [SerializeField] private TextMeshProUGUI t_progressEasy=null;
@@ -30,9 +34,9 @@ namespace SlideAndStick {
         private void Start() {
             // Update progress texts!
             LevelsManager lm = LevelsManager.Instance;
-            t_progressEasy.text = lm.GetNumLevelsCompleted(0) + "/" + lm.GetNumLevelsPlayable(0);
-            t_progressMed.text  = lm.GetNumLevelsCompleted(1) + "/" + lm.GetNumLevelsPlayable(1);
-            t_progressHard.text = lm.GetNumLevelsCompleted(2) + "/" + lm.GetNumLevelsPlayable(2);
+            t_progressEasy.text = lm.GetNumLevelsCompleted(CollIndex_E) + "/" + lm.GetNumLevelsPlayable(CollIndex_E);
+            t_progressMed.text  = lm.GetNumLevelsCompleted(CollIndex_M) + "/" + lm.GetNumLevelsPlayable(CollIndex_M);
+            t_progressHard.text = lm.GetNumLevelsCompleted(CollIndex_H) + "/" + lm.GetNumLevelsPlayable(CollIndex_H);
             UpdateDeleteLayoutsText();
         }
         
@@ -67,6 +71,7 @@ namespace SlideAndStick {
         }
         public void ClearAllSaveData() {
             GameManagers.Instance.DataManager.ClearAllSaveData ();
+            LevelsManager.Instance.ReloadModeDatas();
             ReloadScene ();
         }
         
