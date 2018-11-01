@@ -13,6 +13,7 @@ namespace SlideAndStick {
         public string FUEID { get; private set; }
         // Properties (Variable)
         public bool AreGoalsSatisfied { get; private set; }
+        public bool DidRandGen { get; private set; } // TRUE when any Tiles are added randomly.
         public bool IsInKnownFailState { get; private set; }
         private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
 		private List<MergeSpot> lastMergeSpots; // remade when we call MergeAllTiles.
@@ -71,6 +72,7 @@ namespace SlideAndStick {
             Difficulty = bd.difficulty;
             DevRating = bd.devRating;
             FUEID = bd.fueID;
+            DidRandGen = false; // We'll say otherwise eventually.
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -299,6 +301,9 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Debug
 		// ----------------------------------------------------------------
+        public void Debug_SetDifficulty(int _difficulty) {
+            Difficulty = _difficulty;
+        }
 		public void Debug_AddTilesIfNone(RandGenParams rgp) {
 			if (tiles.Count > 0) { return; } // Nah, we've got some.
 			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * rgp.PercentTiles);
@@ -307,6 +312,8 @@ namespace SlideAndStick {
 			//			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
 			Debug_AddRandomWalls(rgp.NumWalls);
 			Debug_AddRandomTiles(numToAdd, numColors, stickiness);
+            // Yes, we did!
+            DidRandGen = true;
 			OnMoveComplete();
 		}
 		private void Debug_AddRandomWalls(int numToAdd) {
@@ -344,11 +351,20 @@ namespace SlideAndStick {
                 }
             }
 		}
-		public void Debug_CopyLayoutToClipboard(bool isCompact) {
-			string str = "";//"\n";
-			str += Debug_GetLayout(isCompact);
-			GameUtils.CopyToClipboard(str);
-		}
+        
+        public void Debug_CopyLayoutToClipboard(bool isCompact) {
+            GameUtils.CopyToClipboard(Debug_GetLayout(isCompact));
+        }
+        public void Debug_CopyXMLToClipboard(bool isCompact) {
+            GameUtils.CopyToClipboard(Debug_GetAsXML(isCompact));
+        }
+        public string Debug_GetAsXML(bool isCompact) {
+            string layoutStr = Debug_GetLayout(isCompact);
+            string str = "<Level ";
+            str += "diff=\"" + Difficulty +"\" ";
+            str += "layout=\"" + layoutStr + "\" />\n";
+            return str;
+        }
 		public string Debug_GetLayout(bool isCompact) {
 			// Make empty allChars grid string thing. (E.g. If a space has a tile AND a wall, that string'll be like "0|". We pick it apart later.)
 			string[,] allChars = new string[NumCols,NumRows];

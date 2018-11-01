@@ -4,11 +4,8 @@ using System.Collections;
 using System.Globalization;
 using System.IO;
 
-public class TextUtils {
+public static class TextUtils {
 	// Properties
-
-//	private static string[] LINE_BREAKS_STRINGS = new string[] { "\n" }; Works on Mac
-//	private static string[] LINE_BREAKS_STRINGS = new string[] { "\r\n", "\n" }; Works on PC.
 	private static string[] LINE_BREAKS_STRINGS = new string[] { System.Environment.NewLine };
 	private static CultureInfo parserCulture = CultureInfo.CreateSpecificCulture ("en"); // We ONLY want to parse (number) strings with English culture!
 
@@ -51,6 +48,11 @@ public class TextUtils {
 //		return Regex.Replace(_string, @"\s+", "");public static string RemoveWhitespace(this string str) {
 		return string.Join("", _string.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
 	}
+    
+    public static int CountOccurances(string source, string occurance) {
+        if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(occurance)) { return 0; } // Safety check.
+        return source.Split(new string[] {occurance}, System.StringSplitOptions.None).Length - 1;
+    }
 
 
 

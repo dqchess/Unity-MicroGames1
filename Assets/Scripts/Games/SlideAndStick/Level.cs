@@ -173,7 +173,8 @@ namespace SlideAndStick {
 		private void RegisterButtonInput() {
 			// DEBUG
 			if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
-			if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
+            if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
+            if (Input.GetKeyDown(KeyCode.X)) { board.Debug_CopyXMLToClipboard(true); }
 		}
 
 		private void RegisterTouchInput() {

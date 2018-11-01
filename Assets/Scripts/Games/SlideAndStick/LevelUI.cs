@@ -34,7 +34,8 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
 		private void Start () {
-			t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
+            t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
+            if (level.Board.DidRandGen) { t_levelName.text += " (RAND)"; }
             t_packName.text = GetPackName();
             
             levelCompletePopup.Hide();
