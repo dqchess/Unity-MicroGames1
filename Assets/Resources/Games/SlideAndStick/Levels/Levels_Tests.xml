@@ -11,23 +11,18 @@
 <LevelPack packName="Tests">
 <Levels>
 
-    <!-- Wall "Puzzles" -->
-    <Level diff="0" layout="
-        00#,
-        #.#,
+
+    <!-- TESTS -->
+    <Level diff="0" noWin="true" layout="
+        0..,
         ...,
-        00|,
+        ...,
     " />
-    <Level diff="0" layout="
-        000..,
-        010..,
-        001..,
-        ...|.,
-        .....,
+    <Level diff="0" noWin="true" layout="
+        0.1,
+        ...,
+        ...,
     " />
-
-    <Level diff="4" layout=" .0.11, .1.10, 1.001, 1.10., .0000, , ..._., ....., ....., ....., ....|," />
-
 
 
 
@@ -122,8 +117,6 @@
 	<Level diff="6" layout=" .2001, 12011, ..010, 2..20, 2..2.," />
 
 
-    <!-- 3 Colors -->
-
 
 
 	
@@ -147,10 +140,29 @@
     <Level diff="0" layout="" />
     <Level diff="0" layout="" />
 	
+
+
+    <!-- Wall "Puzzles" -->
+    <Level diff="0" layout="
+        00#,
+        #.#,
+        ...,
+        00|,
+    " />
+    <Level diff="0" layout="
+        000..,
+        010..,
+        001..,
+        ...|.,
+        .....,
+    " />
+
+    <Level diff="4" layout=" .0.11, .1.10, 1.001, 1.10., .0000, , ..._., ....., ....., ....., ....|," />
 	
 	
 	
 
+    <!-- TESTS -->
     <Level diff="0" layout="
         ....,
         ._..,

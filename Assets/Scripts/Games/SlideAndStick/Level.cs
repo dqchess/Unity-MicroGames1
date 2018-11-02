@@ -18,7 +18,7 @@ namespace SlideAndStick {
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
         private LevelAddress myAddress;
 		private Vector2Int mousePosBoard;
-		private Vector2Int tileGrabbingClickBoardOffset; // when we set tileGrabbing, this is the boardPos difference between our mouse and the Tile. For retaining tileGrabbing for split tiles.
+		public  Vector2Int TileGrabbingClickBoardOffset { get; private set; } // when we set tileGrabbing, this is the boardPos difference between our mouse and the Tile. For retaining tileGrabbing for split tiles.
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
         [SerializeField] private LevelUI levelUI=null;
@@ -201,7 +201,7 @@ namespace SlideAndStick {
 		}
 		public void OnCancelSimMove() {
 			ReleaseTileGrabbing();
-			boardView.OnCancelSimMove();
+			boardView.OnCanceledMove();
 		}
         
         public void ReleaseTileGrabbing() {
@@ -211,8 +211,7 @@ namespace SlideAndStick {
 			if (tileGrabbing != _tile) { // If it's changed...!
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
-				tileGrabbingClickBoardOffset = GetMousePosOffset(tileGrabbing);
-				//board.OnSetTileGrabbing(tileGrabbing); // tell Board.
+				TileGrabbingClickBoardOffset = GetMousePosOffset(tileGrabbing);
                 boardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
                 // Tell the Tiles!
                 if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { boardView.Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
@@ -222,7 +221,7 @@ namespace SlideAndStick {
 		/// Call this after we finish a move: tileGrabbing may now be null (it was destroyed in a merge), so we want to set tileGrabbing to what it LOOKS like we were already grabbing.
 		private void ConfirmTileGrabbing() {
 			if (tileGrabbing != null) {
-				Vector2Int boardPos = tileGrabbing.BoardPos.ToVector2Int() + tileGrabbingClickBoardOffset;
+				Vector2Int boardPos = tileGrabbing.BoardPos.ToVector2Int() + TileGrabbingClickBoardOffset;
 				SetTileGrabbing(board.GetTile(boardPos));
 			}
 		}
@@ -239,9 +238,9 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
-        private void OnBoardMoveComplete () {
+        private void OnBoardMoveComplete() {
             // Tell BoardView!
-			boardView.OnBoardMoveComplete();
+			boardView.OnExecutedMove();
 			// Trade-off tileGrabbing, in case it's changed (from a merge)!
 			ConfirmTileGrabbing();
 			// Tell people!
@@ -301,7 +300,7 @@ namespace SlideAndStick {
 				// We make moves.
 				NumMovesMade ++;
 				// Complete this move!
-				OnBoardMoveComplete ();
+				OnBoardMoveComplete();
 			}
 		}
 
@@ -315,7 +314,7 @@ namespace SlideAndStick {
 			NumMovesMade --; // decrement this here!
 			gameController.FUEController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!
-			OnBoardMoveComplete();
+			OnBoardMoveComplete();//TODO: Do we need to call this? Try commenting it out!
 		}
 		public void UndoAllMoves() {
 			if (!CanUndoMove()) { return; }

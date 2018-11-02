@@ -6,12 +6,14 @@ namespace SlideAndStick {
     /** Owned and managed by Level.cs, this class translates mobile touch input into gameplay input (SIMULATING and MAKING moves!). */
     public class SimMoveController {
         // Constants
+        private const float FlickVelThreshold = 4f; // if our touchVel is greater than this in OnTouchUp, we count it as a flick and execute the move!
         private float minDragOffset; // In screen space. Any drag less than this will be ignored.
         // Properties
         private readonly float unitSize;
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
         private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
+        private Vector2 prevTouchPos; // for determining finger velocity, which allows flicking tiles.
 		// References
 		private Level level;
 
@@ -71,6 +73,8 @@ namespace SlideAndStick {
 			if (InputController.Instance.IsTouchDown()) { OnTouchDown(); }
 			if (InputController.Instance.IsTouchUp())   { OnTouchUp();   }
 			if (InputController.Instance.IsTouchHold()) { OnTouchHeld(); }
+            
+            prevTouchPos = GetTouchPos();
         }
 
         private void OnTouchHeld() {
@@ -85,7 +89,9 @@ namespace SlideAndStick {
 
 			if (level.CanMakeAnyMove()) {
 	            // Far enough into LEGAL simulated move? Execute it!
-				if (SimMovePercent > 0.5f && CanExecuteSimMove) {
+                float touchVel = Vector2.Distance(GetTouchPos(), prevTouchPos);
+                bool isFlick = touchVel > FlickVelThreshold;
+				if ((SimMovePercent>0.5f || isFlick) && CanExecuteSimMove) {
 	                ExecuteSimMove();
 	            }
 				// Otherwise, cancel it.

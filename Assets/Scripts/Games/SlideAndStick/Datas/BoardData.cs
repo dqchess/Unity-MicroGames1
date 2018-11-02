@@ -7,6 +7,7 @@ namespace SlideAndStick {
         // Constants
         private readonly char[] LINE_BREAKS_CHARS = new char[] { ',' }; // our board layouts are comma-separated (because XML's don't encode line breaks).
 		// Properties
+        public bool debug_noWin; // true for many test levels, where we don't want any move to trigger a win.
         public int devRating;
         public int difficulty;
         public int numCols,numRows;
@@ -45,6 +46,7 @@ namespace SlideAndStick {
 			MakeEmptyLists ();
 		}
 		public BoardData(BoardDataXML bdxml) {
+            debug_noWin = bdxml.debug_noWin;
             difficulty = bdxml.difficulty;
             devRating = bdxml.devRating;
             fueID = bdxml.fueID;

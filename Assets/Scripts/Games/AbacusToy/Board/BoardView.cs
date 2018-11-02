@@ -17,7 +17,7 @@ namespace AbacusToy {
         private Board simMoveBoard; // for TOUCH INPUT feedback. Same story as the pre-move dragging in Threes!.
         // Properties
         public float UnitSize { get; private set; } // how big each board space is in pixels
-        public bool AreObjectsAnimating { get; private set; }
+        private bool areObjectsAnimating;
         private float animLoc; // eases to 0 or 1 while we're animating!
         private float animLocVel;
         public float AnimLocTarget { get; private set; } // either 0 (undoing a halfway animation) or 1 (going to the new, updated position).
@@ -148,12 +148,12 @@ namespace AbacusToy {
 //          animLoc = 0;
             animLocVel = 0.08f;
             AnimLocTarget = 1;
-            AreObjectsAnimating = true;
+            areObjectsAnimating = true;
             // Do this for safety.
             ApplyObjectsAnimationLoc();
         }
         public void UpdateAllViewsMoveEnd() {
-            AreObjectsAnimating = false;
+            areObjectsAnimating = false;
             animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
             for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
@@ -188,7 +188,7 @@ namespace AbacusToy {
             }
             // Keep the value locked to the target value.
             animLoc = AnimLocTarget;
-            AreObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
+            areObjectsAnimating = false; // ALWAYS say we're not animating here. If we swipe a few times really fast, we don't want competing animations.
             ApplyObjectsAnimationLoc ();
         }
         private void ClearSimMoveDirAndBoard() {
@@ -196,7 +196,7 @@ namespace AbacusToy {
             simMoveBoard = null;
             // Not at target loc? Say we're animating!
             if (!IsFinishedAnimating()) {
-                AreObjectsAnimating = true;
+                areObjectsAnimating = true;
                 //animLocVel = 0.08f;
                 //animLocTarget = 0;
             }
@@ -252,7 +252,7 @@ namespace AbacusToy {
         //  Update
         // ----------------------------------------------------------------
         private void FixedUpdate() {
-            if (AreObjectsAnimating) {
+            if (areObjectsAnimating) {
                 animLocVel *= 0.75f;
                 animLocVel += (AnimLocTarget-animLoc) * 0.05f;//AnimationEasing;
                 animLoc += animLocVel;
