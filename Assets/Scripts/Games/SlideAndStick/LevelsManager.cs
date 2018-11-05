@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SlideAndStick {
@@ -105,6 +106,7 @@ namespace SlideAndStick {
         private void Reset () {
             ReloadModeDatas ();
             //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
+            Debug_OrderLevelsAndCopyToClipboard(new LevelAddress(GameModes.StandardIndex,0,0, 0));
         }
     
     
@@ -128,6 +130,22 @@ namespace SlideAndStick {
             SaveStorage.DeleteAll ();
             Reset ();
             Debug.Log ("All SaveStorage CLEARED!");
+        }
+        
+        
+        private void Debug_OrderLevelsAndCopyToClipboard(LevelAddress address) {
+            PackData packData = GetPackData(address);
+            //// FIRST make a list of all the levels.
+            //List<LevelData> lds = new List<LevelData>(packData.LevelDatas);
+            // Order them by difficulty!
+            List<LevelData> ldsSorted = packData.LevelDatas.OrderBy(o=>o.boardData.difficulty).ThenBy(o=>o.boardData.numCols*o.boardData.numRows).ToList();
+            // Pack them into a big-ass string, yo.
+            string str = "";
+            foreach (LevelData ld in ldsSorted) {
+                str += ld.boardData.Debug_GetAsXML(true);
+            }
+            // Copy them to the clip-clopboard!
+            GameUtils.CopyToClipboard(str);
         }
     
     
