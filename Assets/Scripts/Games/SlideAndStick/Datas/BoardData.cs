@@ -124,6 +124,75 @@ namespace SlideAndStick {
 
 
 
+        // ----------------------------------------------------------------
+        //  Debug
+        // ----------------------------------------------------------------
+        public void Debug_CopyLayoutToClipboard(bool isCompact) {
+            GameUtils.CopyToClipboard(Debug_GetLayout(isCompact));
+        }
+        public void Debug_CopyXMLToClipboard(bool isCompact) {
+            GameUtils.CopyToClipboard(Debug_GetAsXML(isCompact));
+        }
+        public string Debug_GetAsXML(bool isCompact) {
+            string layoutStr = Debug_GetLayout(isCompact);
+            string str = "    <Level ";
+            str += "diff=\"" + difficulty +"\" ";
+            str += "layout=\"" + layoutStr + "\" />\n";
+            return str;
+        }
+        public string Debug_GetLayout(bool isCompact) {
+            // Make empty allChars grid string thing. (E.g. If a space has a tile AND a wall, that string'll be like "0|". We pick it apart later.)
+            string[,] allChars = new string[numCols,numRows];
+            for (int i=0; i<numCols; i++) { for (int j=0; j<numRows; j++) { allChars[i,j]=""; } }
+            // Populate!
+            foreach (TileData t in tileDatas) {
+                foreach (Vector2Int fpLocal in t.footprintLocal) {
+                    Vector2Int fpGlobal = fpLocal + t.boardPos.ToVector2Int();
+                    allChars[fpGlobal.x,fpGlobal.y] += t.colorID.ToString();
+                }
+            }
+            foreach (WallData w in wallDatas) {
+                int c = w.boardPos.col;// + (w.IsVertical ? 1 : 0);
+                int r = w.boardPos.row + (w.IsVertical() ? 0 : -1);
+                allChars[c,r] += w.IsVertical() ? "|" : "_";
+            }
+            // How many layers is that?
+            int numLayers = 0;
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    numLayers = Mathf.Max(numLayers, allChars[i,j].Length);
+                }
+            }
+
+            // Now combine all this into ONE big ol' string!
+            string tab = isCompact ? "" : "        ";
+            string lb = isCompact ? " " : "\n";
+            string str = "" + lb;
+            for (int layer=0; layer<numLayers; layer++) {
+                for (int row=0; row<numRows; row++) {
+                    str += tab;
+                    for (int col=0; col<numCols; col++) {
+                        string spaceStr = allChars[col,row];
+                        // There IS a thing here!
+                        if (layer < spaceStr.Length) {
+                            str += spaceStr[layer];
+                        }
+                        // There is NOT a thing here. Use the info about the BoardSpace then.
+                        else {
+                            BoardSpaceData space = spaceDatas[col,row];
+                            if (!space.isPlayable) { str += "#"; }
+                            else { str += "."; }
+                        }
+                    }
+                    str += ",";
+                    if (row < numRows-1) { str += lb; }
+                }
+                if (layer < numLayers-1) { str += lb+tab+","+lb; }
+            }
+
+            return str;
+        }
+
 
 	}
 }

@@ -314,7 +314,7 @@ namespace SlideAndStick {
 			NumMovesMade --; // decrement this here!
 			gameController.FUEController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!
-			OnBoardMoveComplete();//TODO: Do we need to call this? Try commenting it out!
+			//OnBoardMoveComplete();//Note: Commented out. We don't neeed to call these as the code is now. (TBH there's really two functions in OnBoardMoveComplete: handling the move just executed, and any post-move-forward-or-backward paperwork.)
 		}
 		public void UndoAllMoves() {
 			if (!CanUndoMove()) { return; }
@@ -329,39 +329,3 @@ namespace SlideAndStick {
 	}
 
 }
-
-
-//        private bool IsPlayerMove_L() { return Input.GetButtonDown("MoveL") || simMoveController.IsSwipe_L; }
-//        private bool IsPlayerMove_R() { return Input.GetButtonDown("MoveR") || simMoveController.IsSwipe_R; }
-//        private bool IsPlayerMove_D() { return Input.GetButtonDown("MoveD") || simMoveController.IsSwipe_D; }
-//        private bool IsPlayerMove_U() { return Input.GetButtonDown("MoveU") || simMoveController.IsSwipe_U; }
-/*
-		override protected void AddLevelComponents() {
-			if (resourcesHandler == null) { return; } // Safety check for runtime compile.
-
-			string levelString = gameController.LevelLoader.GetLevelString(LevelIndex);
-			if (!string.IsNullOrEmpty(levelString)) {
-				MakeLevelFromString(levelString);
-			}
-			else {
-//				DestroyLevelComponents();
-//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
-				Debug.LogWarning("No level data available for level: " + LevelIndex);
-			}
-//			if (LevelIndex > LastLevelIndex) {
-//				levelUI.t_moreLevelsComingSoon.gameObject.SetActive(true);
-//			}
-		}
-		private void MakeLevelFromString(string _str) {
-			try {
-				string[] lines = TextUtils.GetStringArrayFromStringWithLineBreaks(_str);
-				description = lines[0]; // Description will be the first line (what follows "LEVEL ").
-				string[] boardLayout = lines.Skip(1).ToArray(); // skip the descrpition string. The rest is the board layout! :)
-				BoardData boardData = new BoardData(boardLayout);
-				RemakeModelAndViewFromData(boardData);
-			}
-			catch (System.Exception e) {
-				Debug.LogError("Error reading level string! LevelIndex: " + LevelIndex + ", description: \"" + description + "\". Error: " + e);
-			}
-		}
-        */

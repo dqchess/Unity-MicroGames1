@@ -16,7 +16,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public Wall (Board _boardRef, WallData _data) {
             base.InitializeAsBoardObject (_boardRef, _data.boardPos);
-			IsVertical = SideFacing==1 || SideFacing==3; // note that 3 should never be passed in. 0 and 1 only (so we can never have two walls in the same space accidentally).
+			IsVertical = _data.IsVertical();
             // Add me to my (two) BoardSpaces!
             Vector2Int adjacentSpaceDir = MathUtils.GetDir(SideFacing);
             BetweenPos = new Vector2(Col+adjacentSpaceDir.x*0.5f, Row+adjacentSpaceDir.y*0.5f);

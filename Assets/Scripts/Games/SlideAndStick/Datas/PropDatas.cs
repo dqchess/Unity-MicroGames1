@@ -35,6 +35,7 @@ namespace SlideAndStick {
     }
 
     public class WallData : BoardObjectData {
+        public bool IsVertical() { return boardPos.sideFacing==1 || boardPos.sideFacing==3; } // note that 3 should never be passed in. 0 and 1 only (so we can never have two walls in the same space accidentally).
         public WallData(BoardPos _boardPos) {
             boardPos = _boardPos;
         }

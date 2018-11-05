@@ -356,70 +356,19 @@ namespace SlideAndStick {
             }
 		}
         
+        
         public void Debug_CopyLayoutToClipboard(bool isCompact) {
-            GameUtils.CopyToClipboard(Debug_GetLayout(isCompact));
+            SerializeAsData().Debug_CopyLayoutToClipboard(isCompact);
         }
         public void Debug_CopyXMLToClipboard(bool isCompact) {
-            GameUtils.CopyToClipboard(Debug_GetAsXML(isCompact));
+            SerializeAsData().Debug_CopyXMLToClipboard(isCompact);
         }
         public string Debug_GetAsXML(bool isCompact) {
-            string layoutStr = Debug_GetLayout(isCompact);
-            string str = "    <Level ";
-            str += "diff=\"" + Difficulty +"\" ";
-            str += "layout=\"" + layoutStr + "\" />\n";
-            return str;
+            return SerializeAsData().Debug_GetAsXML(isCompact);
         }
-		public string Debug_GetLayout(bool isCompact) {
-			// Make empty allChars grid string thing. (E.g. If a space has a tile AND a wall, that string'll be like "0|". We pick it apart later.)
-			string[,] allChars = new string[NumCols,NumRows];
-			for (int i=0; i<NumCols; i++) { for (int j=0; j<NumRows; j++) { allChars[i,j]=""; } }
-			// Populate!
-			foreach (Tile t in tiles) {
-				foreach (Vector2Int fp in t.FootprintGlobal) {
-					allChars[fp.x,fp.y] += t.ColorID.ToString();
-				}
-			}
-			foreach (Wall w in walls) {
-				int c = w.Col;// + (w.IsVertical ? 1 : 0);
-				int r = w.Row + (w.IsVertical ? 0 : -1);
-				allChars[c,r] += w.IsVertical ? "|" : "_";
-			}
-			// How many layers is that?
-			int numLayers = 0;
-			for (int i=0; i<NumCols; i++) {
-				for (int j=0; j<NumRows; j++) {
-					numLayers = Mathf.Max(numLayers, allChars[i,j].Length);
-				}
-			}
-
-			// Now combine all this into ONE big ol' string!
-			string tab = isCompact ? "" : "        ";
-			string lb = isCompact ? " " : "\n";
-			string str = "" + lb;
-			for (int layer=0; layer<numLayers; layer++) {
-				for (int row=0; row<NumRows; row++) {
-					str += tab;
-					for (int col=0; col<NumCols; col++) {
-						string spaceStr = allChars[col,row];
-						// There IS a thing here!
-						if (layer < spaceStr.Length) {
-							str += spaceStr[layer];
-						}
-						// There is NOT a thing here. Use the info about the BoardSpace then.
-						else {
-							BoardSpace space = GetSpace(col,row);
-							if (!space.IsPlayable) { str += "#"; }
-							else { str += "."; }
-						}
-					}
-					str += ",";
-					if (row < NumRows-1) { str += lb; }
-				}
-				if (layer < numLayers-1) { str += lb+tab+","+lb; }
-			}
-
-			return str;
-		}
+        public string Debug_GetLayout(bool isCompact) {
+            return SerializeAsData().Debug_GetLayout(isCompact);
+        }
 
 
 
