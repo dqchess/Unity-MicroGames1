@@ -12,10 +12,10 @@
     	public int level;
     
     	public LevelAddress (int mode, int collection, int pack, int level) {
-    		this.mode = mode;
-    		this.collection = collection;
-    		this.pack = pack;
-    		this.level = level;
+    		this.mode = Mathf.Max(0, mode);
+    		this.collection = Mathf.Max(0, collection);
+    		this.pack = Mathf.Max(0, pack);
+    		this.level = Mathf.Max(0, level);
     	}
     
     	public bool IsTutorial { get { return mode == GameModes.TutorialIndex; } }
@@ -30,6 +30,15 @@
     		}
     		return LevelAddress.undefined; // Hmm.
     	}
+    
+    
+        public static LevelAddress operator + (LevelAddress a, LevelAddress b) {
+            return new LevelAddress(
+                a.mode+b.mode,
+                a.collection+b.collection,
+                a.pack+b.pack,
+                a.level+b.level);
+        }
     
     	public override bool Equals(object o) { return base.Equals (o); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
     	public override int GetHashCode() { return base.GetHashCode(); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).

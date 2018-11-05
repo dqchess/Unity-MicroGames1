@@ -103,14 +103,14 @@ namespace SlideAndStick {
         public LevelsManager() {
             Reset ();
         }
-        private void Reset () {
+        public void Reset () {
             ReloadModeDatas ();
             //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
-            Debug_OrderLevelsAndCopyToClipboard(new LevelAddress(GameModes.StandardIndex,0,0, 0));
+            Debug_PrintTotalNumLevels();
         }
     
     
-        public void ReloadModeDatas () {
+        private void ReloadModeDatas () {
             modeDatas = new ModeCollectionData[2];
     
             modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
@@ -133,7 +133,18 @@ namespace SlideAndStick {
         }
         
         
-        private void Debug_OrderLevelsAndCopyToClipboard(LevelAddress address) {
+        private void Debug_PrintTotalNumLevels() {
+            int total=0;
+            foreach (ModeCollectionData modeCollectionData in modeDatas) {
+                foreach (PackCollectionData packCollectionData in modeCollectionData.CollectionDatas) {
+                    foreach (PackData packData in packCollectionData.PackDatas) {
+                        total += packData.NumLevels;
+                    }
+                }
+            }
+            Debug.Log("Total SlideAndStick levels: " + total);
+        }
+        public void Debug_OrderLevelsAndCopyToClipboard(LevelAddress address) {
             PackData packData = GetPackData(address);
             //// FIRST make a list of all the levels.
             //List<LevelData> lds = new List<LevelData>(packData.LevelDatas);

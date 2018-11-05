@@ -16,8 +16,8 @@ namespace SlideAndStick {
 		// Getters (Public)
 		public FUEController FUEController { get { return fueController; } }
         // Getters (Private)
-        private LevelAddress currentAddress { get { return level==null?LevelAddress.zero : level.MyAddress; } }
-        private PackData CurrentPackData { get { return levelsManager.GetPackData(currentAddress); } }
+        private LevelAddress currAddress { get { return level==null?LevelAddress.zero : level.MyAddress; } }
+        private PackData CurrentPackData { get { return levelsManager.GetPackData(currAddress); } }
         private LevelsManager levelsManager { get { return LevelsManager.Instance; } }
 
 
@@ -74,28 +74,34 @@ namespace SlideAndStick {
             while (!popup.DidPressNextButton) { yield return null; }
             
             //yield return new WaitForSecondsRealtime(0.1f);
-            SetCurrentLevel(currentAddress.NextLevel, true);
+            SetCurrentLevel(currAddress.NextLevel, true);
         }
         private bool didPressLevelCompletePopupNextButton;
 
-        public void RestartLevel() { SetCurrentLevel(currentAddress, false); }
+        public void RestartLevel() { SetCurrentLevel(currAddress, false); }
         private void StartPrevLevel() {
-            LevelData data = levelsManager.GetLevelData(currentAddress.PreviousLevel);
+            LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
             if (data != null) { SetCurrentLevel(data); }
         }
         private void StartNextLevel () {
-            LevelData data = levelsManager.GetLevelData (currentAddress.NextLevel);
+            LevelData data = levelsManager.GetLevelData (currAddress.NextLevel);
             if (data != null) { SetCurrentLevel(data); }
             else { OnCompleteLastLevelInPack(); } // If we've reached the end of this world...
         }
-        private void ChangeLevel(int levelIndexChange) {
-            LevelAddress newAddress = currentAddress;
-            newAddress.level = Mathf.Max(0, newAddress.level+levelIndexChange);
-            SetCurrentLevel(newAddress);
+        private void ChangeCollection(int change) {
+            //SetCurrentLevel(currentAddress + new LevelAddress(0, change, 0, 0));
+            SetCurrentLevel(new LevelAddress(currAddress.mode, currAddress.collection+change, 0, 0));
+        }
+        private void ChangePack(int change) {
+            //SetCurrentLevel(currentAddress + new LevelAddress(0, 0, change, 0));
+            SetCurrentLevel(new LevelAddress(currAddress.mode, currAddress.collection, currAddress.pack+change, 0));
+        }
+        private void ChangeLevel(int change) {
+            SetCurrentLevel(currAddress + new LevelAddress(0, 0, 0, change));
         }
         private void SetCurrentLevel(LevelAddress address, bool doAnimate=false) {
             if (Application.isEditor) { // In editor? Noice. Reload all levels from file so we can update during runtime!
-                levelsManager.ReloadModeDatas();
+                levelsManager.Reset();
             }
             LevelData ld = levelsManager.GetLevelData (address);
             if (ld == null) { Debug.LogError("Requested LevelData doesn't exist! Address: " + address.ToString()); } // Useful feedback for dev.
@@ -153,7 +159,7 @@ namespace SlideAndStick {
             // Tell people!
             fueController.OnStartLevel(level);
             // Save values!
-            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currentAddress), currentAddress.ToString());
+            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currAddress), currAddress.ToString());
         }
         
         
@@ -191,10 +197,10 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
         private void WinLevel() {
             // Tell people!
-            levelsManager.OnCompleteLevel(currentAddress);
+            levelsManager.OnCompleteLevel(currAddress);
             level.OnWinLevel();
             fueController.OnCompleteLevel();
-            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currentAddress);
+            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
             StartCoroutine(Coroutine_JustWonLevel());
         }
 
@@ -215,10 +221,21 @@ namespace SlideAndStick {
 			}
     
             // DEBUG
+            bool isKey_alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+            bool isKey_ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+            if (isKey_ctrl) {
+                if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeCollection(-1); return; }
+                if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeCollection( 1); return; }
+            }
+            else if (isKey_alt) {
+                if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangePack(-1); return; }
+                if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangePack( 1); return; }
+            }
             if (Input.GetKeyDown(KeyCode.P))            { ChangeLevel(-10); return; } // P = Back 10 levels.
             if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeLevel( -1); return; } // [ = Back 1 level.
             if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
             if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
+            
         }
 
 

@@ -34,7 +34,7 @@ namespace SlideAndStick {
         //  Initialize
         // ----------------------------------------------------------------
         protected void InitializeAsBoardOccupant (Board _boardRef, BoardOccupantData _data) {
-			FootprintLocal = _data.footprintLocal;
+			FootprintLocal = new List<Vector2Int>(_data.footprintLocal);
             base.InitializeAsBoardObject (_boardRef, _data.boardPos);
             RemakeMergePoses();
 		}

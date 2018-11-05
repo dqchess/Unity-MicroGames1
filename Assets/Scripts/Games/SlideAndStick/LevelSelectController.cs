@@ -71,7 +71,7 @@ namespace SlideAndStick {
         }
         public void ClearAllSaveData() {
             GameManagers.Instance.DataManager.ClearAllSaveData ();
-            LevelsManager.Instance.ReloadModeDatas();
+            LevelsManager.Instance.Reset();
             ReloadScene ();
         }
         
@@ -108,7 +108,7 @@ namespace SlideAndStick {
     
             // DEBUG
             if (Input.GetKeyDown(KeyCode.Return)) {
-                LevelsManager.Instance.ReloadModeDatas();
+                LevelsManager.Instance.Reset();
                 ReloadScene ();
                 return;
             }

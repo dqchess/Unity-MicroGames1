@@ -3,17 +3,18 @@
 
 
 
-<!--
-    ================================================================
-    ================================================================
--->
-<LevelPack packName="Double Hard">
+<LevelPack packName="5x5">
 <Levels>
-
+    <Level diff="5" layout=" ...1, 1000, 0101, 0.11," />
+    <Level diff="5" layout=" .101, 0.00, 1.1., 1011," desc="IS THIS POSSIBLE?" />
+    <Level diff="5" layout=" 1.22, 2.1., .12., 0100," />
+    <Level diff="5" layout=" .1.0, 10.., 2011, 2101," />
+    <Level diff="5" layout=" ..2., 1.00, 2.2., 0001," />
+    <Level diff="5" layout=" 0..0, 202., ..22, 1100," />
+    <Level diff="5" layout=" .100., 00111, 1001., ..0.., 0.11.," desc="great" />
 
 </Levels>
 </LevelPack>
-
 
 
 

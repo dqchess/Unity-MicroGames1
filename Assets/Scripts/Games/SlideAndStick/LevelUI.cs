@@ -7,6 +7,7 @@ using TMPro;
 namespace SlideAndStick {
 	public class LevelUI : MonoBehaviour {
         // Components
+        [SerializeField] private GameObject go_randLayoutHelperUI=null;
         [SerializeField] private RectTransform rt_levelName=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_packName=null;
@@ -17,16 +18,13 @@ namespace SlideAndStick {
         // Getters (Public)
         public LevelCompletePopup LevelCompletePopup { get { return levelCompletePopup; } }
         // Getters (Private)
+        private string GetCollectionName() {
+            PackCollectionData data = LevelsManager.Instance.GetPackCollectionData(level.MyAddress);
+            return data.CollectionName;
+        }
         private string GetPackName() {
-            PackData packData = LevelsManager.Instance.GetPackData(level.MyAddress);
-            return packData.PackName;
-            //switch (collectionIndex) {
-            //    case 0: return "TESTS";
-            //    case 1: return "easy";
-            //    case 2: return "medium";
-            //    case 3: return "hard";
-            //    default: return "undefined";
-            //}
+            PackData data = LevelsManager.Instance.GetPackData(level.MyAddress);
+            return data.PackName;
         }
 
 
@@ -36,9 +34,11 @@ namespace SlideAndStick {
 		private void Start () {
             t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
             if (level.Board.DidRandGen) { t_levelName.text += " (RAND)"; }
-            t_packName.text = GetPackName();
+            t_packName.text = GetCollectionName() + ",  " + GetPackName() + " (D" + level.Board.Difficulty + ")";
             
             levelCompletePopup.Hide();
+            
+            go_randLayoutHelperUI.SetActive(level.Board.DidRandGen); // only show rand-gen UI for rand-gen boards.
         }
         
         

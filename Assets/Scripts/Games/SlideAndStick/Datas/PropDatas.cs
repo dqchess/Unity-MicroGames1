@@ -30,7 +30,7 @@ namespace SlideAndStick {
         public TileData (BoardPos _boardPos, int _colorID, List<Vector2Int> _footprintLocal) {
             boardPos = _boardPos;
             colorID = _colorID;
-            footprintLocal = _footprintLocal;
+            footprintLocal = new List<Vector2Int>(_footprintLocal);
         }
     }
 

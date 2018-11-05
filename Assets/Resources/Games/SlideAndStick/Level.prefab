@@ -1293,6 +1293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca68d21766aa4c4dba98ee0127edb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  go_randLayoutHelperUI: {fileID: 1037728724629548}
   rt_levelName: {fileID: 224962923939308570}
   t_levelName: {fileID: 114087574234903176}
   t_packName: {fileID: 114338642713201362}
