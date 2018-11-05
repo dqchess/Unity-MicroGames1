@@ -1,0 +1,90 @@
+<LevelsCollection collectionName="Tutorial" gameMode="SlideAndStick">
+<Packs>
+
+
+
+<!--
+    ================================================================
+    Tutorial
+    ================================================================
+-->
+<LevelPack packName="Tutorial">
+<Levels>
+
+
+    <Level diff="1" name="IntroGame1" fueID="1" layout="
+        ...,
+        0.0,
+        0..,
+    " />
+    <Level diff="1" name="IntroGame2" fueID="2" layout="
+        1.1,
+        0.0,
+        0..,
+    " />
+    <Level diff="1" name="IntroGame3" layout="
+        2.3,
+        2.2,
+        33.,
+    " />
+    <Level diff="1" name="IntroToUndo" fueID="introToUndo" layout="
+        1.1,
+        010,
+        0.0,
+    " />
+
+
+    <Level diff="1" desc="clearly handmade" layout="
+        ..10,
+        ..11,
+        00..,
+        10..,
+    " />
+    <Level diff="2" fueID="failHelp1" layout="
+        .03,
+        303,
+        0.0,
+    " />
+    <Level diff="1" fueID="failHelp0" layout="
+        2.2,
+        1.1,
+        222,
+    " />
+    <!--
+    <Level diff="1" fueID="TEST" layout="
+        2.2,
+        1.1,
+        2.2,
+    " />
+    -->
+    <Level diff="2" layout="
+        220,
+        .02,
+        2.0,
+    " />
+    <Level diff="2" fueID="failHelp2" layout="
+        2..,
+        121,
+        211,
+    " />
+    <Level diff="2" fueID="failHelp3" layout="
+        232,
+        ..3,
+        322,
+    " />
+
+
+	
+	
+</Levels>
+</LevelPack>
+
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

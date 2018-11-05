@@ -11,7 +11,70 @@
 <LevelPack packName="Medium">
 <Levels>
 
+    <!-- Assorted, EASY-MED, Assorted -->
+    <Level diff="3" layout="
+        002,
+        .21,
+        1.0,
+    " />
+    <Level diff="3" desc="neat" layout="
+        2012,
+        20.1,
+        .022,
+        ....,
+    " />
+    <Level diff="3" desc="fine" layout="
+        .1.2,
+        220.,
+        .101,
+        ..0.,
+    " />
+    <Level diff="3" layout="
+        0.00,
+        01.0,
+        1.11,
+        0.01,
+    " />
+    <Level diff="3" layout="
+        010.,
+        0221,
+        .0.2,
+        20..,
+    " />
+    <Level diff="3" layout="
+        1122,
+        121.,
+        21.2,
+        .2..,
+    " />
+    <Level diff="3" desc="very simple 'gotcha' level" layout="
+        1...,
+        .000,
+        ....,
+        001.,
+    " />
+    <Level diff="3" desc="great" layout="
+        .220,
+        20.1,
+        1..2,
+        000.,
+    " />
+
+
+    
     <!-- 4x4, MEDIUM, 2 COLORS -->
+    <Level diff="3" layout="
+        .001,
+        1..1,
+        11.0,
+        1101,
+    " />
+    <Level diff="3" layout="
+        .1.1,
+        .10.,
+        1001,
+        1010,
+    " />
     <Level diff="3" desc="clearly handmade. Obvious simple 'gotcha'." layout="
         0011,
         ....,
