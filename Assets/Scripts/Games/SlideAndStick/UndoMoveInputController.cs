@@ -34,14 +34,24 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		//  Update
 		// ----------------------------------------------------------------
 		private void Update () {
+            RegisterButtonInput();
+            UpdateEmphasizeButtons();
+        }
+        
+        private void RegisterButtonInput() {
 			bool isButton_undo_held = Input.GetKey(KeyCode.Backspace) || Input.GetKey(KeyCode.Delete) || Input.GetKey(KeyCode.Z);
 			bool isButton_undo_up = Input.GetKeyUp(KeyCode.Backspace) || Input.GetKeyUp(KeyCode.Delete) || Input.GetKeyUp(KeyCode.Z);
 			bool isButton_undo_down = Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Z);
 
-			if (isButton_undo_up) { OnButton_Undo_Up (); }
+            // Shift + Undo = Undo All Moves!
+            //if (Input.GetKey(KeyCode.LeftShift) && isButton_undo_down) { level.UndoAllMoves(); }
+            if (Input.GetKeyDown(KeyCode.X)) { level.UndoAllMoves(); }
+			else if (isButton_undo_up) { OnButton_Undo_Up (); }
 			else if (isButton_undo_down) { OnButton_Undo_Down (); }
 			else if (isButton_undo_held) { OnButton_Undo_Held (); }
+        }
 
+        private void UpdateEmphasizeButtons() {
 			if (areButtonsEmphasized) {
 				SetButtonsScale(0.9f + Mathf.Abs(Mathf.Sin(Time.unscaledTime*8f))*0.3f);
 			}

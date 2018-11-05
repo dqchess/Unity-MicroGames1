@@ -12,15 +12,15 @@
 <Levels>
 
 	
-    <Level diff="0" layout=" ..., ..., ..., " />
-    <Level diff="0" layout=" ..., ..., ..., ..., " />
-    <Level diff="0" layout=" ...., ...., ...., ...., " />
-    <Level diff="0" layout=" ...., ...., ...., ...., ...., " />
-    <Level diff="0" layout=" ....., ....., ....., ....., ....., " />
-    <Level diff="0" layout=" ....., ....., ....., ....., ....., ....., " />
-    <Level diff="0" layout=" ......, ......, ......, ......, ......, ......, " />
-    <Level diff="0" layout=" ......, ......, ......, ......, ......, ......, ......, " />
-    <Level diff="0" layout=" ......., ......., ......., ......., ......., ......., ......., " />
+    <Level diff="0" noWin="true" layout=" ..., ..., ..., " />
+    <Level diff="0" noWin="true" layout=" ..., ..., ..., ..., " />
+    <Level diff="0" noWin="true" layout=" ...., ...., ...., ...., " />
+    <Level diff="0" noWin="true" layout=" ...., ...., ...., ...., ...., " />
+    <Level diff="0" noWin="true" layout=" ....., ....., ....., ....., ....., " />
+    <Level diff="0" noWin="true" layout=" ....., ....., ....., ....., ....., ....., " />
+    <Level diff="0" noWin="true" layout=" ......, ......, ......, ......, ......, ......, " />
+    <Level diff="0" noWin="true" layout=" ......, ......, ......, ......, ......, ......, ......, " />
+    <Level diff="0" noWin="true" layout=" ......., ......., ......., ......., ......., ......., ......., " />
 
 
 

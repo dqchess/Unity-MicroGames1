@@ -54,7 +54,7 @@
 
 
 
-<LevelPack packName="assorted">
+<LevelPack packName="Supa Hard">
 <Levels>
     <Level diff="7" layout=" 0.20, 22.2, 1.0., 2201," desc="can lose easily on first move :P" />
     <Level diff="7" layout=" .00., .01., 0.02, 1022," />

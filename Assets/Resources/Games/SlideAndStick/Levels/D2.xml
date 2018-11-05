@@ -2,8 +2,6 @@
 <Packs>
 
 
-
-
 <LevelPack packName="4x4">
 <Levels>
     <Level diff="2" layout=" 0.00, 01.1, .100, 1.01," />
@@ -41,7 +39,9 @@
 </LevelPack>
 
 
-<LevelPack packName="5x5, 2 colors">
+
+
+<LevelPack packName="5x5">
 <Levels>
     <Level diff="2" layout=" .1111, .1011, ...1., 1.001, 1.101," />
     <Level diff="2" layout=" 01011, 0.011, 0..00, ...00, .0.01," />
@@ -62,14 +62,6 @@
     <Level diff="2" layout=" 111.., .1010, 00.01, 0.001, ..00.," />
     <Level diff="2" layout=" 0...0, 0010., 01100, 11010, ....0," />
     <Level diff="2" layout=" 11.00, .10.0, ..011, 1..11, .0111," />
-
-</Levels>
-</LevelPack>
-
-
-
-<LevelPack packName="5x5, 2 or 3 colors">
-<Levels>
     <Level diff="2" layout=" 11101, ..001, 11..0, 1...0, 111.0," desc="super satisfying" />
     <Level diff="2" layout=" ...00, ....1, 0.10., 0.00., 0.01.," />
     <Level diff="2" layout=" 00001, ....1, .0..1, 10..., 1...0," />

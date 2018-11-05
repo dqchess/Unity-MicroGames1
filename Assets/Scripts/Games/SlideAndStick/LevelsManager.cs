@@ -107,7 +107,8 @@ namespace SlideAndStick {
         public void Reset () {
             ReloadModeDatas ();
             //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
-            Debug_PrintTotalNumLevels();
+            //Debug_PrintTotalNumLevels();
+            Debug_PrintNumLevelsInEachPack();
         }
     
     
@@ -141,11 +142,20 @@ namespace SlideAndStick {
             }
             Debug.Log("Total SlideAndStick levels: " + total);
         }
+        private void Debug_PrintNumLevelsInEachPack() {
+            string str = "TOTALS:\n";
+            foreach (ModeCollectionData mcData in modeDatas) {
+                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
+                    foreach (PackData pData in pcData.PackDatas) {
+                        str += pcData.CollectionName + ", " + pData.PackName + " total: " + pData.NumLevels + "\n";
+                    }
+                }
+            }
+            Debug.Log(str);
+        }
         public void Debug_OrderLevelsAndCopyToClipboard(LevelAddress address) {
             PackData packData = GetPackData(address);
-            //// FIRST make a list of all the levels.
-            //List<LevelData> lds = new List<LevelData>(packData.LevelDatas);
-            // Order them by difficulty!
+            // Order list by difficulty/size!
             List<LevelData> ldsSorted = packData.LevelDatas.OrderBy(o=>o.boardData.difficulty).ThenBy(o=>o.boardData.numCols*o.boardData.numRows).ToList();
             // Pack them into a big-ass string, yo.
             string str = "";

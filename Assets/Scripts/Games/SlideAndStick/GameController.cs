@@ -78,7 +78,7 @@ namespace SlideAndStick {
         }
         private bool didPressLevelCompletePopupNextButton;
 
-        public void RestartLevel() { SetCurrentLevel(currAddress, false); }
+        private void RestartLevel() { SetCurrentLevel(currAddress, false); }
         private void StartPrevLevel() {
             LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
             if (data != null) { SetCurrentLevel(data); }
@@ -214,11 +214,11 @@ namespace SlideAndStick {
         override protected void RegisterButtonInput() {
             base.RegisterButtonInput();
 
-			// R = Restart Level (without reloading scene)
-			if (Input.GetKeyDown(KeyCode.R)) {
-				RestartLevel();
-				return;
-			}
+            // R = Reload Level (without reloading scene)
+            if (Input.GetKeyDown(KeyCode.R)) {
+                RestartLevel();
+                return;
+            }
     
             // DEBUG
             bool isKey_alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);

@@ -3,8 +3,6 @@
 
 
 
-
-
 <LevelPack packName="4x4">
 <Levels>
     <Level diff="4" layout=" 010., 1.11, 0111, ..0.," />
@@ -31,6 +29,9 @@
     <Level diff="4" layout=" 0122, .0.., 21.., 2.11," />
 </Levels>
 </LevelPack>
+
+
+
 
 <LevelPack packName="5x5">
 <Levels>
@@ -115,8 +116,7 @@
     <Level diff="4" layout=" .0212, 10.12, 12012, .20.., .....," />
     <Level diff="4" layout=" ..110, .010., 2100., 210.., ..00.," />
 
-    
-    <Level diff="4" layout=" .01101, .01.01, .001.., ...1.0, ...0.0, ...1.0," />
+
 </Levels>
 </LevelPack>
 
