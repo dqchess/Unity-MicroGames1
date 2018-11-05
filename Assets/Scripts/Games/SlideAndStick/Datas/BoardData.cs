@@ -11,6 +11,7 @@ namespace SlideAndStick {
         public int devRating;
         public int difficulty;
         public int numCols,numRows;
+        public string description; // developer description.
         public string fueID; // which tutorial this is gonna be!
 		// BoardObjects
 		public BoardSpaceData[,] spaceDatas;
@@ -48,6 +49,7 @@ namespace SlideAndStick {
 		public BoardData(BoardDataXML bdxml) {
             debug_noWin = bdxml.debug_noWin;
             difficulty = bdxml.difficulty;
+            description = bdxml.desc;
             devRating = bdxml.devRating;
             fueID = bdxml.fueID;
             string[] layoutArray = GetLevelStringArrayFromLayoutString(bdxml.layout);
@@ -137,7 +139,11 @@ namespace SlideAndStick {
             string layoutStr = Debug_GetLayout(isCompact);
             string str = "    <Level ";
             str += "diff=\"" + difficulty +"\" ";
-            str += "layout=\"" + layoutStr + "\" />\n";
+            str += "layout=\"" + layoutStr + "\" ";
+            if (!string.IsNullOrEmpty(fueID)) { str += "fueID=\"" + fueID + "\" "; }
+            if (devRating!=0) { str += "r=\"" + devRating + "\" "; }
+            if (!string.IsNullOrEmpty(description)) { str += "desc=\"" + description + "\" "; }
+            str += "/>\n";
             return str;
         }
         public string Debug_GetLayout(bool isCompact) {

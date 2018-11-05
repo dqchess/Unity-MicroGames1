@@ -11,6 +11,7 @@ namespace SlideAndStick {
         public int Difficulty { get; private set; }
         public int NumCols { get; private set; }
         public int NumRows { get; private set; }
+        private string Description;
         public string FUEID { get; private set; }
         // Properties (Variable)
         public bool AreGoalsSatisfied { get; private set; }
@@ -51,6 +52,7 @@ namespace SlideAndStick {
 		public BoardData SerializeAsData() {
 			BoardData bd = new BoardData(NumCols,NumRows);
             bd.debug_noWin = Debug_noWin;
+            bd.description = Description;
             bd.devRating = DevRating;
             bd.difficulty = Difficulty;
             bd.fueID = FUEID;
@@ -73,6 +75,7 @@ namespace SlideAndStick {
 			NumCols = bd.numCols;
 			NumRows = bd.numRows;
             Debug_noWin = bd.debug_noWin;
+            Description = bd.description;
             Difficulty = bd.difficulty;
             DevRating = bd.devRating;
             FUEID = bd.fueID;
