@@ -103,6 +103,7 @@ namespace SlideAndStick {
             if (Application.isEditor) { // In editor? Noice. Reload all levels from file so we can update during runtime!
                 levelsManager.Reset();
             }
+            address = address.NoNegatives();
             LevelData ld = levelsManager.GetLevelData (address);
             if (ld == null) { Debug.LogError("Requested LevelData doesn't exist! Address: " + address.ToString()); } // Useful feedback for dev.
             SetCurrentLevel(ld, doAnimate);

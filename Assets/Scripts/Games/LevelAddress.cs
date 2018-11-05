@@ -12,14 +12,25 @@
     	public int level;
     
     	public LevelAddress (int mode, int collection, int pack, int level) {
-    		this.mode = Mathf.Max(0, mode);
-    		this.collection = Mathf.Max(0, collection);
-    		this.pack = Mathf.Max(0, pack);
-    		this.level = Mathf.Max(0, level);
+            //this.mode = Mathf.Max(0, mode);
+            //this.collection = Mathf.Max(0, collection);
+            //this.pack = Mathf.Max(0, pack);
+            //this.level = Mathf.Max(0, level);
+            this.mode = mode;
+            this.collection = collection;
+            this.pack = pack;
+            this.level = level;
     	}
     
     	public LevelAddress NextLevel { get { return new LevelAddress(mode, collection, pack, level+1); } }
     	public LevelAddress PreviousLevel { get { return new LevelAddress(mode, collection, pack, level-1); } }
+        public LevelAddress NoNegatives() {
+            return new LevelAddress(
+                Mathf.Max(0, mode),
+                Mathf.Max(0, collection),
+                Mathf.Max(0, pack),
+                Mathf.Max(0, level));
+        }
     
     	public override string ToString() { return mode + "," + collection + "," + pack + "," + level; }
     	static public LevelAddress FromString(string str) {
