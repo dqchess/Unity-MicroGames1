@@ -3,18 +3,86 @@
 
 
 
-<LevelPack packName="5x5">
+<LevelPack packName="4x4">
 <Levels>
+    <Level diff="5" layout=" 0001, 1.10, 0.00, 11..," />
+    <Level diff="5" layout=" 00.1, 0101, 100., ....," desc="smart req moment" />
     <Level diff="5" layout=" ...1, 1000, 0101, 0.11," />
     <Level diff="5" layout=" .101, 0.00, 1.1., 1011," desc="IS THIS POSSIBLE?" />
     <Level diff="5" layout=" 1.22, 2.1., .12., 0100," />
     <Level diff="5" layout=" .1.0, 10.., 2011, 2101," />
     <Level diff="5" layout=" ..2., 1.00, 2.2., 0001," />
     <Level diff="5" layout=" 0..0, 202., ..22, 1100," />
-    <Level diff="5" layout=" .100., 00111, 1001., ..0.., 0.11.," desc="great" />
+    <Level diff="5" layout=" 0110, ..11, .010, .101," />
 
 </Levels>
 </LevelPack>
+
+
+
+
+
+
+<LevelPack packName="5x5">
+<Levels>
+    <Level diff="5" layout=" .100., 00111, 1001., ..0.., 0.11.," desc="great" />
+    <Level diff="5" layout=" 21121, ..111, .1.01, 1.00., ...00," desc="smart. req planning on 1st move" />
+    <Level diff="5" layout=" 22..., 2.22., 002.1, .1201, .1..1," desc="easy to get f'd" />
+    <Level diff="5" layout=" .0221, ..2.1, 2..10, .01.1, .0.22," />
+    <Level diff="5" layout=" ...01, 1..01, 110.1, .10.1, .....," desc="hehe" />
+    <Level diff="5" layout=" .2022, .2202, .2202, ...00, ..2..," desc="hehe" />
+    <Level diff="5" layout=" ..001, ..011, ..010, ..100, .....," />
+    <Level diff="5" layout=" .10.1, 2..01, 0.002, .20.2, .0002," />
+    <Level diff="5" layout=" .1100, 1.100, 11..1, 0..01, 100..," />
+    <Level diff="5" layout=" 1..10, 0.010, 00101, 000.1, ...0.," />
+    <Level diff="5" layout=" 1111., 000.0, .00.0, 0..10, 010..," />
+    <Level diff="5" layout=" 0.11., 0...0, .10.0, 11010, 1..1.," />
+    <Level diff="5" layout=" .10.., ...0., .0.01, 00010, 01.10," />
+    <Level diff="5" layout=" 100.1, 1.1.1, .110., .00.0, 1.0..," />
+    <Level diff="5" layout=" ...00, 11..0, 00..0, 0.011, 0.0.1," />
+    <Level diff="5" layout=" 100.1, 111.1, .11.., 1..0., 0..01," />
+    <Level diff="5" layout=" 0.110, 0.0.0, ..001, 1..00, ...11," />
+    <Level diff="5" layout=" .11.., 1...0, 110.1, 1.0.1, .0101," />
+    <Level diff="5" layout=" 111.0, .111., ..1.., .0101, 10..1," />
+    <Level diff="5" layout=" 0.10., .1..1, 010.1, 0.0.1, ..111," />
+    <Level diff="5" layout=" 1.001, 00.11, ..0.., 11.11, .1..0," />
+    <Level diff="5" layout=" 11.00, 0.111, 0..0., .100., .10..," />
+    <Level diff="5" layout=" .1100, .01.0, .110., 01.0., ...01," />
+    <Level diff="5" layout=" 011.0, 1.100, 10.0., .0..., 0.01.," />
+    <Level diff="5" layout=" 001.0, .11.0, .0..., 111.1, .11.0," />
+    <Level diff="5" layout=" 1110., ...01, 1.1.0, 11101, ...0.," />
+    <Level diff="5" layout=" 01011, 0..10, 1...0, ..110, ...10," />
+    <Level diff="5" layout=" .01.0, .01.0, ...10, .1010, .1.10," />
+    <Level diff="5" layout=" .0.00, .0.0., ..11., 0101., 0100.," />
+    <Level diff="5" layout=" .11.0, 00.01, 0.10., 1.00., 1..0.," />
+    <Level diff="5" layout=" 11.01, .010., .01.1, 0.1.., 0.1.0," />
+    <Level diff="5" layout=" 0.00., 00..1, .1101, .000., 1..1.," />
+    <Level diff="5" layout=" 10..0, 001.0, 1110., 1.0.0, .0...," />
+    <Level diff="5" layout=" ..111, 1...0, .00.0, 0000., 01.0.," />
+    <Level diff="5" layout=" 1..01, 1..0., ..110, 0.11., 0.010," />
+    <Level diff="5" layout=" 101.0, 10..., 100.., .0011, ...11," />
+    <Level diff="5" layout=" 000.1, 00011, 11.1., 10..., .0...," />
+    <Level diff="5" layout=" 1.222, 1010., 101.2, .022., .....," />
+    <Level diff="5" layout=" .2022, .2021, .0..., 02..0, 0..00," />
+    <Level diff="5" layout=" ..110, .1220, .0022, .002., ..0..," />
+    <Level diff="5" layout=" 22210, .2212, .2.22, ...10, ...1.," />
+    <Level diff="5" layout=" 0.1.2, 12.12, 12.1., .2.21, ...21," />
+    <Level diff="5" layout=" 1.200, 12202, ..10., .1.11, .1...," />
+    <Level diff="5" layout=" ...00, 2.2.0, 2.2.2, 2111., ..012," />
+    <Level diff="5" layout=" 1022., 10.2., ..2.., 2111., .100.," />
+    <Level diff="5" layout=" .2200, .0210, ..0.2, 1...2, 11..2," />
+    <Level diff="5" layout=" .0200, 0.220, 0...., 01.21, .1.2.," />
+    <Level diff="5" layout=" 1.111, 1.1.0, 021.., 022.1, 2....," />
+    <Level diff="5" layout=" 202.2, 201.2, 2.1.2, 0.12., ....1," />
+    <Level diff="5" layout=" .11.2, 0.0.1, 22021, 2.02., 2....," />
+
+
+    <Level diff="5" layout=" ...001, .00001, 100.00, 10..10, ....1., ....1.," desc="neat!" />
+
+
+</Levels>
+</LevelPack>
+
 
 
 

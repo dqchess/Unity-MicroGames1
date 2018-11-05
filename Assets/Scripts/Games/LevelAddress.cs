@@ -18,7 +18,6 @@
     		this.level = Mathf.Max(0, level);
     	}
     
-    	public bool IsTutorial { get { return mode == GameModes.TutorialIndex; } }
     	public LevelAddress NextLevel { get { return new LevelAddress(mode, collection, pack, level+1); } }
     	public LevelAddress PreviousLevel { get { return new LevelAddress(mode, collection, pack, level-1); } }
     

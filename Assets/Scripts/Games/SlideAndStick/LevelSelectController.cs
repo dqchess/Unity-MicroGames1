@@ -94,9 +94,9 @@ namespace SlideAndStick {
             SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress(address), address.ToString()); // Actually save the value! That's what GameController pulls in.
             OpenScene (SceneNames.Gameplay(GameNames.SlideAndStick));
         }
-        private void OpenTutorial() {
-            LoadLevel(new LevelAddress(GameModes.TutorialIndex, 0,0, -1));
-        }
+        //private void OpenTutorial() {
+        //    LoadLevel(new LevelAddress(GameModes.TutorialIndex, 0,0, -1));
+        //}
     
     
         // ----------------------------------------------------------------

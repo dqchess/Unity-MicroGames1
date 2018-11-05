@@ -72,6 +72,7 @@ namespace SlideAndStick {
             }
         }
         
+        // TODO: Remove or fix these! They're incorrect.
         public int GetNumLevelsPlayable(int collection) {
             PackCollectionData packCollectionData = GetPackCollectionData(0, collection);
             return packCollectionData.PackDatas[0].NumLevelsPlayable;
@@ -111,9 +112,9 @@ namespace SlideAndStick {
     
     
         private void ReloadModeDatas () {
-            modeDatas = new ModeCollectionData[2];
+            modeDatas = new ModeCollectionData[1];
     
-            modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
+            //modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
             modeDatas[GameModes.StandardIndex] = new ModeCollectionData(GameModes.StandardIndex, GameModes.Standard, "Standard");
         }
     
@@ -136,11 +137,7 @@ namespace SlideAndStick {
         private void Debug_PrintTotalNumLevels() {
             int total=0;
             foreach (ModeCollectionData modeCollectionData in modeDatas) {
-                foreach (PackCollectionData packCollectionData in modeCollectionData.CollectionDatas) {
-                    foreach (PackData packData in packCollectionData.PackDatas) {
-                        total += packData.NumLevels;
-                    }
-                }
+                total += modeCollectionData.NumLevels();
             }
             Debug.Log("Total SlideAndStick levels: " + total);
         }

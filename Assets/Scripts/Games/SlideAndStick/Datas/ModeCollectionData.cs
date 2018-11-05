@@ -23,6 +23,14 @@ namespace SlideAndStick {
     		if (collectionIndex<0 || collectionIndex>=collectionDatas.Count) { return null; }
     		return collectionDatas [collectionIndex];
     	}
+        public int NumLevels() {
+            int total = 0;
+            foreach (PackCollectionData data in CollectionDatas) {
+                total += data.NumLevels();
+                //Debug.Log("PackCollectionData total: " + data.NumLevels());
+            }
+            return total;
+        }
     
     
     	// ----------------------------------------------------------------

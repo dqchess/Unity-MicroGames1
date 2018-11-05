@@ -20,6 +20,13 @@ namespace SlideAndStick {
     	public int NumPacks { get { return packDatas.Count; } }
     	public string CollectionName { get { return collectionName; } }
     	public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }
+        public int NumLevels() {
+            int total = 0;
+            foreach (PackData data in PackDatas) {
+                total += data.NumLevels;
+            }
+            return total;
+        }
     
     	public PackData GetPackData (int index) {
     		if (index<0 || index>=packDatas.Count) { return null; } // Outta bounds.

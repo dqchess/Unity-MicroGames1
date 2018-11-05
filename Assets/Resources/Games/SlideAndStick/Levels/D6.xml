@@ -2,15 +2,65 @@
 <Packs>
 
 
-
-<!--
-    ================================================================
-    ================================================================
--->
-<LevelPack packName="Small">
+<LevelPack packName="4x4">
 <Levels>
+    <Level diff="6" layout=" 1.00, 00.1, 1101, 0.1.," />
+    <Level diff="6" layout=" 00.0, 1.11, 100., 011.," />
+    <Level diff="6" layout=" ..11, 010., 1.01, 1101," />
+    <Level diff="6" layout=" 1120, 2..0, .02., 221.," />
+    <Level diff="6" layout=" 2..., 00.0, 20.., 1021," />
+    <Level diff="6" layout=" ...2, 2.0., 1211, 12.0," />
+    <Level diff="6" layout=" 1201, 0..., 2000, .2.0," />
+</Levels>
+</LevelPack>
 
 
+
+
+<LevelPack packName="5x5">
+<Levels>
+    <Level diff="6" layout=" .000., ..21., ...1., 10222, 0002.," />
+    <Level diff="6" layout=" 00..., 0.101, ...01, 21201, .1.0.," />
+    <Level diff="6" layout=" .2001, 12011, ..010, 2..20, 2..2.," />
+    <Level diff="6" layout=" 1101., 11..0, 10..0, .01.0, 0010.," />
+    <Level diff="6" layout=" 101.., 1.1.0, .0.00, .111., 01..1," />
+    <Level diff="6" layout=" 11..1, .00.., 00110, 0.010, ..1..," />
+    <Level diff="6" layout=" .0..0, .10.0, .10.., 00.01, 1.001," />
+    <Level diff="6" layout=" 0.010, .1..0, 11.01, 1..11, 0..1.," />
+    <Level diff="6" layout=" .10.0, .00.0, 11..1, 11.01, .1.0.," />
+    <Level diff="6" layout=" 00.1., 1..10, ..1.., .1110, 0001.," />
+    <Level diff="6" layout=" ...0., 1000., 100.1, 01..1, 01..0," />
+    <Level diff="6" layout=" 1101., ..010, 1..10, .101., 01...," />
+    <Level diff="6" layout=" 11..., 0.1.., 00..0, 1111., 001.0," />
+    <Level diff="6" layout=" 110.0, 10..0, 11..., 0.0.., 0.001," />
+    <Level diff="6" layout=" .00.., 0.010, 0.01., .11.0, .11.0," />
+    <Level diff="6" layout=" 11.01, 1..01, 0.01., 0.01., ..1.0," />
+    <Level diff="6" layout=" ...00, 1.0.0, .1010, 01..1, 01.0.," />
+    <Level diff="6" layout=" 1.00., ..111, .010., 00..0, ..001," />
+    <Level diff="6" layout=" .2..., 001.., .11.0, 10021, 1.22.," />
+    <Level diff="6" layout=" 2111., 211.., .1.21, 0.12., 0.1..," />
+    <Level diff="6" layout=" ...01, .1.01, 01221, 0..2., 12.0.," />
+    <Level diff="6" layout=" 22..., 21..., .001., 0001., .0222," />
+    <Level diff="6" layout=" .001., 122.2, 1212., ..12., .0.2.," />
+    <Level diff="6" layout=" .0.2., .1220, .0220, .0.02, .0..2," />
+    <Level diff="6" layout=" .2201, .0201, .00.., ..12., .112.," />
+    <Level diff="6" layout=" 100.1, 10.01, 1...1, .1.2., 222..," />
+    <Level diff="6" layout=" 112.., 1121., 01210, ..11., ...1.," />
+    <Level diff="6" layout=" 11002, 1.0.2, ..110, ..0.1, ..0.1," />
+
+</Levels>
+</LevelPack>
+
+
+
+
+<LevelPack packName="assorted">
+<Levels>
+    <Level diff="7" layout=" 0.20, 22.2, 1.0., 2201," desc="can lose easily on first move :P" />
+    <Level diff="7" layout=" .00., .01., 0.02, 1022," />
+    <Level diff="7" layout=" 001.., .1120, ..221, 2.00., 2.0..," />
+    <Level diff="7" layout=" 1..12, 01..2, 20..., 2010., 200..," />
+    <Level diff="7" layout=" 11.22, 1.01., .0011, 0010., .1.0.," desc="IDK if possible!" />
 </Levels>
 </LevelPack>
 
