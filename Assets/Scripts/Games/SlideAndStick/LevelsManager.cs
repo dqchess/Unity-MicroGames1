@@ -72,6 +72,13 @@ namespace SlideAndStick {
             }
         }
         
+        public LevelData GetFallbackEmptyLevelData() {
+            return new LevelData {
+                myAddress = new LevelAddress(0, 0, 0, 0),
+                boardData = new BoardData(1, 1)
+            };
+        }
+        
         // TODO: Remove or fix these! They're incorrect.
         public int GetNumLevelsPlayable(int collection) {
             PackCollectionData packCollectionData = GetPackCollectionData(0, collection);

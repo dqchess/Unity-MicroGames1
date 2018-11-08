@@ -38,12 +38,24 @@ namespace SlideAndStick {
         public Tile GetTile(BoardPos pos) { return GetTile(pos.col,pos.row); }
         public Tile GetTile(Vector2Int pos) { return GetTile(pos.x,pos.y); }
         public Tile GetTile(int col,int row) { return BoardUtils.GetOccupant(this, col,row) as Tile; }
+        public List<MergeSpot> LastMergeSpots { get { return lastMergeSpots; } }
 		public int GetNumTiles(int colorID) {
 			int total = 0;
 			foreach (Tile t in tiles) { if (t.ColorID==colorID) { total ++; } }
 			return total;
 		}
-		public List<MergeSpot> LastMergeSpots { get { return lastMergeSpots; } }
+        public bool AreAnyTileColorsSatisfied() {
+            int[] numTilesOfColor = new int[9]; // we won't have more than 9 colorIDs.
+            for (int i=0; i<numTilesOfColor.Length; i++) { numTilesOfColor[i] = 0; }
+            foreach (Tile t in tiles) {
+                if (t.ColorID<0 || t.ColorID>=numTilesOfColor.Length) { Debug.LogError("ColorID outta bounds."); continue; } // Safety check.
+                numTilesOfColor[t.ColorID] ++;
+            }
+            for (int i=0; i<numTilesOfColor.Length; i++) {
+                if (numTilesOfColor[i] == 1) { return true; }
+            }
+            return false;
+        }
 
 		public Board Clone() {
 			BoardData data = SerializeAsData();
@@ -371,6 +383,10 @@ namespace SlideAndStick {
         }
         public string Debug_GetLayout(bool isCompact) {
             return SerializeAsData().Debug_GetLayout(isCompact);
+        }
+        public void Debug_CopyXMLToClipboardWithDiff(int _diff) {
+            Difficulty = _diff;
+            Debug_CopyXMLToClipboard(true);
         }
 
 

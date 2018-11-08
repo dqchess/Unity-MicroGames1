@@ -8,24 +8,21 @@ namespace SlideAndStick {
     	public BoardData boardData;
     	public bool isLocked; // this is calculated by my WorldData.
     	public LevelAddress myAddress;
-    	public string levelKey;
-    	// Variable properties
-    	private bool didCompleteLevel;
-    
-    	// Getters
-    	public bool DidCompleteLevel { get { return didCompleteLevel; } }
-    
-    	// ----------------------------------------------------------------
-    	//  Initialize
-    	// ----------------------------------------------------------------
-    	public LevelData (LevelAddress myAddress, BoardDataXML ldxml) {
+        // Variable Properties
+        public bool DidCompleteLevel { get; private set; }
+
+
+        // ----------------------------------------------------------------
+        //  Initialize
+        // ----------------------------------------------------------------
+        public LevelData () { }
+        public LevelData (LevelAddress myAddress, BoardDataXML ldxml) {
     		// Basic properties
     		this.myAddress = myAddress;
     		boardData = new BoardData(ldxml);
-    		levelKey = myAddress.ToString(); // whatevs.
     
     		// LOAD up stats!
-    		didCompleteLevel = SaveStorage.GetInt (SaveKeys.SlideAndStick_DidCompleteLevel(myAddress)) == 1;
+    		DidCompleteLevel = SaveStorage.GetInt (SaveKeys.SlideAndStick_DidCompleteLevel(myAddress)) == 1;
     	}
     
     
@@ -33,9 +30,9 @@ namespace SlideAndStick {
     	//  Doers
     	// ----------------------------------------------------------------
     	public void SetDidCompleteLevel (bool _didCompleteLevel) {
-    		if (didCompleteLevel != _didCompleteLevel) {
-    			didCompleteLevel = _didCompleteLevel;
-    			SaveStorage.SetInt (SaveKeys.SlideAndStick_DidCompleteLevel(myAddress), didCompleteLevel?1:0);
+    		if (DidCompleteLevel != _didCompleteLevel) {
+    			DidCompleteLevel = _didCompleteLevel;
+    			SaveStorage.SetInt (SaveKeys.SlideAndStick_DidCompleteLevel(myAddress), DidCompleteLevel?1:0);
     		}
     	}
     

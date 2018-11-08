@@ -145,7 +145,7 @@ namespace SlideAndStick {
             if (ld == null) {
                 Debug.LogError ("Can't load the requested level! Can't find its LevelData.");
                 if (level == null) { // If there's no currentLevel, yikes! Default us to something.
-                    ld = levelsManager.GetLevelData(0,0,0,0);
+                    ld = levelsManager.GetFallbackEmptyLevelData();
                 }
                 else { return; } // If there IS a currentLevel, let's just stay there!
             }

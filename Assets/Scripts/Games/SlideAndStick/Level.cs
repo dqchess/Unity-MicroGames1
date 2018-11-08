@@ -98,7 +98,7 @@ namespace SlideAndStick {
 			DestroyBoardModelAndView ();
 			// Make them afresh!
 			board = new Board(bd);
-			board.Debug_AddTilesIfNone(gameController.randGenParams); // For rando layout generating!
+            AddReasonableRandTilesToBoardIfNone(); // For rando layout generating!
 			boardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
 			boardView.Initialize (this, board);
             // Tell ppl!
@@ -117,6 +117,21 @@ namespace SlideAndStick {
 			tileOver = null;
 			tileGrabbing = null;
 		}
+        
+        private void AddReasonableRandTilesToBoardIfNone() {
+            // First, remember the basic empty boardData.
+            BoardData bd = board.SerializeAsData();
+            for (int i=0; i<99; i++) { // let's try 99 times.
+                board.Debug_AddTilesIfNone(gameController.randGenParams);
+                // Oh, this isn't a good enough layout? Try again.
+                if (board.AreAnyTileColorsSatisfied()) {
+                    board = new Board(bd);
+                }
+                else {
+                    break;
+                }
+            }
+        }
 
 
 
@@ -172,10 +187,17 @@ namespace SlideAndStick {
 		private void RegisterButtonInput() {
 			// DEBUG
             if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
-			if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
-            if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
-            if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }
-            if (Input.GetKeyDown(KeyCode.V)) { board.Debug_CopyXMLToClipboard(false); }
+			else if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
+            else if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
+            else if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }
+            else if (Input.GetKeyDown(KeyCode.V)) { board.Debug_CopyXMLToClipboard(false); }
+            else if (Input.GetKeyDown(KeyCode.Alpha1)) { board.Debug_CopyXMLToClipboardWithDiff(1); }
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) { board.Debug_CopyXMLToClipboardWithDiff(2); }
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) { board.Debug_CopyXMLToClipboardWithDiff(3); }
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) { board.Debug_CopyXMLToClipboardWithDiff(4); }
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) { board.Debug_CopyXMLToClipboardWithDiff(5); }
+            else if (Input.GetKeyDown(KeyCode.Alpha6)) { board.Debug_CopyXMLToClipboardWithDiff(6); }
+            else if (Input.GetKeyDown(KeyCode.Alpha7)) { board.Debug_CopyXMLToClipboardWithDiff(7); }
 		}
 
 		private void RegisterTouchInput() {
