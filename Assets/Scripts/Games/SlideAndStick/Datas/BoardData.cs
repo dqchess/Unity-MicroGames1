@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlideAndStick {
-    [System.Serializable]
+    [System.Serializable] // NOTE: Not currently serialized anywhere! (So this [and 1D spaceDatas] is here just in case we DO wanna serialize.)
 	public class BoardData {
         // Constants
         private readonly char[] LINE_BREAKS_CHARS = new char[] { ',' }; // our board layouts are comma-separated (because XML's don't encode line breaks).

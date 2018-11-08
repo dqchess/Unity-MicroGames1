@@ -52,7 +52,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         private void UpdateDeleteLayoutsText() {
             string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_CustomLayouts);
-            int numLayouts = 0;//QQQRandLayoutHelperUI.GetNumLayouts(savedLayoutsString);
+            int numLayouts = RandLayoutHelperUI.GetNumLayouts(savedLayoutsString);
             t_deleteLayouts.text = "delete " + numLayouts + " saved layouts";
         }
         public void CopySavedLayoutsToClipboard() {
