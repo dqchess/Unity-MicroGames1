@@ -8,13 +8,15 @@ namespace SlideAndStick {
 Key presses are handled internally; UI Undo-Button presses I'm told about by Button_UndoMove.cs. */
 	public class UndoMoveInputController : MonoBehaviour {
 		// Properties
-		private bool areButtonsEmphasized; // TRUE when we're in a known, hardcoded fail state! When TRUE, the buttons will oscillate loudly.
+		private bool isUndoButtonEmphasized; // TRUE when we're in a known, hardcoded fail state! When TRUE, an arrow bounce-points at undo button.
 		private float undoLoc; // when this hits past 1, we say to undo a move (and reset its value)!
 		private float undoVel;
+        private Vector2 calloutArrowPosNeutral;
 		// References
 		[SerializeField] private Level level=null;
 		[SerializeField] private Button restartLevelButton=null;
-		[SerializeField] private UndoMoveButton undoButton=null;
+        [SerializeField] private Image i_calloutArrow=null;
+        [SerializeField] private UndoMoveButton undoButton=null;
 
 		// Getters (Public)
 		public RectTransform rt_undoButton { get { return undoButton.GetComponent<RectTransform>(); } }
@@ -26,6 +28,8 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		private void Start() {
 			// We can't SerializeField my ref for the button, so *I* have to tell the button who I am.
 			undoButton.SetUndoControllerRef(this);
+            // Set calloutArrowPosNeutral.
+            calloutArrowPosNeutral = i_calloutArrow.rectTransform.anchoredPosition;
 		}
 
 
@@ -52,8 +56,12 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
         }
 
         private void UpdateEmphasizeButtons() {
-			if (areButtonsEmphasized) {
-				SetButtonsScale(0.9f + Mathf.Abs(Mathf.Sin(Time.unscaledTime*8f))*0.3f);
+			if (isUndoButtonEmphasized) {
+                float loc = Mathf.Abs(MathUtils.Sin01(Time.unscaledTime*7f));
+                loc = Mathf.Pow(loc, 0.25f);
+                float yOffset = loc * 36;
+                i_calloutArrow.rectTransform.anchoredPosition = calloutArrowPosNeutral + new Vector2(0, yOffset);
+				//SetButtonsScale(0.9f + Mathf.Abs(Mathf.Sin(Time.unscaledTime*8f))*0.3f);
 			}
 		}
 
@@ -64,15 +72,16 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			undoButton.gameObject.SetActive(_isVisible);
 			restartLevelButton.gameObject.SetActive(_isVisible);
 		}
-		private void SetButtonsScale(float scale) {
-			undoButton.transform.localScale = Vector3.one * scale;
-//			restartLevelButton.transform.localScale = Vector3.one * scale;DISABLED scaling this one.
-		}
-		private void EmphasizeButtonsIfInFailState() {
-			areButtonsEmphasized = level.Board != null && level.Board.IsInKnownFailState;
-			if (!areButtonsEmphasized) { // Stop emphasizing?
-				SetButtonsScale(1);
-			}
+//		private void SetButtonsScale(float scale) {
+//			undoButton.transform.localScale = Vector3.one * scale;
+////			restartLevelButton.transform.localScale = Vector3.one * scale;DISABLED scaling this one.
+		//}
+		private void UpdateCalloutArrowEnabledByFailState() {
+			isUndoButtonEmphasized = level.Board != null && level.Board.IsInKnownFailState;
+			//if (!areButtonsEmphasized) { // Stop emphasizing?
+				//SetButtonsScale(1);
+			//}
+            i_calloutArrow.enabled = isUndoButtonEmphasized;
 		}
 
 
@@ -88,7 +97,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		public void OnNumMovesMadeChanged(int numMovesMade) {
 			undoButton.interactable = numMovesMade > 0;
 			restartLevelButton.interactable = numMovesMade > 0;
-			EmphasizeButtonsIfInFailState();
+			UpdateCalloutArrowEnabledByFailState();
 		}
 
 
@@ -99,7 +108,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			level.UndoAllMoves();//.GameController.RestartLevel();//ReloadScene();
 		}
 
-		public void OnButton_Undo_Held () {
+		public void OnButton_Undo_Held() {
 			// Update vel
 			undoVel += 0.006f;
 			if (undoVel > 0.8f) { undoVel = 0.8f; } // Max vel!
@@ -111,10 +120,10 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 				level.UndoMoveAttempt();
 			}
 		}
-		public void OnButton_Undo_Up () {
+		public void OnButton_Undo_Up() {
 
 		}
-		public void OnButton_Undo_Down () {
+		public void OnButton_Undo_Down() {
 			// Do the first undo!
 			level.UndoMoveAttempt();
 			// Reset dees.

@@ -11,10 +11,12 @@ namespace SlideAndStick {
         [SerializeField] private GameObject go_params=null;
         [SerializeField] private GameObject go_saveButtons=null;
         [SerializeField] private Slider sl_numColors=null;
-        [SerializeField] private Slider sl_stickiness=null;
+        [SerializeField] private Slider sl_stickinessMin=null;
+        [SerializeField] private Slider sl_stickinessMax=null;
         [SerializeField] private Slider sl_percentTiles=null;
         [SerializeField] private TextMeshProUGUI t_numColors=null;
-        [SerializeField] private TextMeshProUGUI t_stickiness=null;
+        [SerializeField] private TextMeshProUGUI t_stickinessMin=null;
+        [SerializeField] private TextMeshProUGUI t_stickinessMax=null;
         [SerializeField] private TextMeshProUGUI t_percentTiles=null;
         [SerializeField] private TextMeshProUGUI t_savedPopup=null;
         // Properties
@@ -41,9 +43,7 @@ namespace SlideAndStick {
             // Load layouts!
             LoadCustomLayouts();
             // Load params!
-            sl_numColors.value = rgp.NumColors;
-            sl_stickiness.value = rgp.Stickiness;
-            sl_percentTiles.value = rgp.PercentTiles;
+            UpdateSliderValuesFromParams();
             UpdateParamsTextsFromValues();
             // Hide t_savedPopup.
             SetSavedPopupAlpha(0);
@@ -64,8 +64,15 @@ namespace SlideAndStick {
         }
         private void UpdateParamsTextsFromValues() {
             t_numColors.text = rgp.NumColors.ToString();
-            t_stickiness.text = rgp.Stickiness.ToString();
+            t_stickinessMin.text = rgp.StickinessMin.ToString();
+            t_stickinessMax.text = rgp.StickinessMax.ToString();
             t_percentTiles.text = (int)(100*rgp.PercentTiles) + "%";
+        }
+        private void UpdateSliderValuesFromParams() {
+            sl_numColors.value = rgp.NumColors;
+            sl_stickinessMin.value = rgp.StickinessMin;
+            sl_stickinessMax.value = rgp.StickinessMax;
+            sl_percentTiles.value = rgp.PercentTiles;
         }
         private void SetSavedPopupAlpha(float alpha) {
             cg_savedPopup.alpha = alpha;
@@ -78,12 +85,20 @@ namespace SlideAndStick {
             rgp.NumColors = (int)sl_numColors.value;
             UpdateParamsTextsFromValues();
         }
-        public void OnSlVal_Stickiness() {
-            rgp.Stickiness = (int)sl_stickiness.value;
-            UpdateParamsTextsFromValues();
-        }
         public void OnSlVal_PercentTiles() {
             rgp.PercentTiles = sl_percentTiles.value;
+            UpdateParamsTextsFromValues();
+        }
+        public void OnSlVal_StickinessMin() {
+            SetStickinessMinAndMax((int)sl_stickinessMin.value, rgp.StickinessMax);
+        }
+        public void OnSlVal_StickinessMax() {
+            SetStickinessMinAndMax(rgp.StickinessMin, (int)sl_stickinessMax.value);
+        }
+        private void SetStickinessMinAndMax(int _min, int _max) {
+            rgp.StickinessMin = Mathf.Min(_min, _max);
+            rgp.StickinessMax = Mathf.Max(_min, _max);
+            UpdateSliderValuesFromParams(); // in case one of the above has changed, update the slider poses.
             UpdateParamsTextsFromValues();
         }
         

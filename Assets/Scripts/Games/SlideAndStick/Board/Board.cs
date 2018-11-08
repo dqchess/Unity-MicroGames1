@@ -328,10 +328,11 @@ namespace SlideAndStick {
 			if (tiles.Count > 0) { return; } // Nah, we've got some.
 			int numToAdd = Mathf.FloorToInt(NumCols*NumRows * rgp.PercentTiles);
 			int numColors = rgp.NumColors;
-			int stickiness = rgp.Stickiness;
+            int stickinessMin = rgp.StickinessMin;
+            int stickinessMax = rgp.StickinessMax;
 			//			if (tiles.Count == 0) { Debug_AddRandomTiles(Mathf.FloorToInt(NumCols*NumRows*Random.Range(0.5f,0.85f)), numColors); }
 			Debug_AddRandomWalls(rgp.NumWalls);
-			Debug_AddRandomTiles(numToAdd, numColors, stickiness);
+			Debug_AddRandomTiles(numToAdd, numColors, stickinessMin,stickinessMax);
             // Yes, we did!
             DidRandGen = true;
 			OnMoveComplete();
@@ -346,7 +347,7 @@ namespace SlideAndStick {
 				if (numToAdd <= 0) { break; }
 			}
 		}
-		private void Debug_AddRandomTiles(int numToAdd, int numColors, int stickiness) {
+		private void Debug_AddRandomTiles(int numToAdd, int numColors, int stickinessMin,int stickinessMax) {
             //for (int i=0; i<numToAdd; i++) {TEST TEMP
             //    BoardPos randPos = BoardUtils.GetRandOpenPos(this);
             //    if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
@@ -358,7 +359,7 @@ namespace SlideAndStick {
                 BoardPos randPos = BoardUtils.GetRandOpenPos(this);
                 if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
                 int colorID = Random.Range(0, numColors);
-                int clusterAttemptSize = Random.Range(1, stickiness+1);
+                int clusterAttemptSize = Random.Range(stickinessMin, stickinessMax+1);
                 for (int j=0; j<clusterAttemptSize; j++) { // For every ONE tile, add more of the same color next to it!
                     if (!BoardUtils.CanAddTile(this,randPos)) { continue; }
                     AddTile(randPos, colorID);

@@ -11,6 +11,21 @@
     <Level diff="6" layout=" 2..., 00.0, 20.., 1021," />
     <Level diff="6" layout=" ...2, 2.0., 1211, 12.0," />
     <Level diff="6" layout=" 1201, 0..., 2000, .2.0," />
+    <Level diff="6" layout=" 0001, .1.., .12., 2200," />
+    <Level diff="6" layout=" 0211, 1011, .01., ...2," />
+    <Level diff="6" layout=" 01.0, 0120, 021., 0...," />
+    <Level diff="6" layout=" ...., 0202, 020., 1101," />
+    <Level diff="6" layout=" 1110, .021, .211, .2..," />
+    <Level diff="6" layout=" 221., 2021, 0.2., .12.," />
+    <Level diff="6" layout=" .022, 10.2, 20.2, 1.0.," />
+    <Level diff="6" layout=" 1.11, .010, .0.0, .011," />
+    
+    <Level diff="7" layout=" 22.0, .110, 021., 01..," />
+    <Level diff="7" layout=" .2.., 0210, 0102, ..02," />
+    <Level diff="7" layout=" 1.00, 01.1, 001., 1..0," />
+    <Level diff="7" layout=" 1100, 0..1, 001., 1..0," />
+    <Level diff="7" layout=" 0.10, 0.10, 00.1, 1..1," />
+    <Level diff="7" layout=" 1001, 1001, 0..., 0..0," />
 </Levels>
 </LevelPack>
 
