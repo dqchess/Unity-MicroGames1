@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace SlideAndStick {
-    public class RandLayoutHelperUI : MonoBehaviour {
+    public class CustomBoardGenUI : MonoBehaviour {
         // Components
         [SerializeField] private CanvasGroup cg_savedPopup=null;
         [SerializeField] private GameObject go_params=null;
+        [SerializeField] private GameObject go_paintPallete=null;
         [SerializeField] private GameObject go_saveButtons=null;
         [SerializeField] private Slider sl_numColors=null;
         [SerializeField] private Slider sl_stickinessMin=null;
@@ -55,6 +56,9 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void ToggleParamsVisible() {
             go_params.SetActive(!go_params.activeSelf);
+        }
+        public void TogglePaintPaletteVisible() {
+            go_paintPallete.SetActive(!go_paintPallete.activeSelf);
         }
         public void ToggleSaveButtonsVisible() {
             go_saveButtons.SetActive(!go_saveButtons.activeSelf);

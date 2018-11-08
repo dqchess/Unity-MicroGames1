@@ -16,7 +16,7 @@ namespace SlideAndStick {
         public float TimeSpentThisPlay { get; private set; }
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
         private LevelAddress myAddress;
-		private Vector2Int mousePosBoard;
+		public Vector2Int MousePosBoard { get; private set; }
 		public  Vector2Int TileGrabbingClickBoardOffset { get; private set; } // when we set tileGrabbing, this is the boardPos difference between our mouse and the Tile. For retaining tileGrabbing for split tiles.
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
@@ -57,7 +57,7 @@ namespace SlideAndStick {
 		}
 		private Vector2Int GetMousePosOffset(BoardOccupant bo) {
 			if (bo == null) { return Vector2Int.zero; }
-			return mousePosBoard - bo.BoardPos.ToVector2Int();
+			return MousePosBoard - bo.BoardPos.ToVector2Int();
 		}
 
 
@@ -93,7 +93,7 @@ namespace SlideAndStick {
 			boardSnapshots = new List<BoardData>();
 			NumMovesMade = 0;
 		}
-        private void RemakeModelAndViewFromData (BoardData bd) {
+        private void RemakeModelAndViewFromData(BoardData bd) {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
@@ -163,7 +163,7 @@ namespace SlideAndStick {
 			mousePosScaled += new Vector2(-boardView.Pos.x, boardView.Pos.y); // Note: Idk why negative...
 			int col = Mathf.FloorToInt(mousePosScaled.x / (float)boardView.UnitSize);
 			int row = Mathf.FloorToInt(mousePosScaled.y / (float)boardView.UnitSize);
-			mousePosBoard = new Vector2Int(col,row);
+			MousePosBoard = new Vector2Int(col,row);
 		}
 
 		private void UpdateTileOver() {
@@ -172,7 +172,7 @@ namespace SlideAndStick {
 			// B) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
 			else if (tileGrabbing != null) { SetTileOver(tileGrabbing); }
 			// C) Otherwise, use the one the mouse is over.
-			else { SetTileOver(board.GetTile(mousePosBoard)); }
+			else { SetTileOver(board.GetTile(MousePosBoard)); }
         }
         private void SetTileOver(Tile tile) {
             Tile prevTileOver = tileOver;
@@ -347,6 +347,21 @@ namespace SlideAndStick {
 //			// Tie up loose ends by "completing" this move!
 //			OnBoardMoveComplete();
 		}
+        
+        
+        
+        // ----------------------------------------------------------------
+        //  Debug
+        // ----------------------------------------------------------------
+        public void Debug_RemakeBoardAndViewFromArbitrarySnapshot(BoardData boardData) {
+            // Take a snapshot and add it to our list!
+            BoardData preMoveSnapshot = board.SerializeAsData();
+            boardSnapshots.Add (preMoveSnapshot);
+            // Treat this like a real move.
+            RemakeModelAndViewFromData(boardData);
+            NumMovesMade ++;
+            OnBoardMoveComplete();
+        }
 
 	}
 

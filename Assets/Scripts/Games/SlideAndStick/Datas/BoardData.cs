@@ -129,6 +129,18 @@ namespace SlideAndStick {
             WallData newData = new WallData(new BoardPos(col,row, sideFacing));
             wallDatas.Add(newData);
         }
+        
+        
+        /** Makes every Tile into a 1x1! */
+        public void SeparateAllTiles() {
+            List<TileData> newTileDatas = new List<TileData>();
+            foreach (TileData tileData in tileDatas) {
+                foreach (Vector2Int fpLocal in tileData.footprintLocal) {
+                    newTileDatas.Add(new TileData(tileData.boardPos+fpLocal, tileData.colorID));
+                }
+            }
+            tileDatas = newTileDatas;
+        }
 
 
 

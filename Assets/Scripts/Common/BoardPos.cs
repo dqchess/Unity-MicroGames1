@@ -40,6 +40,10 @@ public struct BoardPos {
     public override bool Equals(object o) { return base.Equals (o); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 	public override int GetHashCode() { return base.GetHashCode(); } // NOTE: Just added these to appease compiler warnings. I don't suggest their usage (because idk what they even do).
 
+    public static BoardPos operator + (BoardPos a, Vector2Int b) {
+        return new BoardPos(a.col+b.x, a.row+b.y, a.sideFacing);
+    }
+    
 	public static bool operator == (BoardPos b1, BoardPos b2) {
 		return b1.Equals(b2);
 	}
