@@ -116,6 +116,7 @@ namespace SlideAndStick {
             //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
             //Debug_PrintTotalNumLevels();
             Debug_PrintNumLevelsInEachPack();
+            Debug_PrintDuplicateLevelLayouts();
         }
     
     
@@ -171,6 +172,29 @@ namespace SlideAndStick {
             }
             // Copy them to the clip-clopboard!
             GameUtils.CopyToClipboard(str);
+        }
+        private void Debug_PrintDuplicateLevelLayouts() {
+            Dictionary<string,LevelData> layoutDict = new Dictionary<string, LevelData>();
+            foreach (ModeCollectionData mcData in modeDatas) {
+                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
+                    foreach (PackData pData in pcData.PackDatas) {
+                        foreach (LevelData levelData in pData.LevelDatas) {
+                            // You know, skip empty layouts, ok?
+                            if (levelData.boardData.tileDatas.Count == 0) { continue; }
+                            // This layout's not empty! ;)
+                            string xmlLayout = levelData.boardData.Debug_GetLayout(true);
+                            if (!layoutDict.ContainsKey(xmlLayout)) {
+                                layoutDict.Add(xmlLayout, levelData);
+                            }
+                            else {
+                                //string addA = layoutDict[xmlLayout].myAddress.ToString();
+                                //string addB = layoutDict[xmlLayout].myAddress.ToString();
+                                Debug.LogWarning("Duplicate level layout! Layout: " + xmlLayout);//Addresses: " + addA + ", " + addB);
+                            }
+                        }
+                    }
+                }
+            }
         }
     
     

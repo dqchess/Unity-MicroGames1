@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlideAndStick {
+    [System.Serializable]
 	public class BoardData {
         // Constants
         private readonly char[] LINE_BREAKS_CHARS = new char[] { ',' }; // our board layouts are comma-separated (because XML's don't encode line breaks).
@@ -14,12 +15,17 @@ namespace SlideAndStick {
         public string description; // developer description.
         public string fueID; // which tutorial this is gonna be!
 		// BoardObjects
-		public BoardSpaceData[,] spaceDatas;
+        public BoardSpaceData[] spaceDatas; // NOTE: Unity Json serialization doesn't support 2D arrays. :P
         public List<TileData> tileDatas;
         public List<WallData> wallDatas;
 
-		// Getters (Private)
-		private BoardSpaceData GetSpaceData (int col,int row) { return spaceDatas[col,row]; }
+        // Getters (Public)
+        public BoardSpaceData GetSpaceData (int col,int row) { return spaceDatas[Space1DIndex(col,row)]; }
+        public void SetSpaceData(int col,int row, BoardSpaceData bsd) {
+            spaceDatas[Space1DIndex(col,row)] = bsd;
+        }
+        // Getters (Private)
+        private int Space1DIndex(int col,int row) { return MathUtils.GridIndex2Dto1D(col,row, numCols); }
 
         private string[] GetLevelStringArrayFromLayoutString (string layout) {
             List<string> stringList = new List<string>(layout.Split (LINE_BREAKS_CHARS, System.StringSplitOptions.None));
@@ -84,9 +90,9 @@ namespace SlideAndStick {
                         //}
                         char c = layoutArray[stringArrayIndex][col];
     					switch (c) {
-    						case '#': spaceDatas[col,row].isPlayable = false; break;
-                            case '_': AddWallData (col,row+1, Sides.T); break; // note: because the underscore looks lower, consider it in the next row (so layout text file looks more intuitive).
-                            case '|': AddWallData (col,row, Sides.L); break;
+    						case '#': GetSpaceData(col,row).isPlayable = false; break;
+                            case '_': AddWallData(col,row+1, Sides.T); break; // note: because the underscore looks lower, consider it in the next row (so layout text file looks more intuitive).
+                            case '|': AddWallData(col,row,   Sides.L); break;
                             case '0': AddTileData(col,row, 0); break;
     						case '1': AddTileData(col,row, 1); break;
     						case '2': AddTileData(col,row, 2); break;
@@ -102,10 +108,10 @@ namespace SlideAndStick {
 
 		private void MakeEmptyLists () {
 			// Spaces
-			spaceDatas = new BoardSpaceData[numCols,numRows];
+			spaceDatas = new BoardSpaceData[numCols*numRows];
 			for (int i=0; i<numCols; i++) {
 				for (int j=0; j<numRows; j++) {
-					spaceDatas[i,j] = new BoardSpaceData (i,j);
+					SetSpaceData(i,j, new BoardSpaceData (i,j));
 				}
 			}
 			// Props
@@ -185,7 +191,7 @@ namespace SlideAndStick {
                         }
                         // There is NOT a thing here. Use the info about the BoardSpace then.
                         else {
-                            BoardSpaceData space = spaceDatas[col,row];
+                            BoardSpaceData space = GetSpaceData(col,row);
                             if (!space.isPlayable) { str += "#"; }
                             else { str += "."; }
                         }

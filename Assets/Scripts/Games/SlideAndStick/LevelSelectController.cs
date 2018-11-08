@@ -51,12 +51,12 @@ namespace SlideAndStick {
         //  Doers
         // ----------------------------------------------------------------
         private void UpdateDeleteLayoutsText() {
-            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_SavedLayouts);
-            int numLayouts = RandLayoutHelperUI.GetNumLayouts(savedLayoutsString);
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_CustomLayouts);
+            int numLayouts = 0;//QQQRandLayoutHelperUI.GetNumLayouts(savedLayoutsString);
             t_deleteLayouts.text = "delete " + numLayouts + " saved layouts";
         }
         public void CopySavedLayoutsToClipboard() {
-            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_SavedLayouts);
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SlideAndStick_Debug_CustomLayouts);
             GameUtils.CopyToClipboard(savedLayoutsString);
         }
         private void StartGameAtCollection(int collection) {
@@ -66,7 +66,7 @@ namespace SlideAndStick {
             LoadLevel(lastPlayedAddress);
         }
         public void DeleteSavedLayouts() {
-            SaveStorage.DeleteKey(SaveKeys.SlideAndStick_Debug_SavedLayouts);
+            SaveStorage.DeleteKey(SaveKeys.SlideAndStick_Debug_CustomLayouts);
             ReloadScene ();
         }
         public void ClearAllSaveData() {

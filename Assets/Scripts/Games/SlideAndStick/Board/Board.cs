@@ -72,7 +72,8 @@ namespace SlideAndStick {
             foreach (Wall p in walls) { bd.wallDatas.Add (p.SerializeAsData()); }
 			for (int col=0; col<NumCols; col++) {
 				for (int row=0; row<NumRows; row++) {
-					bd.spaceDatas[col,row] = GetSpace(col,row).SerializeAsData();
+                    BoardSpaceData bsd = GetSpace(col,row).SerializeAsData();
+					bd.SetSpaceData(col,row, bsd);
 				}
 			}
 			return bd;
@@ -108,7 +109,7 @@ namespace SlideAndStick {
 			spaces = new BoardSpace[NumCols,NumRows];
 			for (int i=0; i<NumCols; i++) {
 				for (int j=0; j<NumRows; j++) {
-					spaces[i,j] = new BoardSpace (this, bd.spaceDatas[i,j]);
+					spaces[i,j] = new BoardSpace(this, bd.GetSpaceData(i,j));
 				}
 			}
 		}

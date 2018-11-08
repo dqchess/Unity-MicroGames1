@@ -93,6 +93,11 @@ public class MathUtils {
 		return Mathf.Max(Mathf.Abs(x1-x2), Mathf.Abs(y1-y2));
 	}
 
+    /** For 2D grids. Converts col/row to fit into a 1D array. */
+    public static int GridIndex2Dto1D(int col,int row, int numCols) { return col + row*numCols; }
+    /** For 2D grids. Converts 1D-array index to col/row. */
+    public static Vector2Int GridIndex1Dto2D(int index, int numCols) { return new Vector2Int(index%numCols, Mathf.FloorToInt(index/(float)numCols)); }
+    
 
 	public static Vector2Int GetDir(Vector2 posA, Vector2 posB) {
 		int degrees = Mathf.RoundToInt(LineUtils.GetAngle_Degrees(posA,posB));
