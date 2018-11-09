@@ -9,17 +9,20 @@ namespace SlideAndStick {
     /** i.e. Easy, Medium, Hard. */
     public class PackCollectionData {
     	// Properties
+        public string CollectionName { get; private set; } // the display name.
     	private LevelAddress myAddress;
-    	private string collectionName; // the display name.
-    	private List<PackData> packDatas;
+        private List<PackData> packDatas;
     
     
     	// ----------------------------------------------------------------
     	//  Getters
     	// ----------------------------------------------------------------
+        public bool DoesLevelExist(LevelAddress ad) {
+            if (ad.pack<0 || ad.pack>=packDatas.Count) { return false; } // Outta bounds? Return false!
+            return packDatas[ad.mode].DoesLevelExist(ad); // Ok, ask the next guy.
+        }
     	public int NumPacks { get { return packDatas.Count; } }
-    	public string CollectionName { get { return collectionName; } }
-    	public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }
+        public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }
         public int NumLevels() {
             int total = 0;
             foreach (PackData data in PackDatas) {
@@ -61,7 +64,7 @@ namespace SlideAndStick {
     		}
     
     		// MY properties!
-    		collectionName = collectionXML.collectionName;
+    		CollectionName = collectionXML.collectionName;
     
     		// Make those PackDatas!
     		packDatas = new List<PackData>();

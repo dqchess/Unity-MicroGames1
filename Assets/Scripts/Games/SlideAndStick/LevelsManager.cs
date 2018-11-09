@@ -72,6 +72,15 @@ namespace SlideAndStick {
             }
         }
         
+        private bool DoesLevelExist(LevelAddress address) {
+            if (address.mode >= modeDatas.Length) { return false; } // Outta bounds? Return false!
+            return modeDatas[address.mode].DoesLevelExist(address); // Ok, ask the next guy.
+        }
+        public bool IsLastLevelInPack(LevelAddress address) {
+            // Return TRUE if the next level is outta bounds!
+            return !DoesLevelExist(address.NextLevel);
+        }
+        
         public LevelData GetFallbackEmptyLevelData() {
             return new LevelData {
                 myAddress = new LevelAddress(0, 0, 0, 0),
@@ -121,7 +130,7 @@ namespace SlideAndStick {
     
     
         private void ReloadModeDatas () {
-            modeDatas = new ModeCollectionData[1];
+            modeDatas = new ModeCollectionData[GameModes.NumModes];
     
             //modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
             modeDatas[GameModes.StandardIndex] = new ModeCollectionData(GameModes.StandardIndex, GameModes.Standard, "Standard");

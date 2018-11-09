@@ -50,7 +50,18 @@ namespace SlideAndStick {
             float x = rt_levelName.anchoredPosition.x;
             float y = level.BoardView.MyRectTransform.anchoredPosition.y*0.5f;
             rt_levelName.anchoredPosition = new Vector2(x,y);
-		}
+        }
+        
+        
+        // ----------------------------------------------------------------
+        //  Update
+        // ----------------------------------------------------------------
+        private void Update() {
+            // Debug!
+            if (Input.GetKeyDown(KeyCode.D)) {
+                go_randLayoutHelperUI.SetActive(!go_randLayoutHelperUI.activeSelf);
+            }
+        }
 
 
 	}

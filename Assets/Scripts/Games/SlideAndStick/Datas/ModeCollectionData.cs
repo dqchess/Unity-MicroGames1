@@ -8,16 +8,19 @@ namespace SlideAndStick {
     	// Properties
     	private int modeIndex;
     	private string modeName; // for code
-    	private string modeDisplayName; // for user's eyes
-    	private string[] collectionsOrder; // the NAMES of the world xml files in order. Loaded from its own file.
+        public  string ModeDisplayName { get; private set; } // for user's eyes
+        private string[] collectionsOrder; // the NAMES of the world xml files in order. Loaded from its own file.
     	private List<PackCollectionData> collectionDatas;
     
     
     	// ----------------------------------------------------------------
     	//  Getters
     	// ----------------------------------------------------------------
-    	public string ModeDisplayName { get { return modeDisplayName; } }
-    	public int NumPackCollections { get { return collectionDatas.Count; } }
+        public bool DoesLevelExist(LevelAddress ad) {
+            if (ad.collection<0 || ad.collection>=collectionDatas.Count) { return false; } // Outta bounds? Return false!
+            return collectionDatas[ad.collection].DoesLevelExist(ad); // Ok, ask the next guy.
+        }
+        public int NumPackCollections { get { return collectionDatas.Count; } }
     	public System.Collections.ObjectModel.ReadOnlyCollection<PackCollectionData> CollectionDatas { get { return collectionDatas.AsReadOnly(); } }
     	public PackCollectionData GetPackCollectionData (int collectionIndex) {
     		if (collectionIndex<0 || collectionIndex>=collectionDatas.Count) { return null; }
@@ -39,7 +42,7 @@ namespace SlideAndStick {
     	public ModeCollectionData (int modeIndex, string modeName, string modeDisplayName) {
     		this.modeIndex = modeIndex;
     		this.modeName = modeName;
-    		this.modeDisplayName = modeDisplayName;
+    		this.ModeDisplayName = modeDisplayName;
     
     		LoadAllCollectionDatas ();
     	}

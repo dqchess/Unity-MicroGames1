@@ -74,26 +74,26 @@ namespace SlideAndStick {
             while (!popup.DidPressNextButton) { yield return null; }
             
             //yield return new WaitForSecondsRealtime(0.1f);
-            SetCurrentLevel(currAddress.NextLevel, true);
+            StartNextLevel();
         }
-        private bool didPressLevelCompletePopupNextButton;
 
         private void RestartLevel() { SetCurrentLevel(currAddress, false); }
         private void StartPrevLevel() {
             LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
             if (data != null) { SetCurrentLevel(data); }
         }
-        private void StartNextLevel () {
-            LevelData data = levelsManager.GetLevelData (currAddress.NextLevel);
-            if (data != null) { SetCurrentLevel(data); }
-            else { OnCompleteLastLevelInPack(); } // If we've reached the end of this world...
+        private void StartNextLevel() {
+            if (levelsManager.IsLastLevelInPack(currAddress)) {
+                OnCompleteLastLevelInPack();
+            }
+            else {
+                SetCurrentLevel(currAddress.NextLevel, true);
+            }
         }
         private void ChangeCollection(int change) {
-            //SetCurrentLevel(currentAddress + new LevelAddress(0, change, 0, 0));
             SetCurrentLevel(new LevelAddress(currAddress.mode, currAddress.collection+change, 0, 0));
         }
         private void ChangePack(int change) {
-            //SetCurrentLevel(currentAddress + new LevelAddress(0, 0, change, 0));
             SetCurrentLevel(new LevelAddress(currAddress.mode, currAddress.collection, currAddress.pack+change, 0));
         }
         private void ChangeLevel(int change) {
@@ -104,7 +104,7 @@ namespace SlideAndStick {
                 levelsManager.Reset();
             }
             address = address.NoNegatives();
-            LevelData ld = levelsManager.GetLevelData (address);
+            LevelData ld = levelsManager.GetLevelData(address);
             if (ld == null) { Debug.LogError("Requested LevelData doesn't exist! Address: " + address.ToString()); } // Useful feedback for dev.
             SetCurrentLevel(ld, doAnimate);
         }
@@ -162,40 +162,16 @@ namespace SlideAndStick {
             // Save values!
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currAddress), currAddress.ToString());
         }
-        
-        
-        
-
-        private void OnCompleteLastLevelInPack() {
-            //// We just completed the tutorial?? Save that!!
-            //if (currentAddress.IsTutorial) {
-            //    SaveStorage.SetInt(SaveKeys.DidCompleteTutorial, 1);
-            //    // TEMP jump straight into the first level of Lettersmash!
-            //    SetCurrentLevel(new LevelAddress(GameModes.LetterSmashIndex, 0,0,0));
-            //    return;
-            //}
-            //// Quit outta this level back to some menu (the menu'll depend on our mode).
-            //QuitToMenu();
-        }
     
-    
-        public void QuitToMenu() {
-            //// We just completed the tutorial??
-            //if (currentAddress.IsTutorial) {
-            //    MainMenuController.startingMenuName = MenuNames.ModeSelect;
-            //}
-            //// Otherwise, just boot us back to LevelSelect!
-            //else {
-            //    MainMenuController.startingMenuName = MenuNames.LevelSelect;
-            //}
-            //OpenScene(SceneNames.MainMenu);
-        }
         
         
 
 		// ----------------------------------------------------------------
 		//  Game Events
 		// ----------------------------------------------------------------
+        public void OnBoardGoalsSatisfied() {
+            WinLevel();
+        }
         private void WinLevel() {
             // Tell people!
             levelsManager.OnCompleteLevel(currAddress);
@@ -204,10 +180,17 @@ namespace SlideAndStick {
             FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
             StartCoroutine(Coroutine_JustWonLevel());
         }
+        private void OnCompleteLastLevelInPack() {
+            //// We just completed the tutorial?? Save that!!
+            //if (currAddress.mode == GameModes.TutorialIndex) {
+            //    SaveStorage.SetInt(SaveKeys.SlideAndStick_DidCompleteTutorial, 1);
+            //}
+            // Bring us to LevelSelect!
+            OpenScene(SceneNames.LevelSelect(MyGameName()));
+        }
 
-		public void OnBoardGoalsSatisfied() {
-			WinLevel();
-		}
+
+
 
         // ----------------------------------------------------------------
         //  Input

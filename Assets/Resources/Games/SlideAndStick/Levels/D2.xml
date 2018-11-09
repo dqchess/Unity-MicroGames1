@@ -98,6 +98,8 @@
     <Level diff="2" layout=" 00.., 0..0, 0100, 001.," />
     <Level diff="2" layout=" 0000, ..10, .001, 1..1," />
     
+    <Level diff="2" layout=" 102., .0.2, ..12, .012," />
+
 </Levels>
 </LevelPack>
 

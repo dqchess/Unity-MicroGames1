@@ -1,24 +1,25 @@
 <LevelsCollection collectionName="Beginner" gameMode="SlideAndStick">
 <Packs>
 
-
-
-<LevelPack packName="4x4">
-<Levels>
-    <Level diff="1" layout=" 1111, 0.0., 110., 000.," />
+<!--
     <Level diff="1" layout=" .120, .21., .2.0, ..22," />
-    <Level diff="1" layout=" 1..1, ..11, 1.00, 10.0," />
-    <Level diff="1" layout=" 1..0, .110, .00., 0.00," />
     <Level diff="1" layout=" 110., .110, 1.1., .1.0," />
-    <Level diff="1" layout=" 0.01, ...1, 00.1, 1.11," />
-    <Level diff="1" layout=" 110., 10.., 10.0, 1..1," />
-    <Level diff="1" layout=" 01.0, 11.., 1110, ...0," />
     <Level diff="1" layout=" .102, 1.02, ...0, 00.0," />
     <Level diff="1" layout=" 0.00, .110, 2.2., ..20," />
     <Level diff="1" layout=" ...1, 2..1, 2.20, 2110," />
-    <Level diff="1" layout=" 102., .0.2, ..12, .012," />
-    <Level diff="1" layout=" .111, 2.2., 2.11, .11.," />
-    <Level diff="1" layout=" .111, .00., 00.1, .1.1," />
+ -->
+
+<LevelPack packName="4x4">
+<Levels>
+    <Level diff="1" layout=" .001, ...1, 00.1, 11.1," />
+    <Level diff="1" layout=" 1111, 0.0., 110., 000.," />
+    <Level diff="1" layout=" 1..1, ..11, 1.00, 10.0," />
+    <Level diff="1" layout=" 1..0, .110, .00., 0.00," />
+    <Level diff="1" layout=" ..10, ..11, 00.., 10..," desc="clearly handmade" />
+    <Level diff="1" layout=" 110., 10.., 10.0, 1..1," />
+    <Level diff="1" layout=" 01.0, 11.., 1110, ...0," />
+    <Level diff="1" layout=" .111, 0.0., 0.11, .11.," />
+    <Level diff="1" layout=" .111, .00., .1.1, 00.1," />
     <Level diff="1" layout=" 211., .1.., .22., 122.," />
     <Level diff="1" layout=" ..20, ..20, 2.2., 200.," />
     <Level diff="1" layout=" 1000, ..10, 0.00, ....," />
@@ -26,7 +27,6 @@
     <Level diff="1" layout=" 1..2, 11.2, 12.., 2..1," />
     <Level diff="1" layout=" 2.00, .2.0, 22.2, 22.0," />
     <Level diff="1" layout=" 2222, 00.., 20.., 22.0," />
-    <Level diff="1" layout=" 0.00, 0100, 01.1, ...1," />
     <Level diff="1" layout=" 2.11, ..11, 1.21, 1.22," />
     <Level diff="1" layout=" 100., 10.0, .00., 110.," />
     <Level diff="1" layout=" ..00, 2..0, 2.22, 2022," />

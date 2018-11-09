@@ -7,8 +7,9 @@
 
 <LevelPack packName="Unsorted">
 <Levels>
-    <!-- Ask Kurt: What's this difficulty to him? -->
+    <!-- Ask Kurt: What's this difficulty to him?
     <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
+    -->
 
 
 
@@ -87,7 +88,7 @@
     <Level diff="3" layout=" 1..0.., 1..00., .0110., .011.., .01..., .00...," />
     <Level diff="2" layout=" ..1110, .....0, 0..011, 0..001, 0..001, ...0..," />
     <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
-
+    <Level diff="4" layout=" 110..., .1.11., 00111., 10..01, 10..01, ....01," />
 
 
 
@@ -167,6 +168,26 @@
 <LevelPack packName="Currently don't belong anywhere, but may in the future if/when we make lvls of similar size.">
 <Levels>
 
+    <Level diff="2" layout="
+        220,
+        .02,
+        2.0,
+    " />
+    <Level diff="3" fueID="failHelp2" layout="
+        2..,
+        121,
+        211,
+    " />
+    <Level diff="5" fueID="failHelp3" layout="
+        232,
+        ..3,
+        322,
+    " />
+    <Level diff="1" fueID="TEST" layout="
+        2.2,
+        1.1,
+        2.2,
+    " />
     <Level diff="3" layout=" 002, .21, 1.0," />
     <Level diff="3" layout=" 0.100, 0.000, ..0.., ..010, ..0.0, ....0," />
     <Level diff="6" layout=" 212, 0.0, 12.," />
