@@ -1,17 +1,42 @@
 <LevelsCollection collectionName="Hard" gameMode="SlideAndStick">
 <Packs>
 
-
+<!--
+    <Level diff="4" layout=" 0100, 1.01, .0.0, 0.11," desc="fine" />
+    <Level diff="4" layout=" 11.0, 11.0, .0.2, .022," />
+    <Level diff="4" layout=" 001., 0.00, 00.1, ..10," />
+    <Level diff="4" layout=" .001, 2021, 2.2., .1.0," />
+    <Level diff="4" layout=" 000., 1..2, 1..0, 2211," />
+-->
 
 <LevelPack packName="4x4">
 <Levels>
     <Level diff="4" layout=" 010., 1.11, 0111, ..0.," />
     <Level diff="4" layout=" 011., 1010, 1.10, .0..," desc="more tricky than satisfying" />
-    <Level diff="4" layout=" 1001, 0..., 00.1, 0110," />
     <Level diff="4" layout=" .010, .01., 01.0, 0100," />
+    <Level diff="4" layout=" 12.1, 12.1, ...1, .22.," desc="gotcha" />
+    <Level diff="4" layout=" .100, 1.01, 1..1, 01.1," />
+    <Level diff="4" layout=" 0011, .101, 0.00, ..1.," />
     <Level diff="4" layout=" 00.., 0.10, .00., 1011," />
-    <Level diff="4" layout=" 0100, 1.01, .0.0, 0.11," desc="fine" />
     <Level diff="4" layout=" 1110, 0.00, .1.0, 110.," />
+    <Level diff="4" layout=" 1..., .221, 2111, ..12," />
+    <Level diff="4" layout=" 010., 0101, .0.., .0.1," desc="nice" />
+    <Level diff="4" layout=" 0010, 001., 11.., 10.1," />
+    <Level diff="4" layout=" 0.00, 01.1, .100, 1.01," />
+    <Level diff="4" layout=" 0.11, 0..1, 1.1., 1001," />
+    <Level diff="4" layout=" .011, ..10, 100., 00.0," />
+    <Level diff="4" layout=" 11.., 100., 11.1, 100.," desc="obvious gotcha" />
+    <Level diff="4" layout=" 1100, 1.1., 1.01, ..00," />
+    <Level diff="4" layout=" 1.0., 1.1., 1010, 0.10," />
+    <Level diff="4" layout=" 1001, 1..1, .101, .10.," />
+    <Level diff="4" layout=" 0.11, 1..., 000., 01.0," />
+    <Level diff="4" layout=" .00., 0111, 1..0, .111," />
+    <Level diff="4" layout=" 01.0, .0.0, 011., .11.," />
+    <Level diff="4" layout=" .010, .01., 0.00, .10.," />
+    <Level diff="4" layout=" 1110, 0.00, .0.1, .0..," />
+    <Level diff="4" layout=" ..10, 0100, 0.01, 0..1," />
+
+    <!-- Too many single drags -->
     <Level diff="4" layout=" 0010, 10.., 1..1, 1010," />
     <Level diff="4" layout=" 1.0., .2.., 2011, 1.12," desc="fine" />
     <Level diff="4" layout=" 2220, 011., 20.1, 12..," />
@@ -22,30 +47,7 @@
     <Level diff="4" layout=" 0.00, .2.0, 11.., 0020," />
     <Level diff="4" layout=" 2..., 21.1, 0100, .2.1," desc="great" />
     <Level diff="4" layout=" 0.02, 0100, 12.0, 1.12," />
-    <Level diff="4" layout=" 1..., .221, 2111, ..12," />
     <Level diff="4" layout=" 21.0, 022., 00.1, .220," />
-    <Level diff="4" layout=" 11.0, 11.0, .0.2, .022," />
-    <Level diff="4" layout=" 0010, 001., 11.., 10.1," />
-    <Level diff="4" layout=" 0122, .0.., 21.., 2.11," />
-    <Level diff="4" layout=" 12.1, 12.1, ...1, .22.," />
-    <Level diff="4" layout=" 2122, 2..2, 12.2, .2.2," />
-    <Level diff="4" layout=" 0.11, 0..1, 1.1., 1001," />
-    <Level diff="4" layout=" 000., 1..2, 1..0, 2211," />
-    <Level diff="4" layout=" .001, 2021, 2.2., .1.0," />
-    <Level diff="4" layout=" ..10, 0100, 0.01, 0..1," />
-    <Level diff="4" layout=" .011, ..10, 100., 00.0," />
-    <Level diff="4" layout=" 11.., 100., 11.1, 100.," />
-    <Level diff="4" layout=" 001., 0.00, 00.1, ..10," />
-    <Level diff="4" layout=" 0..., 011., 0110, 101.," />
-    <Level diff="4" layout=" 1100, 1.1., 1.01, ..00," />
-    <Level diff="4" layout=" 1.0., 1.1., 1010, 0.10," />
-    <Level diff="4" layout=" 1001, 1..1, .101, .10.," />
-    <Level diff="4" layout=" 0.11, 1..., 000., 01.0," />
-    <Level diff="4" layout=" .0.., 0111, 1..0, .1.1," />
-    <Level diff="4" layout=" 01.0, .0.0, 011., .11.," />
-    <Level diff="4" layout=" .010, .01., 0.00, .10.," />
-    <Level diff="4" layout=" 1110, 0.00, .0.1, .0..," />
-    <Level diff="4" layout=" 21.1, 2122, 2..2, ...2," />
 
 </Levels>
 </LevelPack>

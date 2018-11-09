@@ -110,36 +110,25 @@ namespace SlideAndStick {
         }
     
         private void SetCurrentLevel(LevelData levelData, bool doAnimate=false) {
-		//	StopCoroutine("Coroutine_SetCurrentLevel");
-		//	StartCoroutine(Coroutine_SetCurrentLevel(levelData, doAnimate));
-		//}
-		//private IEnumerator Coroutine_SetCurrentLevel(LevelData levelData, bool doAnimate) {
 			Level oldLevel = level;
 
-			// Make the new level!
 			InitializeLevel(levelData);
-
-			if (doAnimate) { StartCoroutine(Coroutine_AnimateLevelTransition(oldLevel)); }
-			else { DestroyOldLevel(oldLevel); }
+            
+            // Animate in/out!
+			if (doAnimate) {
+                level.AnimateIn();
+                if (oldLevel != null) {
+                    oldLevel.AnimateOut();
+                }
+            }
+            // No animating.
+			else {
+                //level.OnCompleteAnimateIn();
+                if (oldLevel != null) {
+                    oldLevel.DestroySelf();
+                }
+            }
 		}
-        private IEnumerator Coroutine_AnimateLevelTransition(Level oldLevel) {
-            level.IsAnimating = true;
-            oldLevel.IsAnimating = true;
-    
-            float duration = 1.2f;
-            float height = 1200;
-            Vector3 levelDefaultPos = level.transform.localPosition;
-            level.transform.localPosition += new Vector3(0, height, 0);
-            LeanTween.moveLocal(level.gameObject, levelDefaultPos, duration).setEaseInOutQuart();
-            LeanTween.moveLocal(oldLevel.gameObject, new Vector3(0, -height, 0), duration).setEaseInOutQuart();
-            yield return new WaitForSeconds(duration);
-    
-            level.IsAnimating = false;
-            DestroyOldLevel(oldLevel);
-        }
-        private void DestroyOldLevel(Level oldLevel) {
-            if (oldLevel!=null) { Destroy(oldLevel.gameObject); }
-        }
         
         private void InitializeLevel(LevelData ld) {
             if (ld == null) {

@@ -82,10 +82,15 @@ namespace SlideAndStick {
 			// Send in the clowns!
 			RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
+            //// Prep me for my boardView animating in.
+            //boardView.PreAnimateInFreshBoard();
 		}
         private void OnDestroy() {
             // Make sure to increment how long we've spent in me!
             AddToTimeSpentTotal();
+        }
+        public void DestroySelf() {
+            Destroy(this.gameObject);
         }
 
 
@@ -131,6 +136,34 @@ namespace SlideAndStick {
                     break;
                 }
             }
+        }
+        
+        
+        // ----------------------------------------------------------------
+        //  Animate In/Out
+        // ----------------------------------------------------------------
+        private const float animInOutDuration = 1.2f;
+        private const float animInOutHeight = 1200;
+        public void AnimateIn() {
+            // I'm animating!
+            IsAnimating = true;
+            Vector3 posDefault = transform.localPosition;
+            transform.localPosition += new Vector3(0, animInOutHeight, 0);
+            LeanTween.moveLocal(gameObject, posDefault, animInOutDuration).setEaseInOutQuart();
+            LeanTween.delayedCall(animInOutDuration*0.7f, OnCompleteAnimateIn); // Go ahead and call the done-function early for tighter transitions.
+        }
+        public void AnimateOut() {
+            IsAnimating = true;
+            LeanTween.moveLocal(gameObject, new Vector3(0, -animInOutHeight, 0), animInOutDuration).setEaseInOutQuart().setOnComplete(OnCompleteAnimateOut);
+        }
+        public void OnCompleteAnimateIn() {
+            IsAnimating = false;
+            // Nice visual animating-in effect, mm!
+            boardView.AnimateInFreshBoard();
+        }
+        private void OnCompleteAnimateOut() {
+            IsAnimating = false;
+            DestroySelf();
         }
 
 

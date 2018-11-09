@@ -150,6 +150,17 @@ namespace SlideAndStick {
 			if (sourceObject is Tile) { AddTileView (sourceObject as Tile); }
 			else { Debug.LogError ("Trying to add BoardOccupantView from BoardObject, but no clause to handle this type! " + sourceObject.GetType().ToString()); }
 		}
+        
+        
+        public void PreAnimateInFreshBoard() {
+            // TODO: BoardSpaces.
+            foreach (BoardOccupantView bov in allOccupantViews) { bov.PreAnimateInFreshBoard(); }
+        }
+        public void AnimateInFreshBoard() {
+            // TODO: BoardSpaces.
+            foreach (BoardOccupantView bov in allOccupantViews) { bov.AnimateInFreshBoard(); }
+        }
+        
 
 
 		// ----------------------------------------------------------------

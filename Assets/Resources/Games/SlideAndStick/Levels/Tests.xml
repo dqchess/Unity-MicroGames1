@@ -7,8 +7,14 @@
 
 <LevelPack packName="Unsorted">
 <Levels>
-    <!-- Ask Kurt: What's this difficulty to him?
+    <!--
+    Ask Kurt: What's this difficulty to him?
     <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
+
+    Maybes?
+    <Level diff="3" layout=" 010., .121, ..2., .222," />
+    <Level diff="5" layout=" .200, 200., .01., ..12," />
+
     -->
 
     <Level diff="2" layout=" .1.110, .1.000, .1.010, .11.1., ..1..0, ..1...," />

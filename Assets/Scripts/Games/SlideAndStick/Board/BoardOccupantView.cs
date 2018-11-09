@@ -32,6 +32,17 @@ namespace SlideAndStick {
 			// Legit destroy me, yo!
 			Destroy(this.gameObject);
 		}
+        
+        
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        public void PreAnimateInFreshBoard() {
+            this.gameObject.transform.localScale = Vector3.one * 0.7f;
+        }
+        public void AnimateInFreshBoard() {
+            LeanTween.scale(this.gameObject, Vector3.one, 0.8f).setEaseOutBounce();
+        }
 
 
 	}
