@@ -7,7 +7,6 @@ using TMPro;
 namespace SlideAndStick {
 	public class LevelUI : MonoBehaviour {
         // Components
-        [SerializeField] private GameObject go_randLayoutHelperUI=null;
         [SerializeField] private RectTransform rt_levelName=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_packName=null;
@@ -37,8 +36,6 @@ namespace SlideAndStick {
             t_packName.text = GetCollectionName() + ",  " + GetPackName() + " (D" + level.Board.Difficulty + ")";
             
             levelCompletePopup.Hide();
-            
-            go_randLayoutHelperUI.SetActive(level.Board.DidRandGen); // only show rand-gen UI for rand-gen boards.
         }
         
         
@@ -50,17 +47,6 @@ namespace SlideAndStick {
             float x = rt_levelName.anchoredPosition.x;
             float y = level.BoardView.MyRectTransform.anchoredPosition.y*0.5f;
             rt_levelName.anchoredPosition = new Vector2(x,y);
-        }
-        
-        
-        // ----------------------------------------------------------------
-        //  Update
-        // ----------------------------------------------------------------
-        private void Update() {
-            // Debug!
-            if (Input.GetKeyDown(KeyCode.D)) {
-                go_randLayoutHelperUI.SetActive(!go_randLayoutHelperUI.activeSelf);
-            }
         }
 
 

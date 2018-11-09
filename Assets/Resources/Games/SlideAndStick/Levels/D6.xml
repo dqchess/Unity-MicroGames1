@@ -69,6 +69,19 @@
 
 
 
+<LevelPack packName="6x6">
+<Levels>
+    <Level diff="6" layout=" ....01, 0...01, 0.1.01, .01.0., .011.0, .0.1..," />
+    <Level diff="6" layout=" 01...., 01..11, 0.1.11, ..1011, ..10.1, ...0..," />
+    <Level diff="6" layout=" 0111.., 0011.., ..110., ...101, 1..10., 1.....," />
+    <Level diff="6" layout=" 20011., 20...., 201..., 221.01, ..1.01, .21.22," />
+
+    <Level diff="7" layout=" 010011, 110..1, 1..1.1, 1..1.0, 10..00, .0.1..," />
+</Levels>
+</LevelPack>
+
+
+
 <LevelPack packName="Supa Hard">
 <Levels>
     <Level diff="7" layout=" 0.20, 22.2, 1.0., 2201," desc="can lose easily on first move :P" />
