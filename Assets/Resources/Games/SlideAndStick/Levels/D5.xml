@@ -5,6 +5,20 @@
 <!--
     <Level diff="5" layout=" .101, 0.00, 1.1., 1011," desc="IS THIS POSSIBLE?" />
     <Level diff="5" layout=" .010, 01.1, ..1., 0.10," />
+    <Level diff="5" layout=" 1.22, 2.1., .12., 0100," />
+    <Level diff="5" layout=" .1.0, 10.., 2011, 2101," />
+    <Level diff="5" layout=" ..2., 1.00, 2.2., 0001," />
+    <Level diff="5" layout=" 0..0, 202., ..22, 1100," />
+    <Level diff="5" layout=" 0110, ..11, .010, .101," />
+    <Level diff="5" layout=" 01.., 0.10, .010, 2.20," />
+    <Level diff="5" layout=" 0112, 02.2, ...1, .010," />
+    <Level diff="5" layout=" .112, 01.2, .021, ..22," />
+    <Level diff="5" layout=" 2220, .11., 01.1, 0.2.," />
+    <Level diff="5" layout=" 2.01, 2.11, 2..1, 021.," />
+    <Level diff="5" layout=" 10.1, 10.2, 1.20, ..21," />
+    <Level diff="5" layout=" 0002, .010, 1.20, ..2.," />
+    <Level diff="5" layout=" 0221, 011., .022, ..2.," />
+    <Level diff="5" layout=" .001, 1..2, 202., 20.2," />
 -->
 
 <LevelPack packName="4x4">
@@ -34,23 +48,6 @@
     <Level diff="5" layout=" ..11, 12.1, .212, 211.," />
     <Level diff="5" layout=" 122., 10.1, ...1, 0211," />
 
-    
-
-    <!-- Too much work -->
-    <Level diff="5" layout=" 1.22, 2.1., .12., 0100," />
-    <Level diff="5" layout=" .1.0, 10.., 2011, 2101," />
-    <Level diff="5" layout=" ..2., 1.00, 2.2., 0001," />
-    <Level diff="5" layout=" 0..0, 202., ..22, 1100," />
-    <Level diff="5" layout=" 0110, ..11, .010, .101," />
-    <Level diff="5" layout=" 01.., 0.10, .010, 2.20," />
-    <Level diff="5" layout=" 0112, 02.2, ...1, .010," />
-    <Level diff="5" layout=" .112, 01.2, .021, ..22," />
-    <Level diff="5" layout=" 2220, .11., 01.1, 0.2.," />
-    <Level diff="5" layout=" 2.01, 2.11, 2..1, 021.," />
-    <Level diff="5" layout=" 10.1, 10.2, 1.20, ..21," />
-    <Level diff="5" layout=" 0002, .010, 1.20, ..2.," />
-    <Level diff="5" layout=" 0221, 011., .022, ..2.," />
-    <Level diff="5" layout=" .001, 1..2, 202., 20.2," />
 
 
 </Levels>

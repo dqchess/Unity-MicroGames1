@@ -7,24 +7,21 @@
 
 <LevelPack packName="Unsorted">
 <Levels>
-    <!--
-    Ask Kurt: What's this difficulty to him?
-    <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
 
-    Maybes?
-    <Level diff="3" layout=" 010., .121, ..2., .222," />
-    <Level diff="5" layout=" .200, 200., .01., ..12," />
+    <Level diff="1" layout=" 0..., ...., ...., ....," />
+    <Level diff="2" layout=" 1...00, 10..00, 10..00, 1....1, 0....1, 0..1.1," />
 
-    -->
+<!--
+
+    <Level diff="1" layout=" 000..., 00...1, 00..01, 001.01, 0.1.0., ......," />
+    <Level diff="1" layout=" .1...., 0111.., 0111.., 0.11.., ..11.1, ..00.1," />
 
     <Level diff="2" layout=" .1.110, .1.000, .1.010, .11.1., ..1..0, ..1...," />
     <Level diff="2" layout=" 001111, .01010, ..1000, .....0, 1....0, ......," />
-    <Level diff="1" layout=" 000..., 00...1, 00..01, 001.01, 0.1.0., ......," />
     <Level diff="2" layout=" .00000, .0.1.0, 1..1.0, 1..11., ...01., ...01.," />
     <Level diff="2" layout=" 111111, 1...00, 1...00, ....11, ...0.0, ...0.0," />
     <Level diff="2" layout=" 1...00, 10..00, 10..00, 1....1, 0....1, 0..1.1," />
-    <Level diff="1" layout=" .1...., 0111.., 0111.., 0.11.., ..11.1, ..00.1," />
-
+-->
 
 
 
@@ -34,10 +31,22 @@
 
 
 
+    <!--
+    Ask Kurt: What's this difficulty to him?
+    <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
+
+    Maybes?
+    <Level diff="3" layout=" 010., .121, ..2., .222," />
+    <Level diff="5" layout=" .200, 200., .01., ..12," />
+    <Level diff="2" layout=" .000., .1100, .0100, .1111, .0..1," />
+
+    -->
 
 
 
-<LevelPack packName="Currently don't belong anywhere, but may in the future if/when we make lvls of similar size.">
+
+
+<LevelPack packName="Misfits for now">
 <Levels>
 
     <Level diff="2" layout="

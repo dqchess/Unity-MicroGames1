@@ -145,9 +145,9 @@ namespace SlideAndStick {
             
             // Reset basic stuff
             SetIsPaused(false);
-            //gameState = GameStates.Playing;
             // Tell people!
             fueController.OnStartLevel(level);
+            levelsManager.selectedAddress = currAddress; // for consistency.
             // Save values!
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currAddress), currAddress.ToString());
         }
@@ -196,7 +196,11 @@ namespace SlideAndStick {
             // DEBUG
             bool isKey_alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
             bool isKey_ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-            if (isKey_ctrl) {
+            bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            if (isKey_shift) {
+                if (Input.GetKeyDown(KeyCode.S)) { levelsManager.Debug_SaveReplaceXMLLayout(level); }
+            }
+            else if (isKey_ctrl) {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeCollection(-1); return; }
                 if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeCollection( 1); return; }
             }
@@ -204,10 +208,12 @@ namespace SlideAndStick {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangePack(-1); return; }
                 if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangePack( 1); return; }
             }
-            if (Input.GetKeyDown(KeyCode.P))            { ChangeLevel(-10); return; } // P = Back 10 levels.
-            if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeLevel( -1); return; } // [ = Back 1 level.
-            if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
-            if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
+            else {
+                if (Input.GetKeyDown(KeyCode.P))            { ChangeLevel(-10); return; } // P = Back 10 levels.
+                if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeLevel( -1); return; } // [ = Back 1 level.
+                if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
+                if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
+            }
             
         }
 
