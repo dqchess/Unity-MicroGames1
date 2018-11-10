@@ -28,6 +28,7 @@ namespace SlideAndStick {
 		// Getters (Public)
         //public TileView Temp_TileViewGrabbing { get { return Temp_GetTileView(tileGrabbing); } }
         //public Tile Temp_TileGrabbing { get { return tileGrabbing; } }
+        public BoardData Debug_FirstBoardSnapshot { get { return boardSnapshots.Count>0 ? boardSnapshots[0] : null; } }
 		public Board Board { get { return board; } }
 		public BoardView BoardView { get { return boardView; } }
 		public GameController GameController { get { return gameController; } }
@@ -129,7 +130,7 @@ namespace SlideAndStick {
             for (int i=0; i<99; i++) { // let's try 99 times.
                 board.Debug_AddTilesIfNone(gameController.randGenParams);
                 // Oh, this isn't a good enough layout? Try again.
-                if (board.AreAnyTileColorsSatisfied()) {
+                if (board.AreAnyTileColorsSatisfied() || board.NumColors()==1) {
                     board = new Board(bd);
                 }
                 else {
@@ -387,12 +388,12 @@ namespace SlideAndStick {
         //  Debug
         // ----------------------------------------------------------------
         public void Debug_RemakeBoardAndViewFromArbitrarySnapshot(BoardData boardData) {
-            // Take a snapshot and add it to our list!
-            BoardData preMoveSnapshot = board.SerializeAsData();
-            boardSnapshots.Add (preMoveSnapshot);
+            //// Take a snapshot and add it to our list!
+            //BoardData preMoveSnapshot = board.SerializeAsData();
+            //boardSnapshots.Add (preMoveSnapshot);
             // Treat this like a real move.
             RemakeModelAndViewFromData(boardData);
-            NumMovesMade ++;
+            //NumMovesMade ++;
             OnBoardMoveComplete();
         }
 

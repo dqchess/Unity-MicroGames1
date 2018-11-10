@@ -55,6 +55,10 @@ namespace SlideAndStick {
             // First, delete any footprint here. NOTE: Every tile is a 1x1, so this loop can be very simple.
             for (int i=0; i<boardData.tileDatas.Count; i++) {
                 if (boardData.tileDatas[i].boardPos == space.BoardPos) {
+                    // We're painting with the same color? Just erase, then! For convenience.
+                    if (boardData.tileDatas[i].colorID == colorID) {
+                        colorID = -1; // say we wanna use the eraser instead now. (No point in painting over a color with itself anyways.)
+                    }
                     boardData.tileDatas.RemoveAt(i);
                     break;
                 }

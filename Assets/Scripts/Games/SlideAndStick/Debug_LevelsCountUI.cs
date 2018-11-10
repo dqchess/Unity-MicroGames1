@@ -112,26 +112,74 @@ namespace SlideAndStick {
         private void UpdateCountsText() {
             string str = "";
             ModeCollectionData mcdStandard = lm.GetModeCollectionData(GameModes.StandardIndex);
-            for (int i=Index_Collection_Tutorial; i<mcdStandard.CollectionDatas.Count; i++) { // start at Tutorial collection.
-                PackCollectionData pcData = mcdStandard.CollectionDatas[i];
-                foreach (PackData pData in pcData.PackDatas) {
-                    int numOfficialLvls = pData.NumLevels;
-                    int numUnsortedLvls = GetNumUnsortedLvls(pData.MyAddress);
-                    int numMade = numOfficialLvls + numUnsortedLvls;
-                    string namePrefix = pcData.CollectionName + " " + pData.PackName + ":    ";
-                    if (doShowRemaining) {
-                        int numToMake = targetLvlCounts.ContainsKey(pData.MyAddress) ? targetLvlCounts[pData.MyAddress] : 0;
-                        int numRemaining = numToMake - numMade;
-                        str += namePrefix + numRemaining;
-                    }
-                    else {
-                        str += namePrefix + numOfficialLvls;
-                        if (numUnsortedLvls > 0) { str += "+" + numUnsortedLvls; }
-                    }
-                    str += "\n";
-                }
-            }
+            
+            str += GetTextLine(Difficulties.Beginner, 4);
+            str += GetTextLine(Difficulties.Easy, 4);
+            str += GetTextLine(Difficulties.Med, 4);
+            str += GetTextLine(Difficulties.Hard, 4);
+            str += GetTextLine(Difficulties.DoubleHard, 4);
+            str += GetTextLine(Difficulties.Impossible, 4);
+            
+            str += GetTextLine(Difficulties.Beginner, 5);
+            str += GetTextLine(Difficulties.Easy, 5);
+            str += GetTextLine(Difficulties.Med, 5);
+            str += GetTextLine(Difficulties.Hard, 5);
+            str += GetTextLine(Difficulties.DoubleHard, 5);
+            str += GetTextLine(Difficulties.Impossible, 5);
+            
+            str += GetTextLine(Difficulties.Easy, 6);
+            str += GetTextLine(Difficulties.Med, 6);
+            str += GetTextLine(Difficulties.Hard, 6);
+            str += GetTextLine(Difficulties.DoubleHard, 6);
+            str += GetTextLine(Difficulties.Impossible, 6);
             t_counts.text = str;
+        }
+        //private void UpdateCountsText() {
+        //    string str = "";
+        //    ModeCollectionData mcdStandard = lm.GetModeCollectionData(GameModes.StandardIndex);
+        //    for (int i=Index_Collection_Tutorial; i<mcdStandard.CollectionDatas.Count; i++) { // start at Tutorial collection.
+        //        PackCollectionData pcData = mcdStandard.CollectionDatas[i];
+        //        foreach (PackData pData in pcData.PackDatas) {
+        //            int numOfficialLvls = pData.NumLevels;
+        //            int numUnsortedLvls = GetNumUnsortedLvls(pData.MyAddress);
+        //            int numMade = numOfficialLvls + numUnsortedLvls;
+        //            string namePrefix = pcData.CollectionName + " " + pData.PackName + ":    ";
+        //            if (doShowRemaining) {
+        //                int numToMake = targetLvlCounts.ContainsKey(pData.MyAddress) ? targetLvlCounts[pData.MyAddress] : 0;
+        //                int numRemaining = numToMake - numMade;
+        //                str += namePrefix + numRemaining;
+        //            }
+        //            else {
+        //                str += namePrefix + numOfficialLvls;
+        //                if (numUnsortedLvls > 0) { str += "+" + numUnsortedLvls; }
+        //            }
+        //            str += "\n";
+        //        }
+        //    }
+        //    t_counts.text = str;
+        //}
+        
+        private string GetTextLine(int diff, int numCols) {
+            LevelAddress address = GetPackAddress(diff, numCols);
+            PackCollectionData pcd = lm.GetPackCollectionData(address);
+            PackData pd = lm.GetPackData(address);
+            if (pd == null) { return "undefined"; } // Safety check.
+            string str = "";
+            int numOfficialLvls = pd.NumLevels;
+            int numUnsortedLvls = GetNumUnsortedLvls(pd.MyAddress);
+            int numMade = numOfficialLvls + numUnsortedLvls;
+            string namePrefix = pcd.CollectionName + " " + pd.PackName + ":         ";
+            if (doShowRemaining) {
+                int numToMake = targetLvlCounts.ContainsKey(pd.MyAddress) ? targetLvlCounts[pd.MyAddress] : 0;
+                int numRemaining = numToMake - numMade;
+                str += namePrefix + numRemaining;
+            }
+            else {
+                str += namePrefix + numOfficialLvls;
+                if (numUnsortedLvls > 0) { str += "+" + numUnsortedLvls; }
+            }
+            str += "\n";
+            return str;
         }
         
     }

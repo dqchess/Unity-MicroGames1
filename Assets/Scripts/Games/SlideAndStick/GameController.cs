@@ -10,6 +10,8 @@ namespace SlideAndStick {
 		// Components
 		[SerializeField] public RandGenParams randGenParams=null;
 		private Level level;
+        // Properties
+        private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
 		// References
 		[SerializeField] private FUEController fueController=null;
 
@@ -142,6 +144,7 @@ namespace SlideAndStick {
             // Instantiate the Level from the provided LevelData!
             level = Instantiate(resourcesHandler.slideAndStick_level).GetComponent<Level>();
             level.Initialize(this, canvas.transform, ld);
+            debug_prevBoardDatas.Add(level.Board.SerializeAsData());
             
             // Reset basic stuff
             SetIsPaused(false);
@@ -213,8 +216,24 @@ namespace SlideAndStick {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeLevel( -1); return; } // [ = Back 1 level.
                 if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
                 if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
+                
+                // E = Restore prev Board! In case we had one we liked but accidentally made a new one.
+                if (Input.GetKeyDown(KeyCode.E)) {
+                    Debug_RestorePrevBoard();
+                    return;
+                }
             }
             
+        }
+        
+        
+        // Debug
+        private void Debug_RestorePrevBoard() {
+            if (debug_prevBoardDatas.Count > 1) {
+                BoardData snapshot = debug_prevBoardDatas[debug_prevBoardDatas.Count-2];
+                debug_prevBoardDatas.RemoveAt(debug_prevBoardDatas.Count-1);
+                level.Debug_RemakeBoardAndViewFromArbitrarySnapshot(snapshot);
+            }
         }
 
 

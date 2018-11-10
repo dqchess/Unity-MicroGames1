@@ -56,6 +56,19 @@ namespace SlideAndStick {
             }
             return false;
         }
+        /** Returns how many unique colors are in the board. */
+        public int NumColors() {
+            int numColors = 0; // will add to.
+            bool[] isColor = new bool[9];
+            for (int i=0; i<tiles.Count; i++) {
+                int colorID = tiles[i].ColorID;
+                if (!isColor[colorID]) { 
+                    isColor[colorID] = true;
+                    numColors ++;
+                }
+            }
+            return numColors;
+        }
 
 		public Board Clone() {
 			BoardData data = SerializeAsData();
@@ -367,6 +380,7 @@ namespace SlideAndStick {
                     if (numToAdd <= 0) { break; }
                     Vector2Int randDir = BoardUtils.GetRandOpenDir(this, randPos);
                     if (randDir == Vector2Int.zero) { continue; }
+                    //Debug.Log("Randdir: " + randDir);
                     randPos.col += randDir.x;
                     randPos.row += randDir.y;
                 }
