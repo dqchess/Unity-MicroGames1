@@ -62,6 +62,39 @@
     <Level diff="2" layout=" 0200, 0..1, 1..1, .2.1," />
     <Level diff="2" layout=" 102., .0.2, ..12, .012," />
     <Level diff="2" layout=" 1112, 1..0, 122., 2120," />
+    <Level diff="2" layout=" 1.00, 1..., 1.1., 001.," />
+    <Level diff="2" layout=" .00., ..1., 1.10, 1.10," />
+    <Level diff="2" layout=" 010., 010., ...1, ..11," />
+    <Level diff="2" layout=" 11.., 10.0, .010, ..10," />
+    <Level diff="2" layout=" 0011, 0.1., 1..., 1..0," />
+    <Level diff="2" layout=" 0.11, 01.1, .1.0, ...0," />
+    <Level diff="2" layout=" .110, .1.0, .00., .0.1," />
+    <Level diff="2" layout=" .001, .11., .10., .00.," />
+    <Level diff="2" layout=" 1101, ..01, .0.1, .0..," />
+    <Level diff="2" layout=" .10., .10., 0..1, 00.1," />
+    <Level diff="2" layout=" ..11, 0.11, 0.10, 1.00," />
+    <Level diff="2" layout=" .111, .1.., .212, 2.11," />
+    <Level diff="2" layout=" 1.22, 1..1, 1..1, .211," />
+    <Level diff="2" layout=" 220., 22.., 10.., 201.," />
+    <Level diff="2" layout=" 2211, 2211, 112., ....," />
+    <Level diff="2" layout=" ..00, 0101, 0.01, 0..1," />
+    <Level diff="2" layout=" 0221, 0221, .01., 2...," />
+    <Level diff="2" layout=" 2202, 2002, .00., ...0," />
+    <Level diff="2" layout=" 2122, 2122, 2..1, ...1," />
+    <Level diff="2" layout=" 0110, ..10, 1.10, 1..0," />
+    <Level diff="2" layout=" 0.00, 01.0, 01.1, .1.1," />
+    <Level diff="2" layout=" ...1, .011, 10.0, 1..0," />
+    <Level diff="2" layout=" 21.., 21.., 122., 11..," />
+    <Level diff="2" layout=" 00.., ..2., 2020, 2..0," />
+    <Level diff="2" layout=" ..21, .2.1, .221, 21.1," />
+    <Level diff="2" layout=" 00.1, ..11, ..21, 021.," />
+    <Level diff="2" layout=" 1..., 1.11, 1212, ..12," />
+    <Level diff="2" layout=" 2.22, ..21, .112, .11.," />
+    <Level diff="2" layout=" 2211, 21.2, 2.22, ....," />
+    <Level diff="2" layout=" 00.0, 2002, 2.2., ..2.," />
+    <Level diff="2" layout=" .00., .100, 0.00, 0.1.," />
+    <Level diff="2" layout=" 2112, .122, 1.2., 11.2," />
+    <Level diff="2" layout=" 2211, 2..1, .12., .22.," />
 
 
 </Levels>

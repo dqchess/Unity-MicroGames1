@@ -56,6 +56,15 @@
     <Level diff="1" layout=" 0010, .0.0, .0.1, .011," />
     <Level diff="1" layout=" 00.1, 0..., 0101, 11.1," />
     <Level diff="1" layout=" 00.1, 0101, 0.11, ..1.," />
+    <Level diff="1" layout=" 1000, .1.0, .10., ..0.," />
+    <Level diff="1" layout=" .1.., .1.1, 0.01, 0.01," />
+    <Level diff="1" layout=" ..10, 1.10, 10.0, .0..," />
+    <Level diff="1" layout=" 2202, .0.2, .000, ..00," />
+    <Level diff="1" layout=" .002, 02.2, 02.2, 22..," />
+    <Level diff="1" layout=" 01.., 01.., ..01, .001," />
+    <Level diff="1" layout=" ..00, 2.2., 2022, ...2," />
+    <Level diff="1" layout=" ..2., 2.21, 21.1, 11..," />
+    <Level diff="1" layout=" 12.., 1..2, 11.1, .121," />
 </Levels>
 </LevelPack>
 

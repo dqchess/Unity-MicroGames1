@@ -84,6 +84,40 @@
     <Level diff="3" layout=" 0.11, 0..0, 1.00, 0100," />
     <Level diff="3" layout=" 0001, 001., ..10, 00.0," />
     <Level diff="3" layout=" .220, 20.1, 1..2, 000.," desc="justifiably interesting" />
+    <Level diff="3" layout=" 1.22, ...., .212, .212," />
+    <Level diff="3" layout=" 00.., 003., 0.30, 33.0," />
+    <Level diff="3" layout=" 1022, .012, ...0, 0..2," />
+    <Level diff="3" layout=" 011., 01.0, 1..0, ...0," />
+    <Level diff="3" layout=" 1.00, 1..1, 1..1, 0..1," />
+    <Level diff="3" layout=" 0011, .0.0, ..10, ..1.," />
+    <Level diff="3" layout=" 1101, 00.1, 10.1, ....," />
+    <Level diff="3" layout=" 2221, 2.21, ..12, ..1.," />
+    <Level diff="3" layout=" 22.0, 22.0, 02.2, ...2," />
+    <Level diff="3" layout=" 030., 330., 3..3, 00.3," />
+    <Level diff="3" layout=" .233, 32.., 3.3., 2232," />
+    <Level diff="3" layout=" .31., ..10, 1.33, 1.00," />
+    <Level diff="3" layout=" .011, .2.1, .021, 101.," />
+    <Level diff="3" layout=" 12.0, 121., 10.., 10.2," />
+    <Level diff="3" layout=" 2111, 2122, ..21, ..21," />
+    <Level diff="3" layout=" 2000, .111, 2.10, ...1," />
+    <Level diff="3" layout=" 1101, 1.01, 0.01, 0...," />
+    <Level diff="3" layout=" 111., 1010, 00.0, .1..," />
+    <Level diff="3" layout=" ..22, 0.22, 2022, 20..," />
+    <Level diff="3" layout=" 1001, 1..1, ..01, 1.01," />
+    <Level diff="3" layout=" ..0., 2.0., 0.20, 0.20," />
+    <Level diff="3" layout=" .010, 1010, .1.., .1..," />
+    <Level diff="3" layout=" ..12, .212, .2.1, .2.1," />
+    <Level diff="3" layout=" 10.1, 10.1, .1.0, .1..," />
+    <Level diff="3" layout=" 2.0., 2.0., .02., 002.," />
+    <Level diff="3" layout=" 23.., .23., 2..3, 0020," />
+    <Level diff="3" layout=" 0220, ..02, 2.22, ..2.," />
+    <Level diff="3" layout=" ..0., ..2., 2202, 2002," />
+    <Level diff="3" layout=" 2..0, 1..1, 2021, .22.," />
+    <Level diff="3" layout=" 1..2, 0.20, 01.0, 0.2.," />
+    <Level diff="3" layout=" 1020, 102., .1.., .12.," />
+    <Level diff="3" layout=" .0.1, 0..1, 22.2, .102," />
+    <Level diff="3" layout=" 02.., 001., .1.0, 22.0," />
+    <Level diff="3" layout=" 211., ..20, 0.00, ..01," />
 
 </Levels>
 </LevelPack>
