@@ -12,8 +12,6 @@
 
 
 
-
-
 </Levels>
 </LevelPack>
 
@@ -37,7 +35,6 @@
 <LevelPack packName="Misfits for now">
 <Levels>
 
-    <Level diff="3" layout=" 0.0, 11., 001," />
     <Level diff="3" layout=" 0.0, 11., 001," />
     <Level diff="2" layout="
         220,
