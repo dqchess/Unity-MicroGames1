@@ -124,7 +124,7 @@ namespace SlideAndStick {
             ReloadModeDatas ();
             //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
             //Debug_PrintTotalNumLevels();
-            Debug_PrintNumLevelsInEachPack();
+            //Debug_PrintNumLevelsInEachPack();
             Debug_PrintDuplicateLevelLayouts();
         }
     

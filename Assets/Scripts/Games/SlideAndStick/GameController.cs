@@ -125,7 +125,7 @@ namespace SlideAndStick {
             }
             // No animating.
 			else {
-                //level.OnCompleteAnimateIn();
+                level.AnimateInBoard();
                 if (oldLevel != null) {
                     oldLevel.DestroySelf();
                 }

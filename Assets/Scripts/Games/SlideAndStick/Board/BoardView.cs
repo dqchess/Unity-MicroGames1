@@ -153,11 +153,21 @@ namespace SlideAndStick {
         
         
         public void PreAnimateInFreshBoard() {
-            // TODO: BoardSpaces.
+            if (MyBoard.DidRandGen) { return; } // For debug! Don't animate debug levels.//GameProperties.IsDebugFeatures && 
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    spaceViews[i,j].PreAnimateInFreshBoard();
+                }
+            }
             foreach (BoardOccupantView bov in allOccupantViews) { bov.PreAnimateInFreshBoard(); }
         }
         public void AnimateInFreshBoard() {
-            // TODO: BoardSpaces.
+            if (MyBoard.DidRandGen) { return; } // For debug! Don't animate debug levels.//GameProperties.IsDebugFeatures && 
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    spaceViews[i,j].AnimateInFreshBoard();
+                }
+            }
             foreach (BoardOccupantView bov in allOccupantViews) { bov.AnimateInFreshBoard(); }
         }
         

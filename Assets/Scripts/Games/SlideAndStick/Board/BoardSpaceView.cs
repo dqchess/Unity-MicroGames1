@@ -11,13 +11,13 @@ namespace SlideAndStick {
 		// Properties
 		private Color fillColor;
 		// References
-//		private BoardSpace mySpace;
+		private BoardSpace mySpace;
 
 		// ----------------------------------------------------------------
 		//  Initialize
 		// ----------------------------------------------------------------
 		public void Initialize (BoardView _boardView, BoardSpace mySpace) {
-//			this.mySpace = mySpace;
+			this.mySpace = mySpace;
 			int col = mySpace.Col;
 			int row = mySpace.Row;
 
@@ -53,6 +53,20 @@ namespace SlideAndStick {
    //             Destroy(i_backing.gameObject);
 			//}
 		}
+        
+        
+        // ----------------------------------------------------------------
+        //  Animations
+        // ----------------------------------------------------------------
+        public void PreAnimateInFreshBoard() {
+            //float offset = (mySpace.Col + mySpace.Row*1.1f) * 0.1f;
+            this.gameObject.transform.localScale = Vector3.zero;//Vector3.one * (0.4f-offset);
+        }
+        public void AnimateInFreshBoard() {
+            //float offset = (mySpace.Col + mySpace.Row) * 0.05f;
+            float delay = (mySpace.Col + mySpace.Row) * 0.042f;
+            LeanTween.scale(this.gameObject, Vector3.one, 0.52f).setEaseOutBack().setDelay(delay);// + offset
+        }
 
 
 	}

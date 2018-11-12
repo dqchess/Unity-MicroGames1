@@ -44,7 +44,7 @@ namespace SlideAndStick {
 			get { return _scale; }
 			set {
 				_scale = value;
-				this.transform.localScale = Vector2.one * _scale;// * myBoardView.BaseObjectScaleConstant;
+				this.transform.localScale = Vector2.one * _scale;
 				OnSetScale ();
 			}
 		}

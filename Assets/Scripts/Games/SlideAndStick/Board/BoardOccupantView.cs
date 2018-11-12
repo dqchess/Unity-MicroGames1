@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
 	public class BoardOccupantView : BoardObjectView {
+        //// Properties
+        //[SerializeField] private AnimationCurve ac_appear=null;
 		// References
 		protected BoardOccupant myOccupant; // a direct reference to my model. Doesn't change.
 
@@ -35,13 +37,25 @@ namespace SlideAndStick {
         
         
         // ----------------------------------------------------------------
-        //  Doers
+        //  Animations
         // ----------------------------------------------------------------
+        //public void PreAnimateInFreshBoard() {
+        //    float offset = (myOccupant.Col + myOccupant.Row*1.1f) * 0.04f;
+        //    this.gameObject.transform.localScale = Vector3.one * (0.9f-offset);
+        //}
+        //public void AnimateInFreshBoard() {
+        //    float offset = (myOccupant.Col + myOccupant.Row*1.1f) * 0.04f;
+        //    LeanTween.scale(this.gameObject, Vector3.one, 0.5f + offset).setEaseOutBounce();
+        //}
         public void PreAnimateInFreshBoard() {
-            this.gameObject.transform.localScale = Vector3.one * 0.7f;
+            // TODO: Maybe. I'd really like to have these start at like 0.5 scale. For that, we need to use an AnimationClip.
+            //float offset = (myOccupant.Col + myOccupant.Row*1.1f) * 0.1f;
+            this.gameObject.transform.localScale = Vector3.zero;//Vector3.one * (0.4f-offset);
         }
         public void AnimateInFreshBoard() {
-            LeanTween.scale(this.gameObject, Vector3.one, 0.8f).setEaseOutBounce();
+            //float offset = (myOccupant.Col + myOccupant.Row) * 0.05f;
+            float delay = (myOccupant.Col + myOccupant.Row) * 0.042f;
+            LeanTween.scale(this.gameObject, Vector3.one, 0.52f).setEaseOutBack().setDelay(delay);// + offset
         }
 
 
