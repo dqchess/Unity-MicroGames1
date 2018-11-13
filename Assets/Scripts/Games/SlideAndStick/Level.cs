@@ -178,7 +178,10 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void Update() {
+        public void DependentFixedUpdate() {
+            boardView.DependentFixedUpdate();
+        }
+		public void DependentUpdate() {
 			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 			if (simMoveController == null) { return; } // Safety check.
 

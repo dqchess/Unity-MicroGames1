@@ -193,7 +193,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void Update() {
+        public void DependentUpdate() {
 			// We've got a sequence going on??
 			if (IsSequenceActive()) {
 				// Counting down to next step.

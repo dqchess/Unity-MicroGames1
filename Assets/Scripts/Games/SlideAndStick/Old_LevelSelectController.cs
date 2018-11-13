@@ -4,16 +4,16 @@ using UnityEngine;
 using TMPro;
 
 namespace SlideAndStick {
-    public class LevelSelectController : MonoBehaviour {
+    public class Old_LevelSelectController : MonoBehaviour {
         // Constants
-        private static int CollIndex_E = 2; // NOTE: We will eventually improve this! It's sloppy as is but functioning and untenable.
-        private static int CollIndex_M = 3;
-        private static int CollIndex_H = 4;
+        //private static int CollIndex_E = 2; // NOTE: We will eventually improve this! It's sloppy as is but functioning and untenable.
+        //private static int CollIndex_M = 3;
+        //private static int CollIndex_H = 4;
         // Components
         [SerializeField] private TextMeshProUGUI t_deleteLayouts=null;
-        [SerializeField] private TextMeshProUGUI t_progressEasy=null;
-        [SerializeField] private TextMeshProUGUI t_progressMed=null;
-        [SerializeField] private TextMeshProUGUI t_progressHard=null;
+        //[SerializeField] private TextMeshProUGUI t_progressEasy=null;
+        //[SerializeField] private TextMeshProUGUI t_progressMed=null;
+        //[SerializeField] private TextMeshProUGUI t_progressHard=null;
     
         // Getters (Private)
         private LevelAddress GetLastPlayedAddress(int collection) {
@@ -34,9 +34,9 @@ namespace SlideAndStick {
         private void Start() {
             // Update progress texts!
             LevelsManager lm = LevelsManager.Instance;
-            t_progressEasy.text = lm.GetNumLevelsCompleted(CollIndex_E) + "/" + lm.GetNumLevelsPlayable(CollIndex_E);
-            t_progressMed.text  = lm.GetNumLevelsCompleted(CollIndex_M) + "/" + lm.GetNumLevelsPlayable(CollIndex_M);
-            t_progressHard.text = lm.GetNumLevelsCompleted(CollIndex_H) + "/" + lm.GetNumLevelsPlayable(CollIndex_H);
+            //t_progressEasy.text = lm.GetNumLevelsCompleted(CollIndex_E) + "/" + lm.GetNumLevelsPlayable(CollIndex_E);
+            //t_progressMed.text  = lm.GetNumLevelsCompleted(CollIndex_M) + "/" + lm.GetNumLevelsPlayable(CollIndex_M);
+            //t_progressHard.text = lm.GetNumLevelsCompleted(CollIndex_H) + "/" + lm.GetNumLevelsPlayable(CollIndex_H);
             UpdateDeleteLayoutsText();
         }
         

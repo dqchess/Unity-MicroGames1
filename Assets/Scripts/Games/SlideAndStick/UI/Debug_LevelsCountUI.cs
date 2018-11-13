@@ -111,7 +111,6 @@ namespace SlideAndStick {
         }
         private void UpdateCountsText() {
             string str = "";
-            ModeCollectionData mcdStandard = lm.GetModeCollectionData(GameModes.StandardIndex);
             
             str += GetTextLine(Difficulties.Beginner, 4);
             str += GetTextLine(Difficulties.Easy, 4);

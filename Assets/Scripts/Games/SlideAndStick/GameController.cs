@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace SlideAndStick {
+    /** Note that this GameController /manually/ trickles down Update calls. To ensure no accidental Update calls when we shouldn't have any (i.e. when blocked by LevSel). */
 	public class GameController : BaseGameController {
 		// Overrideables
 		override public string MyGameName() { return GameNames.SlideAndStick; }
@@ -13,11 +14,13 @@ namespace SlideAndStick {
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
 		// References
+        [SerializeField] private CoreMenuController coreMenuController;
 		[SerializeField] private FUEController fueController=null;
 
 		// Getters (Public)
-		public FUEController FUEController { get { return fueController; } }
+        public FUEController FUEController { get { return fueController; } }
         // Getters (Private)
+        private bool IsBlockedByLevSel { get { return coreMenuController.IsGameControllerBlockedByLevSel(); } }
         private LevelAddress currAddress { get { return level==null?LevelAddress.zero : level.MyAddress; } }
         private PackData CurrentPackData { get { return levelsManager.GetPackData(currAddress); } }
         private LevelsManager levelsManager { get { return LevelsManager.Instance; } }
@@ -36,7 +39,7 @@ namespace SlideAndStick {
             AssetDatabase.Refresh();
     //      AssetDatabase.ImportAsset(LevelLoader.LevelsFilePath(MyGameName(), true));
             #endif
-    
+            
             // Start at the level we've most recently played!
             SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
             
@@ -59,6 +62,11 @@ namespace SlideAndStick {
             ChangeLevel(levelIndexChange);
         }
         
+        
+        //public void Open() {
+        //    // Start at the level we've most recently played!
+        //    SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
+        //}
         
 
 		// ----------------------------------------------------------------
@@ -101,7 +109,7 @@ namespace SlideAndStick {
         private void ChangeLevel(int change) {
             SetCurrentLevel(currAddress + new LevelAddress(0, 0, 0, change));
         }
-        private void SetCurrentLevel(LevelAddress address, bool doAnimate=false) {
+        public void SetCurrentLevel(LevelAddress address, bool doAnimate=false) {
             if (Application.isEditor) { // In editor? Noice. Reload all levels from file so we can update during runtime!
                 levelsManager.Reset();
             }
@@ -183,6 +191,21 @@ namespace SlideAndStick {
 
 
 
+        // ----------------------------------------------------------------
+        //  Update
+        // ----------------------------------------------------------------
+        override protected void Update () {
+            if (!IsBlockedByLevSel) { return; }
+            base.Update();
+            // Update my dependencies!
+            level.DependentUpdate();
+            fueController.DependentUpdate();
+        }
+        private void FixedUpdate() {
+            if (!IsBlockedByLevSel) { return; }
+            // Update my dependencies!
+            level.DependentFixedUpdate();
+        }
 
         // ----------------------------------------------------------------
         //  Input

@@ -336,7 +336,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
-		private void FixedUpdate() {
+        public void DependentFixedUpdate() {
 			//print(Time.frameCount + " animating: " + areObjectsAnimating + ", animLocTarget: " + animLocTarget + ", animLoc: " + animLoc + ", animLocVel: " + animLocVel + ", simMoveDir: " + simMoveDir);
 			if (areObjectsAnimating) {
                 animLocVel *= 0.98f;
