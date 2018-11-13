@@ -5,16 +5,17 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace SlideAndStick {
-    public class PackSelectMenu : MonoBehaviour {
+    public class PackSelectMenu : BaseLevSelMenu {
         // Constants
         private const int numLevelCols = 5;
         //private const int numLevelRows = 5; // TODO: Use dis.
         private const float packButtonWidth = 100;
     	// Components
-    	[SerializeField] private TextMeshProUGUI t_collectionName=null;
+        [SerializeField] private LevSelProgressBar progressBar=null;
         [SerializeField] private RectTransform rt_packButtons=null;
         [SerializeField] private RectTransform rt_levelButtons=null;
         [SerializeField] private RectTransform rt_levelPageButtons=null;
+        [SerializeField] private TextMeshProUGUI t_collectionName=null;
         private List<PackButton> packButtons= new List<PackButton>(); // these are recycled! Not all are used at once.
     	private List<LevelButton> levelButtons=new List<LevelButton>(); // these are recycled! Not all are used at once.
         // References
@@ -23,8 +24,6 @@ namespace SlideAndStick {
         public Color CurrentPackColor { get; private set; }
         
         // Getters (Private)
-        private LevelsManager lm { get { return LevelsManager.Instance; } }
-        private LevelAddress selectedAddress { get { return lm.selectedAddress; } }
         private PackCollectionData myCollData { get { return lm.GetPackCollectionData(selectedAddress); } }
         private PackData myPackData { get { return lm.GetPackData(selectedAddress); } }
     
@@ -32,12 +31,12 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Adding Things
         // ----------------------------------------------------------------
-        private void AddPackButton(int index) {
+        private void AddPackButton() {
             PackButton newObj = Instantiate(ResourcesHandler.Instance.slideAndStick_levSelPackButton).GetComponent<PackButton>();
             newObj.Initialize(this, rt_packButtons);
             packButtons.Add(newObj);
         }
-        private void AddLevelButton(int index) {
+        private void AddLevelButton() {
             LevelButton newObj = Instantiate(ResourcesHandler.Instance.slideAndStick_levSelLevelButton).GetComponent<LevelButton>();
             newObj.Initialize(this, rt_levelButtons);
             levelButtons.Add(newObj);
@@ -55,7 +54,8 @@ namespace SlideAndStick {
         private void SetSelectedPack(LevelAddress _address) {
             lm.selectedAddress = _address;
             
-            CurrentPackColor = LevSelController.GetPackColor(selectedAddress);
+            CurrentPackColor = LevSelController.GetCollectionColor(selectedAddress.collection);
+            progressBar.UpdateVisuals(lm.selectedAddress, CurrentPackColor);
             UpdateHeaderText();
             RefreshPackButtons();
             RefreshLevelButtons();
@@ -85,7 +85,7 @@ namespace SlideAndStick {
             // Add missing buttons.
             int numPacks = myCollData.NumPacks;
             for (int i=packButtons.Count; i<numPacks; i++) {
-                AddPackButton(i);
+                AddPackButton();
             }
             // Hide extra buttons.
             for (int i=numPacks; i<packButtons.Count; i++) {
@@ -93,9 +93,12 @@ namespace SlideAndStick {
             }
             // Spawn visible buttons!
             Vector2 buttonSize = new Vector2(packButtonWidth, rt_packButtons.rect.height);
+            float buttonSpacing = buttonSize.x + 32;
             for (int i=0; i<numPacks; i++) {
-                packButtons[i].Spawn(myCollData.GetPackData(i));
-                Vector2 pos = new Vector2(i*(packButtonWidth+40), 0);
+                bool isSelected = selectedAddress.pack==i;
+                packButtons[i].Spawn(myCollData.GetPackData(i), isSelected);
+                float posX = (i+0.5f)*buttonSpacing - (numPacks*buttonSpacing*0.5f);
+                Vector2 pos = new Vector2(posX, 0);
                 packButtons[i].SetPosSize(pos, buttonSize);
             }
         }
@@ -103,7 +106,7 @@ namespace SlideAndStick {
             // Add missing buttons.
             int numLevels = myPackData.NumLevels;
             for (int i=levelButtons.Count; i<numLevels; i++) {
-                AddLevelButton(i);
+                AddLevelButton();
             }
             // Hide extra buttons.
             for (int i=numLevels; i<levelButtons.Count; i++) {

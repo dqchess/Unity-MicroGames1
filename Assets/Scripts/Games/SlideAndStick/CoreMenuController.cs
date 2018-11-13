@@ -40,7 +40,7 @@ namespace SlideAndStick {
         private void OpenLevSelController(bool doAnimate) {
             levSelController.Open(doAnimate);
         }
-        private void CloseLevSelController(bool doAnimate) {
+        public void CloseLevSelController(bool doAnimate) {
             //gameController.Open();
             levSelController.Close(doAnimate);
         }
@@ -55,7 +55,7 @@ namespace SlideAndStick {
         //  Events
         // ----------------------------------------------------------------
         public void OnToggleLevSelButtonClick() {
-            bool isOpen = levSelController.OpenLoc == 1;
+            bool isOpen = levSelController.OpenLoc > 0.6f;
             if (isOpen) {
                 CloseLevSelController(true);
             }

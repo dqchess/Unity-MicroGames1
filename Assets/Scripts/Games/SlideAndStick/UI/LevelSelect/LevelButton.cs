@@ -53,7 +53,7 @@ namespace SlideAndStick {
             }
             else {
                 i_backing.sprite = s_notCompleted;
-                i_backing.color = new Color(0.65f,0.65f,0.65f);
+                i_backing.color = packSelectMenu.CurrentPackColor;//new Color(0.65f,0.65f,0.65f);
                 t_levelName.color = packSelectMenu.CurrentPackColor;
             }
         }
@@ -67,7 +67,7 @@ namespace SlideAndStick {
         //  Events
         // ----------------------------------------------------------------
         public void OnClick() {
-            packSelectMenu.OnClickPackButton(myLevelData.myAddress);
+            packSelectMenu.OnClickLevelButton(myLevelData.myAddress);
         }
     }
 }
