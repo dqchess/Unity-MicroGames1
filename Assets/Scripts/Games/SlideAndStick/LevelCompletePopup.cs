@@ -9,6 +9,9 @@ namespace SlideAndStick {
         // Components
         [SerializeField] private RectTransform rt_complete=null;
         [SerializeField] private RectTransform rt_nextButton=null;
+        [SerializeField] private Text t_debugTimeSpent=null;
+        // References
+        [SerializeField] private Level level=null;
         // Properties
         public bool DidPressNextButton { get; private set; }
 
@@ -24,6 +27,8 @@ namespace SlideAndStick {
         public void Appear() {
             this.gameObject.SetActive(true);
             
+            UpdateDebugTimeSpentText();
+            
             DidPressNextButton = false; // We'll set to true when we press Next button!
             
             //rt_complete.anchoredPosition = new Vector2(0, rt_complete.anchoredPosition.y);
@@ -33,6 +38,12 @@ namespace SlideAndStick {
             rt_nextButton.localPosition = new Vector2(centerXPos-800,rt_nextButton.localPosition.y);
             LeanTween.moveX(rt_complete.gameObject,   centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0);
             LeanTween.moveX(rt_nextButton.gameObject, centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0.11f);
+        }
+        
+        private void UpdateDebugTimeSpentText() {
+            string saveKey = SaveKeys.TimeSpentTotal(level.GameController.MyGameName(), level.MyAddress);
+            float timeSpentTotal = SaveStorage.GetFloat(saveKey, 0);
+            t_debugTimeSpent.text = "total time spent: " + TextUtils.ToTimeString_ms(timeSpentTotal);
         }
     
     
