@@ -345,6 +345,10 @@ MonoBehaviour:
     type: 2}
   letterClear_wordTile: {fileID: 1588581518580352, guid: cf18deb6e071c47d79e2d7324ae15533,
     type: 2}
+  slideAndStick_levSelPackButton: {fileID: 1386133328862126, guid: 5d687cc2b29944922a6b59fb4ee5a3c7,
+    type: 2}
+  slideAndStick_levSelLevelButton: {fileID: 1541161270568078, guid: acc94d0fbf10a48b3938cdceeba8546a,
+    type: 2}
   slideAndStick_boardSpaceView: {fileID: 1372780191091626, guid: 412161c38b9b843c6bf5e4bcf44dcbfa,
     type: 2}
   slideAndStick_boardView: {fileID: 1509143095400638, guid: 99abc2562f97c4c07953c05636100712,

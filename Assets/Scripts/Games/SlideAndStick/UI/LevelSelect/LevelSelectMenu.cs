@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/*
 namespace SlideAndStick {
     public class LevelSelectMenu : BaseSelectMenu {
     	// Constants
@@ -122,3 +123,5 @@ namespace SlideAndStick {
 
 //		float containerWidth = ScreenHandler.RelativeScreenSize.x + levelTilesContainerSize.x; // let's use this value to determine how much horz. space I've got for the tiles.
 //		float containerWidth = levelTilesContainerSize.x; // let's use this value to determine how much horz. space I've got for the tiles.
+
+*/

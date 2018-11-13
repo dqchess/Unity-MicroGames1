@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
 namespace SlideAndStick {
     public class CollectionSelectMenu : BaseSelectMenu {
     
@@ -30,3 +31,4 @@ namespace SlideAndStick {
     
     }
 }
+*/

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/*
 namespace SlideAndStick {
     public class LevelTile : MonoBehaviour {
     	// Components
@@ -77,3 +78,4 @@ namespace SlideAndStick {
 
     }
 }
+*/

@@ -8,14 +8,28 @@ namespace SlideAndStick {
         private const int TEMP_CollectionIndex_Tutorial = 2;
         // References
         [SerializeField] private Canvas canvas;
+        [SerializeField] private CanvasGroup cg_scrim;
         [SerializeField] private CoreMenuController coreMenuController;
         [SerializeField] private RectTransform rt_menus;
         [SerializeField] private RectTransform rt_toggleLevSelButton;
+        [SerializeField] private GameObject go_collectionsMenu;
+        [SerializeField] private PackSelectMenu packsMenu;
         // Properties
-        //private float canvasWidth;
         private float menusWidth;
         public float OpenLoc { get; private set; } // how open I am! From 0 to 1.
-    
+        
+        // Getters (Public)
+        public static Color GetPackColor(LevelAddress address) {
+            switch (address.collection) {
+                case 3: return new Color( 59/255f,229/255f,196/255f);
+                case 4: return new Color( 59/255f,229/255f, 80/255f);
+                case 5: return new Color(255/255f,216/255f, 78/255f);
+                case 6: return new Color(250/255f, 85/255f,200/255f);
+                case 7: return new Color(144/255f,144/255f,144/255f);
+                case 8: return new Color( 58/255f, 58/255f, 58/255f);
+                default: return Color.red; // Hmm.
+            }
+        }
         // Getters (Private)
         private LevelsManager lm { get { return LevelsManager.Instance; } }
         private LevelAddress GetLastPlayedAddress(int collection) {
@@ -36,8 +50,18 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         private void Start () {
             // Set values
-            //canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
             menusWidth = rt_menus.rect.width;
+            
+            // Show right menu
+            Temp_SetVisibleMenu(go_collectionsMenu);
+        }
+        
+        // Temp
+        private void Temp_SetVisibleMenu(GameObject _menu) {
+            go_collectionsMenu.SetActive(false);
+            packsMenu.gameObject.SetActive(false);
+            
+            _menu.SetActive(true);
         }
         
         
@@ -73,6 +97,7 @@ namespace SlideAndStick {
             rt_menus.anchoredPosition = new Vector2(menusX, rt_menus.anchoredPosition.y);
             float togButtonX = 16 + menusX + menusWidth;
             rt_toggleLevSelButton.anchoredPosition = new Vector2(togButtonX, rt_toggleLevSelButton.anchoredPosition.y);
+            cg_scrim.alpha = OpenLoc;
         }
         
         
@@ -82,7 +107,31 @@ namespace SlideAndStick {
         public void OpenLevel(LevelAddress address) {
             coreMenuController.OpenLevel(address);
         }
-    
+        
+        
+        // ----------------------------------------------------------------
+        //  Menus Within Me
+        // ----------------------------------------------------------------
+        public void ClosePacksMenu() {
+            Temp_SetVisibleMenu(go_collectionsMenu);
+        }
+        private void ShowPackMenu(LevelAddress address) {
+            Temp_SetVisibleMenu(packsMenu.gameObject);
+            
+            packsMenu.Show(address);
+        }
+        
+        
+        // ----------------------------------------------------------------
+        //  Button Events
+        // ----------------------------------------------------------------
+        public void OnCollectionButtonClick(int collectionIndex) {
+            LevelAddress address = lm.selectedAddress;
+            address.collection = collectionIndex;
+            address.pack = 0; // TODO: Remember previously selected packs.
+            address.level = 0;
+            ShowPackMenu(address);
+        }
     
     }
 }
