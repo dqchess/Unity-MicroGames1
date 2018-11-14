@@ -37,7 +37,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-        private void OpenLevSelController(bool doAnimate) {
+        public void OpenLevSelController(bool doAnimate) {
             levSelController.Open(doAnimate);
         }
         public void CloseLevSelController(bool doAnimate) {

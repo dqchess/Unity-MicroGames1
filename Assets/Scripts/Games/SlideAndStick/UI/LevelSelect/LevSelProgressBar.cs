@@ -5,18 +5,29 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
 public class LevSelProgressBar : MonoBehaviour {
-        // Components
-        [SerializeField] private Image i_fill=null;
+		// Components
+		[SerializeField] private Image i_fill=null;
+		[SerializeField] private Image i_fillMask=null;
         [SerializeField] private RectTransform myRectTransform=null;
+		// Properties
+		private float widthFull;
+//		private float height;
         
+
+		private void Start() {
+			widthFull = myRectTransform.rect.width;
+//			height = myRectTransform.rect.height;
+			// Fill image is always the full width. (We size the mask instead.)
+			i_fill.rectTransform.sizeDelta = new Vector2(widthFull, i_fill.rectTransform.sizeDelta.y);
+		}
+
         
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
         public void SetFillPercent(float percent) {
-            float widthFull = myRectTransform.rect.width;
             float fillWidth = widthFull * percent;
-            i_fill.rectTransform.sizeDelta = new Vector2(fillWidth, i_fill.rectTransform.sizeDelta.y);
+			i_fillMask.rectTransform.sizeDelta = new Vector2(fillWidth, i_fillMask.rectTransform.sizeDelta.y);
         }
         
         

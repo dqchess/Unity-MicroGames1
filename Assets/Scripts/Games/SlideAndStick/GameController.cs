@@ -185,8 +185,12 @@ namespace SlideAndStick {
             //if (currAddress.mode == GameModes.TutorialIndex) {
             //    SaveStorage.SetInt(SaveKeys.SlideAndStick_DidCompleteTutorial, 1);
             //}
+
+			// What's the next level we can play?
+			//TODO: This
+
             // Bring us to LevelSelect!
-            OpenScene(SceneNames.LevelSelect(MyGameName()));
+			coreMenuController.OpenLevSelController(false);
         }
 
 

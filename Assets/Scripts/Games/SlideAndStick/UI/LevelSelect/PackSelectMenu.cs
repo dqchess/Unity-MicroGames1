@@ -32,9 +32,11 @@ namespace SlideAndStick {
 
 
 
-        // ----------------------------------------------------------------
-        //  Adding Things
-        // ----------------------------------------------------------------
+
+
+		// ----------------------------------------------------------------
+		//  Adding Things
+		// ----------------------------------------------------------------
         private void AddPackButton() {
             PackButton newObj = Instantiate(ResourcesHandler.Instance.slideAndStick_levSelPackButton).GetComponent<PackButton>();
             newObj.Initialize(this, rt_packButtons);
@@ -55,6 +57,11 @@ namespace SlideAndStick {
     	// ----------------------------------------------------------------
     	//  Doer Setters
 		// ----------------------------------------------------------------
+		public void ManualRefreshLevelButtons() {
+			int _currPage = CurrPage;
+			SetSelectedPack(selectedAddress);
+			SetCurrPage(_currPage);
+		}
         public void SetSelectedPack(LevelAddress _address) {
             lm.selectedAddress = _address;
             

@@ -74,6 +74,9 @@ namespace SlideAndStick {
         public void Open(bool doAnimate) {
             rt_menus.gameObject.SetActive(true);
             LeanTween.cancel(gameObject);
+			// Refresh my PacksMenu manually, in case we beat any levels since last opening.
+			packsMenu.ManualRefreshLevelButtons();
+
             if (doAnimate) {
                 LeanTween.value(gameObject, SetOpenLoc, OpenLoc,1, 0.5f).setEaseOutQuart();
             }
