@@ -8,7 +8,8 @@ namespace SlideAndStick {
     public class PackSelectMenu : BaseLevSelMenu {
         // Constants
         private const int numLevelCols = 5;
-        //private const int numLevelRows = 5; // TODO: Use dis.
+        private const int numLevelRows = 5;
+        private const int numLevelsPerPage = numLevelCols*numLevelRows;
         private const float packButtonWidth = 100;
     	// Components
         [SerializeField] private LevSelProgressBar progressBar=null;
@@ -18,16 +19,20 @@ namespace SlideAndStick {
         [SerializeField] private TextMeshProUGUI t_collectionName=null;
         private List<PackButton> packButtons= new List<PackButton>(); // these are recycled! Not all are used at once.
     	private List<LevelButton> levelButtons=new List<LevelButton>(); // these are recycled! Not all are used at once.
+        //private List<LevelButtonGroup> levelButtonGroups=new List<LevelButtonGroup>(); // these are recycled! Not all are used at once.
         // References
         [SerializeField] private LevSelController levSelController=null;
         // Properties
         public Color CurrentPackColor { get; private set; }
+        private int currPage; // which page of LevelButtons we're lookin' at.
+        private int numLevelPages;
         
         // Getters (Private)
         private PackCollectionData myCollData { get { return lm.GetPackCollectionData(selectedAddress); } }
         private PackData myPackData { get { return lm.GetPackData(selectedAddress); } }
-    
-        
+
+
+
         // ----------------------------------------------------------------
         //  Adding Things
         // ----------------------------------------------------------------
@@ -37,8 +42,13 @@ namespace SlideAndStick {
             packButtons.Add(newObj);
         }
         private void AddLevelButton() {
+            int buttonIndex = levelButtons.Count;
+            int indexInPage = buttonIndex%numLevelsPerPage;
+            int pageIndex = Mathf.FloorToInt(buttonIndex/(float)numLevelsPerPage);
+            int col = (indexInPage%numLevelCols);
+            int row = Mathf.FloorToInt(indexInPage/(float)numLevelCols);
             LevelButton newObj = Instantiate(ResourcesHandler.Instance.slideAndStick_levSelLevelButton).GetComponent<LevelButton>();
-            newObj.Initialize(this, rt_levelButtons);
+            newObj.Initialize(this, rt_levelButtons, buttonIndex,pageIndex, col,row);
             levelButtons.Add(newObj);
         }
         
@@ -59,6 +69,17 @@ namespace SlideAndStick {
             UpdateHeaderText();
             RefreshPackButtons();
             RefreshLevelButtons();
+            SetCurrPage(0);
+        }
+        private void SetCurrPage(int _currPage) {
+            _currPage = Mathf.Max(0, Mathf.Min(numLevelPages-1, _currPage));
+            //int dir = MathUtils.Sign(_currPage-currPage);
+            currPage = _currPage;
+            
+            int numLevels = myPackData.NumLevels;
+            for (int i=0; i<numLevels; i++) {
+                levelButtons[i].OnSetCurrPage(currPage);
+            }
         }
     
     
@@ -71,8 +92,20 @@ namespace SlideAndStick {
         public void OnClickLevelButton(LevelAddress address) {
             levSelController.OpenLevel(address);
         }
-    
-    
+        public void OnClickNextPageButton() {
+            SetCurrPage(currPage+1);
+        }
+        public void OnClickPrevPageButton() {
+            SetCurrPage(currPage-1);
+        }
+
+        // TEMP HACK TEST
+        private void Update() {
+            if (Input.GetKeyDown(KeyCode.LeftArrow))  { OnClickPrevPageButton(); }
+            if (Input.GetKeyDown(KeyCode.RightArrow)) { OnClickNextPageButton(); }
+        }
+
+
         // ----------------------------------------------------------------
         //  Updating Visuals
         // ----------------------------------------------------------------
@@ -103,8 +136,9 @@ namespace SlideAndStick {
             }
         }
         private void RefreshLevelButtons() {
-            // Add missing buttons.
             int numLevels = myPackData.NumLevels;
+            numLevelPages = Mathf.CeilToInt(numLevels/(float)numLevelsPerPage);
+            // Add missing buttons.
             for (int i=levelButtons.Count; i<numLevels; i++) {
                 AddLevelButton();
             }
@@ -130,10 +164,8 @@ namespace SlideAndStick {
             Vector2 buttonSpacing = new Vector2(buttonSpacingf,buttonSpacingf);
             
             for (int i=0; i<myPackData.NumLevels; i++) {
-                int col = (i%numLevelCols);
-                int row = Mathf.FloorToInt(i/(float)numLevelCols);
                 LevelButton obj = levelButtons[i];
-                obj.SetPosSize(new Vector2(col*unitSize.x, -row*unitSize.y), buttonSize);
+                obj.UpdatePosSize(unitSize, buttonSize);
             }
         }
     
