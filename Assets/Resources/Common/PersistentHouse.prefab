@@ -349,6 +349,8 @@ MonoBehaviour:
     type: 2}
   slideAndStick_levSelLevelButton: {fileID: 1541161270568078, guid: acc94d0fbf10a48b3938cdceeba8546a,
     type: 2}
+  slideAndStick_levelsPageDotButton: {fileID: 1821305489974966, guid: 20dd0d55b27a35b48a8395b7b8f67ee9,
+    type: 2}
   slideAndStick_boardSpaceView: {fileID: 1372780191091626, guid: 412161c38b9b843c6bf5e4bcf44dcbfa,
     type: 2}
   slideAndStick_boardView: {fileID: 1509143095400638, guid: 99abc2562f97c4c07953c05636100712,

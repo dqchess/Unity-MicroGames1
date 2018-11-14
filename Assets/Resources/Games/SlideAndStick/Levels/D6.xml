@@ -1,6 +1,9 @@
 <LevelsCollection collectionName="Impossible" gameMode="SlideAndStick">
 <Packs>
 
+<!--
+-->
+
 
 <LevelPack packName="4x4">
 <Levels>
@@ -18,6 +21,7 @@
     <Level diff="6" layout=" 1110, .021, .211, .2..," />
     <Level diff="6" layout=" 221., 2021, 0.2., .12.," />
     <Level diff="6" layout=" .022, 10.2, 20.2, 1.0.," />
+    <Level diff="6" layout=" 0.01, 1101, 1..., 10.0," />
     <Level diff="6" layout=" 1.11, .010, .0.0, .011," />
     
     <Level diff="7" layout=" 22.0, .110, 021., 01..," />
@@ -26,6 +30,8 @@
     <Level diff="7" layout=" 1100, 0..1, 001., 1..0," />
     <Level diff="7" layout=" 0.10, 0.10, 00.1, 1..1," />
     <Level diff="7" layout=" 1001, 1001, 0..., 0..0," />
+    <Level diff="7" layout=" 0.20, 22.2, 1.0., 2201," desc="can lose easily on first move :P" />
+    <Level diff="7" layout=" .00., .01., 0.02, 1022," />
 </Levels>
 </LevelPack>
 
@@ -54,10 +60,17 @@
     <Level diff="6" layout=" 22..., 21..., .001., 0001., .0222," />
     <Level diff="6" layout=" .001., 122.2, 1212., ..12., .0.2.," />
     <Level diff="6" layout=" .0.2., .1220, .0220, .0.02, .0..2," />
+    <Level diff="6" layout=" 11200, .120., 0121., .2.1., .2...," />
+    <Level diff="6" layout=" ..001, .0.21, 10122, 10100, ....2," />
+    <Level diff="6" layout=" 1.200, 1.2.1, ...01, 1.101, 1.122," />
     <Level diff="6" layout=" .2201, .0201, .00.., ..12., .112.," />
     <Level diff="6" layout=" 100.1, 10.01, 1...1, .1.2., 222..," />
     <Level diff="6" layout=" 112.., 1121., 01210, ..11., ...1.," />
     <Level diff="6" layout=" 11002, 1.0.2, ..110, ..0.1, ..0.1," />
+	
+    <Level diff="7" layout=" 11.22, 1.01., .0011, 0010., .1.0.," />
+    <Level diff="7" layout=" 001.., .1120, ..221, 2.00., 2.0..," />
+    <Level diff="7" layout=" 1..12, 01..2, 20..., 2010., 200..," />
 
 </Levels>
 </LevelPack>
@@ -96,15 +109,6 @@
 
 
 
-<LevelPack packName="Supa Hard">
-<Levels>
-    <Level diff="7" layout=" 0.20, 22.2, 1.0., 2201," desc="can lose easily on first move :P" />
-    <Level diff="7" layout=" .00., .01., 0.02, 1022," />
-    <Level diff="7" layout=" 001.., .1120, ..221, 2.00., 2.0..," />
-    <Level diff="7" layout=" 1..12, 01..2, 20..., 2010., 200..," />
-    <Level diff="7" layout=" 11.22, 1.01., .0011, 0010., .1.0.," desc="IDK if possible!" />
-</Levels>
-</LevelPack>
 
 
 

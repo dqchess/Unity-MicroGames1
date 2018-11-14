@@ -7,6 +7,7 @@ using TMPro;
 namespace SlideAndStick {
     public class LevelButton : MonoBehaviour {
         // Components
+//		[SerializeField] private Button myButton=null;
         [SerializeField] private CanvasGroup myCanvasGroup=null;
         [SerializeField] private Image i_backing=null;
         [SerializeField] private RectTransform myRectTransform=null;
@@ -21,7 +22,11 @@ namespace SlideAndStick {
         private LevelData myLevelData;
         private PackSelectMenu packSelectMenu;
         
-        // Setters (Private)
+		// Setters (Private)
+		private float Scale { get { return myRectTransform.localScale.x; } }
+		private void SetScale(float _scale) {
+			myRectTransform.localScale = new Vector3(_scale,_scale,_scale);
+		}
         private Vector2 Pos {
             get { return myRectTransform.anchoredPosition; }
             set { myRectTransform.anchoredPosition = value; }
@@ -52,7 +57,7 @@ namespace SlideAndStick {
         public void Despawn() {
             this.gameObject.SetActive(false);
         }
-        public void Spawn(LevelData _levelData) {//, int _col,int _row, int _myPageIndex) {
+		public void Spawn(LevelData _levelData, int currPage) {//, int _col,int _row, int _myPageIndex) {
             this.gameObject.SetActive(true);
             this.myLevelData = _levelData;
             
@@ -60,6 +65,7 @@ namespace SlideAndStick {
             
             this.name = "Level_" + levelIndexDisplay;
             t_levelName.text = levelIndexDisplay.ToString();
+			UpdateInteractivityFromCurrPage(currPage);
             
             // Completed-ness visuals!
             if (myLevelData.DidCompleteLevel) {
@@ -72,6 +78,21 @@ namespace SlideAndStick {
                 i_backing.color = packSelectMenu.CurrentPackColor;//new Color(0.65f,0.65f,0.65f);
                 t_levelName.color = packSelectMenu.CurrentPackColor;
             }
+
+			// Pre-animate me!
+			LeanTween.cancel(this.gameObject);
+			SetAlpha(0);
+			float targetX = GetTargetPosX(currPage);
+			SetPosX(targetX);
+			// Tween in!
+			bool isMyPage = myPageIndex == currPage;
+			if (isMyPage) {
+				SetScale(0.5f);
+				float duration = 0.3f;
+				float delay = (col+row)*0.04f;
+				LeanTween.value(gameObject, SetAlpha, myCanvasGroup.alpha,1, duration).setEaseOutQuart().setDelay(delay);
+				LeanTween.value(gameObject, SetScale, Scale,1, duration).setEaseOutBack().setDelay(delay);
+			}
         }
         
         public void UpdatePosSize(Vector2 _unitSize, Vector2 _size) {
@@ -85,20 +106,32 @@ namespace SlideAndStick {
         private void SetPosX(float posX) {
             Pos = new Vector2(posX, Pos.y);
         }
+		private void UpdateInteractivityFromCurrPage(int currPage) {
+			bool isMyPage = myPageIndex == currPage;
+			myCanvasGroup.blocksRaycasts = myCanvasGroup.interactable = isMyPage;
+		}
+
         
         // ----------------------------------------------------------------
         //  Animating In/Out
         // ----------------------------------------------------------------
-        public void OnSetCurrPage(int currPage) {
-            bool doAppear = myPageIndex == currPage;
-            int pageDiff = myPageIndex - currPage;
-            float duration = 0.3f + (col+row)*0.07f;
-            float alphaTarget = doAppear ? 1 : 0;
+		public void OnSetCurrPage(int currPage) {
+			bool isMyPage = myPageIndex == currPage;
+			// Update my interactivity!
+			UpdateInteractivityFromCurrPage(currPage);
+			// Animate!
+			float duration = 0.3f + (col+row)*0.06f;
+			float delay = (col+row)*0.011f;
+			float alphaTarget = isMyPage ? 1 : 0;
             LeanTween.cancel(this.gameObject);
-            LeanTween.value(gameObject, SetAlpha, myCanvasGroup.alpha,alphaTarget, duration).setEaseOutQuart();
-            float targetX = posNeutral.x + pageDiff*200;
-            LeanTween.value(gameObject, SetPosX, Pos.x,targetX, duration).setEaseOutQuart();
+			LeanTween.value(gameObject, SetAlpha, myCanvasGroup.alpha,alphaTarget, duration).setEaseOutQuart().setDelay(delay);
+			float targetX = GetTargetPosX(currPage);
+			LeanTween.value(gameObject, SetPosX, Pos.x,targetX, duration).setEaseOutQuart().setDelay(delay);
         }
+		private float GetTargetPosX(int currPage) {
+			int pageDiff = myPageIndex - currPage;
+			return posNeutral.x + pageDiff*200;
+		}
         
         
         // ----------------------------------------------------------------

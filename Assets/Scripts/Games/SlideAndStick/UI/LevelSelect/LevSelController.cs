@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlideAndStick {
+	public enum MenuTransType { Push, Pop }
+
     public class LevSelController : MonoBehaviour {
         // Statics
         private const int TEMP_CollectionIndex_Tutorial = 2;
@@ -52,18 +54,18 @@ namespace SlideAndStick {
             // Set values
             menusWidth = rt_menus.rect.width;
         }
-        private void Start() {
-            // Show right menu
-            Temp_SetVisibleMenu(collectionsMenu);
+		private void Start() {
+			packsMenu.Close(MenuTransType.Pop); // TODO: No animations
+			collectionsMenu.Open(MenuTransType.Pop);
         }
         
-        // Temp
-        private void Temp_SetVisibleMenu(BaseLevSelMenu _menu) {
-            collectionsMenu.gameObject.SetActive(false);
-            packsMenu.gameObject.SetActive(false);
-            
-            _menu.gameObject.SetActive(true);
-        }
+//        // Temp
+//        private void Temp_SetVisibleMenu(BaseLevSelMenu _menu) {
+//            collectionsMenu.gameObject.SetActive(false);
+//            packsMenu.gameObject.SetActive(false);
+//            
+//            _menu.gameObject.SetActive(true);
+//        }
         
         
         // ----------------------------------------------------------------
@@ -116,12 +118,13 @@ namespace SlideAndStick {
         //  Menus Within Me
         // ----------------------------------------------------------------
         public void ClosePacksMenu() {
-            Temp_SetVisibleMenu(collectionsMenu);
+			packsMenu.Close(MenuTransType.Pop);
+			collectionsMenu.Open(MenuTransType.Pop);
         }
-        private void ShowPackMenu(LevelAddress address) {
-            Temp_SetVisibleMenu(packsMenu);
-            
-            packsMenu.Show(address);
+		private void ShowPackMenu(LevelAddress address) {
+			packsMenu.Open(MenuTransType.Push);
+			packsMenu.SetSelectedPack(address);
+			collectionsMenu.Close(MenuTransType.Push);
         }
         
         
@@ -131,7 +134,7 @@ namespace SlideAndStick {
         public void OnCollectionButtonClick(int collectionIndex) {
             LevelAddress address = lm.selectedAddress;
             address.collection = collectionIndex;
-            address.pack = 0; // TODO: Remember previously selected packs.
+			address.pack = 0; // Note: Previously selected packs are not remembered. (We could add that with a little effort, though.)
             address.level = 0;
             ShowPackMenu(address);
         }
