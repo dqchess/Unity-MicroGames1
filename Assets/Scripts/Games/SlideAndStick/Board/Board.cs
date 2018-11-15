@@ -15,6 +15,7 @@ namespace SlideAndStick {
         public string FUEID { get; private set; }
         // Properties (Variable)
         public bool AreGoalsSatisfied { get; private set; }
+        public bool DidAnyTilesMergeLastMove { get; private set; }
         public bool DidRandGen { get; private set; } // TRUE when any Tiles are added randomly.
         public bool IsInKnownFailState { get; private set; }
         private int numTilesToWin; // set when we're made. Goal: One of each colored Tile!
@@ -106,6 +107,7 @@ namespace SlideAndStick {
             DevRating = bd.devRating;
             FUEID = bd.fueID;
             DidRandGen = false; // We'll say otherwise eventually.
+            DidAnyTilesMergeLastMove = false;
 
 			// Add all gameplay objects!
 			MakeEmptyPropLists ();
@@ -220,6 +222,8 @@ namespace SlideAndStick {
 			tileB.RemoveFromPlay();
 			// Append tileA's footprint, yo.
 			tileA.AppendMyFootprint(tileB);
+            // Yes, they did!
+            DidAnyTilesMergeLastMove = true;
 		}
 		/** For each global footprint of tileA, looks around to see if it's mergin' with tileB. If so, we add a MergeLocation there. */
 		private void AddMergeSpots(Tile tileA, Tile tileB) {
@@ -312,6 +316,7 @@ namespace SlideAndStick {
 			return result;
 		}
 		private void OnMoveComplete () {
+            DidAnyTilesMergeLastMove = false; // will say otherwise next!
             MergeAdjacentTiles();
             UpdateTilesMergePoses();
             SeparateSplitTiles();

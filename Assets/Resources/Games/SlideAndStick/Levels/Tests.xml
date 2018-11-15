@@ -22,6 +22,13 @@
     <!--
     Ask Kurt: What's this difficulty to him?
     <Level diff="4" layout=" .11.00, 0101.0, 0.011., ...1.., 0....0, 0....0," />
+    <Level diff="0" layout=" .01., 1010, 0..1, .0.0," desc="What about this level? Quality/difficulty?" />
+    <Level diff="4" layout=" .0000, 1.000, 0.001, 01.0., 0101.," desc="what's this difficulty??" />
+    <Level diff="0" layout=" 010., .010, 1..., 001.," />
+
+
+
+
 
     Maybes?
     <Level diff="3" layout=" 010., .121, ..2., .222," />

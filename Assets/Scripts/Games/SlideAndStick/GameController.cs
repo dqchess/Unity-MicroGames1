@@ -17,9 +17,11 @@ namespace SlideAndStick {
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private GameObject go_toggleLevSelButton=null;
+        [SerializeField] private SlideAndStickSfxController sfxController=null;
 
 		// Getters (Public)
         public FUEController FUEController { get { return fueController; } }
+        public SlideAndStickSfxController SFXController { get { return sfxController; } }
         // Getters (Private)
         private bool IsBlockedByLevSel { get { return coreMenuController.IsGameControllerBlockedByLevSel(); } }
         private LevelAddress currAddress { get { return level==null?LevelAddress.zero : level.MyAddress; } }
@@ -42,7 +44,8 @@ namespace SlideAndStick {
             #endif
             
             // Start at the level we've most recently played!
-            SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
+            bool debug_supressAnimation = Input.GetKey(KeyCode.A); // DEBUG for TESTING!
+            SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress(), !debug_supressAnimation);
             
             // Add event listeners!
             GameManagers.Instance.EventManager.LevelJumpButtonClickEvent += OnLevelJumpButtonClick;
@@ -184,6 +187,7 @@ namespace SlideAndStick {
             levelsManager.OnCompleteLevel(currAddress);
             level.OnWinLevel();
             fueController.OnCompleteLevel();
+            sfxController.OnCompleteLevel();
             FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
             if (levelsManager.IsLastLevelInPack(currAddress)) {
                 OnCompleteLastLevelInPack();

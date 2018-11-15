@@ -60,10 +60,10 @@ namespace SlideAndStick {
             GameUtils.CopyToClipboard(savedLayoutsString);
         }
         private void StartGameAtCollection(int collection) {
-            LevelAddress lastPlayedAddress = LevelsManager.Instance.GetLastPlayedLevelAddress();// GetLastPlayedAddress(collection);
-            LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
-            
-            LoadLevel(lastPlayedAddress);
+            //LevelAddress lastPlayedAddress = LevelsManager.Instance.GetLastPlayedLevelAddress();// GetLastPlayedAddress(collection);
+            //LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
+            LevelAddress address = new LevelAddress(GameModes.StandardIndex, collection, 0,0);
+            LoadLevel(address);
         }
         public void DeleteSavedLayouts() {
             SaveStorage.DeleteKey(SaveKeys.SlideAndStick_Debug_CustomLayouts);

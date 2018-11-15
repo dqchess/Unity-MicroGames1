@@ -20,6 +20,11 @@
     <Level diff="1" layout=" ..10, ..11, 00.., 10..," desc="clearly handmade" />
     <Level diff="1" layout=" 110., 10.., 10.0, 1..1," />
     <Level diff="1" layout=" 01.0, 11.., 1110, ...0," />
+    <Level diff="1" layout=" 1..0, 10.0, .011, .111," />
+    <Level diff="1" layout=" 11.1, 0001, 0..0, ...0," />
+    <Level diff="1" layout=" 0..0, 0..0, 01.1, 01.1," />
+    <Level diff="1" layout=" 0..0, 1.00, 1.10, 1.10," />
+    <Level diff="1" layout=" 00.0, .100, .10., ..11," />
     <Level diff="1" layout=" .111, 0.0., 0.11, .11.," />
     <Level diff="1" layout=" .111, .00., .1.1, 00.1," />
     <Level diff="1" layout=" 211., .1.., .22., 122.," />
@@ -129,6 +134,8 @@
     <Level diff="1" layout=" 0111., 0.01., 01.1., 01.1., 01...," />
     <Level diff="1" layout=" 111.1, ...01, 0.001, 0.00., 0.0..," />
     <Level diff="1" layout=" ...00, 100.1, 11.11, 11.11, 11.11," />
+    <Level diff="1" layout=" 33300, 30.00, 30.30, 3..30, 3.000," />
+    <Level diff="1" layout=" 2.311, 2...., 2.231, 2.231, 2..31," />
 
 </Levels>
 </LevelPack>

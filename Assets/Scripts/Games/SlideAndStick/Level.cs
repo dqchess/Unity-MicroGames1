@@ -43,6 +43,7 @@ namespace SlideAndStick {
 		}
         // Getters (Private)
         private InputController inputController { get { return InputController.Instance; } }
+        private SlideAndStickSfxController sfxController { get { return gameController.SFXController; } }
         private bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		private bool CanUndoMove () {
 			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
@@ -254,6 +255,8 @@ namespace SlideAndStick {
 			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			if (tileOver != null) {
 				SetTileGrabbing(tileOver);
+                // Sound's good!
+                sfxController.OnGrabTile();
 			}
 		}
 		//private void OnTouchUp() {
@@ -270,7 +273,11 @@ namespace SlideAndStick {
 		}
         
         public void ReleaseTileGrabbing() {
-            SetTileGrabbing(null);
+            if (tileGrabbing != null) {
+                SetTileGrabbing(null);
+                // Sound's good!
+                sfxController.OnReleaseTile();
+            }
         }
 		private void SetTileGrabbing(Tile _tile) {
 			if (tileGrabbing != _tile) { // If it's changed...!
@@ -310,6 +317,9 @@ namespace SlideAndStick {
 			ConfirmTileGrabbing();
 			// Tell people!
 			gameController.FUEController.OnBoardMoveComplete();
+            if (board.DidAnyTilesMergeLastMove) {
+                sfxController.OnTilesMerged();
+            }
             // If our goals are satisfied, win!!
             if (board.AreGoalsSatisfied) {
                 gameController.OnBoardGoalsSatisfied();
