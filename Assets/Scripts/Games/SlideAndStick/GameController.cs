@@ -15,7 +15,8 @@ namespace SlideAndStick {
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
 		// References
         [SerializeField] private CoreMenuController coreMenuController=null;
-		[SerializeField] private FUEController fueController=null;
+        [SerializeField] private FUEController fueController=null;
+        [SerializeField] private GameObject go_toggleLevSelButton=null;
 
 		// Getters (Public)
         public FUEController FUEController { get { return fueController; } }
@@ -62,11 +63,6 @@ namespace SlideAndStick {
             ChangeLevel(levelIndexChange);
         }
         
-        
-        //public void Open() {
-        //    // Start at the level we've most recently played!
-        //    SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress());
-        //}
         
 
 		// ----------------------------------------------------------------
@@ -167,6 +163,8 @@ namespace SlideAndStick {
             // Tell people!
             fueController.OnStartLevel(level);
             levelsManager.selectedAddress = currAddress; // for consistency.
+            bool isTutorial = levelsManager.IsTutorial(currAddress);
+            go_toggleLevSelButton.SetActive(!isTutorial); // hide menu button in tutorial!
             // Save values!
             //SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelLocal(currAddress), currAddress.ToString());
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.ToString());

@@ -13,7 +13,6 @@ namespace SlideAndStick {
         [SerializeField] private CanvasGroup cg_scrim=null;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private RectTransform rt_menus=null;
-        [SerializeField] private RectTransform rt_toggleLevSelButton=null;
         [SerializeField] private BaseLevSelMenu collectionsMenu=null;
         [SerializeField] private PackSelectMenu packsMenu=null;
         // Properties

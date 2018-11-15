@@ -6,11 +6,11 @@ public class RandGenParams : MonoBehaviour {
 	//		[Header ("Random Tile Params")]
 	//		public float MinPercentTiles = 0.4f;
 	//		public float MinPercentTiles = 0.4f;
-	public float PercentTiles;
-	public int NumColors;
-	public int NumWalls;
-    public int StickinessMin;
-    public int StickinessMax;
+	[HideInInspector] public float PercentTiles;
+	[HideInInspector] public int NumColors;
+	[HideInInspector] public int NumWalls;
+    [HideInInspector] public int StickinessMin;
+    [HideInInspector] public int StickinessMax;
 
 
 	private void Awake() {

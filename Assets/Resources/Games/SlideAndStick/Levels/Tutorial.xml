@@ -22,15 +22,17 @@
         0.0,
         0..,
     " />
+    <!--
     <Level diff="1" name="IntroGame3" layout="
         2.3,
         2.2,
         33.,
     " />
+-->
     <Level diff="1" name="IntroToUndo" fueID="introToUndo" layout="
         1.1,
-        010,
-        0.0,
+        212,
+        2.2,
     " />
 
     <Level diff="2" fueID="failHelp1" layout="

@@ -1946,6 +1946,16 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224886940932502934, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 224663046540929688, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000030517578
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4, type: 2}
   m_IsPrefabAsset: 0
@@ -3478,7 +3488,6 @@ MonoBehaviour:
   cg_scrim: {fileID: 385473695}
   coreMenuController: {fileID: 1409898810}
   rt_menus: {fileID: 1915889570}
-  rt_toggleLevSelButton: {fileID: 906754251}
   collectionsMenu: {fileID: 739783038}
   packsMenu: {fileID: 240631844}
 --- !u!4 &1433873585
@@ -4178,6 +4187,7 @@ MonoBehaviour:
   randGenParams: {fileID: 1724769482}
   coreMenuController: {fileID: 1409898810}
   fueController: {fileID: 1117020574}
+  go_toggleLevSelButton: {fileID: 906754250}
 --- !u!114 &1724769482
 MonoBehaviour:
   m_ObjectHideFlags: 0
