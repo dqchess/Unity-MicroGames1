@@ -27,10 +27,12 @@ namespace SlideAndStick {
             int mode = GameModes.StandardIndex;
             ModeCollectionData mcd = lm.GetModeCollectionData(mode);
             PackCollectionData pcd = mcd.GetPackCollectionData(diff + (Index_Collection_D1-1)); // we know there're X collections before D1.
-            foreach (PackData pd in pcd.PackDatas) {
-                // Correct size!
-                if (pd.NumLevels>0 && pd.GetLevelData(0).boardData.numCols == numCols) {
-                    return pd.MyAddress;
+            if (pcd != null) { // Safety check.
+                foreach (PackData pd in pcd.PackDatas) {
+                    // Correct size!
+                    if (pd.NumLevels>0 && pd.GetLevelData(0).boardData.numCols == numCols) {
+                        return pd.MyAddress;
+                    }
                 }
             }
             //// Collection?

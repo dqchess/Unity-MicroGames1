@@ -85,13 +85,13 @@ namespace SlideAndStick {
             }
 
 			// Pre-animate me!
-			LeanTween.cancel(this.gameObject);
+			//LeanTween.cancel(this.gameObject);
 			SetAlpha(0);
 			float targetX = GetTargetPosX(currPage);
 			SetPosX(targetX);
 			// Tween in!
 			bool isMyPage = myPageIndex == currPage;
-			if (isMyPage) {
+			if (isMyPage && gameObject.activeInHierarchy) {
 				// Animate!
 				if (c_animateAlpha != null) { StopCoroutine(c_animateAlpha); }
 				if (c_animateScale != null) { StopCoroutine(c_animateScale); }
@@ -138,7 +138,7 @@ namespace SlideAndStick {
 			// Update my interactivity!
 			UpdateInteractivityFromCurrPage(currPage);
 
-			this.gameObject.SetActive(true); // test hacky to make sure the coroutines go go.
+            if (!gameObject.activeInHierarchy) { return; } // Oh, if I'm not active in the hierarchy, don't animate.
 
 			// Animate!
 			if (c_animateAlpha != null) { StopCoroutine(c_animateAlpha); }

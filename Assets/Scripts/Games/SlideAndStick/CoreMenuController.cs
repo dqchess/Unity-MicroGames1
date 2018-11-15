@@ -21,9 +21,9 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
         private void Start() {
-            bool didBeatTutorial = true; // TODO: This
+            bool didBeatTutorial = false;//true; // TODO: This
             
-            // Open LEVSEL?
+            // Open LEV-SEL?
             if (didBeatTutorial) {
                 OpenLevSelController(false);
             }
