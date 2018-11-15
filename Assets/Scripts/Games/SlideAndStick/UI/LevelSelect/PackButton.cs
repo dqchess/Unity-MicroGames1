@@ -5,8 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace SlideAndStick {
+    [RequireComponent(typeof(Button))]
     public class PackButton : MonoBehaviour {
         // Components
+        [SerializeField] private Button myButton=null;
         [SerializeField] private Image i_bottom=null;
         [SerializeField] private Image i_top=null;
         [SerializeField] private RectTransform myRectTransform=null;
@@ -39,6 +41,7 @@ namespace SlideAndStick {
             
             this.name = "Pack_" + myPackData.MyAddress.pack;
             t_packName.text = myPackData.PackName;
+            myButton.interactable = !isSelected; // I'm not clickable if I'm selected.
             
             if (isSelected) {
                 i_top.enabled = false;
