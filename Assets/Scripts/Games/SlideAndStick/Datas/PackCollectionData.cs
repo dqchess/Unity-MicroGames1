@@ -10,7 +10,7 @@ namespace SlideAndStick {
     public class PackCollectionData {
     	// Properties
         public string CollectionName { get; private set; } // the display name.
-    	private LevelAddress myAddress;
+    	public LevelAddress MyAddress { get; private set; }
         private List<PackData> packDatas;
     
     
@@ -41,7 +41,7 @@ namespace SlideAndStick {
     	//  Initialize
     	// ----------------------------------------------------------------
     	public PackCollectionData (LevelAddress myAddress, string collectionXMLFilePath) {
-    		this.myAddress = myAddress;
+    		this.MyAddress = myAddress;
     
     		LoadAllPackDatas (collectionXMLFilePath);
     	}
@@ -69,7 +69,7 @@ namespace SlideAndStick {
     		// Make those PackDatas!
     		packDatas = new List<PackData>();
     		for (int i=0; i<collectionXML.packDataXMLs.Count; i++) {
-    			LevelAddress packAddress = new LevelAddress(myAddress.mode, myAddress.collection, i, -1);
+    			LevelAddress packAddress = new LevelAddress(MyAddress.mode, MyAddress.collection, i, -1);
     			PackData newData = new PackData(packAddress, collectionXML.packDataXMLs[i]);
     			AddPackData (newData);
     		}

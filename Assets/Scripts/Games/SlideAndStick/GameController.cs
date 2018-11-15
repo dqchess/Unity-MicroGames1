@@ -158,7 +158,7 @@ namespace SlideAndStick {
     
             // Instantiate the Level from the provided LevelData!
             level = Instantiate(resourcesHandler.slideAndStick_level).GetComponent<Level>();
-            level.Initialize(this, canvas.transform, ld);
+            level.Initialize(this, go_levelContainer.transform, ld);
             debug_prevBoardDatas.Add(level.Board.SerializeAsData());
             
             // Reset basic stuff
@@ -262,6 +262,23 @@ namespace SlideAndStick {
                 }
             }
             
+        }
+        
+        
+        [SerializeField] private GameObject go_levelContainer;
+        public void RecedeIntoBackground() {
+            LeanTween.cancel(go_levelContainer);
+            float duration = 0.7f;
+            Vector3 posTo = new Vector3(100, 0,0);//200
+            LeanTween.scale(go_levelContainer, Vector3.one*0.74f, duration).setEaseOutQuart();
+            LeanTween.moveLocal(go_levelContainer, posTo, duration).setEaseOutQuart();
+        }
+        public void ReturnToForeground() {
+            LeanTween.cancel(go_levelContainer.gameObject);
+            float duration = 0.5f;
+            Vector3 posTo = new Vector3(0,0,0);
+            LeanTween.scale(go_levelContainer, Vector3.one, duration).setEaseOutQuart();
+            LeanTween.moveLocal(go_levelContainer, posTo, duration).setEaseOutQuart();
         }
         
         

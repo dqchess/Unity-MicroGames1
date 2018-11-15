@@ -13,6 +13,7 @@ namespace SlideAndStick {
         [SerializeField] private CanvasGroup cg_scrim=null;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private RectTransform rt_menus=null;
+        [SerializeField] private ToggleLevSelButton toggleLevSelButton=null;
         [SerializeField] private BaseLevSelMenu collectionsMenu=null;
         [SerializeField] private PackSelectMenu packsMenu=null;
         // Properties
@@ -82,11 +83,13 @@ namespace SlideAndStick {
         private void SetOpenLoc(float _loc) {
             OpenLoc = _loc;
             
-            float menusX = Mathf.Lerp(-menusWidth,0, OpenLoc);
+            float scaleClosed = 1f;//1.4f
+            float menusX = Mathf.Lerp(-menusWidth*scaleClosed,0, OpenLoc);
             rt_menus.anchoredPosition = new Vector2(menusX, rt_menus.anchoredPosition.y);
+            rt_menus.localScale = Vector3.one * Mathf.Lerp(scaleClosed, 1f, OpenLoc);
             float togButtonX = 16 + menusX + menusWidth;
-            //rt_toggleLevSelButton.anchoredPosition = new Vector2(togButtonX, rt_toggleLevSelButton.anchoredPosition.y);
             cg_scrim.alpha = OpenLoc;
+            toggleLevSelButton.SetOpenLoc(OpenLoc);
         }
         
         

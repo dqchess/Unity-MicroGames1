@@ -139,6 +139,7 @@ namespace SlideAndStick {
             //Debug_PrintTotalNumLevels();
             //Debug_PrintNumLevelsInEachPack();
             Debug_PrintDuplicateLevelLayouts();
+            //Debug_PrintAlreadySatisfiedTileLayouts();
         }
     
     
@@ -221,6 +222,26 @@ namespace SlideAndStick {
                                 //string addA = layoutDict[xmlLayout].myAddress.ToString();
                                 //string addB = layoutDict[xmlLayout].myAddress.ToString();
                                 Debug.LogWarning("Duplicate level layout! Layout: " + xmlLayout);//Addresses: " + addA + ", " + addB);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void Debug_PrintAlreadySatisfiedTileLayouts() {
+            foreach (ModeCollectionData mcData in modeDatas) {
+                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
+                    // HARDCODED skip rand/test/tutorial lvls.
+                    if (pcData.MyAddress.collection < 2) { continue; }
+                    foreach (PackData pData in pcData.PackDatas) {
+                        foreach (LevelData levelData in pData.LevelDatas) {
+                            // You know, skip empty layouts, ok?
+                            if (levelData.boardData.tileDatas.Count == 0) { continue; }
+                            // This layout's not empty! ;)
+                            Board board = new Board(levelData.boardData);
+                            if (board.AreAnyTileColorsSatisfied()) {
+                                string xmlLayout = levelData.boardData.Debug_GetLayout(true);
+                                Debug.LogWarning("Already-satisfied-tile-color layout! Layout: " + xmlLayout);
                             }
                         }
                     }

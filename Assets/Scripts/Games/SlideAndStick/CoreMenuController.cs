@@ -40,15 +40,16 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void OpenLevSelController(bool doAnimate) {
             levSelController.Open(doAnimate);
+            gameController.RecedeIntoBackground();
         }
         public void CloseLevSelController(bool doAnimate) {
-            //gameController.Open();
             levSelController.Close(doAnimate);
+            gameController.ReturnToForeground();
         }
         
         public void OpenLevel(LevelAddress address) {
             gameController.SetCurrentLevel(address, false);
-            levSelController.Close(true);
+            CloseLevSelController(true);
         }
         
         
