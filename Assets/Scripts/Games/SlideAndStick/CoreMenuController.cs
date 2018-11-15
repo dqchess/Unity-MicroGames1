@@ -5,8 +5,8 @@ using UnityEngine;
 namespace SlideAndStick {
     public class CoreMenuController : MonoBehaviour {
         // References
-        [SerializeField] private GameController gameController;
-        [SerializeField] private LevSelController levSelController;
+        [SerializeField] private GameController gameController=null;
+        [SerializeField] private LevSelController levSelController=null;
         
         // Getters (Private)
         private LevelsManager lm { get { return LevelsManager.Instance; } }
@@ -21,15 +21,16 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
         private void Start() {
-            bool didBeatTutorial = false;//true; // TODO: This
+            bool didBeatTutorial = SaveStorage.GetInt(SaveKeys.SlideAndStick_DidCompleteTutorial) == 1;
             
-            // Open LEV-SEL?
-            if (didBeatTutorial) {
-                OpenLevSelController(false);
-            }
-            // Open GAME?
-            else {
+            // Didn't beat tutorial? Go straight into it!
+            if (!didBeatTutorial) {
                 CloseLevSelController(false);
+                //OpenLevel(
+            }
+            // We DID beat the tutorial. Open LevSel menu!
+            else {
+                OpenLevSelController(false);
             }
         }
         

@@ -19,7 +19,7 @@ namespace SlideAndStick {
     	// ----------------------------------------------------------------
         public bool DoesLevelExist(LevelAddress ad) {
             if (ad.pack<0 || ad.pack>=packDatas.Count) { return false; } // Outta bounds? Return false!
-            return packDatas[ad.mode].DoesLevelExist(ad); // Ok, ask the next guy.
+            return packDatas[ad.pack].DoesLevelExist(ad); // Ok, ask the next guy.
         }
     	public int NumPacks { get { return packDatas.Count; } }
         public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }

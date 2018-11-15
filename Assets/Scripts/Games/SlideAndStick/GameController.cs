@@ -14,7 +14,7 @@ namespace SlideAndStick {
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
 		// References
-        [SerializeField] private CoreMenuController coreMenuController;
+        [SerializeField] private CoreMenuController coreMenuController=null;
 		[SerializeField] private FUEController fueController=null;
 
 		// Getters (Public)
@@ -83,22 +83,30 @@ namespace SlideAndStick {
             popup.Appear();
             while (!popup.DidPressNextButton) { yield return null; }
             
-            //yield return new WaitForSecondsRealtime(0.1f);
-            StartNextLevel();
+            // NOT last level in pack? Start next level!
+            if (!levelsManager.IsLastLevelInPack(currAddress)) {
+                StartNextLevel();
+            }
+            else {
+                // What's the next level we can play?
+                RolloverPackStartNextLevel();
+                // Bring us to LevelSelect!
+                coreMenuController.OpenLevSelController(false);
+            }
         }
 
         private void RestartLevel() { SetCurrentLevel(currAddress, false); }
-        private void StartPrevLevel() {
-            LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
-            if (data != null) { SetCurrentLevel(data); }
-        }
+        //private void StartPrevLevel() {
+        //    LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
+        //    if (data != null) { SetCurrentLevel(data); }
+        //}
         private void StartNextLevel() {
-            if (levelsManager.IsLastLevelInPack(currAddress)) {
-                OnCompleteLastLevelInPack();
-            }
-            else {
-                SetCurrentLevel(currAddress.NextLevel, true);
-            }
+            LevelData data = levelsManager.GetLevelData(currAddress.NextLevel);
+            if (data != null) { SetCurrentLevel(data, true); }
+        }
+        private void RolloverPackStartNextLevel() {
+            LevelData data = levelsManager.GetRolloverPackNextLevelData(currAddress);
+            if (data != null) { SetCurrentLevel(data, false); } // Note: Don't animate; LevSel's covering us now.
         }
         private void ChangeCollection(int change) {
             SetCurrentLevel(new LevelAddress(currAddress.mode, currAddress.collection+change, 0, 0));
@@ -160,7 +168,8 @@ namespace SlideAndStick {
             fueController.OnStartLevel(level);
             levelsManager.selectedAddress = currAddress; // for consistency.
             // Save values!
-            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelAddress(currAddress), currAddress.ToString());
+            //SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelLocal(currAddress), currAddress.ToString());
+            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.ToString());
         }
     
         
@@ -178,19 +187,19 @@ namespace SlideAndStick {
             level.OnWinLevel();
             fueController.OnCompleteLevel();
             FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
+            if (levelsManager.IsLastLevelInPack(currAddress)) {
+                OnCompleteLastLevelInPack();
+            }
+            // Preemptively save the NEXT level as the last one played! In case we quit now and reopen the game (we don't wanna open to the lvl we just beat).
+            SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.NextLevel.ToString());
+            // Start next level business!
             StartCoroutine(Coroutine_JustWonLevel());
         }
         private void OnCompleteLastLevelInPack() {
-            //// We just completed the tutorial?? Save that!!
-            //if (currAddress.mode == GameModes.TutorialIndex) {
-            //    SaveStorage.SetInt(SaveKeys.SlideAndStick_DidCompleteTutorial, 1);
-            //}
-
-			// What's the next level we can play?
-			//TODO: This
-
-            // Bring us to LevelSelect!
-			coreMenuController.OpenLevSelController(false);
+            // We just completed the tutorial?? Save that!!
+            if (levelsManager.IsTutorial(currAddress)) {
+                SaveStorage.SetInt(SaveKeys.SlideAndStick_DidCompleteTutorial, 1);
+            }
         }
 
 

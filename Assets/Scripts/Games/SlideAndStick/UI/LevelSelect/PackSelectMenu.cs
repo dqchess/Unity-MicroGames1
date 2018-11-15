@@ -53,14 +53,17 @@ namespace SlideAndStick {
             levelButtons.Add(newObj);
         }
         
+        
     
     	// ----------------------------------------------------------------
     	//  Doer Setters
 		// ----------------------------------------------------------------
 		public void ManualRefreshLevelButtons() {
-			int _currPage = CurrPage;
+            if (selectedAddress == LevelAddress.undefined) { return; } // Safety check.
+            // Force-select the current pack and page!
 			SetSelectedPack(selectedAddress);
-			SetCurrPage(_currPage);
+            int _page = Mathf.FloorToInt(selectedAddress.level/(float)numLevelsPerPage);
+			SetCurrPage(_page);
 		}
         public void SetSelectedPack(LevelAddress _address) {
             lm.selectedAddress = _address;

@@ -34,16 +34,6 @@ namespace SlideAndStick {
         }
         // Getters (Private)
         private LevelsManager lm { get { return LevelsManager.Instance; } }
-        private LevelAddress GetLastPlayedAddress(int collection) {
-            LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
-            string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(collectionAdd);
-            if (SaveStorage.HasKey(key)) { // We've got it saved! Load 'er up.
-                return LevelAddress.FromString(SaveStorage.GetString(key));
-            }
-            else { // Oh, there was no save data. Use collectionAdd to start at the first level in the collection.
-                return collectionAdd;
-            }
-        }
     
     
     
@@ -58,14 +48,6 @@ namespace SlideAndStick {
 			packsMenu.Close(MenuTransType.Pop); // TODO: No animations
 			collectionsMenu.Open(MenuTransType.Pop);
         }
-        
-//        // Temp
-//        private void Temp_SetVisibleMenu(BaseLevSelMenu _menu) {
-//            collectionsMenu.gameObject.SetActive(false);
-//            packsMenu.gameObject.SetActive(false);
-//            
-//            _menu.gameObject.SetActive(true);
-//        }
         
         
         // ----------------------------------------------------------------

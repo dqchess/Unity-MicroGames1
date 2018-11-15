@@ -16,16 +16,16 @@ namespace SlideAndStick {
         //[SerializeField] private TextMeshProUGUI t_progressHard=null;
     
         // Getters (Private)
-        private LevelAddress GetLastPlayedAddress(int collection) {
-            LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
-            string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(collectionAdd);
-            if (SaveStorage.HasKey(key)) { // We've got it saved! Load 'er up.
-                return LevelAddress.FromString(SaveStorage.GetString(key));
-            }
-            else { // Oh, there was no save data. Use collectionAdd to start at the first level in the collection.
-                return collectionAdd;
-            }
-        }
+        //private LevelAddress GetLastPlayedAddress(int collection) {
+        //    LevelAddress collectionAdd = new LevelAddress(0,collection,0,0);
+        //    string key = SaveKeys.SlideAndStick_LastPlayedLevelLocal(collectionAdd);
+        //    if (SaveStorage.HasKey(key)) { // We've got it saved! Load 'er up.
+        //        return LevelAddress.FromString(SaveStorage.GetString(key));
+        //    }
+        //    else { // Oh, there was no save data. Use collectionAdd to start at the first level in the collection.
+        //        return collectionAdd;
+        //    }
+        //}
         
         
         // ----------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace SlideAndStick {
             GameUtils.CopyToClipboard(savedLayoutsString);
         }
         private void StartGameAtCollection(int collection) {
-            LevelAddress lastPlayedAddress = GetLastPlayedAddress(collection);
+            LevelAddress lastPlayedAddress = LevelsManager.Instance.GetLastPlayedLevelAddress();// GetLastPlayedAddress(collection);
             LevelsManager.Instance.selectedAddress = lastPlayedAddress; // Setting this is optional. Just keepin' it consistent.
             
             LoadLevel(lastPlayedAddress);
@@ -91,7 +91,7 @@ namespace SlideAndStick {
     
         public void LoadLevel (LevelAddress address) {
             LevelsManager.Instance.selectedAddress = address; // Setting this is optional. Just keepin' it consistent.
-            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelAddress(address), address.ToString()); // Actually save the value! That's what GameController pulls in.
+            SaveStorage.SetString (SaveKeys.SlideAndStick_LastPlayedLevelGlobal, address.ToString()); // Actually save the value! That's what GameController pulls in.
             OpenScene (SceneNames.Gameplay(GameNames.SlideAndStick));
         }
         //private void OpenTutorial() {

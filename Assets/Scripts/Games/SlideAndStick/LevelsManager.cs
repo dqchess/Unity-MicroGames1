@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace SlideAndStick {
     public class LevelsManager {
+        // Constants
+        private static readonly LevelAddress TutorialPackAddress = new LevelAddress(GameModes.StandardIndex, 2, 0, 0);
+        // Properties
+        public LevelAddress selectedAddress = LevelAddress.undefined; // used for navigating menus! :)
+        private ModeCollectionData[] modeDatas; // Currently only one mode.
     
         // Instance
         static private LevelsManager instance;
@@ -15,16 +20,10 @@ namespace SlideAndStick {
             }
         }
     
-        // Properties
-        public LevelAddress selectedAddress = LevelAddress.undefined; // used for navigating menus! :)
-        private ModeCollectionData[] modeDatas; // FindTheWord and LetterSmash.
-        //private int playerCoins; // our soft currency!
-    
     
         // ----------------------------------------------------------------
         //  Getters
         // ----------------------------------------------------------------
-        //public int PlayerCoins { get { return playerCoins; } }
         public ModeCollectionData GetModeCollectionData (int modeIndex) {
             if (modeIndex<0 || modeIndex>=modeDatas.Length) { return null; }
             return modeDatas [modeIndex];
@@ -62,14 +61,32 @@ namespace SlideAndStick {
         public LevelAddress GetLastPlayedLevelAddress() {
             if (selectedAddress == LevelAddress.undefined) { selectedAddress = LevelAddress.zero; } // hacky make sure it's not -1s. (Why do we even have it start at undefined?..)
             // Save data? Use it!
-            string key = SaveKeys.SlideAndStick_LastPlayedLevelAddress(selectedAddress);
+            string key = SaveKeys.SlideAndStick_LastPlayedLevelGlobal;//Local(selectedAddress);
             if (SaveStorage.HasKey(key)) { 
                 return LevelAddress.FromString (SaveStorage.GetString (key));
             }
-            // No save data. Default to the first level, I guess.
+            // No save data. Default to the tutorial!
             else {
-                return new LevelAddress(0,0,0,0);
+                return TutorialPackAddress;
             }
+        }
+        
+        /** Rolls over to the first lvl in the next pack, collection, or mode. */
+        public LevelData GetRolloverPackNextLevelData(LevelAddress src) {
+            LevelAddress nextPackAdr = new LevelAddress(src.mode, src.collection, src.pack+1, 0);
+            // There's a pack after this! Roll into it.
+            if (GetPackData(nextPackAdr) != null) {
+                return GetLevelData(nextPackAdr);
+            }
+            // No pack after this. Try the next collection, then.
+            else {
+                LevelAddress nextCollAdr = new LevelAddress(src.mode, src.collection+1, 0,0);
+                if (GetPackCollectionData(nextCollAdr) != null) {
+                    return GetLevelData(nextCollAdr);
+                }
+            }
+            // We were handed the final pack of the final collection in this mode? Return null: No level comes next.
+            return null;
         }
         
         private bool DoesLevelExist(LevelAddress address) {
@@ -80,6 +97,11 @@ namespace SlideAndStick {
             // Return TRUE if the next level is outta bounds!
             return !DoesLevelExist(address.NextLevel);
         }
+        public bool IsTutorial(LevelAddress address) {
+            return address.mode == TutorialPackAddress.mode
+                && address.collection == TutorialPackAddress.collection
+                && address.pack == TutorialPackAddress.pack;
+        }
         
         public LevelData GetFallbackEmptyLevelData() {
             return new LevelData {
@@ -88,15 +110,6 @@ namespace SlideAndStick {
             };
         }
         
-        // TODO: Remove or fix these! They're incorrect.
-        public int GetNumLevelsPlayable(int collection) {
-            PackCollectionData packCollectionData = GetPackCollectionData(0, collection);
-            return packCollectionData.PackDatas[0].NumLevelsPlayable;
-        }
-        public int GetNumLevelsCompleted(int collection) {
-            PackCollectionData packCollectionData = GetPackCollectionData(0, collection);
-            return packCollectionData.PackDatas[0].NumLevelsCompleted;
-        }
     
     
         // ----------------------------------------------------------------

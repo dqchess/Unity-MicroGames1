@@ -53,14 +53,16 @@ public static class SaveKeys {
     
     // SlideAndStick
     public const string SlideAndStick_Debug_CustomLayouts = "SlideAndStick_Debug_CustomLayouts";
+    public const string SlideAndStick_DidCompleteTutorial = "SlideAndStick_DidCompleteTutorial";
     public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";
 	public const string SlideAndStick_RandGenNumColors = "SlideAndStick_RandGenNumColors";
 	public const string SlideAndStick_RandGenNumWalls = "SlideAndStick_RandGenNumWalls";
     public const string SlideAndStick_RandGenStickinessMin = "SlideAndStick_RandGenStickinessMin";
     public const string SlideAndStick_RandGenStickinessMax = "SlideAndStick_RandGenStickinessMax";
-    static public string SlideAndStick_LastPlayedLevelAddress(LevelAddress curAdd) {
-        return "SlideAndStick_LastPlayedLevelAddress_" + curAdd.mode + "," + curAdd.collection + "," + curAdd.pack;
-    }
+    public const string SlideAndStick_LastPlayedLevelGlobal = "SlideAndStick_LastPlayedLevelGlobal";
+    //static public string SlideAndStick_LastPlayedLevelLocal(LevelAddress curAdd) {
+    //    return "SlideAndStick_LastPlayedLevelLocal_" + curAdd.mode + "," + curAdd.collection + "," + curAdd.pack;
+    //}
     static public string SlideAndStick_DidCompleteLevel(LevelAddress address) {
         return "SlideAndStick_DidCompleteLevel_" + address.ToString();
     }

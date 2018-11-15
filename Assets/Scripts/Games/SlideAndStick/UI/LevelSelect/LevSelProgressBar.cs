@@ -35,9 +35,10 @@ public class LevSelProgressBar : MonoBehaviour {
             i_fill.color = color;
             
             PackData packData = LevelsManager.Instance.GetPackData(address);
-            float percent = packData.NumLevelsCompleted / (float)packData.NumLevels;
-            
-            SetFillPercent(percent);
+            if (packData != null) { // Safety check.
+                float percent = packData.NumLevelsCompleted / (float)packData.NumLevels;
+                SetFillPercent(percent);
+            }
         }
         
         
