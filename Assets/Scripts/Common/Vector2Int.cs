@@ -44,6 +44,14 @@ public struct Vector2Int {
 		return !a.Equals(b);
 	}
     
+    
+    /** Returns a Vector2Int that only has ONE value set (e.g. 1,0; 0,-1). */
+    public static Vector2Int Sign(int x,int y) {
+        Vector2Int v = new Vector2Int(MathUtils.Sign(x), MathUtils.Sign(y));
+        if (v.x!=0 && v.y!=0) { v.y = 0; } // Don't-allow-diagonals!
+        return v;
+    }
+    
     public Vector2Int RotatedClockwise() {
         if (this == Vector2Int.T) { return Vector2Int.R; }
         if (this == Vector2Int.R) { return Vector2Int.B; }

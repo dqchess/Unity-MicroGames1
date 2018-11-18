@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224893977947254208}
-  - component: {fileID: 114416856642673926}
+  - component: {fileID: 114264197335788204}
   m_Layer: 5
   m_Name: WallView
   m_TagString: Untagged
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114416856642673926
+--- !u!114 &114264197335788204
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

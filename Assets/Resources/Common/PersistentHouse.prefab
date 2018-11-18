@@ -349,21 +349,35 @@ MonoBehaviour:
     type: 2}
   slideAndStick_levSelLevelButton: {fileID: 1541161270568078, guid: acc94d0fbf10a48b3938cdceeba8546a,
     type: 2}
-  slideAndStick_levelsPageDotButton: {fileID: 1821305489974966, guid: 20dd0d55b27a35b48a8395b7b8f67ee9,
+  slideAndStick_levelsPageDotButton: {fileID: 1821305489974966, guid: 9a7d244125a3545f6b9e6b0e187edf07,
     type: 2}
-  slideAndStick_boardSpaceView: {fileID: 1372780191091626, guid: 412161c38b9b843c6bf5e4bcf44dcbfa,
+  slideAndStick_boardSpaceView: {fileID: 1372780191091626, guid: ef1c2044da2e14c0b9090e0bad36ad79,
     type: 2}
-  slideAndStick_boardView: {fileID: 1509143095400638, guid: 99abc2562f97c4c07953c05636100712,
+  slideAndStick_boardView: {fileID: 1509143095400638, guid: 72433157ee6c04d21a0582a2f7a6a171,
     type: 2}
-  slideAndStick_boardController: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+  slideAndStick_level: {fileID: 1698266709426448, guid: be3a76721b6ca44128f9f5cd7d6bd67b,
     type: 2}
-  slideAndStick_level: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+  slideAndStick_mergeSpotView: {fileID: 1480341240316084, guid: df37362f740a147418f019d0145a4e51,
     type: 2}
-  slideAndStick_mergeSpotView: {fileID: 1480341240316084, guid: 858b5a69e3216964d80ed1d706b23442,
-    type: 2}
-  slideAndStick_tileView: {fileID: 1647619775195882, guid: c44131899001147ba98a0baf8a047802,
+  slideAndStick_tileView: {fileID: 1647619775195882, guid: 923ab6a1c1c5a4eaa82843318499667c,
     type: 2}
   slideAndStick_wallView: {fileID: 1334356613339156, guid: 659fa689c3d6746dab8933f2c8301783,
+    type: 2}
+  spoolOut_levSelPackButton: {fileID: 1386133328862126, guid: 99a8b445883654d6c9811f5f7ab2e7f8,
+    type: 2}
+  spoolOut_levSelLevelButton: {fileID: 1541161270568078, guid: a3d2377386d5743d7ab9b63447eba1d8,
+    type: 2}
+  spoolOut_levelsPageDotButton: {fileID: 1821305489974966, guid: 20dd0d55b27a35b48a8395b7b8f67ee9,
+    type: 2}
+  spoolOut_boardSpaceView: {fileID: 1372780191091626, guid: 412161c38b9b843c6bf5e4bcf44dcbfa,
+    type: 2}
+  spoolOut_boardView: {fileID: 1509143095400638, guid: 99abc2562f97c4c07953c05636100712,
+    type: 2}
+  spoolOut_level: {fileID: 1698266709426448, guid: 0f9482d3bccfd412ea2a1aab6e2a3ce4,
+    type: 2}
+  spoolOut_spoolView: {fileID: 1647619775195882, guid: c44131899001147ba98a0baf8a047802,
+    type: 2}
+  spoolOut_wallView: {fileID: 1334356613339156, guid: 7bf5adb6b647242a596b551a75851a58,
     type: 2}
   waveTap_level: {fileID: 1479912835452602, guid: 59ab38c13237eab41b9569cd8d67943d,
     type: 2}

@@ -55,8 +55,8 @@ public static class SaveKeys {
     public const string SlideAndStick_Debug_CustomLayouts = "SlideAndStick_Debug_CustomLayouts";
     public const string SlideAndStick_DidCompleteTutorial = "SlideAndStick_DidCompleteTutorial";
     public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";
-	public const string SlideAndStick_RandGenNumColors = "SlideAndStick_RandGenNumColors";
-	public const string SlideAndStick_RandGenNumWalls = "SlideAndStick_RandGenNumWalls";
+    public const string SlideAndStick_RandGenNumColors = "SlideAndStick_RandGenNumColors";
+    public const string SlideAndStick_RandGenNumWalls = "SlideAndStick_RandGenNumWalls";
     public const string SlideAndStick_RandGenStickinessMin = "SlideAndStick_RandGenStickinessMin";
     public const string SlideAndStick_RandGenStickinessMax = "SlideAndStick_RandGenStickinessMax";
     public const string SlideAndStick_LastPlayedLevelGlobal = "SlideAndStick_LastPlayedLevelGlobal";
@@ -66,5 +66,22 @@ public static class SaveKeys {
     static public string SlideAndStick_DidCompleteLevel(LevelAddress address) {
         return "SlideAndStick_DidCompleteLevel_" + address.ToString();
     }
+    
+    
+    
+    
+    
+    // SpoolOut
+    public const string SpoolOut_Debug_CustomLayouts = "SpoolOut_Debug_CustomLayouts";
+    public const string SpoolOut_DidCompleteTutorial = "SpoolOut_DidCompleteTutorial";
+    public const string SpoolOut_RandGenNumWalls = "SpoolOut_RandGenNumWalls";
+    public const string SpoolOut_LastPlayedLevelGlobal = "SpoolOut_LastPlayedLevelGlobal";
+    static public string SpoolOut_DidCompleteLevel(LevelAddress address) {
+        return "SpoolOut_DidCompleteLevel_" + address.ToString();
+    }
+    
+    
+    
+    
 
 }

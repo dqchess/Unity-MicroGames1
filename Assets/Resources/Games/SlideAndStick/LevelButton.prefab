@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224799801658124198}
-  - component: {fileID: 114583795461196486}
+  - component: {fileID: 114566241277883474}
   - component: {fileID: 225458600571965162}
   - component: {fileID: 114404733040741312}
   m_Layer: 5
@@ -62,7 +62,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &114404733040741312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114583795461196486}
+      - m_Target: {fileID: 114566241277883474}
         m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
@@ -229,7 +229,7 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &114583795461196486
+--- !u!114 &114566241277883474
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

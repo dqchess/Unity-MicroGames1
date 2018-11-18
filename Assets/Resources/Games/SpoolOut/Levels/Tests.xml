@@ -1,0 +1,48 @@
+<LevelsCollection collectionName="Tests" gameMode="Standard">
+<Packs>
+
+
+
+
+
+<LevelPack packName="Tests">
+<Levels>
+
+    <Level diff="0" layout="
+        2...,
+        ...3,
+        4...,
+        ...5,
+    " />
+
+
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+<LevelPack packName="Unsorted">
+<Levels>
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

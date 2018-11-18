@@ -16,7 +16,8 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		//  Awake
 		// ----------------------------------------------------------------
-		private void Awake() {
+		override protected void Awake() {
+            base.Awake();
 			myRectTransform = GetComponent<RectTransform>();
 		}
 

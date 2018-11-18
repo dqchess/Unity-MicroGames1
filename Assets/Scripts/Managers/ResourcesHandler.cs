@@ -36,16 +36,24 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject letterClear_letterTile;
 	[SerializeField] public GameObject letterClear_wordTile;
 
-	[SerializeField] public GameObject slideAndStick_levSelPackButton;
-	[SerializeField] public GameObject slideAndStick_levSelLevelButton;
-	[SerializeField] public GameObject slideAndStick_levelsPageDotButton;
+    [SerializeField] public GameObject slideAndStick_levSelPackButton;
+    [SerializeField] public GameObject slideAndStick_levSelLevelButton;
+    [SerializeField] public GameObject slideAndStick_levelsPageDotButton;
     [SerializeField] public GameObject slideAndStick_boardSpaceView;
     [SerializeField] public GameObject slideAndStick_boardView;
-    [SerializeField] public GameObject slideAndStick_boardController;
-	[SerializeField] public GameObject slideAndStick_level;
-	[SerializeField] public GameObject slideAndStick_mergeSpotView;
+    [SerializeField] public GameObject slideAndStick_level;
+    [SerializeField] public GameObject slideAndStick_mergeSpotView;
     [SerializeField] public GameObject slideAndStick_tileView;
     [SerializeField] public GameObject slideAndStick_wallView;
+
+    [SerializeField] public GameObject spoolOut_levSelPackButton;
+    [SerializeField] public GameObject spoolOut_levSelLevelButton;
+    [SerializeField] public GameObject spoolOut_levelsPageDotButton;
+    [SerializeField] public GameObject spoolOut_boardSpaceView;
+    [SerializeField] public GameObject spoolOut_boardView;
+    [SerializeField] public GameObject spoolOut_level;
+    [SerializeField] public GameObject spoolOut_spoolView;
+    [SerializeField] public GameObject spoolOut_wallView;
 
 	[SerializeField] public GameObject waveTap_level;
 	[SerializeField] public GameObject waveTap_bar;
