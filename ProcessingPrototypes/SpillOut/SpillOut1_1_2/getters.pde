@@ -1,14 +1,14 @@
 // getters
 
 
-Well GetWellPathEnd(int col,int row) {
-  Well wellHere = GetWell(col,row);
-  if (wellHere == null) { return null; }
-  // Ah, there's a Well here, but it's not its last space.
-  if (!wellHere.IsLastSpace(col,row)) { return null; }
-  // There's a Well here and this is its last space!
-  return wellHere;
-}
+//Well GetWellPathEnd(int col,int row) {
+//  Well wellHere = GetWell(col,row);
+//  if (wellHere == null) { return null; }
+//  // Ah, there's a Well here, but it's not its last space.
+//  if (!wellHere.IsLastSpace(col,row)) { return null; }
+//  // There's a Well here and this is its last space!
+//  return wellHere;
+//}
 Well GetWell(int col,int row) {
   if (GetSpace(col,row) == null) return null;
   return GetSpace(col,row).GetWellOnMe();

@@ -1,9 +1,17 @@
 // Spill-Out
 // started 11/16/2018
 
+/*
+TODOS
+Allow clicking anywhere on a path to truncate it to that point
+Rand generate level ;)
+
+*/
+
 
 
 // Constants
+final int MinRandWellPathLength = 2;
 float MIN_HORZ_GAP = 100;
 float MIN_VERT_GAP = 80;
 // Grid Properties
@@ -21,7 +29,7 @@ Well wellGrabbing;
 
 // Objects
 GridSpace[][] gridSpaces;
-ArrayList wells;
+Well[] wells;
 
 // Assorted stuff
 PFont myFont;
@@ -60,10 +68,9 @@ void draw() {
   }
   
   // Wells!
-  for (int i=wells.size()-1; i>=0; --i) {
-    Well obj = (Well) wells.get(i);
-    obj.Update();
-    obj.Draw();
+  for (int i=wells.length-1; i>=0; --i) {
+    wells[i].Update();
+    wells[i].Draw();
   }
 }
 
@@ -85,7 +92,7 @@ void OnMousePosGridChanged() {
 }
 
 void UpdateWellOver() {
-  wellOver = GetWellPathEnd(mouseCol,mouseRow);
+  wellOver = GetWell(mouseCol,mouseRow);
 }
 
 
@@ -96,6 +103,7 @@ void mousePressed() {
   mouseDownY = mouseY;
   // Grab Well??
   if (wellOver != null) {
+    TruncateWell(wellOver, mouseCol,mouseRow);
     SetWellGrabbing(wellOver);
   }
 }

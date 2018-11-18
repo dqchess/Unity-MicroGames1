@@ -12,19 +12,30 @@ void MakeBoardFromData(BoardData bd) {
 void AddWell(int col,int row, int colorID,int value) { AddWell(new Well(col,row, null, colorID,value)); }
 void AddWell(Well newWell) {
   wells.add(newWell);
-//  gridSpaces[newWell.col][newWell.row].setWell(newWell);
 }
 
 
 void printGridSpaces() {
-//  for (int row=0; row<rows; row++) {
-//    String tempString = "";
-//    for (int col=0; col<cols; col++) {
-//      //if (GetWell(col,row) != null) tempString += GetWell(col,row).value;
-//      else tempString += ".";
-//    }
-//    println(tempString);
-//  }
+  for (int row=0; row<rows; row++) {
+    String tempString = "";
+    for (int col=0; col<cols; col++) {
+      if (GetWell(col,row) != null) tempString += GetWell(col,row).colorID;
+      else tempString += ".";
+    }
+    println(tempString);
+  }
+}
+
+
+void TruncateWell(Well well, int col,int row) {
+  Vector2Int truncPos = new Vector2Int(col,row);
+  if (!well.PathContains(truncPos)) { // Safety check.
+    println("Whoa!! Trying to truncate a Well, but it doesn't have the space we wanna truncate to!");
+    return;
+  }
+  while (!well.lastSpacePos().Equals(truncPos)) {
+    well.RemovePathSpace();
+  }
 }
 
 
@@ -37,8 +48,10 @@ void ReleaseWellGrabbing() {
 
 // CANDO: a while loop. Keep trying to go until we can't.
 void TryToDragWellEndToPos(Well well, int _col,int _row) {
+  if (well.numSpacesLeft <= 0) { return; } // Whoa, no spaces left in it? Do nothin'.
   Vector2Int endPos = well.lastSpacePos();
   Vector2Int dir = new Vector2Int(sign(_col-endPos.x), sign(_row-endPos.y));
+  if (dir.x!=0 && dir.y!=0) { dir.y = 0; } // Don't-allow-diagonals safety check.
   Vector2Int newPos = new Vector2Int(endPos.x+dir.x, endPos.y+dir.y);
   // This is the second-to-last space? REMOVE pathSpace.
   if (well.IsSecondLastSpacePos(newPos)) {

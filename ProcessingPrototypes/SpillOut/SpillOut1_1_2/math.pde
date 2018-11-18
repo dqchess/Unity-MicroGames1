@@ -17,6 +17,9 @@ class Vector2Int {
   public Vector2Int Copy() {
     return new Vector2Int(x,y);
   }
+  public boolean Equals(Vector2Int other) {
+    return x==other.x && y==other.y;
+  }
 }
 
 

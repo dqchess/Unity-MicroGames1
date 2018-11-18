@@ -30,6 +30,12 @@ class Well {
     if (secondLastPos == null) { return false; } // Don't even have second-to-last space? False.
     return secondLastPos.x==pos.x && secondLastPos.y==pos.y;
   }
+  public boolean PathContains(Vector2Int pos) {
+    for (int i=0; i<pathSpaces.length; i++) {
+      if (pathSpaces[i].Equals(pos)) { return true; }
+    }
+    return false;
+  }
   Well clone() {
     Well clone = new Well(col,row, pathSpaces, colorID, numSpacesToFill);
     clone.corePos = new PVector(corePos.x,corePos.y);

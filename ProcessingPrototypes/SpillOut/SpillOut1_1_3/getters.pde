@@ -1,14 +1,14 @@
 // getters
 
 
-Well GetWellPathEnd(int col,int row) {
-  Well wellHere = GetWell(col,row);
-  if (wellHere == null) { return null; }
-  // Ah, there's a Well here, but it's not its last space.
-  if (!wellHere.IsLastSpace(col,row)) { return null; }
-  // There's a Well here and this is its last space!
-  return wellHere;
-}
+//Well GetWellPathEnd(int col,int row) {
+//  Well wellHere = GetWell(col,row);
+//  if (wellHere == null) { return null; }
+//  // Ah, there's a Well here, but it's not its last space.
+//  if (!wellHere.IsLastSpace(col,row)) { return null; }
+//  // There's a Well here and this is its last space!
+//  return wellHere;
+//}
 Well GetWell(int col,int row) {
   if (GetSpace(col,row) == null) return null;
   return GetSpace(col,row).GetWellOnMe();
@@ -69,6 +69,36 @@ boolean CanWellPathEnterSpace(Vector2Int spacePos) {
 //  } while (didMoveInRow[row] == false);
 //  return row;
 //}
+
+
+Vector2Int GetDir(int side) {
+  switch (side) {
+    case 0: return new Vector2Int( 0,-1);
+    case 1: return new Vector2Int( 1, 0);
+    case 2: return new Vector2Int( 0, 1);
+    case 3: return new Vector2Int(-1, 0);
+    default: return new Vector2Int(-1,-1); // Hmm.
+  }
+}
+
+/** E.g. if arrayLength is 4, we may return 2,0,3,1. */
+public int[] GetShuffledIntArray(int arrayLength) {
+  int[] array = new int[arrayLength];
+  for (int i=0; i<arrayLength; i++) { array[i] = i; }
+  return GetShuffledIntArray(array);
+}
+public int[] GetShuffledIntArray(int[] originalArray) {
+  int[] shuffledArray = new int[originalArray.length];
+  for (int i=0; i<shuffledArray.length; i++) { shuffledArray[i] = originalArray[i]; }
+  for (int i=0; i<shuffledArray.length; i++) {
+    int randIndex = (int)random(0, shuffledArray.length);
+    int valA = shuffledArray[i];
+    int valB = shuffledArray[randIndex];
+    shuffledArray[i] = valB;
+    shuffledArray[randIndex] = valA;
+  }
+  return shuffledArray;
+}
 
 
 // WELL VISUALS

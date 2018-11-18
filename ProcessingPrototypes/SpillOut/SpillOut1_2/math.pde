@@ -14,8 +14,13 @@ class Vector2Int {
     x = _x;
     y = _y;
   }
+  public String ToString() { return x + "," + y; }
   public Vector2Int Copy() {
     return new Vector2Int(x,y);
+  }
+  public Vector2Int Plus(Vector2Int other) { return new Vector2Int(x+other.x, y+other.y); }
+  public boolean Equals(Vector2Int other) {
+    return x==other.x && y==other.y;
   }
 }
 

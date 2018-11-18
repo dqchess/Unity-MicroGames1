@@ -1,6 +1,13 @@
 // Spill-Out
 // started 11/16/2018
 
+/*
+TODOS
+Allow clicking anywhere on a path to truncate it to that point
+Rand generate level ;)
+
+*/
+
 
 
 // Constants
@@ -85,7 +92,7 @@ void OnMousePosGridChanged() {
 }
 
 void UpdateWellOver() {
-  wellOver = GetWellPathEnd(mouseCol,mouseRow);
+  wellOver = GetWell(mouseCol,mouseRow);
 }
 
 
@@ -96,6 +103,7 @@ void mousePressed() {
   mouseDownY = mouseY;
   // Grab Well??
   if (wellOver != null) {
+    TruncateWell(wellOver, mouseCol,mouseRow);
     SetWellGrabbing(wellOver);
   }
 }

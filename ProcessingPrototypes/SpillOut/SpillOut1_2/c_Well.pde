@@ -30,6 +30,12 @@ class Well {
     if (secondLastPos == null) { return false; } // Don't even have second-to-last space? False.
     return secondLastPos.x==pos.x && secondLastPos.y==pos.y;
   }
+  public boolean PathContains(Vector2Int pos) {
+    for (int i=0; i<pathSpaces.length; i++) {
+      if (pathSpaces[i].Equals(pos)) { return true; }
+    }
+    return false;
+  }
   Well clone() {
     Well clone = new Well(col,row, pathSpaces, colorID, numSpacesToFill);
     clone.corePos = new PVector(corePos.x,corePos.y);
@@ -57,7 +63,7 @@ class Well {
   void SetColorID(int colorID) {
     this.colorID = colorID;
     bodyColor = GetFillColor(colorID);
-    sideColor = GetStrokeColor(colorID);
+    sideColor = GetStrokeColor(bodyColor);
     textColor = color(0, 180);
     textSize = unitSize.x*0.5;
   }
@@ -73,6 +79,14 @@ class Well {
     Vector2Int lps = lastSpacePos();
     GetSpace(lps.x,lps.y).RemoveWellOnMe();
     pathSpaces = (Vector2Int[]) shorten(pathSpaces);
+    UpdateNumSpacesLeft();
+  }
+  void RemoveAllPathSpaces() {
+    for (int i=0; i<pathSpaces.length; i++) {
+      GetSpace(pathSpaces[i]).RemoveWellOnMe();
+    }
+    pathSpaces = new Vector2Int[0];
+    AddPathSpace(new Vector2Int(col,row));
     UpdateNumSpacesLeft();
   }
   private void UpdateNumSpacesLeft() {
@@ -123,10 +137,12 @@ class Well {
     rectMode(CENTER);
     rect(0,-cardThickness, unitSize.x,unitSize.y-cardThickness*0.5);
     // Text
-    fill(0, 120);
-    textAlign(CENTER, CENTER);
-    textSize(textSize);
-    text(numSpacesLeft, 0,-cardThickness);
+    if (numSpacesLeft > 0) {
+      fill(0, 120);
+      textAlign(CENTER, CENTER);
+      textSize(textSize);
+      text(numSpacesLeft, 0,-cardThickness);
+    }
     
     popMatrix();
   }
