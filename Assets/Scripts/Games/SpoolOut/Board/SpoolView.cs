@@ -14,10 +14,11 @@ namespace SpoolOut {
         // References
         public Spool MySpool { get; private set; }
         // Properties
-		public Color BodyColor { get; private set; }
+		public Color PathColor { get; private set; }
+		private Color coreColor;
 
         // Getters (Static)
-        static public Color GetBodyColor(int colorID) {
+        static public Color GetPathColor(int colorID) {
             switch (colorID) {
                 case -1: return new Color(128/255f,128/255f,128/255f, 20/255f);
                 case  0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
@@ -39,9 +40,10 @@ namespace SpoolOut {
 			MySpool = _myObj;
 			base.InitializeAsBoardObjectView(_myBoardView, tf_parent, _myObj);
 			myRectTransform.anchoredPosition = Vector2.zero; // Put me at 0,0. My components are what I position!
-			BodyColor = GetBodyColor(MySpool.ColorID);
+			PathColor = GetPathColor(MySpool.ColorID);
+			coreColor = Color.Lerp(PathColor,Color.black, 0.08f);
             
-			i_core.color = BodyColor;
+			i_core.color = coreColor;
             
 			rt_core.anchoredPosition = GetPosFromBO(MySpool);
 			rt_core.sizeDelta = new Vector2(MyBoardView.UnitSize,MyBoardView.UnitSize);
@@ -83,9 +85,11 @@ namespace SpoolOut {
 			SetHighlightAlpha(0.35f);
 		}
         private void SetHighlightAlpha(float alpha) {
+			// Update pathView.
 			pathView.SetEndHighlightAlpha(alpha);
-			// QQQ TEST
-			i_core.color = Color.Lerp(BodyColor, Color.blue, alpha);
+			// Update my core.
+			float coreHighlight = MySpool.PathSpaces.Count<2 ? alpha*0.5f : 0; // ONLY highlight core when there's no path.
+			i_core.color = Color.Lerp(coreColor,Color.black, coreHighlight);
         }
 
 /*

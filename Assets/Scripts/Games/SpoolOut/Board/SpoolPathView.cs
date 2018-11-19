@@ -16,7 +16,7 @@ namespace SpoolOut {
 
 		// Getters (Private)
 		private BoardView myBoardView { get { return mySpoolView.MyBoardView; } }
-		private Color BodyColor { get { return mySpoolView.BodyColor; } }
+		private Color BodyColor { get { return mySpoolView.PathColor; } }
 		private Spool mySpool { get { return mySpoolView.MySpool; } }
 		private List<Vector2Int> pathSpaces { get { return mySpool==null ? null : mySpool.PathSpaces; } }
 		private int NumPathPoses { get { return pathSpaces==null ? 0 : pathSpaces.Count; } }
@@ -32,9 +32,9 @@ namespace SpoolOut {
 			il_body.Initialize();
 
 			// Size me riiight.
-			float lineWidth = UnitSize * 0.8f;
+			float lineWidth = UnitSize * 0.72f;
 			il_body.SetThickness(lineWidth);
-			i_pathEnd.rectTransform.sizeDelta = new Vector2(UnitSize*0.9f, UnitSize*0.9f);
+			i_pathEnd.rectTransform.sizeDelta = new Vector2(UnitSize*0.64f, UnitSize*0.64f);
 			// Color me goood.
 			SetEndsColors(BodyColor);
 			SetLineColor(BodyColor);
@@ -72,7 +72,8 @@ namespace SpoolOut {
 		}
 
 		public void SetEndHighlightAlpha(float alpha) {
-			i_pathEnd.color = Color.Lerp(BodyColor,Color.black, alpha*0.3f);
+			i_pathEnd.enabled = alpha > 0.05f; // Hide end if no alpha.
+			i_pathEnd.color = Color.Lerp(BodyColor,Color.black, 0.2f + alpha*0.3f);
 		}
 
 

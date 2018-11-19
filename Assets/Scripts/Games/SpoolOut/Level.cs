@@ -150,6 +150,8 @@ namespace SpoolOut {
 			if (view != null) {
 				view.WholesaleRemakeVisuals();
 			}
+			// Hacky, yo.
+			OnBoardMoveComplete();
 		}
 
 
@@ -328,6 +330,7 @@ namespace SpoolOut {
         }
 
 
+		// ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
         public void Debug_RemakeBoardAndViewFromArbitrarySnapshot(BoardData boardData) {

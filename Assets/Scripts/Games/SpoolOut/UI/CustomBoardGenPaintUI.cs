@@ -27,7 +27,7 @@ namespace SpoolOut {
             // Color buttons to match Spool colors!
             for (int i=0; i<b_colorIDs.Length; i++) {
                 ColorBlock cb = b_colorIDs[i].colors;
-                Color bodyColor = SpoolView.GetBodyColor(i);
+                Color bodyColor = SpoolView.GetPathColor(i);
                 cb.normalColor = bodyColor;
                 cb.highlightedColor = Color.Lerp(bodyColor, Color.white, 0.2f);
                 cb.pressedColor = Color.Lerp(bodyColor, Color.black, 0.3f);
