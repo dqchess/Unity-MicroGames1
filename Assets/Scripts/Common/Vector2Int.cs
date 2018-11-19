@@ -2,7 +2,8 @@
 
 public struct Vector2Int {
 	static public readonly Vector2Int zero = new Vector2Int(0,0);
-	static public readonly Vector2Int none = new Vector2Int(-1,-1);
+//	static public readonly Vector2Int none = new Vector2Int(-1,-1);
+	static public readonly Vector2Int undefined = new Vector2Int(-999999,-999999); // Meh.
 	static public readonly Vector2Int L = new Vector2Int (-1, 0);
 	static public readonly Vector2Int R = new Vector2Int ( 1, 0);
 	static public readonly Vector2Int B = new Vector2Int ( 0, 1);

@@ -46,7 +46,7 @@ namespace SpoolOut {
 			i_core.color = coreColor;
             
 			rt_core.anchoredPosition = GetPosFromBO(MySpool);
-			rt_core.sizeDelta = new Vector2(MyBoardView.UnitSize,MyBoardView.UnitSize);
+			rt_core.sizeDelta = new Vector2(MyBoardView.UnitSize,MyBoardView.UnitSize)*0.95f;
 
 			pathView.Initialize();
 			WholesaleRemakeVisuals(); // Look fresh from the get-go.

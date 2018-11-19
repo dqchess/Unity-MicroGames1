@@ -98,19 +98,24 @@ namespace SpoolOut {
 		}
         
         private void AddReasonableRandSpoolsToBoardIfNone() {
+			if (board.spools.Count > 0) { return; } // We have Spools? Ok, do nothing! No rand-genning.
+			RandGenParams rgp = gameController.randGenParams;
             // First, remember the basic empty boardData.
-            //BoardData bd = board.SerializeAsData();
-            //for (int i=0; i<99; i++) { // let's try 99 times.
-            //    board.Debug_AddSpoolsIfNone(gameController.randGenParams);
-            //    // Oh, this isn't a good enough layout? Try again.
-            //    if (board.AreAnySpoolColorsSatisfied() || board.NumColors()==1) {
-            //        board = new Board(bd);
-            //    }
-            //    else {
-            //        break;
-            //    }
-            //}TODO: This.
-        }
+            BoardData bd = board.SerializeAsData();
+            for (int i=0; i<99; i++) { // let's try 99 times.
+				board.Debug_AddRandomSpools(rgp);
+				if (board.AreRandomlyMadeSpoolsGood(rgp)) { // This layout is good! Let's go with it. :)
+					Debug.Log("Good layout found after attempts: " + i);
+					break;
+				}
+				// Ah, the layout is NOT good enough. Remake the board to try again.
+				else {
+					board = new Board(bd);
+				}
+			}
+		}
+
+
         
         
         // ----------------------------------------------------------------

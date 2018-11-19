@@ -73,8 +73,9 @@ public static class SaveKeys {
     
     // SpoolOut
     public const string SpoolOut_Debug_CustomLayouts = "SpoolOut_Debug_CustomLayouts";
-    public const string SpoolOut_DidCompleteTutorial = "SpoolOut_DidCompleteTutorial";
-    public const string SpoolOut_RandGenNumWalls = "SpoolOut_RandGenNumWalls";
+	public const string SpoolOut_DidCompleteTutorial = "SpoolOut_DidCompleteTutorial";
+	public const string SpoolOut_RandGenMinSpoolPathLength = "SpoolOut_RandGenMinSpoolPathLength";
+	public const string SpoolOut_RandGenNumWalls = "SpoolOut_RandGenNumWalls";
     public const string SpoolOut_LastPlayedLevelGlobal = "SpoolOut_LastPlayedLevelGlobal";
     static public string SpoolOut_DidCompleteLevel(LevelAddress address) {
         return "SpoolOut_DidCompleteLevel_" + address.ToString();

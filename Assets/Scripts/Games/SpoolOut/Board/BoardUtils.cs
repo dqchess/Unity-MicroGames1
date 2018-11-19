@@ -16,6 +16,16 @@ namespace SpoolOut {
 			return !isColEven; // If it's an ODD row, return if it's NOT an even col!
 		}
 
+		public static int NumOpenSpaces(Board b) {
+			int total=0;
+			for (int i=0; i<b.NumCols; i++) {
+				for (int j=0; j<b.NumRows; j++) {
+					if (b.spaces[i,j].IsOpen()) { total ++; }
+				}
+			}
+			return total;
+		}
+
 
         public static BoardSpace GetSpace(Board b, BoardPos pos) { return GetSpace(b, pos.col,pos.row); }
         public static BoardSpace GetSpace(Board b, Vector2Int pos) { return GetSpace(b, pos.x,pos.y); }
@@ -66,28 +76,28 @@ namespace SpoolOut {
             }
 			return BoardPos.undefined;
 		}
-		public static BoardPos GetRandOpenPos(Board b) {
+		public static Vector2Int GetRandOpenPos(Board b) {
 			int safetyCount = 0;
 			while(safetyCount++ < 99) {
 				int randCol = Random.Range(0, b.NumCols);
 				int randRow = Random.Range(0, b.NumRows);
 				if (b.GetSpace(randCol,randRow).IsOpen()) {
-					return new BoardPos(randCol, randRow);
+					return new Vector2Int(randCol, randRow);
 				}
 			}
-			return BoardPos.undefined;
+			return Vector2Int.undefined;
 		}
-        public static Vector2Int GetRandOpenDir(Board b, BoardPos originPos) {
+		public static Vector2Int GetRandOpenDir(Board b, Vector2Int originPos) {
             int[] randSides = MathUtils.GetShuffledIntArray(4);
             for (int i=0; i<randSides.Length; i++) {
                 Vector2Int dir = MathUtils.GetDir(i);
-                if (CanAddSpool(b, new BoardPos(originPos.col+dir.x, originPos.row+dir.y))) {
+				if (CanAddSpool(b, originPos + dir)) {
                     return dir;
                 }
             }
             return Vector2Int.zero;
         }
-        public static bool CanAddSpool(Board b, BoardPos pos) {
+		public static bool CanAddSpool(Board b, Vector2Int pos) {
             BoardSpace space = GetSpace(b, pos);
             return space!=null && space.IsOpen();
         }

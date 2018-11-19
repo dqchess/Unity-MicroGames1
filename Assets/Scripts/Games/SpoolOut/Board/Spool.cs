@@ -15,12 +15,12 @@ namespace SpoolOut {
         public Vector2Int LastSpacePos { get { return PathSpaces[PathSpaces.Count-1]; } }
         public bool IsSecondLastSpacePos(Vector2Int pos) {
             Vector2Int secondLastPos = secondLastSpacePos();
-            if (secondLastPos == Vector2Int.none) { return false; } // Don't even have second-to-last space? False.
+			if (secondLastPos == Vector2Int.undefined) { return false; } // Don't even have second-to-last space? False.
             return secondLastPos.x==pos.x && secondLastPos.y==pos.y;
         }
         // Getters (Private)
         private Vector2Int secondLastSpacePos() {
-            if (PathSpaces.Count < 2) { return Vector2Int.none; } // No second-last space? Return null.
+			if (PathSpaces.Count < 2) { return Vector2Int.undefined; } // No second-last space? Return null.
             return PathSpaces[PathSpaces.Count-2];
         }
         private bool IsLastSpace(int col,int row) {
@@ -56,6 +56,12 @@ namespace SpoolOut {
 			SpoolData data = new SpoolData(BoardPos, ColorID, NumSpacesToFill, new List<Vector2Int>(PathSpaces)); // note: COPY the Vector2Int list. DEF don't want a reference.
 			return data;
 		}
+
+
+		public void Debug_SetNumSpacesToToPathSpaces() {
+			NumSpacesToFill = PathSpaces.Count;
+			UpdateNumSpacesLeft();
+		}
         
         
         
@@ -81,6 +87,7 @@ namespace SpoolOut {
             }
             PathSpaces = new List<Vector2Int>();
             AddPathSpace(new Vector2Int(BoardPos.col,BoardPos.row));
+//			Truncate(BoardPos.ToVector2Int());
         }
         public void Truncate(Vector2Int truncPos) {
             if (!PathContains(truncPos)) { // Safety check.

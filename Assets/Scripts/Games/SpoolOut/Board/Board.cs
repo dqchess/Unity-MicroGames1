@@ -134,24 +134,10 @@ namespace SpoolOut {
 
 
 
-
-
-        private void RemoveAllSpoolPaths() {
-            foreach (Spool spool in spools) {
-                spool.RemoveAllPathSpaces();
-            }
-        }
-
-
-
-
-
-
-
 		// ----------------------------------------------------------------
-		//  Doers
+		//  Events
 		// ----------------------------------------------------------------
-		private void OnMoveComplete () {
+		private void OnMoveComplete() {
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
 		}
 
@@ -162,94 +148,85 @@ namespace SpoolOut {
         public void Debug_SetDifficulty(int _difficulty) {
             Difficulty = _difficulty;
         }
-        
-        /*
-void AddRandomGoodWells() {
-  int count=0;
-  while (count++<99) {
-    AddRandomWells();
-    // Are these good enough? Nice! Stop. :)
-//    println("count: " + count + " AreRandomlyMadeWellsGood: " + AreRandomlyMadeWellsGood());
-//    printGridSpaces();
-    if (AreRandomlyMadeWellsGood()) { break; }
-  }
-}
-boolean AreRandomlyMadeWellsGood() {
-  for (int i=0; i<wells.length; i++) {
-    if (wells[i].pathSpaces.length < MinRandWellPathLength) { return false; }
-  }
-  return true;
-}
 
 
-void AddRandomWells() {
-  RemoveAllWells();
-  
-  int numSpacesOpen = cols*rows;
-  
-  int count=0;
-  while (numSpacesOpen>0 && count++<999) {
-    Well newWell = AddRandomWell();
-    if (newWell == null) { break; } // Safety check.
-    numSpacesOpen -= newWell.pathSpaces.length;
-  }
-}
-Well AddRandomWell() {
-  int count=0;
-  while (true) {
-    GridSpace randSpace = GetRandSpace();
-    if (randSpace.CanAddWellPath()) { // This space is vacant!
-      int colorID = wells.length;
-      int value = 1; // will set next.
-      Well newWell = AddWell(randSpace.col,randSpace.row, colorID,value);
-      GiveWellRandPath(newWell);
-      return newWell;
-    }
-    // Safety check.
-    if (count++ > 999) { println("Whoa! No vacant board spaces left!"); return null; }//printGridSpaces(); 
-  }
-}
+		// ----------------------------------------------------------------
+		//  Debug: Rand Level Generating!
+		// ----------------------------------------------------------------
+		public bool AreRandomlyMadeSpoolsGood(RandGenParams rgp) {
+			for (int i=0; i<spools.Count; i++) {
+				if (spools[i].NumSpacesToFill < rgp.MinSpoolPathLength) { 
+					return false;
+				}
+			}
+			return true;
+		}
 
-void GiveWellRandPath(Well well) {
-  int numSpacesToFill = (int)random(cols-1,cols+3);
-  int count=0;
-  Vector2Int currSpace = new Vector2Int(well.col,well.row);
-  while (well.pathSpaces.length<numSpacesToFill && count++<99) {
-    int randSide = RandOpenSide(currSpace);
-    if (randSide == -1) { break; } // Whoa! Hit a dead end? Ok, totally stop.
-    Vector2Int dir = GetDir(randSide);
-    currSpace = currSpace.Plus(dir);
-    well.AddPathSpace(currSpace);
-  }
-  // Set this Well's numSpacesToFill!
-  well.numSpacesToFill = well.pathSpaces.length;
-  well.UpdateNumSpacesLeft();
-}
+		private void RemoveAllSpoolPaths() {
+			foreach (Spool spool in spools) {
+				spool.RemoveAllPathSpaces();
+			}
+		}
 
-int RandOpenSide(Vector2Int sourcePos) {
-  int[] randSides = GetShuffledIntArray(4);
-  // Try each side one by one.
-  for (int i=0; i<randSides.length; i++) {
-    Vector2Int dir = GetDir(randSides[i]);
-    if (IsSpaceOpen(sourcePos.Plus(dir))) {
-      return randSides[i];
-    }
-  }
-  // Nah, nothin' fits.
-  return -1;
-}
-*/
+		public void Debug_AddRandomSpools(RandGenParams rgp) {
+			int numSpacesOpen = BoardUtils.NumOpenSpaces(this);
 
-
-		public void Debug_AddSpoolsIfNone(RandGenParams rgp) {
-			if (spools.Count > 0) { return; } // Nah, we've got some.
-			int numToAdd = 2; // TODO: This whole chestnut.
-			Debug_AddRandomWalls(rgp.NumWalls);
-			Debug_AddRandomSpools(numToAdd);
-            // Yes, we did!
-            DidRandGen = true;
+			int count=0;
+			while (numSpacesOpen>0 && count++<999) {
+				Spool newSpool = AddRandomSpool();
+				if (newSpool == null) { break; } // Safety check.
+				numSpacesOpen -=  newSpool.PathSpaces.Count;
+			}
+			// Yes, we did!
+			DidRandGen = true;
+			RemoveAllSpoolPaths();
 			OnMoveComplete();
 		}
+		private Spool AddRandomSpool() {
+			int count=0;
+			while (true) {
+				Vector2Int randPos = BoardUtils.GetRandOpenPos(this);
+				if (BoardUtils.CanAddSpool(this, randPos)) { // This space is vacant!
+					int colorID = spools.Count;
+					int numSpacesToFill = 1; // will set next.
+					SpoolData data = new SpoolData(new BoardPos(randPos), colorID, numSpacesToFill, null);
+					Spool newSpool = AddSpool(data);
+					GiveSpoolRandPath(newSpool);
+					return newSpool;
+				}
+				// Safety check.
+				if (count++ > 999) { Debug.LogWarning("Whoa! Rand generating Spools. No vacant board spaces left!"); return null; }//printGridSpaces(); 
+			}
+		}
+
+		private void GiveSpoolRandPath(Spool spool) {
+			int numSpacesToFill = Random.Range(NumCols-1,NumCols+3);
+			int count=0;
+			Vector2Int currSpace = new Vector2Int(spool.Col,spool.Row);
+			while (spool.PathSpaces.Count<numSpacesToFill && count++<99) {
+				int randSide = RandOpenSide(currSpace);
+				if (randSide == -1) { break; } // Whoa! Hit a dead end? Ok, totally stop.
+				Vector2Int dir = MathUtils.GetDir(randSide);
+				currSpace += dir;
+				spool.AddPathSpace(currSpace);
+			}
+			// Set this Spool's numSpacesToFill!
+			spool.Debug_SetNumSpacesToToPathSpaces();
+		}
+
+		private int RandOpenSide(Vector2Int sourcePos) {
+			int[] randSides = MathUtils.GetShuffledIntArray(4);
+			// Try each side one by one.
+			for (int i=0; i<randSides.Length; i++) {
+				Vector2Int dir = MathUtils.GetDir(randSides[i]);
+				if (BoardUtils.IsSpaceOpen(this, sourcePos + dir)) {
+					return randSides[i];
+				}
+			}
+			// Nah, nothin' fits.
+			return -1;
+		}
+
 		private void Debug_AddRandomWalls(int numToAdd) {
 			int safetyCount=0;
 			while (numToAdd > 0 && safetyCount++<99) {
@@ -260,16 +237,16 @@ int RandOpenSide(Vector2Int sourcePos) {
 				if (numToAdd <= 0) { break; }
 			}
 		}
-		private void Debug_AddRandomSpools(int numToAdd) {
-            for (int i=0; i<numToAdd; i++) {
-                BoardPos randPos = BoardUtils.GetRandOpenPos(this);
-                if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
-                int colorID = i;
-				int numSpacesToFill = 3;
-                SpoolData spoolData = new SpoolData(randPos, colorID, numSpacesToFill, null);
-                AddSpool(spoolData);
-            }
-		}
+//		private void Debug_AddRandomSpools(int numToAdd) {
+//            for (int i=0; i<numToAdd; i++) {
+//                BoardPos randPos = BoardUtils.GetRandOpenPos(this);
+//                if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
+//                int colorID = i;
+//				int numSpacesToFill = 3;
+//                SpoolData spoolData = new SpoolData(randPos, colorID, numSpacesToFill, null);
+//                AddSpool(spoolData);
+//            }
+//		}
         
         
         public void Debug_CopyLayoutToClipboard(bool isCompact) {

@@ -112,7 +112,7 @@ public class MathUtils {
 			case 225: return Vector2Int.BL;
 			case 270: return Vector2Int.B;
 			case 315: return Vector2Int.BR;
-			default: return Vector2Int.none; // Hmm.
+			default: return Vector2Int.undefined; // Hmm.
 		}
 	}
     public static Vector2Int GetDir (int side) {
