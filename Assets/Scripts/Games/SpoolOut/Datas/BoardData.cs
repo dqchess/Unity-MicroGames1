@@ -130,8 +130,9 @@ namespace SpoolOut {
 
 
 
-        void AddSpoolData(int col,int row, int colorID) {
-            SpoolData newData = new SpoolData(new BoardPos(col,row), colorID, null);
+        void AddSpoolData(int col,int row, int numSpacesToFill) {
+			int colorID = spoolDatas.Count; // colorID just matches which Spool this is.
+			SpoolData newData = new SpoolData(new BoardPos(col,row), colorID, numSpacesToFill, null);
             spoolDatas.Add(newData);
         }
         void AddWallData(int col,int row, int sideFacing) {

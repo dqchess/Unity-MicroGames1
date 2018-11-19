@@ -58,8 +58,13 @@ namespace SpoolOut {
 
 			// Send in the clowns!
 			RemakeModelAndViewFromData(_levelData.boardData);
+
+			// Add event listeners!
+			GameManagers.Instance.EventManager.Spool_PathChangedEvent += OnSpoolPathChanged;
 		}
-        private void OnDestroy() {
+		private void OnDestroy() {
+			// Remove event listeners!
+			GameManagers.Instance.EventManager.Spool_PathChangedEvent -= OnSpoolPathChanged;
             // Make sure to increment how long we've spent in me!
             AddToTimeSpentTotal();
         }
@@ -138,6 +143,18 @@ namespace SpoolOut {
 
 
 		// ----------------------------------------------------------------
+		//  Events
+		// ----------------------------------------------------------------
+		private void OnSpoolPathChanged(Spool spool) {
+			SpoolView view = boardView.Temp_GetSpoolView(spool);
+			if (view != null) {
+				view.WholesaleRemakeVisuals();
+			}
+		}
+
+
+
+		// ----------------------------------------------------------------
 		//  Update
 		// ----------------------------------------------------------------
 		public void DependentUpdate() {
@@ -176,7 +193,7 @@ namespace SpoolOut {
         
         
         // CANDO: a while loop. Keep trying to go until we can't.
-        void TryToDragSpoolEndToPos(Spool spool, Vector2Int _pos) {
+        private void TryToDragSpoolEndToPos(Spool spool, Vector2Int _pos) {
             Vector2Int endPos = spool.LastSpacePos;
             Vector2Int dir = Vector2Int.Sign(_pos.x-endPos.x, _pos.y-endPos.y);
             Vector2Int newPos = new Vector2Int(endPos.x+dir.x, endPos.y+dir.y);
@@ -214,7 +231,8 @@ namespace SpoolOut {
 
 		private void RegisterButtonInput() {
 			// DEBUG
-            if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
+			if (Input.GetKeyDown(KeyCode.B)) { Debug.Log(board.Debug_GetLayout(false)); } // B = print board layout.
+			else if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
 			else if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
             else if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
             else if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }

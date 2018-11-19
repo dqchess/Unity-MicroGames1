@@ -32,10 +32,10 @@ namespace SpoolOut {
 
 			// Parent me!
 			GameUtils.ParentAndReset(this.gameObject, tf_parent.transform);
-			myRectTransform.sizeDelta = new Vector2(MyBoardView.UnitSize, MyBoardView.UnitSize); // NOTE: There's no code pattern to follow here with this! SpoolView totally does its own thing.
-
-			// Start me in the right spot!
-            Pos = GetPosFromBO(_myObject);
+//			myRectTransform.sizeDelta = new Vector2(MyBoardView.UnitSize, MyBoardView.UnitSize); // NOTE: There's no code pattern to follow here with this! SpoolView totally does its own thing.
+//
+//			// Start me in the right spot!   NOTE: Disabled! Spools don't follow this.
+//            Pos = GetPosFromBO(_myObject);
 		}
 
 

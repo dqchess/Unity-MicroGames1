@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourcesHandler : MonoBehaviour {
-    // References!
-    [SerializeField] public GameObject imageLine;
+	// References!
+	[SerializeField] public GameObject imageLine;
+	[SerializeField] public GameObject imageLinesJoint;
 
     [SerializeField] public GameObject abacusToy_boardSpaceView;
     [SerializeField] public GameObject abacusToy_boardView;

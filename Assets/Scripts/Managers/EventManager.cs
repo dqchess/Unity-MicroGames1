@@ -28,6 +28,12 @@ public class EventManager {
 
 	public void TriggerAudioClip (AudioClip _clip) {if (TriggerAudioClipEvent != null) {TriggerAudioClipEvent (_clip);}}
 
+
+	// Game-specific
+	public delegate void Spool_SpoolAction(SpoolOut.Spool spool);
+	public event Spool_SpoolAction Spool_PathChangedEvent;
+	public void Spool_OnSpoolPathChangedEvent(SpoolOut.Spool spool) { if (Spool_PathChangedEvent!=null) { Spool_PathChangedEvent(spool); } }
+
 }
 
 

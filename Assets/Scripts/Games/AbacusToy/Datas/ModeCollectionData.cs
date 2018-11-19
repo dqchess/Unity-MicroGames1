@@ -7,7 +7,7 @@ namespace AbacusToy {
     public class ModeCollectionData {
     	// Properties
     	private int modeIndex;
-    	private string modeName; // for code
+//    	private string modeName; // for code
     	private string modeDisplayName; // for user's eyes
     	private string[] collectionsOrder; // the NAMES of the world xml files in order. Loaded from its own file.
     	private List<PackCollectionData> collectionDatas;
@@ -30,7 +30,7 @@ namespace AbacusToy {
     	// ----------------------------------------------------------------
     	public ModeCollectionData (int modeIndex, string modeName, string modeDisplayName) {
     		this.modeIndex = modeIndex;
-    		this.modeName = modeName;
+//    		this.modeName = modeName;
     		this.modeDisplayName = modeDisplayName;
     
     		LoadAllCollectionDatas ();

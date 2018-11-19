@@ -265,7 +265,8 @@ int RandOpenSide(Vector2Int sourcePos) {
                 BoardPos randPos = BoardUtils.GetRandOpenPos(this);
                 if (randPos == BoardPos.undefined) { break; } // No available spaces left?? Get outta here.
                 int colorID = i;
-                SpoolData spoolData = new SpoolData(randPos, colorID, null);
+				int numSpacesToFill = 3;
+                SpoolData spoolData = new SpoolData(randPos, colorID, numSpacesToFill, null);
                 AddSpool(spoolData);
             }
 		}

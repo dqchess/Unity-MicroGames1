@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace SpoolOut {
 	public class LevelsPageNav : MonoBehaviour {
 		// Components
-		[SerializeField] private RectTransform myRectTransform=null;
+//		[SerializeField] private RectTransform myRectTransform=null;
 		[SerializeField] private Button b_prev=null;
 		[SerializeField] private Button b_next=null;
 		[SerializeField] private Image i_selectedDot=null;

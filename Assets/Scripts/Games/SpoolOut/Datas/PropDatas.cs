@@ -19,16 +19,17 @@ namespace SpoolOut {
     }
 
     public class SpoolData : BoardObjectData {
+		public int colorID;
         public int numSpacesToFill;
-        public int colorID;
         public List<Vector2Int> pathSpaces;//=new List<Vector2Int>{Vector2Int.zero}; // by default, start with one space.
         //public SpoolData (BoardPos _boardPos, int _colorID) { // TEMP FOR debugging
         //    boardPos = _boardPos;
         //    colorID = _colorID;
         //}
-        public SpoolData (BoardPos _boardPos, int _colorID, List<Vector2Int> _pathSpaces) {
+		public SpoolData (BoardPos _boardPos, int _colorID, int _numSpacesToFill, List<Vector2Int> _pathSpaces) {
             boardPos = _boardPos;
-            colorID = _colorID;
+			colorID = _colorID;
+			numSpacesToFill = _numSpacesToFill;
             if (_pathSpaces == null) { // Convenience check! Default our pathSpaces, mmkay?
                 _pathSpaces = new List<Vector2Int> { new Vector2Int(boardPos.col,boardPos.row) };
             }

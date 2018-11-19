@@ -297,6 +297,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imageLine: {fileID: 1551218063471392, guid: de3622acacb6d4addaff526139e77f7b, type: 2}
+  imageLinesJoint: {fileID: 1586272661960996, guid: 6d0cc624a21c645cc81a888903aa4d14,
+    type: 2}
   abacusToy_boardSpaceView: {fileID: 1372780191091626, guid: 660ee981b1fa24bcc802a112ad3da72d,
     type: 2}
   abacusToy_boardView: {fileID: 1509143095400638, guid: 69b8909957be8428cbc3c57b46d216c7,

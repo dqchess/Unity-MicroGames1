@@ -47,7 +47,7 @@ namespace SpoolOut {
 
         
         public static bool CanSpoolPathEnterSpace(Board b, Spool spool, Vector2Int spacePos) {
-            if (spool.numSpacesLeft <= 0) { return false; } // Whoa, no spaces left in it? Naaah.
+            if (spool.NumSpacesLeft <= 0) { return false; } // Whoa, no spaces left in it? Naaah.
             return IsSpaceOpen(b, spacePos);
         }
 

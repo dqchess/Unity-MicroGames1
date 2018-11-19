@@ -85,7 +85,7 @@ namespace SpoolOut {
             float menusX = Mathf.Lerp(-menusWidth*scaleClosed,0, OpenLoc);
             rt_menus.anchoredPosition = new Vector2(menusX, rt_menus.anchoredPosition.y);
             rt_menus.localScale = Vector3.one * Mathf.Lerp(scaleClosed, 1f, OpenLoc);
-            float togButtonX = 16 + menusX + menusWidth;
+//            float togButtonX = 16 + menusX + menusWidth;
             cg_scrim.alpha = OpenLoc;
             toggleLevSelButton.SetOpenLoc(OpenLoc);
         }

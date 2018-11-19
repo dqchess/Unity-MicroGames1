@@ -166,8 +166,8 @@ namespace SlideAndStick {
             float unitDiameter = containerSize.x/numLevelCols;//Mathf.Min(containerSize.x/numLevelCols, containerSize.y/numLevelRows);
             Vector2 unitSize = new Vector2(unitDiameter,unitDiameter);
             Vector2 buttonSize = unitSize * 0.8f;
-            float buttonSpacingf = (containerSize.x/(numLevelCols-1));
-            Vector2 buttonSpacing = new Vector2(buttonSpacingf,buttonSpacingf);
+//            float buttonSpacingf = (containerSize.x/(numLevelCols-1));
+//            Vector2 buttonSpacing = new Vector2(buttonSpacingf,buttonSpacingf);
             
             for (int i=0; i<myPackData.NumLevels; i++) {
                 LevelButton obj = levelButtons[i];

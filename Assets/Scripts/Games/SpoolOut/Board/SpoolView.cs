@@ -7,12 +7,14 @@ using TMPro;
 namespace SpoolOut {
 	public class SpoolView : BoardObjectView {
 		// Components
-        [SerializeField] private Image i_core=null;
-        [SerializeField] private TextMeshProUGUI t_numSpacesLeft=null;
+		[SerializeField] private Image i_core=null;
+		[SerializeField] private RectTransform rt_core=null;
+		[SerializeField] private SpoolPathView pathView=null;
+		[SerializeField] private TextMeshProUGUI t_numSpacesLeft=null;
         // References
         public Spool MySpool { get; private set; }
         // Properties
-        private Color bodyColor;
+		public Color BodyColor { get; private set; }
 
         // Getters (Static)
         static public Color GetBodyColor(int colorID) {
@@ -36,17 +38,38 @@ namespace SpoolOut {
         public void Initialize (BoardView _myBoardView, Transform tf_parent, Spool _myObj) {
 			MySpool = _myObj;
 			base.InitializeAsBoardObjectView(_myBoardView, tf_parent, _myObj);
-            bodyColor = GetBodyColor(MySpool.ColorID);
+			myRectTransform.anchoredPosition = Vector2.zero; // Put me at 0,0. My components are what I position!
+			BodyColor = GetBodyColor(MySpool.ColorID);
             
-            i_core.color = bodyColor;
+			i_core.color = BodyColor;
             
-            // TODO: Thissss.
+			rt_core.anchoredPosition = GetPosFromBO(MySpool);
+			rt_core.sizeDelta = new Vector2(MyBoardView.UnitSize,MyBoardView.UnitSize);
+
+			pathView.Initialize();
+			WholesaleRemakeVisuals(); // Look fresh from the get-go.
+		}
+
+
+		// ----------------------------------------------------------------
+		//  Doers
+		// ----------------------------------------------------------------
+		public void WholesaleRemakeVisuals() {
+			// Text!
+			int numSpacesLeft = MySpool.NumSpacesLeft;
+			t_numSpacesLeft.enabled = numSpacesLeft != 0; // don't show text if we're satisfied. ;)
+			t_numSpacesLeft.text = MySpool.NumSpacesLeft.ToString();
+			// PathView!
+			pathView.WholesaleRemakeVisuals();
 		}
 
 
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
+		private void OnMySpoolPathChanged() {
+			WholesaleRemakeVisuals();
+		}
 		public void OnMouseOut() {
 			SetHighlightAlpha(0);
 		}
@@ -60,7 +83,9 @@ namespace SpoolOut {
 			SetHighlightAlpha(0.35f);
 		}
         private void SetHighlightAlpha(float alpha) {
-            //body.SetHighlightAlpha(alpha);TEMP! Disabled highlighting!
+			pathView.SetEndHighlightAlpha(alpha);
+			// QQQ TEST
+			i_core.color = Color.Lerp(BodyColor, Color.blue, alpha);
         }
 
 /*

@@ -7,12 +7,11 @@ namespace SpoolOut {
         // Properties
         public List<Vector2Int> PathSpaces { get; private set; }
         public int ColorID { get; private set; }
-        public int numSpacesToFill { get; private set; }
-        public int numSpacesLeft { get; private set; } // updated every time we change pathSpaces.
-        
+        public int NumSpacesToFill { get; private set; }
+        public int NumSpacesLeft { get; private set; } // updated every time we change pathSpaces.
         
         // Getters (Public)
-        public bool IsSatisfied { get { return PathSpaces.Count >= numSpacesToFill; } }
+        public bool IsSatisfied { get { return PathSpaces.Count >= NumSpacesToFill; } }
         public Vector2Int LastSpacePos { get { return PathSpaces[PathSpaces.Count-1]; } }
         public bool IsSecondLastSpacePos(Vector2Int pos) {
             Vector2Int secondLastPos = secondLastSpacePos();
@@ -42,8 +41,11 @@ namespace SpoolOut {
         public Spool (Board _boardRef, SpoolData _data) {
 			base.InitializeAsBoardObject(_boardRef, _data);
 			ColorID = _data.colorID;
-            PathSpaces = new List<Vector2Int>(_data.pathSpaces);
-            numSpacesToFill = _data.numSpacesToFill;
+            NumSpacesToFill = _data.numSpacesToFill;
+			PathSpaces = new List<Vector2Int>();
+			foreach (Vector2Int space in _data.pathSpaces) {
+				AddPathSpace(space);
+			}
             //if (pathSpaces == null) { // Convenience: Pass in null to default to just empty path.
             //  pathSpaces = new Vector2Int[0];
             //  AddPathSpace(new Vector2Int(col,row));
@@ -51,7 +53,7 @@ namespace SpoolOut {
             UpdateNumSpacesLeft();
 		}
 		public SpoolData SerializeAsData() {
-			SpoolData data = new SpoolData(BoardPos, ColorID, new List<Vector2Int>(PathSpaces)); // note: COPY the Vector2Int list. DEF don't want a reference.
+			SpoolData data = new SpoolData(BoardPos, ColorID, NumSpacesToFill, new List<Vector2Int>(PathSpaces)); // note: COPY the Vector2Int list. DEF don't want a reference.
 			return data;
 		}
         
@@ -63,15 +65,15 @@ namespace SpoolOut {
         public void AddPathSpace(Vector2Int spacePos) {
             PathSpaces.Add(spacePos);
             GetSpace(spacePos.x,spacePos.y).SetMySpool(this);
-            UpdateNumSpacesLeft();
-        }
+			OnPathChanged();
+		}
         public void RemovePathSpace() {
             if (PathSpaces.Count < 2) { return; } // Safety check!
             // Remove from that space.
             Vector2Int lps = LastSpacePos;
             GetSpace(lps.x,lps.y).RemoveMySpool(this);
-            PathSpaces.RemoveAt(PathSpaces.Count-1);
-            UpdateNumSpacesLeft();
+			PathSpaces.RemoveAt(PathSpaces.Count-1);
+			OnPathChanged();
         }
         public void RemoveAllPathSpaces() {
             foreach (Vector2Int spacePos in PathSpaces) {
@@ -89,8 +91,15 @@ namespace SpoolOut {
                 RemovePathSpace();
             }
         }
+
+		private void OnPathChanged() {
+			UpdateNumSpacesLeft();
+			// Dispatch event!
+			GameManagers.Instance.EventManager.Spool_OnSpoolPathChangedEvent(this);
+		}
+
         private void UpdateNumSpacesLeft() {
-            numSpacesLeft = numSpacesToFill - PathSpaces.Count;
+            NumSpacesLeft = NumSpacesToFill - PathSpaces.Count;
         }
         
         

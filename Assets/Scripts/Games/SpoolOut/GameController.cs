@@ -37,7 +37,7 @@ namespace SpoolOut {
             #endif
             
             // Start at the level we've most recently played!
-            bool debug_supressAnimation = Input.GetKey(KeyCode.A); // DEBUG for TESTING!
+			bool debug_supressAnimation = true; // TEMP DEBUG.
             SetCurrentLevel(levelsManager.GetLastPlayedLevelAddress(), !debug_supressAnimation);
             
             // Add event listeners!

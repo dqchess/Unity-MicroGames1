@@ -98,7 +98,7 @@ public class ImageLine : MonoBehaviour {
     //  }
     public void SetThickness(float _thickness) {
         thickness = _thickness;
-        GameUtils.SizeUIGraphic(image, thickness, length);
+		GameUtils.SizeUIGraphic(image, length, thickness);
     }
 
 
