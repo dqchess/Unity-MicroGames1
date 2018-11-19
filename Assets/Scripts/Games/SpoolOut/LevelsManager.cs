@@ -180,7 +180,7 @@ namespace SpoolOut {
             foreach (ModeCollectionData modeCollectionData in modeDatas) {
                 total += modeCollectionData.NumLevels();
             }
-            Debug.Log("Total SlideAndStick levels: " + total);
+            Debug.Log("Total SpoolOut levels: " + total);
         }
         private void Debug_PrintNumLevelsInEachPack() {
             string str = "TOTALS:\n";

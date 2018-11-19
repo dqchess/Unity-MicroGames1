@@ -11,19 +11,21 @@ namespace SpoolOut {
         [SerializeField] private TextMeshProUGUI t_numSpacesLeft=null;
         // References
         public Spool MySpool { get; private set; }
+        // Properties
+        private Color bodyColor;
 
         // Getters (Static)
         static public Color GetBodyColor(int colorID) {
             switch (colorID) {
                 case -1: return new Color(128/255f,128/255f,128/255f, 20/255f);
-                case  0: return new Color(128/255f,220/255f,200/255f);
-                case  1: return new Color( 58/255f,220/255f,200/255f);
-                case  2: return new Color( 28/255f,200/255f,245/255f);
-                case  3: return new Color(190/255f,150/255f,245/255f);
-                case  4: return new Color(230/255f,150/255f,245/255f);
-                case  5: return new Color( 80/255f,170/255f,245/255f);
-                case  6: return new Color( 12/255f,170/255f,245/255f);
-                default: return new Color(Random.Range(0,1f),150/255f,245/255f); // Hmm.
+                case  0: return new ColorHSB(128/255f,220/255f,200/255f).ToColor();
+                case  1: return new ColorHSB( 58/255f,220/255f,200/255f).ToColor();
+                case  2: return new ColorHSB( 28/255f,200/255f,245/255f).ToColor();
+                case  3: return new ColorHSB(190/255f,150/255f,245/255f).ToColor();
+                case  4: return new ColorHSB(230/255f,150/255f,245/255f).ToColor();
+                case  5: return new ColorHSB( 80/255f,170/255f,245/255f).ToColor();
+                case  6: return new ColorHSB( 12/255f,170/255f,245/255f).ToColor();
+                default: return new ColorHSB(Random.Range(0,1f),150/255f,245/255f).ToColor(); // Hmm.
             }
         }
 
@@ -34,6 +36,9 @@ namespace SpoolOut {
         public void Initialize (BoardView _myBoardView, Transform tf_parent, Spool _myObj) {
 			MySpool = _myObj;
 			base.InitializeAsBoardObjectView(_myBoardView, tf_parent, _myObj);
+            bodyColor = GetBodyColor(MySpool.ColorID);
+            
+            i_core.color = bodyColor;
             
             // TODO: Thissss.
 		}

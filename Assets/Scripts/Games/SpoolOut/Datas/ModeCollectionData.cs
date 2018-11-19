@@ -53,7 +53,7 @@ namespace SpoolOut {
     	// ----------------------------------------------------------------
     	private void LoadAllCollectionDatas () {
     		// Collections Order!
-    		string pathSuffix = "Games/" + GameNames.SlideAndStick + "/Levels/";//TODO: Clarify this! TEST all modes are the same! + modeName + "/";
+    		string pathSuffix = "Games/" + GameNames.SpoolOut + "/Levels/";//TODO: Clarify this! TEST all modes are the same! + modeName + "/";
     		collectionsOrder = TextUtils.GetStringArrayFromResourcesTextFile(pathSuffix + "_CollectionOrder");
     
     		collectionDatas = new List<PackCollectionData>();
