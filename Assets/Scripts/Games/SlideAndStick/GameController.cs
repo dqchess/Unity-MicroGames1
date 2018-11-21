@@ -94,7 +94,7 @@ namespace SlideAndStick {
             }
         }
 
-        private void RestartLevel() { SetCurrentLevel(currAddress, false); }
+        public void RestartLevel() { SetCurrentLevel(currAddress, false); }
         //private void StartPrevLevel() {
         //    LevelData data = levelsManager.GetLevelData(currAddress.PreviousLevel);
         //    if (data != null) { SetCurrentLevel(data); }

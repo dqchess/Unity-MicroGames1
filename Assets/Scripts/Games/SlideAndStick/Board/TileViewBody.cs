@@ -42,9 +42,11 @@ namespace SlideAndStick {
             case 0: return new Color( 71/255f,128/255f,214/255f);
             case 1: return new Color(100/255f,220/255f, 95/255f);
             case 2: return new Color(231/255f,100/255f,192/255f);
-            case 3: return new Color(232/255f,182/255f,110/255f);
-            case 4: return new Color(110/255f,215/255f,233/255f);
-            case 5: return new Color(  5/255f,250/255f,220/255f);
+            case 3: return new Color( 75/255f, 28/255f,151/255f);
+            case 4: return new Color(255/255f,240/255f,102/255f);
+            case 5: return new Color(230/255f,170/255f,112/255f);
+            case 6: return new Color(133/255f,220/255f,223/255f);
+            case 7: return new Color(154/255f,156/255f,172/255f);
             default: return Color.red; // Oops! Too many colors.
             }
         }

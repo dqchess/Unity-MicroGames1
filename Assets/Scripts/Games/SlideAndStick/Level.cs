@@ -128,9 +128,11 @@ namespace SlideAndStick {
         private void AddReasonableRandTilesToBoardIfNone() {
             // First, remember the basic empty boardData.
             BoardData bd = board.SerializeAsData();
-            for (int i=0; i<99; i++) { // let's try 99 times.
+            int count=0;
+            while (true) {
                 board.Debug_AddTilesIfNone(gameController.randGenParams);
-                // Oh, this isn't a good enough layout? Try again.
+                if (count++ > 99) { break; } // Try 99 times!
+                // Not a good enough layout? Try again.
                 if (board.AreAnyTileColorsSatisfied() || board.NumColors()==1) {
                     board = new Board(bd);
                 }

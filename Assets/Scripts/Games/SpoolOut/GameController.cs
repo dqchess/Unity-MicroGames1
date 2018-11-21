@@ -87,7 +87,7 @@ namespace SpoolOut {
             }
         }
 
-        private void RestartLevel() { SetCurrentLevel(currAddress, false); }
+        public void RestartLevel() { SetCurrentLevel(currAddress, false); }
         private void StartNextLevel() {
             LevelData data = levelsManager.GetLevelData(currAddress.NextLevel);
             if (data != null) { SetCurrentLevel(data, true); }

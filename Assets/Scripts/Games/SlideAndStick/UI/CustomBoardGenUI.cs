@@ -105,6 +105,12 @@ namespace SlideAndStick {
             UpdateSliderValuesFromParams(); // in case one of the above has changed, update the slider poses.
             UpdateParamsTextsFromValues();
         }
+        public void OnClickPrevLevel() {
+            GameManagers.Instance.EventManager.OnLevelJumpButtonClick(-1);
+        }
+        public void OnClickNextLevel() {
+            GameManagers.Instance.EventManager.OnLevelJumpButtonClick(1);
+        }
         
 
         // ----------------------------------------------------------------
@@ -118,7 +124,7 @@ namespace SlideAndStick {
         }
         
         public void MakeNewLayout() {
-            level.GameController.ReloadScene();
+            level.GameController.RestartLevel();
         }
         
         private void CopyLayoutsAsXMLToClipboard() {

@@ -26,7 +26,6 @@ namespace SlideAndStick {
             // Didn't beat tutorial? Go straight into it!
             if (!didBeatTutorial) {
                 CloseLevSelController(false);
-                //OpenLevel(
             }
             // We DID beat the tutorial. Open LevSel menu!
             else {
@@ -70,7 +69,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Scene Management
         // ----------------------------------------------------------------
-        private void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
+        public void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
         private void OpenScene (string sceneName) {
             UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName);
         }
