@@ -70,8 +70,8 @@ namespace SpoolOut {
         // ----------------------------------------------------------------
         //  Scene Management
         // ----------------------------------------------------------------
-        private void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
-        private void OpenScene (string sceneName) {
+        public void ReloadScene() { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
+        private void OpenScene(string sceneName) {
             UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName);
         }
         public void ClearAllSaveData() {

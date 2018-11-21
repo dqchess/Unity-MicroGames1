@@ -90,7 +90,7 @@ namespace SpoolOut {
 		public static Vector2Int GetRandOpenDir(Board b, Vector2Int originPos) {
             int[] randSides = MathUtils.GetShuffledIntArray(4);
             for (int i=0; i<randSides.Length; i++) {
-                Vector2Int dir = MathUtils.GetDir(i);
+                Vector2Int dir = MathUtils.GetDir(randSides[i]);
 				if (CanAddSpool(b, originPos + dir)) {
                     return dir;
                 }

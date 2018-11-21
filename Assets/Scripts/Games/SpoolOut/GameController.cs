@@ -218,7 +218,6 @@ namespace SpoolOut {
             bool isKey_ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
             bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             if (isKey_shift) {
-                if (Input.GetKeyDown(KeyCode.S)) { levelsManager.Debug_SaveReplaceXMLLayout(level); }
             }
             else if (isKey_ctrl) {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeCollection(-1); return; }

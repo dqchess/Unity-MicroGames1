@@ -6,20 +6,13 @@ using TMPro;
 
 namespace SpoolOut {
     public class CustomBoardGenUI : MonoBehaviour {
-    /*
         // Components
         [SerializeField] private CanvasGroup cg_savedPopup=null;
         [SerializeField] private GameObject go_params=null;
         [SerializeField] private GameObject go_paintPallete=null;
         [SerializeField] private GameObject go_saveButtons=null;
-        [SerializeField] private Slider sl_numColors=null;
-        [SerializeField] private Slider sl_stickinessMin=null;
-        [SerializeField] private Slider sl_stickinessMax=null;
-        [SerializeField] private Slider sl_percentSpools=null;
-        [SerializeField] private TextMeshProUGUI t_numColors=null;
-        [SerializeField] private TextMeshProUGUI t_stickinessMin=null;
-        [SerializeField] private TextMeshProUGUI t_stickinessMax=null;
-        [SerializeField] private TextMeshProUGUI t_percentSpools=null;
+        [SerializeField] private Slider sl_minPathLength=null;
+        [SerializeField] private TextMeshProUGUI t_minPathLength=null;
         [SerializeField] private TextMeshProUGUI t_savedPopup=null;
         // Properties
         private string customLayoutXMLs; // all the XML nodes in one big-ass string.
@@ -33,9 +26,6 @@ namespace SpoolOut {
         // Getters (Private)
         private GameController gameController { get { return level.GameController; } }
         private RandGenParams rgp { get { return gameController.randGenParams; } }
-        //private bool AreLayoutsIdentical(BoardData bdA, BoardData bdB) {
-        //    return bdA.Debug_GetLayout(true) == bdB.Debug_GetLayout(true);
-        //}
 
 
         // ----------------------------------------------------------------
@@ -68,16 +58,10 @@ namespace SpoolOut {
             go_saveButtons.SetActive(false);
         }
         private void UpdateParamsTextsFromValues() {
-            t_numColors.text = rgp.NumColors.ToString();
-            t_stickinessMin.text = rgp.StickinessMin.ToString();
-            t_stickinessMax.text = rgp.StickinessMax.ToString();
-            t_percentSpools.text = (int)(100*rgp.PercentSpools) + "%";
+            t_minPathLength.text = rgp.MinPathLength.ToString();
         }
         private void UpdateSliderValuesFromParams() {
-            sl_numColors.value = rgp.NumColors;
-            sl_stickinessMin.value = rgp.StickinessMin;
-            sl_stickinessMax.value = rgp.StickinessMax;
-            sl_percentSpools.value = rgp.PercentSpools;
+            sl_minPathLength.value = rgp.MinPathLength;
         }
         private void SetSavedPopupAlpha(float alpha) {
             cg_savedPopup.alpha = alpha;
@@ -86,24 +70,8 @@ namespace SpoolOut {
         // ----------------------------------------------------------------
         //  UI Events
         // ----------------------------------------------------------------
-        public void OnSlVal_NumColors() {
-            rgp.NumColors = (int)sl_numColors.value;
-            UpdateParamsTextsFromValues();
-        }
-        public void OnSlVal_PercentSpools() {
-            rgp.PercentSpools = sl_percentSpools.value;
-            UpdateParamsTextsFromValues();
-        }
-        public void OnSlVal_StickinessMin() {
-            SetStickinessMinAndMax((int)sl_stickinessMin.value, rgp.StickinessMax);
-        }
-        public void OnSlVal_StickinessMax() {
-            SetStickinessMinAndMax(rgp.StickinessMin, (int)sl_stickinessMax.value);
-        }
-        private void SetStickinessMinAndMax(int _min, int _max) {
-            rgp.StickinessMin = Mathf.Min(_min, _max);
-            rgp.StickinessMax = Mathf.Max(_min, _max);
-            UpdateSliderValuesFromParams(); // in case one of the above has changed, update the slider poses.
+        public void OnSlVal_MinPathLength() {
+            rgp.MinPathLength = (int)sl_minPathLength.value;
             UpdateParamsTextsFromValues();
         }
         
@@ -119,7 +87,7 @@ namespace SpoolOut {
         }
         
         public void MakeNewLayout() {
-            level.GameController.ReloadScene();
+            level.GameController.RestartLevel();
         }
         
         private void CopyLayoutsAsXMLToClipboard() {
@@ -156,6 +124,5 @@ namespace SpoolOut {
         }
         
         
-        */
     }
 }

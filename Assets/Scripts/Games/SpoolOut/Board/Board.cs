@@ -155,7 +155,7 @@ namespace SpoolOut {
 		// ----------------------------------------------------------------
 		public bool AreRandomlyMadeSpoolsGood(RandGenParams rgp) {
 			for (int i=0; i<spools.Count; i++) {
-				if (spools[i].NumSpacesToFill < rgp.MinSpoolPathLength) { 
+				if (spools[i].NumSpacesToFill < rgp.MinPathLength) { 
 					return false;
 				}
 			}

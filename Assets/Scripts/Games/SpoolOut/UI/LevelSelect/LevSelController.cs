@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace SpoolOut {
 	public enum MenuTransType { Push, Pop }
@@ -11,6 +12,7 @@ namespace SpoolOut {
         [SerializeField] private CanvasGroup cg_scrim=null;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private RectTransform rt_menus=null;
+        [SerializeField] private TextMeshProUGUI debug_t_deleteLayouts=null;
         [SerializeField] private ToggleLevSelButton toggleLevSelButton=null;
         [SerializeField] private BaseLevSelMenu collectionsMenu=null;
         [SerializeField] private PackSelectMenu packsMenu=null;
@@ -21,6 +23,11 @@ namespace SpoolOut {
         // Getters (Public)
         public static Color GetCollectionColor(int collection) {
             switch (collection) {
+                // Non-Player-Facing (RandLayouts, Tests, Tutorial)
+                case 0: return new ColorHSB(266/360f,0.70f,0.62f).ToColor();
+                case 1: return new ColorHSB( 30/360f,0.32f,0.63f).ToColor();
+                case 2: return new ColorHSB(210/360f,0.44f,0.87f).ToColor();
+                // Packs
                 case 3: return new Color( 59/255f,229/255f,196/255f);
                 case 4: return new Color( 59/255f,229/255f, 80/255f);
                 case 5: return new Color(255/255f,216/255f, 78/255f);
@@ -56,6 +63,7 @@ namespace SpoolOut {
             LeanTween.cancel(gameObject);
 			// Refresh my PacksMenu manually, in case we beat any levels since last opening.
 			packsMenu.ManualRefreshLevelButtons();
+            Debug_UpdateDeleteLayoutsText();
 
             if (doAnimate) {
                 LeanTween.value(gameObject, SetOpenLoc, OpenLoc,1, 0.5f).setEaseOutQuart();
@@ -127,6 +135,28 @@ namespace SpoolOut {
             if (OpenLoc > 0.5f) { // If I'm open and we click the scrim, close me!
                 coreMenuController.CloseLevSelController(true);
             }
+        }
+        
+        // ----------------------------------------------------------------
+        //  Debug
+        // ----------------------------------------------------------------
+        private void Debug_UpdateDeleteLayoutsText() {
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SpoolOut_Debug_CustomLayouts);
+            int numLayouts = CustomBoardGenUI.GetNumLayouts(savedLayoutsString);
+            debug_t_deleteLayouts.text = "delete " + numLayouts + " saved layouts";
+        }
+        public void CopySavedLayoutsToClipboard() {
+            string savedLayoutsString = SaveStorage.GetString(SaveKeys.SpoolOut_Debug_CustomLayouts);
+            GameUtils.CopyToClipboard(savedLayoutsString);
+        }
+        public void DeleteSavedLayouts() {
+            SaveStorage.DeleteKey(SaveKeys.SpoolOut_Debug_CustomLayouts);
+            coreMenuController.ReloadScene();
+        }
+        public void ClearAllSaveData() {
+            GameManagers.Instance.DataManager.ClearAllSaveData ();
+            LevelsManager.Instance.Reset();
+            coreMenuController.ReloadScene();
         }
     
     }

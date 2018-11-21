@@ -170,11 +170,6 @@ namespace SpoolOut {
         // ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
-        /** Dangerous function! Powerful. This overwrites our Board layout in the XML file. */
-        public void Debug_SaveReplaceXMLLayout(Level level) {
-            // First, find the file.
-            
-        }
         private void Debug_PrintTotalNumLevels() {
             int total=0;
             foreach (ModeCollectionData modeCollectionData in modeDatas) {

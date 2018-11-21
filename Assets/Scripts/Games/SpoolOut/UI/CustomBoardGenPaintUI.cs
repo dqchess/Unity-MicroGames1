@@ -68,7 +68,7 @@ namespace SpoolOut {
             //}
             
             // Remake the Board, bro!
-            level.Debug_RemakeBoardAndViewFromArbitrarySnapshot(boardData);
+            level.Debug_RemakeBoardAndViewFromSnapshot(boardData);
         }
         
         

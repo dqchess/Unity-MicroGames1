@@ -10,6 +10,7 @@ namespace SpoolOut {
 		private BoardView boardView;
 		// Properties
         [HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
+        private BoardData debug_initialBoardSnapshot; // for undoing all moves.
         private bool IsLevelOver;
         public float TimeSpentThisPlay { get; private set; }
         private LevelAddress myAddress;
@@ -58,6 +59,7 @@ namespace SpoolOut {
 
 			// Send in the clowns!
 			RemakeModelAndViewFromData(_levelData.boardData);
+            debug_initialBoardSnapshot = board.SerializeAsData(); // Save initial snapshot, yo!
 
 			// Add event listeners!
 			GameManagers.Instance.EventManager.Spool_PathChangedEvent += OnSpoolPathChanged;
@@ -151,6 +153,7 @@ namespace SpoolOut {
 		//  Events
 		// ----------------------------------------------------------------
 		private void OnSpoolPathChanged(Spool spool) {
+            if (boardView == null) { return; } // HACKY TEMP. TODO: Undoing moves/remaking snapshots properly.
 			SpoolView view = boardView.Temp_GetSpoolView(spool);
 			if (view != null) {
 				view.WholesaleRemakeVisuals();
@@ -239,7 +242,8 @@ namespace SpoolOut {
 		private void RegisterButtonInput() {
 			// DEBUG
 			if (Input.GetKeyDown(KeyCode.B)) { Debug.Log(board.Debug_GetLayout(false)); } // B = print board layout.
-			else if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
+            else if (Input.GetKeyDown(KeyCode.X)) { Debug_UndoAllMoves(); }
+            else if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
 			else if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
             else if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
             else if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }
@@ -338,7 +342,11 @@ namespace SpoolOut {
 		// ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
-        public void Debug_RemakeBoardAndViewFromArbitrarySnapshot(BoardData boardData) {
+        private void Debug_UndoAllMoves() {
+            Debug_RemakeBoardAndViewFromSnapshot(debug_initialBoardSnapshot);
+        }
+        // TODO: Determine if this is redundant with RemakeModelAndViewFromData! Maybe that function can also do OnBoardMoveComplete?
+        public void Debug_RemakeBoardAndViewFromSnapshot(BoardData boardData) {
             // Treat this like a real move.
             RemakeModelAndViewFromData(boardData);
             //NumMovesMade ++;

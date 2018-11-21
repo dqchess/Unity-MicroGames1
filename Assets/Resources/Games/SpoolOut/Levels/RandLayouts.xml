@@ -8,46 +8,41 @@
     Random Layouts
     ================================================================
 -->
-<LevelPack packName="Random Layouts">
+<LevelPack packName="Squares">
 <Levels>
-
-	
+    <Level diff="0" noWin="true" layout=" ., " />
+    <Level diff="0" noWin="true" layout=" .., .., " />
     <Level diff="0" noWin="true" layout=" ..., ..., ..., " />
-    <Level diff="0" noWin="true" layout=" ..., ..., ..., ..., " />
     <Level diff="0" noWin="true" layout=" ...., ...., ...., ...., " />
-
-    <Level diff="0" noWin="true" layout=" ...., ...., ...., ...., ...., " />
     <Level diff="0" noWin="true" layout=" ....., ....., ....., ....., ....., " />
-    <Level diff="0" noWin="true" layout=" ....., ....., ....., ....., ....., ....., " />
     <Level diff="0" noWin="true" layout=" ......, ......, ......, ......, ......, ......, " />
-    <Level diff="0" noWin="true" layout=" ......, ......, ......, ......, ......, ......, ......, " />
     <Level diff="0" noWin="true" layout=" ......., ......., ......., ......., ......., ......., ......., " />
+    <Level diff="0" noWin="true" layout=" ........, ........, ........, ........, ........, ........, ........, ........, " />
+    <Level diff="0" noWin="true" layout=" ........., ........., ........., ........., ........., ........., ........., ........., ........., " />
+    <Level diff="0" noWin="true" layout=" .........., .........., .........., .........., .........., .........., .........., .........., .........., .........., " />
+    
+</Levels>
+</LevelPack>
 
 
+<LevelPack packName="Rects">
+<Levels>
+    <Level diff="0" noWin="true" layout=" .., .., .., " />
+    <Level diff="0" noWin="true" layout=" ..., ..., ..., ..., " />
+    <Level diff="0" noWin="true" layout=" ...., ...., ...., ...., ...., " />
+    <Level diff="0" noWin="true" layout=" ....., ....., ....., ....., ....., ....., " />
+    <Level diff="0" noWin="true" layout=" ......, ......, ......, ......, ......, ......, ......, " />
+    <Level diff="0" noWin="true" layout=" ......., ......., ......., ......., ......., ......., ......., ......., " />
+    <Level diff="0" noWin="true" layout=" ........, ........, ........, ........, ........, ........, ........, ........, ........, " />
+    <Level diff="0" noWin="true" layout=" ........., ........., ........., ........., ........., ........., ........., ........., ........., ........., " />
+    <Level diff="0" noWin="true" layout=" .........., .........., .........., .........., .........., .........., .........., .........., .........., .........., .........., " />
 
 
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-    <Level diff="0" layout="" />
-	
-	
-        
+    <Level diff="0" noWin="true" layout=" " />
 
-	
-	
+
+    
+    
 </Levels>
 </LevelPack>
 

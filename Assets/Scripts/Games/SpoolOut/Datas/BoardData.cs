@@ -93,22 +93,22 @@ namespace SpoolOut {
     						case '#': GetSpaceData(col,row).isPlayable = false; break;
                             case '_': AddWallData(col,row+1, Sides.T); break; // note: because the underscore looks lower, consider it in the next row (so layout text file looks more intuitive).
                             case '|': AddWallData(col,row,   Sides.L); break;
-                            case '0': AddSpoolData(col,row, 0); break; // Note: We don't want to make Spools with numSpacesToFill as 0.
-    						case '1': AddSpoolData(col,row, 1); break;
-    						case '2': AddSpoolData(col,row, 2); break;
-    						case '3': AddSpoolData(col,row, 3); break;
-                            case '4': AddSpoolData(col,row, 4); break;
-                            case '5': AddSpoolData(col,row, 5); break;
-                            case '6': AddSpoolData(col,row, 6); break;
-                            case '7': AddSpoolData(col,row, 7); break;
-                            case '8': AddSpoolData(col,row, 8); break;
-                            case '9': AddSpoolData(col,row, 9); break;
-                            case 'A': AddSpoolData(col,row, 10); break;
-                            case 'B': AddSpoolData(col,row, 11); break;
-                            case 'C': AddSpoolData(col,row, 12); break;
-                            case 'D': AddSpoolData(col,row, 13); break;
-                            case 'E': AddSpoolData(col,row, 14); break;
-                            case 'F': AddSpoolData(col,row, 15); break;
+                            case '0': AddSpoolData(col,row, 1+0); break; // Note: We don't want to make Spools with numSpacesToFill as 0.
+    						case '1': AddSpoolData(col,row, 1+1); break; // hacky 1+! So the XML matches the visuals.
+    						case '2': AddSpoolData(col,row, 1+2); break;
+    						case '3': AddSpoolData(col,row, 1+3); break;
+                            case '4': AddSpoolData(col,row, 1+4); break;
+                            case '5': AddSpoolData(col,row, 1+5); break;
+                            case '6': AddSpoolData(col,row, 1+6); break;
+                            case '7': AddSpoolData(col,row, 1+7); break;
+                            case '8': AddSpoolData(col,row, 1+8); break;
+                            case '9': AddSpoolData(col,row, 1+9); break;
+                            case 'A': AddSpoolData(col,row, 1+10); break;
+                            case 'B': AddSpoolData(col,row, 1+11); break;
+                            case 'C': AddSpoolData(col,row, 1+12); break;
+                            case 'D': AddSpoolData(col,row, 1+13); break;
+                            case 'E': AddSpoolData(col,row, 1+14); break;
+                            case 'F': AddSpoolData(col,row, 1+15); break;
     					}
     				}
     			}
@@ -168,9 +168,9 @@ namespace SpoolOut {
             for (int i=0; i<numCols; i++) { for (int j=0; j<numRows; j++) { allChars[i,j]=""; } }
             // Populate!
             foreach (SpoolData s in spoolDatas) {
-                foreach (Vector2Int space in s.pathSpaces) {
-                    allChars[space.x,space.y] += s.colorID.ToString();
-                }
+                allChars[s.boardPos.col,s.boardPos.row] += (s.numSpacesToFill-1).ToString(); // hacky -1! So the visuals match the XML.
+                //foreach (Vector2Int space in s.pathSpaces) {
+                //}
             }
             foreach (WallData w in wallDatas) {
                 int c = w.boardPos.col;// + (w.IsVertical ? 1 : 0);
