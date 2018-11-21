@@ -131,7 +131,7 @@ namespace SlideAndStick {
             int count=0;
             while (true) {
                 board.Debug_AddTilesIfNone(gameController.randGenParams);
-                if (count++ > 99) { break; } // Try 99 times!
+                if (++count >= 99) { break; } // Try 99 times!
                 // Not a good enough layout? Try again.
                 if (board.AreAnyTileColorsSatisfied() || board.NumColors()==1) {
                     board = new Board(bd);

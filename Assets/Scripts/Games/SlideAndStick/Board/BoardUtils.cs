@@ -79,7 +79,7 @@ namespace SlideAndStick {
         public static Vector2Int GetRandOpenDir(Board b, BoardPos originPos) {
             int[] randSides = MathUtils.GetShuffledIntArray(4);
             for (int i=0; i<randSides.Length; i++) {
-                Vector2Int dir = MathUtils.GetDir(i);
+                Vector2Int dir = MathUtils.GetDir(randSides[i]);
                 if (CanAddTile(b, new BoardPos(originPos.col+dir.x, originPos.row+dir.y))) {
                     return dir;
                 }
