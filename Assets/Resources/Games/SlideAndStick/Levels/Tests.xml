@@ -8,6 +8,7 @@
 <LevelPack packName="Tests">
 <Levels>
 	<Level diff="0" noWin="true" layout=" ....., ....., ..0.., ....., .....," />
+	<Level diff="0" noWin="true" layout=" 0...., 1...., 1...., 1...., 1....," />
 
 
     <Level diff="0" layout=" .01., 1010, 0..1, .0.0," desc="What about this level? Quality/difficulty?" />

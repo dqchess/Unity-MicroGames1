@@ -5,6 +5,8 @@ using UnityEngine;
 namespace SlideAndStick {
 	public class Level : MonoBehaviour {
 		// Components
+		public UnityEngine.UI.Image i_test0;//QQQ's.
+		public UnityEngine.UI.Image i_test1;
         [SerializeField] protected RectTransform myRectTransform=null;
 		[SerializeField] private UndoMoveInputController undoMoveInputController=null;
 		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
