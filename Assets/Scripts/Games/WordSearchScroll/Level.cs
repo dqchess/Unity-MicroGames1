@@ -57,7 +57,7 @@ namespace WordSearchScroll {
 
 		private void UpdateMousePoses() {
 			// mousePosRelative!
-			mousePosRelative = Input.mousePosition/gameController.Canvas.scaleFactor;
+			mousePosRelative = InputController.Instance.TouchPosScaled;//.mousePosition/gameController.Canvas.scaleFactor;
 			float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
 			mousePosRelative = new Vector2(mousePosRelative.x, canvasHeight-mousePosRelative.y); // convert to top-left space.
 			mousePosRelative += new Vector2(-board.Pos.x, board.Pos.y); // Note: Idk why negative...

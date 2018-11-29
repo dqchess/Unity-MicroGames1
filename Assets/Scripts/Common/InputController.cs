@@ -5,8 +5,11 @@ public class InputController : MonoBehaviour {
 	// Instance
 	static private InputController instance;
 	// Properties
+    public Vector2 TouchPosScaled { get; private set; }
 	private Vector2 player0AxisInput;
 	private Vector2 player0AxisInputRaw; // this ISN'T rotated to match the camera. It's raw, baby. Raw.
+    // References
+    private Canvas canvas;
 
 	// Getters
 	static public InputController Instance {
@@ -35,12 +38,29 @@ public class InputController : MonoBehaviour {
 	}
 
 
-	// ----------------------------------------------------------------
-	//  Update
-	// ----------------------------------------------------------------
-	private void Update () {
-		RegisterButtonInputs ();
+    // ----------------------------------------------------------------
+    //  Update
+    // ----------------------------------------------------------------
+    private void Update () {
+        // Make sure we got an up-to-date Canvas reference.
+        if (canvas==null || canvas.gameObject==null) {
+            canvas = FindObjectOfType<Canvas>();
+        }
+        
+        UpdateTouchPosScaled();
+		RegisterButtonInputs();
 	}
+    
+    private void UpdateTouchPosScaled() {
+        if (Input.touchSupported && Input.touchCount>0) {
+            TouchPosScaled = Input.touches[0].position/canvas.scaleFactor;
+        }
+        else {
+            TouchPosScaled = Input.mousePosition/canvas.scaleFactor;;
+        }
+    }
+
+
 
 	private void RegisterButtonInputs () {
 		player0AxisInputRaw = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));

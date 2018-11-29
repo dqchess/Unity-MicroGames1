@@ -134,7 +134,7 @@ namespace AbacusToy {
         }
 
         private void UpdateMousePosBoard() {
-            Vector2 mousePosScaled = Input.mousePosition/gameController.Canvas.scaleFactor;
+            Vector2 mousePosScaled = InputController.Instance.TouchPosScaled;//.mousePosition/gameController.Canvas.scaleFactor;
             float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
             mousePosScaled = new Vector2(mousePosScaled.x, canvasHeight-mousePosScaled.y); // convert to top-left space.
             mousePosScaled += new Vector2(-boardView.Pos.x, boardView.Pos.y); // Note: Idk why negative...
