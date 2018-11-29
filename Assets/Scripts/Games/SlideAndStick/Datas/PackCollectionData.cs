@@ -22,14 +22,21 @@ namespace SlideAndStick {
             return packDatas[ad.pack].DoesLevelExist(ad); // Ok, ask the next guy.
         }
     	public int NumPacks { get { return packDatas.Count; } }
-        public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }
-        public int NumLevels() {
-            int total = 0;
-            foreach (PackData data in PackDatas) {
-                total += data.NumLevels;
-            }
-            return total;
-        }
+		public System.Collections.ObjectModel.ReadOnlyCollection<PackData> PackDatas { get { return packDatas.AsReadOnly(); } }
+		public int NumLevels() {
+			int total = 0;
+			foreach (PackData data in PackDatas) {
+				total += data.NumLevels;
+			}
+			return total;
+		}
+		public int NumLevelsCompleted() {
+			int total = 0;
+			foreach (PackData data in PackDatas) {
+				total += data.NumLevelsCompleted;
+			}
+			return total;
+		}
     
     	public PackData GetPackData (int index) {
     		if (index<0 || index>=packDatas.Count) { return null; } // Outta bounds.

@@ -142,6 +142,7 @@ namespace SlideAndStick {
             }
         }
         private void RefreshLevelButtons() {
+			LevelAddress openLvlAddress = LevelAddress.FromString(SaveStorage.GetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal));//lm.selectedAddress;
             int numLevels = myPackData.NumLevels;
             NumLevelPages = Mathf.CeilToInt(numLevels/(float)numLevelsPerPage);
             // Add missing buttons.
@@ -156,7 +157,7 @@ namespace SlideAndStick {
 
             // Spawn visible buttons!
             for (int i=0; i<numLevels; i++) {
-				levelButtons[i].Spawn(myPackData.GetLevelData(i), CurrPage);
+				levelButtons[i].Spawn(myPackData.GetLevelData(i), CurrPage, openLvlAddress);
             }
         }
     

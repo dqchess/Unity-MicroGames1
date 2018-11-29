@@ -63,26 +63,32 @@ namespace SlideAndStick {
         public void Despawn() {
             this.gameObject.SetActive(false);
         }
-		public void Spawn(LevelData _levelData, int currPage) {//, int _col,int _row, int _myPageIndex) {
+		public void Spawn(LevelData _levelData, int currPage, LevelAddress openLvlAddress) {//, int _col,int _row, int _myPageIndex) {
             this.gameObject.SetActive(true);
             this.myLevelData = _levelData;
+			bool isOpenLvl = myLevelData.myAddress == openLvlAddress;
             
             int levelIndexDisplay = myLevelData.myAddress.level + 1;
             
             this.name = "Level_" + levelIndexDisplay;
             t_levelName.text = levelIndexDisplay.ToString();
 			UpdateInteractivityFromCurrPage(currPage);
+
+			Color myColor = packSelectMenu.CurrentPackColor;
+			if (isOpenLvl) { // I'm the open level?? My color is different!
+				myColor = Color.Lerp(myColor, Color.black, 0.3f);
+			}
             
             // Completed-ness visuals!
             if (myLevelData.DidCompleteLevel) {
                 i_backing.sprite = s_completed;
-                i_backing.color = packSelectMenu.CurrentPackColor;
+				i_backing.color = myColor;
                 t_levelName.color = Color.white;
             }
             else {
                 i_backing.sprite = s_notCompleted;
-                i_backing.color = packSelectMenu.CurrentPackColor;//new Color(0.65f,0.65f,0.65f);
-                t_levelName.color = packSelectMenu.CurrentPackColor;
+				i_backing.color = myColor;//new Color(0.65f,0.65f,0.65f);
+				t_levelName.color = myColor;
             }
 
 			// Pre-animate me!

@@ -8,10 +8,13 @@ namespace SlideAndStick {
     public class CollectionButton : MonoBehaviour {
         // Components
         [SerializeField] private Image i_bottom=null;
-        [SerializeField] private Image i_top=null;
-        [SerializeField] private TextMeshProUGUI t_name=null;
+		[SerializeField] private Image i_top=null;
+		[SerializeField] private TextMeshProUGUI t_name=null;
+		[SerializeField] private CollectionProgressBar progressBar=null;
         // Properties
         [SerializeField] private int collectionIndex;
+		private Color collectionColor;
+		private LevelAddress myAddress;
         // References
         [SerializeField] private LevSelController levSelController;
 
@@ -20,12 +23,20 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
         private void Start() {
-            PackCollectionData pcd = LevelsManager.Instance.GetPackCollectionData(GameModes.StandardIndex, collectionIndex);
+			myAddress = new LevelAddress(GameModes.StandardIndex, collectionIndex, 0,0);
+			PackCollectionData pcd = LevelsManager.Instance.GetPackCollectionData(myAddress);
+			collectionColor = LevSelController.GetCollectionColor(collectionIndex);
+
             t_name.text = pcd.CollectionName;
-            Color collectionColor = LevSelController.GetCollectionColor(collectionIndex);
             i_top.color = collectionColor;
             i_bottom.color = Color.Lerp(collectionColor, Color.black, 0.3f);
+			UpdateBarVisuals();
+		}
+
+		private void UpdateBarVisuals() {
+			progressBar.UpdateVisuals(myAddress, collectionColor);
         }
+
 
         // ----------------------------------------------------------------
         //  Events
@@ -33,5 +44,8 @@ namespace SlideAndStick {
         public void OnClick() {
             levSelController.OnCollectionButtonClick(collectionIndex);
         }
+		private void OnEnable() {
+			UpdateBarVisuals();
+		}
     }
 }
