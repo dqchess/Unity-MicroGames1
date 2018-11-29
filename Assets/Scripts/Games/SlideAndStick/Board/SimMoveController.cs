@@ -9,7 +9,7 @@ namespace SlideAndStick {
         private const float FlickVelThreshold = 4f; // if our touchVel is greater than this in OnTouchUp, we count it as a flick and execute the move!
         private float minDragOffset; // In screen space. Any drag less than this will be ignored.
         // Properties
-        private readonly float unitSize;
+        private readonly float uSS; // unitSizeScaled! It's BoardView's UnitSize, but scaled however I want to highten movement sensitivity. If 1, tiles move 1:1 with finger.
         private readonly float dragAxesSwitchThresh; // If dragAxes goes too far x/y by this amount, we'll switch our SimMove!
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
@@ -43,13 +43,25 @@ namespace SlideAndStick {
         private float GetSimMovePercent() {
 			if (!level.GameController.FUEController.CanTouchBoard) { return 0; } // Locked out by FUE? No sim move, then.
             switch (simMoveSide) {
-                case Sides.L: return Mathf.Max(0, -dragAxes.x/unitSize);
-				case Sides.R: return Mathf.Max(0,  dragAxes.x/unitSize);
-				case Sides.B: return Mathf.Max(0, -dragAxes.y/unitSize);
-				case Sides.T: return Mathf.Max(0,  dragAxes.y/unitSize);
+				case -1: return 0; // No side? 0 percent.
+                case Sides.L: return Mathf.Max(0, -dragAxes.x/uSS);
+				case Sides.R: return Mathf.Max(0,  dragAxes.x/uSS);
+				case Sides.B: return Mathf.Max(0, -dragAxes.y/uSS);
+				case Sides.T: return Mathf.Max(0,  dragAxes.y/uSS);
                 default: Debug.LogError("Whoa, side not recognized: " + simMoveSide); return 0;
             }
-        }
+		}
+		static private Vector2Int GetDirFromVector2(Vector2 v) {
+			if (Mathf.Abs(v.x) > Mathf.Abs(v.y)) { // Horizontal.
+				if (v.x < 0) { return Vector2Int.L; }
+				return Vector2Int.R;
+			}
+			else { // Vertical.
+				if (v.y < 0) { return Vector2Int.B; }
+				return Vector2Int.T;
+			}
+			return Vector2Int.undefined; // Hmm.
+		}
 
 
         // ----------------------------------------------------------------
@@ -57,9 +69,9 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
 		public SimMoveController(Level _level) {
 			this.level = _level;
-			this.unitSize = level.BoardView.UnitSize;
+			this.uSS = level.BoardView.UnitSize * 1f;
 			this.minDragOffset = 2;//_unitSize * 0.1f;
-            this.dragAxesSwitchThresh = this.unitSize*0.9f;
+            this.dragAxesSwitchThresh = uSS*0.7f;
         }
 
 
@@ -68,7 +80,11 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void Update() {
 			if (InputController.Instance == null) { return; } // For runtime compile.
-            Debug.Log(Time.frameCount + " simMovePercent: " + SimMovePercent);
+//            Debug.Log(Time.frameCount + " simMovePercent: " + SimMovePercent);
+
+			level.i_test0.rectTransform.anchoredPosition = GetTouchPos();
+			level.i_test1.rectTransform.anchoredPosition = dragAnchorPos;
+
 
 			if (InputController.Instance.IsTouchDown()) { OnTouchDown(); }
 			if (InputController.Instance.IsTouchUp())   { OnTouchUp();   }
@@ -79,7 +95,8 @@ namespace SlideAndStick {
 
         private void OnTouchHeld() {
             UpdateDragAxes();
-            MaybeSwitchMove();
+			MaybeSetSimMove();
+            MaybeSwitchSimMove();
             UpdateSimMove();
         }
         private void OnTouchDown() {
@@ -117,9 +134,20 @@ namespace SlideAndStick {
             
             dragAxes = GetTouchPos() - dragAnchorPos;
         }
+
+		private void MaybeSetSimMove() {
+			// There is NO SimMove...
+			if (SimMoveDir == Vector2Int.zero) {
+				// We WANT a SimMove?! Do eet!
+				Vector2Int thisSimMoveDir = GetSimMoveDir();
+				SetSimMoveDir(thisSimMoveDir);
+				UpdateDragAxes(); // update this for safety.
+				SimMovePercent = GetSimMovePercent(); // update this for safety.
+			}
+		}
         
         /// If we're dragging farther in a DIFFERENT direction...
-        private void MaybeSwitchMove() {
+        private void MaybeSwitchSimMove() {
             Vector2Int thisSimMoveDir = GetSimMoveDir();
             // This simMoveDir is *different* from the current one...
             if (thisSimMoveDir != SimMoveDir) {
@@ -128,29 +156,29 @@ namespace SlideAndStick {
                     SetSimMoveDir(thisSimMoveDir);
                     return;
                 }
-                //Debug.Log(thisSimMoveDir + "   " + dragAxes);
-                // If dragging x or y diff from touchDownAnchor is greater than dragAxesSwitchThresh...
-                if (Mathf.Abs(dragAxes.x) > dragAxesSwitchThresh || Mathf.Abs(dragAxes.y) > dragAxesSwitchThresh) {
-                    SwitchSimMove(thisSimMoveDir);
-                }
-            }
+			}
+//			// If dragging x or y diff from dragAnchorPos is greater than dragAxesSwitchThresh...DISABLED for now.
+//			Vector2 switchThreshAmt = dragAxes / dragAxesSwitchThresh;
+//			if (Mathf.Abs(switchThreshAmt.x)>=1 || Mathf.Abs(switchThreshAmt.y)>=1) {
+//				// If it's a DIFFERENT direction from the way we're already dragging...
+//				Vector2Int switchDir = GetDirFromVector2(switchThreshAmt);
+//				if (switchDir != SimMoveDir) {
+//					SwitchSimMove(switchDir);
+//				}
+//            }
         }
         
         private void SwitchSimMove(Vector2Int _newMoveDir) {
             // Complete or cancel current move.
             if (SimMovePercent > 0.5f) {
-                ExecuteSimMoveSansAnimation();
+				ExecuteSimMoveSansAnimation();
+				// Offset dragAnchorPos towards the move we just made!
+				dragAnchorPos += new Vector2(SimMoveDir.x, -SimMoveDir.y) * uSS; // Note: Flip y.
             }
-            //else {
-            //    CancelSimMove();
-            //}
             // Start new move from leftover anchor dist, and reset anchor.
-            Vector2 newDragAnchor = dragAnchorPos;// + _newMoveDir.ToVector2()*dragAxesSwitchThresh;
-            //level.BoardView.Temp_GetTileGrabbing
             SetSimMoveDir(_newMoveDir);
-            dragAnchorPos = newDragAnchor;
             UpdateSimMove();
-            Debug.Log("newDragAnchor: " + newDragAnchor + " simMovePercent: " + SimMovePercent + "   " + GetSimMovePercent() + "     " + GetSimMoveDir());
+//            Debug.Log("newDragAnchor: " + newDragAnchor + " simMovePercent: " + SimMovePercent + "   " + GetSimMovePercent() + "     " + GetSimMoveDir());
         }
 
         private void UpdateSimMove() {
@@ -162,7 +190,10 @@ namespace SlideAndStick {
                 if (SimMovePercent >= 1) {
                     // We CAN move?! Do!!
                     if (CanExecuteSimMove) {
-                        ExecuteSimMoveSansAnimation();
+						ExecuteSimMoveSansAnimation();
+						ResetDragAnchorAndSimMoveDir();
+//						// Offset dragAnchorPos towards the move we just made!
+//						dragAnchorPos += new Vector2(SimMoveDir.x, -SimMoveDir.y) * uSS; // Note: Flip y.
                     }
                     // We CAN'T move. Limit the percent a bunch.
                     else {
@@ -177,6 +208,8 @@ namespace SlideAndStick {
 			else if (SimMoveDir==Vector2Int.T) level.ExecuteMoveAttempt(Vector2Int.T);
 			else if (SimMoveDir==Vector2Int.L) level.ExecuteMoveAttempt(Vector2Int.L);
 			else if (SimMoveDir==Vector2Int.R) level.ExecuteMoveAttempt(Vector2Int.R);
+		}
+		private void ResetDragAnchorAndSimMoveDir() {
             // Reset dragAnchorPos!
 			dragAnchorPos = GetTouchPos();
 			// Nix any sim move.
@@ -203,12 +236,18 @@ namespace SlideAndStick {
         private void SetSimMoveDir(Vector2Int _dir) {
             SimMoveDir = _dir;
             simMoveSide = MathUtils.GetSide(SimMoveDir);
-            // Reset our dragAnchorPos right next to finger! As if we juust touched down and dragged just enough.
-            dragAnchorPos = GetTouchPos();
-            dragAnchorPos += new Vector2(-_dir.x, _dir.y) * (minDragOffset+1); // hacky flipping y?
-            UpdateDragAxes(); // update this for safety.
-            SimMovePercent = 0; // reset this for safety.
-        }
+		}
+
+
+
+
+//		private void ResetDragAnchorPos() {
+//            // Reset our dragAnchorPos right next to finger! As if we juust touched down and dragged just enough.
+//            dragAnchorPos = GetTouchPos();
+//			dragAnchorPos += new Vector2(-SimMoveDir.x, SimMoveDir.y) * (minDragOffset+1); // hacky flipping y?
+//            UpdateDragAxes(); // update this for safety.
+//            SimMovePercent = 0; // reset this for safety.
+//        }
 
     }
 }
