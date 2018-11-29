@@ -87,10 +87,17 @@ namespace SlideAndStick {
                 StartNextLevel();
             }
             else {
-                // What's the next level we can play?
+				bool wasTutorial = levelsManager.IsTutorial(currAddress);
+                // What's the next level we can play? Start it!
                 RolloverPackStartNextLevel();
-                // Bring us to LevelSelect!
-                coreMenuController.OpenLevSelController(false);
+				// WAS the tutorial?? Tell FUEController!
+				if (wasTutorial) {
+					fueController.ForcePlayerToOpenLevSel();
+				}
+				// Was NOT tutorial. Open LevSel!
+				else {
+                	coreMenuController.OpenLevSelController(false);
+				}
             }
         }
 
@@ -272,6 +279,8 @@ namespace SlideAndStick {
             Vector3 posTo = new Vector3(100, 0,0);//200
             LeanTween.scale(go_levelContainer, Vector3.one*0.74f, duration).setEaseOutQuart();
             LeanTween.moveLocal(go_levelContainer, posTo, duration).setEaseOutQuart();
+			// Tell people.
+			fueController.OnGameControllerRecedeIntoBackground();
         }
         public void ReturnToForeground() {
             LeanTween.cancel(go_levelContainer.gameObject);

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public static class SaveKeys {
 	
-    // Common
+	// Common
+	public const string IsMusic = "IsMusic";
+	public const string IsSfx = "IsSfx";
     public const string VOLUME_MUSIC = "VolumeMusic";
     public const string VOLUME_SFX= "VolumeSfx";
 

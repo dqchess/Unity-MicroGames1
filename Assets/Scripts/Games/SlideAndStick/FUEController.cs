@@ -10,9 +10,13 @@ namespace SlideAndStick {
 		public const string ID_FUE_1 = "1"; // Matches Levels.xml's fueID.
 		public const string ID_FUE_2 = "2"; // Matches Levels.xml's fueID.
 		public const string ID_INTRO_UNDO = "introToUndo"; // Matches Levels.xml's fueID.
-		private const string SEQ_FUE_1 = "SEQ_FUE_1"; // Doesn't matter what this is.
-		private const string SEQ_FUE_2 = "SEQ_FUE_2"; // Doesn't matter what this is.
-		private const string SEQ_INTRO_UNDO = "SEQ_INTRO_UNDO"; // Doesn't matter what this is.
+		private enum Seq {
+			None,
+			FUE_1,
+			FUE_2,
+			IntroUndo,
+			ForceOpenLevSel,
+		}
 		// Specific tutorial properties
 		private Vector2[] FingerMoveBoardPoses_FUE_1 = new Vector2[] {
 			new Vector2(0,1.5f),
@@ -46,12 +50,13 @@ namespace SlideAndStick {
 		public bool CanTouchBoard { get; private set; }
 		private int currentStep; // Each sequence is made up of steps. Which step are we on?
 		private float timeUntilNextStep; // when -1, we won't be counting down.
-		private string currentSeq; // set to currentLevel's fueID, and matches one of the constants up top (or is empty).
+		private Seq currentSeq = Seq.None;
 		// References
 		private Level level;
 
 		// Getters (Private)
-		private bool IsSequenceActive() { return !string.IsNullOrEmpty(currentSeq); }
+//		private bool IsSequenceActive() { return !string.IsNullOrEmpty(currentSeq); }
+		private bool IsSequenceActive() { return currentSeq != Seq.None; }
 		private InputController inputController { get { return InputController.Instance; } }
 		private Vector2[] BoardPosesToScreen(Vector2[] boardPoses) {
 			Vector2[] returnPoses = new Vector2[boardPoses.Length];
@@ -84,9 +89,9 @@ namespace SlideAndStick {
 		// ================================================================
 		//  STARTING / Ending Sequences!
 		// ================================================================
-		private void StartSequence(string newSeqName) {
+		private void StartSequence(Seq newSeq) {
 			if (IsSequenceActive()) {
-				Debug.LogError ("Hey, bud! We're trying to start sequence " + newSeqName + ", but we haven't finished sequence " + currentSeq + ".");
+				Debug.LogError ("Hey, bud! We're trying to start sequence " + newSeq + ", but we haven't finished sequence " + currentSeq + ".");
 				return;
 			}
 
@@ -96,7 +101,7 @@ namespace SlideAndStick {
 			currentStep = 0;
 			CanTouchBoard = true;
 
-			currentSeq = newSeqName;
+			currentSeq = newSeq;
 
 			// Start with the first step!
 			NextStep ();
@@ -106,10 +111,9 @@ namespace SlideAndStick {
 				Debug.LogError ("Hey, dood! We're trying to end a sequence... but we're not running one right now. :P");
 				return;
 			}
-			// Hide everything!
+			// Hide everything, and reset values!
 			HideAllComponents();
-			// Reset values
-			currentSeq = null;
+			currentSeq = Seq.None;
 			timeUntilNextStep = -1;
 			currentStep = 0;
 			CanTouchBoard = true;
@@ -132,10 +136,10 @@ namespace SlideAndStick {
 			// Start an FUE sequence??
 			string fueID = _level.Board.FUEID;
 			if (fueID == ID_FUE_1) {
-				StartSequence(SEQ_FUE_1);
+				StartSequence(Seq.FUE_1);
 			}
 			else if (fueID == ID_FUE_2) {
-				StartSequence(SEQ_FUE_2);
+				StartSequence(Seq.FUE_2);
 			}
 			//else if (fueID == ID_INTRO_UNDO) {NOTE: Disabled this FUE. It's meh.
 			//	StartSequence(SEQ_INTRO_UNDO);
@@ -145,30 +149,42 @@ namespace SlideAndStick {
 			HideAllComponents();
 		}
 		public void OnBoardMoveComplete() {
-			if (currentSeq == SEQ_FUE_2) {
+			if (currentSeq == Seq.FUE_2) {
 				if (level.Board.tiles.Count==3) {
 					NextStep();
 				}
 			}
-			else if (currentSeq == SEQ_INTRO_UNDO) {
+			else if (currentSeq == Seq.IntroUndo) {
 				if (level.NumMovesMade == 1) { // First move? Next step!
 					NextStep();
 				}
 			}
 		}
 		public void OnUndoMove() {
-			if (currentSeq == SEQ_INTRO_UNDO) {
+			if (currentSeq == Seq.IntroUndo) {
 				NextStep();
 			}
 		}
 		public void OnTouchUp() {
 		}
 		public void OnTouchDown() {
-			if (currentSeq == SEQ_INTRO_UNDO) {
+			if (currentSeq == Seq.IntroUndo) {
 				if (currentStep == 2) {
 					NextStep();
 				}
 			}
+		}
+
+		public void OnGameControllerRecedeIntoBackground() {
+			// This means we've opened LevSel!
+			if (currentSeq == Seq.ForceOpenLevSel) {
+				NextStep();
+			}
+		}
+
+
+		public void ForcePlayerToOpenLevSel() {
+			StartSequence(Seq.ForceOpenLevSel);
 		}
 
 
@@ -232,7 +248,7 @@ namespace SlideAndStick {
 			currentStep ++;
 
 			// ---- FUE 1 ----
-			if (currentSeq == SEQ_FUE_1) {
+			if (currentSeq == Seq.FUE_1) {
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
 					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_1);
@@ -241,7 +257,7 @@ namespace SlideAndStick {
 			}
 
 			// ---- FUE 2 ----
-			else if (currentSeq == SEQ_FUE_2) {
+			else if (currentSeq == Seq.FUE_2) {
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
 					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_2A, 3); // Give them 3 seconds to merge something before we show the finger animation.
@@ -254,7 +270,7 @@ namespace SlideAndStick {
 			}
 
 			// ---- FUE 3/3 ----
-			else if (currentSeq == SEQ_INTRO_UNDO) {
+			else if (currentSeq == Seq.IntroUndo) {
 				// Wait for the first move.
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets... yet!
@@ -297,6 +313,23 @@ namespace SlideAndStick {
 				}
 			}
 
+			// ---- Force-Open LevSel ----
+			if (currentSeq == Seq.ForceOpenLevSel) {
+				if (currentStep == s++) {
+//					RectTransform rt_levSelButton = level.GameController.Lev.rt_undoButton;
+//					GameUtils.ParentAndReset(i_arrow.gameObject, rt_levSelButton);
+					GameUtils.ParentAndReset(i_arrow.gameObject, this.transform);
+					Vector2 canvasSize = level.GameController.Canvas.GetComponent<RectTransform>().rect.size;
+					Vector2 arrowPos = new Vector2(canvasSize.x-76, canvasSize.y-40);
+					StartAnimation_BounceArrow(arrowPos, 90);
+					CanTouchBoard = false;
+				}
+				// Wait for input.
+				else if (currentStep == s++) {
+					EndSequence();
+				}
+			}
+
 		}
 
 
@@ -317,9 +350,9 @@ namespace SlideAndStick {
 			i_arrow.transform.localEulerAngles = new Vector3(0,0,rotation);
 
 			float bounceDist = 50;
-			Vector2 posB = arrowPos + new Vector2(Mathf.Sin(rotation*Mathf.Deg2Rad), Mathf.Cos(rotation*Mathf.Deg2Rad))*bounceDist;
+			Vector2 posB = arrowPos + new Vector2(-Mathf.Sin(rotation*Mathf.Deg2Rad), Mathf.Cos(rotation*Mathf.Deg2Rad))*bounceDist;
 			while (true) {
-				float loc = Mathf.Abs(Mathf.Sin(Time.time*6f));
+				float loc = Mathf.Abs(Mathf.Sin(Time.time*4f));
 				i_arrow.rectTransform.anchoredPosition = Vector2.Lerp(arrowPos,posB, loc);
 				yield return null;
 			}
