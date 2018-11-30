@@ -145,7 +145,7 @@
 
 
 
-
+<!--
 <LevelPack packName="6x6 DNU">
 <Levels>
     <Level diff="1" layout=" 11.1.0, 1.1110, ..111., 1.1.00, ......, ...1..," />
@@ -182,6 +182,7 @@
 
 </Levels>
 </LevelPack>
+-->
 
 
 </Packs>

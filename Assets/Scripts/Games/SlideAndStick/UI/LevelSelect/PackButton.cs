@@ -5,15 +5,16 @@ using UnityEngine.UI;
 using TMPro;
 
 namespace SlideAndStick {
-    [RequireComponent(typeof(Button))]
+    //[RequireComponent(typeof(Button))]
     public class PackButton : MonoBehaviour {
         // Components
         [SerializeField] private Button myButton=null;
-        [SerializeField] private Image i_bottom=null;
-        [SerializeField] private Image i_top=null;
+        [SerializeField] private Image i_backing=null;
         [SerializeField] private RectTransform myRectTransform=null;
         [SerializeField] private TextMeshProUGUI t_packName=null;
         // References
+        [SerializeField] private Sprite s_selected=null;
+        [SerializeField] private Sprite s_unselected=null;
         private PackData myPackData;
         private PackSelectMenu packSelectMenu;
         
@@ -42,18 +43,17 @@ namespace SlideAndStick {
             this.name = "Pack_" + myPackData.MyAddress.pack;
             t_packName.text = myPackData.PackName;
             myButton.interactable = !isSelected; // I'm not clickable if I'm selected.
+            i_backing.color = packSelectMenu.CurrentPackColor;
+            
+            i_backing.sprite = isSelected ? s_selected : s_unselected;
             
             if (isSelected) {
-                i_top.enabled = false;
-                i_bottom.enabled = false;
-                t_packName.color = packSelectMenu.CurrentPackColor;
+                t_packName.color = Color.white;
             }
             else {
-                i_top.enabled = true;
-                i_bottom.enabled = true;
-                i_top.color = packSelectMenu.CurrentPackColor;
-                i_bottom.color = Color.Lerp(packSelectMenu.CurrentPackColor, Color.black, 0.3f); // darker bottom image for depth.
-                t_packName.color = Color.white;
+                //i_top.color = packSelectMenu.CurrentPackColor;
+                //i_bottom.color = Color.Lerp(packSelectMenu.CurrentPackColor, Color.black, 0.3f); // darker bottom image for depth.
+                t_packName.color = packSelectMenu.CurrentPackColor;
             }
         }
         public void SetPosSize(Vector2 _pos, Vector2 _size) {

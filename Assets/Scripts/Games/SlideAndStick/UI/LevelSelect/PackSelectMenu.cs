@@ -10,8 +10,9 @@ namespace SlideAndStick {
         private const int numLevelCols = 5;
         private const int numLevelRows = 5;
         private const int numLevelsPerPage = numLevelCols*numLevelRows;
-        private const float packButtonWidth = 100;
+        private const float packButtonWidth = 120;
     	// Components
+        [SerializeField] private DepthButtonSer backButton=null;
         [SerializeField] private LevSelProgressBar progressBar=null;
 		[SerializeField] private LevelsPageNav pageNav=null;
         [SerializeField] private RectTransform rt_packButtons=null;
@@ -70,6 +71,7 @@ namespace SlideAndStick {
             
             CurrentPackColor = LevSelController.GetCollectionColor(selectedAddress.collection);
             progressBar.UpdateVisuals(lm.selectedAddress, CurrentPackColor);
+            backButton.SetColors(CurrentPackColor);
             UpdateHeaderText();
 			SetCurrPage(0);
             RefreshPackButtons();

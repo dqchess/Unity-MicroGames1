@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/** Pairs with DepthButtonExt; add both together. */
+/** Pairs with DepthButtonExt; add both together.
+    DepthButtonSer is short for DepthButtonSerializable. */
 public class DepthButtonSer : MonoBehaviour {
     // Constants
     private static float depthEasing = 0.36f; // higher is faster.
@@ -18,7 +19,17 @@ public class DepthButtonSer : MonoBehaviour {
     // Coroutines
     private Coroutine c_animateDepth;
 
-
+    
+    // Setters (Public)
+    public void SetColors(Color topColor) {
+        Color bottomColor = Color.Lerp(topColor, Color.black, 0.18f); // automatically make bottom color darker.
+        foreach (Image img in rt_top.GetComponentsInChildren<Image>()) {
+            img.color = topColor;
+        }
+        foreach (Image img in rt_bottom.GetComponentsInChildren<Image>()) {
+            img.color = bottomColor;
+        }
+    }
     // Setters (Private)
     private float Depth {
         get { return depth; }
