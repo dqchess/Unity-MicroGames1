@@ -32,10 +32,10 @@ namespace SlideAndStick {
                 // Packs
                 case 3: return new Color( 59/255f,229/255f,196/255f);
                 case 4: return new Color( 59/255f,229/255f, 80/255f);
-                case 5: return new Color(255/255f,216/255f, 78/255f);
+                case 5: return new Color(255/255f,190/255f, 70/255f);
                 case 6: return new Color(250/255f, 85/255f,200/255f);
-                case 7: return new Color(144/255f,144/255f,144/255f);
-                case 8: return new Color( 58/255f, 58/255f, 58/255f);
+                case 7: return new Color(180/255f,180/255f,180/255f);
+                case 8: return new Color( 90/255f, 90/255f, 90/255f);
                 default: return Color.red; // Hmm.
             }
         }
@@ -45,13 +45,11 @@ namespace SlideAndStick {
     
     
         // ----------------------------------------------------------------
-        //  Start / Destroy
+        //  Start
         // ----------------------------------------------------------------
-        private void Awake() {
+		private void Start() {
             // Set values
             menusWidth = rt_menus.rect.width;
-        }
-		private void Start() {
             packsMenu.Close(MenuTransType.Pop); // TODO: No animations
             collectionsMenu.Open(MenuTransType.Pop);
         }
