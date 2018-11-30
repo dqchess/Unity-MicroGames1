@@ -44,7 +44,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1203076628911610
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,8 +414,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rt_bottom: {fileID: 224983124880824418}
   rt_top: {fileID: 224059953632966684}
-  depthNeutral: 9
-  depthPressed: 3
+  depthNeutral: 5
+  depthPressed: 0
 --- !u!114 &114884168364241342
 MonoBehaviour:
   m_ObjectHideFlags: 1

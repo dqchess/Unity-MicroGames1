@@ -31,6 +31,7 @@
     <Level diff="5" layout=" 2..2, 1.12, 2.12, 2.11," />
     <Level diff="5" layout=" 022., 0220, 0..., 22.0," />
     <Level diff="5" layout=" 01.0, 011., .11., 10.0," />
+    <Level diff="5" layout=" ..11, 010., 1.01, 1101," />
     <Level diff="5" layout=" ..01, 0..1, 11.0, 1110," />
     <Level diff="5" layout=" 10.1, 1..0, .101, .101," />
     <Level diff="5" layout=" ..00, 01.1, 010., 010.," />

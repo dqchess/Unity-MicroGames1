@@ -9,9 +9,8 @@
 <Levels>
     <Level diff="6" layout=" 1.00, 00.1, 1101, 0.1.," />
     <Level diff="6" layout=" 00.0, 1.11, 100., 011.," />
-    <Level diff="6" layout=" ..11, 010., 1.01, 1101," />
     <Level diff="6" layout=" 0.01, 1101, 1..., 10.0," />
-    <Level diff="6" layout=" 1.11, .010, .0.0, .011," />
+    <Level diff="6" layout=" 1.11, .010, .0.0, .011," desc="great. smart" />
     <Level diff="6" layout=" 12.1, 1.11, 0.21, .102," desc="great" />
     <Level diff="6" layout=" 1..1, .0.., 0010, 1101," />
     <Level diff="6" layout=" .001, .1.1, 1.0., 1010," />
