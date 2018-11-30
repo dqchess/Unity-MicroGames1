@@ -79,8 +79,12 @@ namespace SpoolOut {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
-			board = new Board(bd);
-            AddReasonableRandSpoolsToBoardIfNone(); // For rando layout generating!
+            if (bd.spoolDatas.Count == 0) { // No spools?? Rand-gen!!
+			    board = GetReasonableRandSpoolsIfNone(bd, gameController.randGenParams);
+            }
+            else { // There are spools. No rand-gen.
+                board = new Board(bd);
+            }
 			boardView = Instantiate (ResourcesHandler.Instance.spoolOut_boardView).GetComponent<BoardView>();
 			boardView.Initialize (this, board);
             // Tell ppl!
@@ -99,22 +103,19 @@ namespace SpoolOut {
 			spoolGrabbing = null;
 		}
         
-        private void AddReasonableRandSpoolsToBoardIfNone() {
-			if (board.spools.Count > 0) { return; } // We have Spools? Ok, do nothing! No rand-genning.
-			RandGenParams rgp = gameController.randGenParams;
-            // First, remember the basic empty boardData.
-            BoardData bd = board.SerializeAsData();
-            for (int i=0; i<99; i++) { // let's try 99 times.
+        static private Board GetReasonableRandSpoolsIfNone(BoardData bd, RandGenParams rgp) {
+			if (bd.spoolDatas.Count > 0) { return new Board(bd); } // We have Spools? Ok, do nothing! No rand-genning.
+            const int NumTries = 99; // let's try 99 times.
+            for (int i=0; i<NumTries; i++) {
+                Board board = new Board(bd);
 				board.Debug_AddRandomSpools(rgp);
-				if (board.AreRandomlyMadeSpoolsGood(rgp)) { // This layout is good! Let's go with it. :)
+                // This layout is good, OR it's our final attempt. Go with this board!
+				if (board.AreRandomlyMadeSpoolsGood(rgp) || i==NumTries-1) {
 					Debug.Log("Good layout found after attempts: " + i);
-					break;
-				}
-				// Ah, the layout is NOT good enough. Remake the board to try again.
-				else {
-					board = new Board(bd);
+					return board;
 				}
 			}
+            return null; // Hmm.
 		}
 
 
@@ -248,6 +249,7 @@ namespace SpoolOut {
             else if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
             else if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }
             else if (Input.GetKeyDown(KeyCode.V)) { board.Debug_CopyXMLToClipboard(false); }
+            else if (Input.GetKeyDown(KeyCode.L)) { Debug_CopyRandomLayoutsToClipboard(); }
             else if (Input.GetKeyDown(KeyCode.Alpha1)) { board.Debug_CopyXMLToClipboardWithDiff(1); }
             else if (Input.GetKeyDown(KeyCode.Alpha2)) { board.Debug_CopyXMLToClipboardWithDiff(2); }
             else if (Input.GetKeyDown(KeyCode.Alpha3)) { board.Debug_CopyXMLToClipboardWithDiff(3); }
@@ -351,6 +353,23 @@ namespace SpoolOut {
             RemakeModelAndViewFromData(boardData);
             //NumMovesMade ++;
             OnBoardMoveComplete();
+        }
+        
+        
+        private void Debug_CopyRandomLayoutsToClipboard() {
+            const int NumLayouts = 100;
+            string str = "";
+            // Make a BoardData with NO spools from our current Board.
+            BoardData bd = board.SerializeAsData();
+            bd.spoolDatas = new List<SpoolData>();
+            // Make random layouts!
+            for (int i=0; i<NumLayouts; i++) {
+                Board b = GetReasonableRandSpoolsIfNone(bd, gameController.randGenParams);
+                str += b.Debug_GetAsXML(true);
+            }
+            // Copy to clippy!
+            GameUtils.CopyToClipboard(str);
+            Debug.Log(NumLayouts + " rand layouts copied to clipboard!");
         }
 
 	}

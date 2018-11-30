@@ -237,7 +237,7 @@ namespace SpoolOut {
         }
         
         
-        [SerializeField] private GameObject go_levelContainer;
+        [SerializeField] private GameObject go_levelContainer=null;
         public void RecedeIntoBackground() {
             LeanTween.cancel(go_levelContainer);
             float duration = 0.7f;
