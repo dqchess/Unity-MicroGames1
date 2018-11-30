@@ -7,6 +7,7 @@ namespace SlideAndStick {
     public class LevelsManager {
         // Constants
         private static readonly LevelAddress TutorialPackAddress = new LevelAddress(GameModes.StandardIndex, 2, 0, 0);
+        private static readonly LevelAddress FallbackLevelAddress = new LevelAddress(GameModes.StandardIndex, 3, 0, 0);
         // Properties
         public LevelAddress selectedAddress = LevelAddress.undefined; // used for navigating menus! :)
         private ModeCollectionData[] modeDatas; // Currently only one mode.
@@ -58,7 +59,7 @@ namespace SlideAndStick {
             return GetLevelData (address.mode, address.collection, address.pack, address.level);
         }
     
-        public LevelAddress GetLastPlayedLevelAddress() {
+        private LevelAddress GetLastPlayedLevelAddress() {
             if (selectedAddress == LevelAddress.undefined) { selectedAddress = LevelAddress.zero; } // hacky make sure it's not -1s. (Why do we even have it start at undefined?..)
             // Save data? Use it!
             string key = SaveKeys.SlideAndStick_LastPlayedLevelGlobal;//Local(selectedAddress);
@@ -105,9 +106,18 @@ namespace SlideAndStick {
         
         public LevelData GetFallbackEmptyLevelData() {
             return new LevelData {
-                myAddress = new LevelAddress(0, 0, 0, 0),
-                boardData = new BoardData(1, 1)
+                myAddress = LevelAddress.zero,
+                boardData = new BoardData(1,1)
             };
+        }
+        
+        public LevelData GetLastPlayedLevelData() {
+            LevelAddress lastPlayedAdd = GetLastPlayedLevelAddress();
+            LevelData ld = GetLevelData(lastPlayedAdd);
+            if (ld == null) { // Oh, this level doesn't exist. Return the first Beginner level, I guess.
+                ld = GetLevelData(FallbackLevelAddress);
+            }
+            return ld;
         }
         
     
