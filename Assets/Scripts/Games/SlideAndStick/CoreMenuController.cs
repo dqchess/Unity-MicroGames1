@@ -31,6 +31,9 @@ namespace SlideAndStick {
             else {
                 OpenLevSelController(false);
             }
+            
+            // Gimme a banner, Jim!
+            AdManager.instance.showBanner();
         }
         
         

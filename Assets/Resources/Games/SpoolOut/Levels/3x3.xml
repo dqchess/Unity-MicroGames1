@@ -1,0 +1,44 @@
+<LevelsCollection collectionName="3x3" gameMode="Standard">
+<Packs>
+
+
+
+
+
+
+<LevelPack packName="3x3">
+<Levels>
+
+
+
+    <Level diff="2" layout=" ..2, 2.., ..2," desc="classic" />
+    <Level diff="2" layout=" 3.1, ..., ..2," />
+    <Level diff="3" layout=" ..4, .3., ...," />
+    <Level diff="2" layout=" ..1, .2., .3.," />
+    <Level diff="2" layout=" 41., ..., ..1," />
+    <Level diff="2" layout=" 21., ..3, ...," />
+
+
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+
+
+
+
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

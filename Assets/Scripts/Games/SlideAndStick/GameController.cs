@@ -6,6 +6,8 @@ using System.Collections.Generic;
 namespace SlideAndStick {
     /** Note that this GameController /manually/ trickles down Update calls. To ensure no accidental Update calls when we shouldn't have any (i.e. when blocked by LevSel). */
 	public class GameController : BaseGameController {
+        // Constants
+        private const int NumPlaysBetweenAds = 5;
 		// Overrideables
 		override public string MyGameName() { return GameNames.SlideAndStick; }
 		// Components
@@ -13,7 +15,7 @@ namespace SlideAndStick {
 		private Level level;
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
-		// References
+        // References
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private GameObject go_toggleLevSelButton=null;
@@ -179,6 +181,21 @@ namespace SlideAndStick {
             // Save values!
             //SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelLocal(currAddress), currAddress.ToString());
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.ToString());
+            
+            // Maybe show ad!
+            int playsUntilAd = SaveStorage.GetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
+            playsUntilAd --;
+            SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, playsUntilAd);
+            if (playsUntilAd <= 0) {
+                ShowAd();
+            }
+        }
+        
+        private void ShowAd() {
+            // Show an ad!
+            AdManager.instance.showInterstitial();
+            // Reset PlaysUntilAd.
+            SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
         }
     
         
