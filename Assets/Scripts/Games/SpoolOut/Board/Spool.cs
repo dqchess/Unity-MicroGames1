@@ -44,7 +44,7 @@ namespace SpoolOut {
             NumSpacesToFill = _data.numSpacesToFill;
 			PathSpaces = new List<Vector2Int>();
 			foreach (Vector2Int space in _data.pathSpaces) {
-				AddPathSpace(space);
+				AddPathSpace(space, false);
 			}
             //if (pathSpaces == null) { // Convenience: Pass in null to default to just empty path.
             //  pathSpaces = new Vector2Int[0];
@@ -68,10 +68,12 @@ namespace SpoolOut {
         // ----------------------------------------------------------------
         //  Doers
         // ----------------------------------------------------------------
-        public void AddPathSpace(Vector2Int spacePos) {
+        public void AddPathSpace(Vector2Int spacePos, bool doDispatchEvent=true) {
             PathSpaces.Add(spacePos);
             GetSpace(spacePos.x,spacePos.y).SetMySpool(this);
-			OnPathChanged();
+            if (doDispatchEvent) {
+			    OnPathChanged();
+            }
 		}
         public void RemovePathSpace() {
             if (PathSpaces.Count < 2) { return; } // Safety check!

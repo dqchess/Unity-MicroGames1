@@ -159,7 +159,8 @@ namespace SpoolOut {
 			if (view != null) {
 				view.WholesaleRemakeVisuals();
 			}
-			// Hacky, yo.
+			// Hacky, yo!
+            board.OnMoveComplete();
 			OnBoardMoveComplete();
 		}
 

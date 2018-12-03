@@ -3,20 +3,62 @@
 
 
 
-
-
-
 <LevelPack packName="3x3">
 <Levels>
 
 
 
     <Level diff="2" layout=" ..2, 2.., ..2," desc="classic" />
+    <Level diff="0" layout=" ..., ..., 132," />
     <Level diff="2" layout=" 3.1, ..., ..2," />
     <Level diff="3" layout=" ..4, .3., ...," />
     <Level diff="2" layout=" ..1, .2., .3.," />
     <Level diff="2" layout=" 41., ..., ..1," />
     <Level diff="2" layout=" 21., ..3, ...," />
+    <Level diff="0" layout=" 1.2, ..., .3.," />
+    <Level diff="0" layout=" .1., ..., 1.4," />
+    <Level diff="0" layout=" 1.1, ..., 1.2," />
+    <Level diff="0" layout=" .1., .1., 4..," />
+    <Level diff="0" layout=" 3.2, ..1, ...," />
+    <Level diff="0" layout=" ..3, ..1, 2..," />
+    <Level diff="0" layout=" ..1, ..., 4.1," />
+    <Level diff="0" layout=" 1.3, ..., 2..," />
+    <Level diff="0" layout=" ..., 32., 1..," />
+    <Level diff="0" layout=" .11, ..., 2.1," />
+    <Level diff="0" layout=" ..2, .22, ...," />
+    <Level diff="0" layout=" 2.., .1., 1.1," />
+    <Level diff="0" layout=" 1.., 1.., .12," />
+    <Level diff="0" layout=" 4.1, ..., .1.," />
+    <Level diff="0" layout=" .1., 11., 2..," />
+    <Level diff="0" layout=" ..3, ..1, 2..," />
+    <Level diff="0" layout=" 4.., ..., 3..," />
+    <Level diff="0" layout=" ..2, 1.., 1.1," />
+    <Level diff="0" layout=" 2.3, 1.., ...," />
+    <Level diff="0" layout=" .3., .2., .1.," />
+    <Level diff="0" layout=" .1., ..1, ..4," />
+    <Level diff="0" layout=" ..3, .1., 2..," />
+    <Level diff="0" layout=" ..., .4., 11.," />
+    <Level diff="0" layout=" ..2, 2.., 2..," />
+    <Level diff="0" layout=" 1.4, ..., ..1," />
+    <Level diff="0" layout=" 1.3, ..., 2..," />
+    <Level diff="0" layout=" ..2, ..., 1.3," />
+    <Level diff="0" layout=" ..., .21, 11.," />
+    <Level diff="0" layout=" 2.1, ..1, .1.," />
+    <Level diff="0" layout=" ..., 14., .1.," />
+    <Level diff="0" layout=" .1., .3., ..2," />
+    <Level diff="0" layout=" 1.., .2., ..3," />
+    <Level diff="0" layout=" 2.., 2.., ..2," />
+    <Level diff="0" layout=" ..., .4., 3..," />
+    <Level diff="0" layout=" .3., ..1, ..2," />
+    <Level diff="0" layout=" 22., ..., ..2," />
+    <Level diff="0" layout=" ..1, ..., 211," />
+    <Level diff="0" layout=" 21., ..1, .1.," />
+    <Level diff="0" layout=" 3.4, ..., ...," />
+    <Level diff="0" layout=" 1.1, .2., .1.," />
+    <Level diff="0" layout=" ..., 1.., .14," />
+    <Level diff="0" layout=" ..., 12., ..3," />
+    <Level diff="0" layout=" 3.1, ..., ..2," />
+
 
 
 

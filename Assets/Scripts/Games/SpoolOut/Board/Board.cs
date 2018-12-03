@@ -26,6 +26,7 @@ namespace SpoolOut {
 		// Getters (Private)
 		private bool GetAreGoalsSatisfied() {
             if (Debug_noWin) { return false; } // debug_noWin? Test level. We're never satisfied.
+            if (spools.Count == 0) { return false; } // No Spools? Never satisfied.
 			// Ask each Spool.
             foreach (Spool w in spools) {
                 if (!w.IsSatisfied) { return false; }
@@ -82,7 +83,6 @@ namespace SpoolOut {
 			MakeBoardSpaces (bd);
 			AddPropsFromBoardData (bd);
 
-			// Start our solo bubbas out merged, goro!
 			OnMoveComplete();
 		}
 
@@ -137,7 +137,7 @@ namespace SpoolOut {
 		// ----------------------------------------------------------------
 		//  Events
 		// ----------------------------------------------------------------
-		private void OnMoveComplete() {
+		public void OnMoveComplete() {
 			AreGoalsSatisfied = GetAreGoalsSatisfied();
 		}
 

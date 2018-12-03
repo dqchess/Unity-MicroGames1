@@ -33,11 +33,11 @@ namespace SpoolOut {
             
             //rt_complete.anchoredPosition = new Vector2(0, rt_complete.anchoredPosition.y);
             //float centerXPos = rt_complete.transform.localPosition.x;
-            float centerXPos = FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.width*0.5f;//150;
-            rt_complete.localPosition   = new Vector2(centerXPos+800,rt_complete.localPosition.y);
-            rt_nextButton.localPosition = new Vector2(centerXPos-800,rt_nextButton.localPosition.y);
-            LeanTween.moveX(rt_complete.gameObject,   centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0);
-            LeanTween.moveX(rt_nextButton.gameObject, centerXPos, 0.6f).setEaseOutQuint();//.setDelay(0.11f);
+            float centerXPos = 0;//FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.width*0.5f;//150;
+            rt_complete.anchoredPosition   = new Vector2(centerXPos+800,rt_complete.anchoredPosition.y);
+            rt_nextButton.anchoredPosition = new Vector2(centerXPos-800,rt_nextButton.anchoredPosition.y);
+            LeanTween.moveX(rt_complete,   centerXPos, 0.6f).setEaseOutQuint().setDelay(0.1f);
+            LeanTween.moveX(rt_nextButton, centerXPos, 0.6f).setEaseOutQuint().setDelay(0.1f);
         }
         
         private void UpdateDebugTimeSpentText() {
