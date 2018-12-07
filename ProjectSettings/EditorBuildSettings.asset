@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SlideAndStickLevelSelect.unity
-    guid: 35b3f139958d84386b240fdc57ca14e4
-  - enabled: 1
     path: Assets/Scenes/SlideAndStick.unity
     guid: 013ed967315fa4ac69cf258824dd8e24
   m_configObjects: {}
