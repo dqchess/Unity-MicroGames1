@@ -29,60 +29,60 @@ public class AdManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //IronSource.Agent.init(ironsourceKey);QQQ
-        //IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
-        //IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;
-        //IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
-        //IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
-        //IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
-        //IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
-        //IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
-        //IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
-        //IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;
-        //IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent;
-        //IronSourceEvents.onBannerAdScreenPresentedEvent += BannerAdScreenPresentedEvent;
-        //IronSourceEvents.onBannerAdScreenDismissedEvent += BannerAdScreenDismissedEvent;
-        //IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
+        IronSource.Agent.init(ironsourceKey);
+        IronSourceEvents.onRewardedVideoAdOpenedEvent += RewardedVideoAdOpenedEvent;
+        IronSourceEvents.onRewardedVideoAdClosedEvent += RewardedVideoAdClosedEvent;
+        IronSourceEvents.onRewardedVideoAvailabilityChangedEvent += RewardedVideoAvailabilityChangedEvent;
+        IronSourceEvents.onRewardedVideoAdStartedEvent += RewardedVideoAdStartedEvent;
+        IronSourceEvents.onRewardedVideoAdEndedEvent += RewardedVideoAdEndedEvent;
+        IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
+        IronSourceEvents.onRewardedVideoAdShowFailedEvent += RewardedVideoAdShowFailedEvent;
+        IronSourceEvents.onBannerAdLoadedEvent += BannerAdLoadedEvent;
+        IronSourceEvents.onBannerAdLoadFailedEvent += BannerAdLoadFailedEvent;
+        IronSourceEvents.onBannerAdClickedEvent += BannerAdClickedEvent;
+        IronSourceEvents.onBannerAdScreenPresentedEvent += BannerAdScreenPresentedEvent;
+        IronSourceEvents.onBannerAdScreenDismissedEvent += BannerAdScreenDismissedEvent;
+        IronSourceEvents.onBannerAdLeftApplicationEvent += BannerAdLeftApplicationEvent;
     }
 
     //show reward ad
     public void showRewardVideo()
     {
-        //if (IronSource.Agent.isRewardedVideoAvailable())
-        //{
-        //    IronSource.Agent.showRewardedVideo();
-        //}
+        if (IronSource.Agent.isRewardedVideoAvailable())
+        {
+            IronSource.Agent.showRewardedVideo();
+        }
     }
 
     //show baner ad
     public void showBanner()
     {
-        //IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
-        //IronSource.Agent.displayBanner();
+        IronSource.Agent.loadBanner(IronSourceBannerSize.BANNER, IronSourceBannerPosition.BOTTOM);
+        IronSource.Agent.displayBanner();
     }
 
     //hide banner ad
     public void hideBanner()
     {
-        //IronSource.Agent.hideBanner();
+        IronSource.Agent.hideBanner();
     }
 
     //show interstitial
     public void showInterstitial()
     {
-        //if (IronSource.Agent.isInterstitialReady())
-        //{
-        //    IronSource.Agent.showInterstitial();
-        //} else
-        //{
-        //    loadInterstitialAd();
-        //}
+        if (IronSource.Agent.isInterstitialReady())
+        {
+            IronSource.Agent.showInterstitial();
+        } else
+        {
+            loadInterstitialAd();
+        }
     }
 
     //load interstitial 1 level before need to show
     public void loadInterstitialAd()
     {
-        //IronSource.Agent.loadInterstitial();
+        IronSource.Agent.loadInterstitial();
     }
 
     void onRewardedVideoAvailabilityChangedEvent(bool available)
@@ -93,18 +93,18 @@ public class AdManager : MonoBehaviour {
 
     void OnApplicationPause(bool isPaused)
     {
-        //IronSource.Agent.onApplicationPause(isPaused);
+        IronSource.Agent.onApplicationPause(isPaused);
     }
 
     void OnEnable()
     {
-        //IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
-        //IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent;
-        //IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
-        //IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
-        //IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
-        //IronSourceEvents.onInterstitialAdOpenedEvent += InterstitialAdOpenedEvent;
-        //IronSourceEvents.onInterstitialAdClosedEvent += InterstitialAdClosedEvent;
+        IronSourceEvents.onInterstitialAdReadyEvent += InterstitialAdReadyEvent;
+        IronSourceEvents.onInterstitialAdLoadFailedEvent += InterstitialAdLoadFailedEvent;
+        IronSourceEvents.onInterstitialAdShowSucceededEvent += InterstitialAdShowSucceededEvent;
+        IronSourceEvents.onInterstitialAdShowFailedEvent += InterstitialAdShowFailedEvent;
+        IronSourceEvents.onInterstitialAdClickedEvent += InterstitialAdClickedEvent;
+        IronSourceEvents.onInterstitialAdOpenedEvent += InterstitialAdOpenedEvent;
+        IronSourceEvents.onInterstitialAdClosedEvent += InterstitialAdClosedEvent;
     }
 
     //Invoked once the banner has loaded
@@ -113,9 +113,9 @@ public class AdManager : MonoBehaviour {
     }
     //Invoked when the banner loading process has failed.
     //@param description - string - contains information about the failure.
-    //void BannerAdLoadFailedEvent(IronSourceError error)
-    //{
-    //}
+    void BannerAdLoadFailedEvent(IronSourceError error)
+    {
+    }
     // Invoked when end user clicks on the banner ad
     void BannerAdClickedEvent()
     {
@@ -136,18 +136,18 @@ public class AdManager : MonoBehaviour {
 
     //Invoked when the initialization process has failed.
     //@param description - string - contains information about the failure.
-    //void InterstitialAdLoadFailedEvent(IronSourceError error)
-    //{
-    //}
+    void InterstitialAdLoadFailedEvent(IronSourceError error)
+    {
+    }
     //Invoked right before the Interstitial screen is about to open.
     void InterstitialAdShowSucceededEvent()
     {
     }
     //Invoked when the ad fails to show.
     //@param description - string - contains information about the failure.
-    //void InterstitialAdShowFailedEvent(IronSourceError error)
-    //{
-    //}
+    void InterstitialAdShowFailedEvent(IronSourceError error)
+    {
+    }
     // Invoked when end user clicked on the interstitial ad
     void InterstitialAdClickedEvent()
     {
@@ -203,14 +203,14 @@ public class AdManager : MonoBehaviour {
     //
     //@param - placement - placement object which contains the reward data
     //
-    //void RewardedVideoAdRewardedEvent(IronSourcePlacement placement)
-    //{
-    //}
+    void RewardedVideoAdRewardedEvent(IronSourcePlacement placement)
+    {
+    }
     //Invoked when the Rewarded Video failed to show
     //@param description - string - contains information about the failure.
-    //void RewardedVideoAdShowFailedEvent(IronSourceError error)
-    //{
-    //}
+    void RewardedVideoAdShowFailedEvent(IronSourceError error)
+    {
+    }
 
     // Update is called once per frame
     void Update () {
