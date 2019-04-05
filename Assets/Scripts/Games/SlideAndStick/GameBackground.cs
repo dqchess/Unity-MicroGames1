@@ -70,7 +70,7 @@ namespace SlideAndStick {
         private void Start() {
             // Size my gradient right-o!
             float canvasHeight = FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.height;
-            i_backGradient.rectTransform.sizeDelta = new Vector2(canvasHeight,canvasHeight)*1.11f; // add bloat so it still covers screen while rotating.
+            i_backGradient.rectTransform.sizeDelta = new Vector2(canvasHeight,canvasHeight)*1.18f; // add bloat so it still covers screen while rotating.
         }
 
 

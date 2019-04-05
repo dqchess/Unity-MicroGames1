@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace SlideAndStick {
     public class ToggleLevSelButton : MonoBehaviour {
         // Constants
-        private readonly Color colorStack = new Color(0.7f,0.7f,0.7f);
-        private readonly Color colorX = new Color(1,1,1);
+        private readonly Color colorStack = new Color(1,1,1, 0.94f);//new Color(0.7f,0.7f,0.7f);
+        private readonly Color colorX = new Color(1,1,1, 0.94f);
         // Components
         [SerializeField] private Image i_bar0=null;
         [SerializeField] private Image i_bar1=null;

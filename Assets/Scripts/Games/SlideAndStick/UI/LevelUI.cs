@@ -9,7 +9,9 @@ namespace SlideAndStick {
         // Components
         [SerializeField] private RectTransform rt_levelName=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
+        [SerializeField] private TextMeshProUGUI t_levelNameShadow=null;
         [SerializeField] private TextMeshProUGUI t_packName=null;
+        [SerializeField] private TextMeshProUGUI t_packNameShadow=null;
         [SerializeField] private LevelCompletePopup levelCompletePopup=null;
 		// References
 		[SerializeField] private Level level=null;
@@ -31,9 +33,12 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
 		private void Start () {
-            t_levelName.text = "LEVEL " + (level.MyAddress.level+1).ToString();
-            if (level.Board.DidRandGen) { t_levelName.text += " (RAND)"; }
-            t_packName.text = GetCollectionName() + ",  " + GetPackName();// + " (D" + level.Board.Difficulty + ")";
+            // Update texts!
+            string levelStr = "LEVEL " + (level.MyAddress.level+1).ToString();
+            if (level.Board.DidRandGen) { levelStr += " (RAND)"; }
+            string packStr = GetCollectionName();// + ",  " + GetPackName();// + " (D" + level.Board.Difficulty + ")";
+            t_levelName.text = t_levelNameShadow.text = levelStr;
+            t_packName.text = t_packNameShadow.text = packStr;
             
             levelCompletePopup.Hide();
         }

@@ -252,7 +252,7 @@ namespace SlideAndStick {
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
 					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_1);
-					t_instructions.text = "Merge the Tiles!";
+					//t_instructions.text = "Merge the Tiles!";
 				}
 			}
 
@@ -278,7 +278,7 @@ namespace SlideAndStick {
 				// Show instructions.
 				else if (currentStep == s++) {
 					CanTouchBoard = false; // ignore Board input! I'm da captain now!
-					t_instructions.text = "Press to UNDO.";
+					//t_instructions.text = "Press to UNDO.";
 					level.UndoMoveInputController.SetButtonsVisible(true);
 					RectTransform rt_undoButton = level.UndoMoveInputController.rt_undoButton;
 					GameUtils.ParentAndReset(i_arrow.gameObject, rt_undoButton);

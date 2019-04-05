@@ -26,8 +26,8 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		//  Start
 		// ----------------------------------------------------------------
 		private void Start() {
-			// We can't SerializeField my ref for the button, so *I* have to tell the button who I am.
-			undoButton.SetUndoControllerRef(this);
+			//// We can't SerializeField my ref for the button, so *I* have to tell the button who I am.
+			//undoButton.SetUndoControllerRef(this);
             // Set calloutArrowPosNeutral.
             calloutArrowPosNeutral = i_calloutArrow.rectTransform.anchoredPosition;
 		}
@@ -70,7 +70,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
         // ----------------------------------------------------------------
 		public void SetButtonsVisible(bool _isVisible) {
 			undoButton.gameObject.SetActive(_isVisible);
-			restartLevelButton.gameObject.SetActive(_isVisible);
+			//restartLevelButton.gameObject.SetActive(_isVisible);//NOTE: Disabled restartLevelButton!
 		}
 //		private void SetButtonsScale(float scale) {
 //			undoButton.transform.localScale = Vector3.one * scale;
@@ -95,7 +95,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
             SetButtonsVisible(false);
         }
 		public void OnNumMovesMadeChanged(int numMovesMade) {
-			undoButton.interactable = numMovesMade > 0;
+			undoButton.SetInteractable(numMovesMade > 0);
 			restartLevelButton.interactable = numMovesMade > 0;
 			UpdateCalloutArrowEnabledByFailState();
 		}
