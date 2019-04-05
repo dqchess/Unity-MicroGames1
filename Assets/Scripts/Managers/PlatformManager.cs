@@ -22,8 +22,7 @@ public class PlatformManager {
 			|| Application.platform == RuntimePlatform.WindowsPlayer;
 	}
 	public static bool IsPlayStation () {
-		return Application.platform == RuntimePlatform.PS4
-			|| Application.platform == RuntimePlatform.PSP2;
+		return Application.platform == RuntimePlatform.PS4;
 	}
 	public static bool IsXbox () {
 		return Application.platform == RuntimePlatform.XboxOne;

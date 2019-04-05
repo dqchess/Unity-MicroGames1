@@ -8,7 +8,8 @@ public class BuildInfo {
 		#if UNITY_EDITOR
 		return System.DateTime.Now;
 		#else
-		return System.DateTime.Parse(BuildtimeInfo.DateTimeString());
+		//return System.DateTime.Parse(BuildtimeInfo.DateTimeString());
+        return System.DateTime.Parse(BuildInfo.BuildTime().Date.ToLongDateString());
 		#endif
 	}
 }
