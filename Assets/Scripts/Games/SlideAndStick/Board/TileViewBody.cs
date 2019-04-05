@@ -39,14 +39,22 @@ namespace SlideAndStick {
 		static public float GetDiameter(float unitSize) { return unitSize * 0.9f; }
 		static public Color GetBodyColor(int _colorID) {
             switch (_colorID) {
-            case 0: return new Color( 71/255f,128/255f,214/255f);
-            case 1: return new Color(100/255f,220/255f, 95/255f);
-            case 2: return new Color(231/255f,100/255f,192/255f);
-            case 3: return new Color( 75/255f, 28/255f,151/255f);
-            case 4: return new Color(255/255f,240/255f,102/255f);
-            case 5: return new Color(230/255f,170/255f,112/255f);
-            case 6: return new Color(133/255f,220/255f,223/255f);
-            case 7: return new Color(154/255f,156/255f,172/255f);
+            //case 0: return new Color( 71/255f,128/255f,214/255f);
+            //case 1: return new Color(100/255f,220/255f, 95/255f);
+            //case 2: return new Color(231/255f,100/255f,192/255f);
+            //case 3: return new Color( 75/255f, 28/255f,151/255f);
+            //case 4: return new Color(255/255f,240/255f,102/255f);
+            //case 5: return new Color(230/255f,170/255f,112/255f);
+            //case 6: return new Color(133/255f,220/255f,223/255f);
+            //case 7: return new Color(154/255f,156/255f,172/255f);
+            case 0: return new Color(158/255f,216/255f,252/255f);
+            case 1: return new Color(141/255f,255/255f,131/255f);
+            case 2: return new Color(244/255f,255/255f,120/255f);
+            case 3: return new Color(200/255f,131/255f,255/255f);
+            case 4: return new Color(255/255f,108/255f,185/255f);
+            case 5: return new Color(255/255f,185/255f,100/255f);
+            case 6: return new Color(154/255f,156/255f,172/255f);
+            case 7: return new Color( 58/255f,104/255f,197/255f);
             default: return Color.red; // Oops! Too many colors.
             }
         }
@@ -111,11 +119,11 @@ namespace SlideAndStick {
             
             // Kinda sloppy how we handle the shadow. :P
             if (isShadow) {
-				BodyColor = Color.Lerp(BodyColor, Color.black, 0.3f); // Darkness.
-                this.transform.localPosition = new Vector3(0, -UnitSize*0.03f, 0); // nudge shadow down
+				BodyColor = Color.Lerp(BodyColor, Color.black, 0.11f); // Darkness.
+                this.transform.localPosition = new Vector3(0, -UnitSize*0.05f, 0); // nudge shadow down
             }
             else {
-                this.transform.localPosition = new Vector3(0, UnitSize*0.03f, 0); // nudge body up
+                this.transform.localPosition = new Vector3(0, UnitSize*0.10f, 0); // nudge body up
             }
         }
         

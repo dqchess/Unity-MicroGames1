@@ -30,9 +30,13 @@ public class EventManager {
 
 
 	// Game-specific
-	public delegate void Spool_SpoolAction(SpoolOut.Spool spool);
-	public event Spool_SpoolAction Spool_PathChangedEvent;
-	public void Spool_OnSpoolPathChangedEvent(SpoolOut.Spool spool) { if (Spool_PathChangedEvent!=null) { Spool_PathChangedEvent(spool); } }
+    public delegate void Spool_SpoolAction(SpoolOut.Spool spool);
+    public event Spool_SpoolAction Spool_PathChangedEvent;
+    public void Spool_OnSpoolPathChangedEvent(SpoolOut.Spool spool) { if (Spool_PathChangedEvent!=null) { Spool_PathChangedEvent(spool); } }
+    
+    public delegate void SlideAndStick_LevelAction(SlideAndStick.Level level);
+    public event SlideAndStick_LevelAction SlideAndStick_StartLevelEvent;
+    public void SlideAndStick_OnStartLevel(SlideAndStick.Level level) { if (SlideAndStick_StartLevelEvent!=null) { SlideAndStick_StartLevelEvent(level); } }
 
 }
 

@@ -88,6 +88,9 @@ namespace SlideAndStick {
             simMoveController = new SimMoveController(this);
             // Prep me for my boardView animating in.
             boardView.PreAnimateInFreshBoard();
+            
+            // Dispatch event!
+            GameManagers.Instance.EventManager.SlideAndStick_OnStartLevel(this);
 		}
         private void OnDestroy() {
             // Make sure to increment how long we've spent in me!
