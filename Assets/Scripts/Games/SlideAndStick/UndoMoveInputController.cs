@@ -111,7 +111,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		public void OnButton_Undo_Held() {
 			// Update vel
 			undoVel += 0.006f;
-			if (undoVel > 0.8f) { undoVel = 0.8f; } // Max vel!
+			//if (undoVel > 1f) { undoVel = 1f; } // Max vel! Note: Disabled, as one-per-frame limit is enough.
 			// Apply vel
 			undoLoc += undoVel;
 			// Maybe undo!
