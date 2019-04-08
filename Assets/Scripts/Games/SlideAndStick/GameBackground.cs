@@ -4,32 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SlideAndStick {
-
-
-    // TODO: Move into its own class.
-    /** Exactly like Color, but instead of 0-1 values, they're 0-255. */
-    public struct Color255 {
-        public float r,g,b, a;
-        public Color255(float r,float g,float b) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = 255;
-        }
-        public Color255(float r,float g,float b, float a) {
-            this.r = r;
-            this.g = g;
-            this.b = b;
-            this.a = a;
-        }
-        
-        public Color ToColor() { return new Color(r/255f,g/255f,b/255f, a/255f); }
-    }
-    
     public class GameBackground : MonoBehaviour {
         // Components
+        [SerializeField] private GameObject go_driftingTiles=null;
         [SerializeField] private Image i_backFill=null;
         [SerializeField] private Image i_backGradient=null; // this is the one that rotates.
+        private ParticleSystem[] pss_driftingTiles; // set in Start.
         // Properties
         private float gradRotSpeed; // how fast the gradient rotates.
         
@@ -68,9 +48,29 @@ namespace SlideAndStick {
             GameManagers.Instance.EventManager.SlideAndStick_StartLevelEvent -= OnStartLevel;
         }
         private void Start() {
+            // Identify components
+            pss_driftingTiles = GetComponentsInChildren<ParticleSystem>();
+            
             // Size my gradient right-o!
             float canvasHeight = FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.height;
             i_backGradient.rectTransform.sizeDelta = new Vector2(canvasHeight,canvasHeight)*1.18f; // add bloat so it still covers screen while rotating.
+        }
+
+
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        public void SpeedUpParticlesforLevelTrans() {
+            // Like go like, umm like, yanno, like much faster.
+            LeanTween.cancel(go_driftingTiles);
+            LeanTween.value(go_driftingTiles, SetDriftingTilesSpeedScale, 1, 100, 0.6f).setEaseInQuad();
+            LeanTween.value(go_driftingTiles, SetDriftingTilesSpeedScale, 100, 1, 0.9f).setDelay(0.6f).setEaseOutQuart();
+        }
+        private void SetDriftingTilesSpeedScale(float val) {
+            for (int i=0; i<pss_driftingTiles.Length; i++) {
+                ParticleSystem.MainModule main = pss_driftingTiles[i].main;
+                main.simulationSpeed = val;
+            }
         }
 
 
@@ -88,8 +88,8 @@ namespace SlideAndStick {
             Color colorB = colors[1].ToColor();
             LeanTween.cancel(i_backFill.gameObject);
             LeanTween.cancel(i_backGradient.gameObject);
-            LeanTween.color(i_backFill.rectTransform, colorA, 0.8f);
-            LeanTween.color(i_backGradient.rectTransform, colorB, 0.8f);
+            LeanTween.color(i_backFill.rectTransform, colorA, 1.5f);
+            LeanTween.color(i_backGradient.rectTransform, colorB, 1.5f);
         }
 
 

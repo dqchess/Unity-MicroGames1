@@ -16,6 +16,7 @@ namespace SlideAndStick {
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
         // References
+        [SerializeField] private GameBackground background;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private GameObject go_toggleLevSelButton=null;
@@ -147,6 +148,7 @@ namespace SlideAndStick {
                 if (oldLevel != null) {
                     oldLevel.AnimateOut();
                 }
+                background.SpeedUpParticlesforLevelTrans();
             }
             // No animating.
 			else {
@@ -156,6 +158,12 @@ namespace SlideAndStick {
                 }
             }
 		}
+        
+        //private IEnumerator Coroutine_AnimateLevelsInOut(Level l, Level oldLevel) {
+        //    // Animate the dudes in/out.
+        //    // Speed up/slow down the particles.
+        //        StartCoroutine(Coroutine_AnimateLevelsInOut(level, oldLevel));
+        //}
         
         private void InitializeLevel(LevelData ld) {
             if (ld == null) {
@@ -280,6 +288,10 @@ namespace SlideAndStick {
                 if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
                 if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
                 
+                // W = Win!
+                if (Input.GetKeyDown(KeyCode.W)) {
+                    WinLevel();
+                }
                 // E = Restore prev Board! In case we had one we liked but accidentally made a new one.
                 if (Input.GetKeyDown(KeyCode.E)) {
                     Debug_RestorePrevBoard();
