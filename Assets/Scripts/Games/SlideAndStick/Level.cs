@@ -390,6 +390,8 @@ namespace SlideAndStick {
 
 		public void UndoMoveAttempt() {
 			if (!CanUndoMove()) { return; }
+            // Remember snapshot from BEFORE undo.
+            BoardData snapshotPreUndo = board.SerializeAsData();
 			// Get the snapshot to restore to, restore, and decrement moves made!
 			BoardData snapshotData = boardSnapshots[boardSnapshots.Count-1];
 			// Remake my model and view from scratch!
@@ -397,6 +399,7 @@ namespace SlideAndStick {
 			boardSnapshots.Remove(snapshotData);
 			NumMovesMade --; // decrement this here!
 			gameController.FUEController.OnUndoMove();
+            boardView.OnUndoMove(snapshotPreUndo);
 			// Tie up loose ends by "completing" this move!
 			//OnBoardMoveComplete();//Note: Commented out. We don't neeed to call these as the code is now. (TBH there's really two functions in OnBoardMoveComplete: handling the move just executed, and any post-move-forward-or-backward paperwork.)
 		}

@@ -25,6 +25,7 @@ namespace SlideAndStick {
         [SerializeField] private Sprite s_bodyUnitRound=null;
         [SerializeField] private Sprite s_square=null; // for bw and belly-button images.
         [SerializeField] private Sprite s_armpitArc=null;
+        private Material m_bodyMaterial; // my texture! Set in Initialize, based on my Tile's ColorID.
         // Properties
         [SerializeField] internal bool isShadow=false; // a little weird how we handle the shadow here. Not a huge deal tho.
 		public Color BodyColor { get; private set; }
@@ -116,6 +117,7 @@ namespace SlideAndStick {
 //			BodyColor = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f)); // DEBUG TEST
             diameter = GetDiameter(UnitSize);
             allImages = new List<Image>(); // Note: We add our first image in UpdateVisualsPostMove.
+            m_bodyMaterial = isShadow ? null : ResourcesHandler.Instance.SlideAndStickTileBodyMat(MyTile.ColorID);
             
             // Kinda sloppy how we handle the shadow. :P
             if (isShadow) {
@@ -137,6 +139,7 @@ namespace SlideAndStick {
             GameUtils.ParentAndReset(newImage.gameObject, this.transform);
             newImage.name = _name;
             newImage.sprite = sprite;
+            newImage.material = m_bodyMaterial;
             newImage.color = GetAppliedBodyColor();
             newImage.transform.SetAsFirstSibling(); // put behind everything else.
             GameUtils.SizeUIGraphic(newImage, diameter,diameter); // default size it to my diameter.

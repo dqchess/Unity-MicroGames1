@@ -46,6 +46,7 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject slideAndStick_mergeSpotView;
     [SerializeField] public GameObject slideAndStick_tileView;
     [SerializeField] public GameObject slideAndStick_wallView;
+    [SerializeField] private Material[] slideAndStick_tileBodyMats;
 
     [SerializeField] public GameObject spoolOut_levSelPackButton;
     [SerializeField] public GameObject spoolOut_levSelLevelButton;
@@ -63,6 +64,13 @@ public class ResourcesHandler : MonoBehaviour {
 	[SerializeField] public GameObject wordSearchScroll_level;
 	[SerializeField] public GameObject wordSearchScroll_boardSpace;
 	[SerializeField] public GameObject wordSearchScroll_wordHighlight;
+    
+    
+    
+    public Material SlideAndStickTileBodyMat(int colorID) {
+        if (colorID<0 || colorID>=slideAndStick_tileBodyMats.Length) { return null; } // Safety check.
+        return slideAndStick_tileBodyMats[colorID];
+    }
 
 
     // Instance

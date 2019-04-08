@@ -180,6 +180,10 @@ namespace SlideAndStick {
 			// Remove it from the list of views!
 			allOccupantViews.Remove (bo);
 		}
+        public void OnUndoMove(BoardData bdPreUndo) {
+            //Board boardFrom = new Board(bdPreUndo);
+            //SetS
+        }
 
 
 
@@ -208,7 +212,12 @@ namespace SlideAndStick {
 			areObjectsAnimating = false;
 			animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
-            // Tell Occupants.
+            // Tell Spaces and Occupants.
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    spaceViews[i,j].UpdateVisualsPostMove();
+                }
+            }
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}

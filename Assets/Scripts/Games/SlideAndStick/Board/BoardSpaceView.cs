@@ -53,7 +53,7 @@ namespace SlideAndStick {
             // Start me in the right spot!
             pipAnimType = PipAnimTypes.None;
             SetValues_To(mySpace); // set "to" values to where I already am.
-            GoToValues(0);
+            UpdateVisualsPostMove();
 
 			//float diameter = _boardView.UnitSize*0.25f;
             //GameUtils.SizeUIGraphic (i_fill, diameter,diameter);
@@ -89,7 +89,6 @@ namespace SlideAndStick {
         //  Doers
         // ----------------------------------------------------------------
         public void SetValues_To(BoardSpace simSpace) {
-            //pipTopY_to = simSpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
             // Set pipAnimType!
             bool isOccTo = simSpace.HasOccupant;
             bool isOccFrom = mySpace.HasOccupant;
@@ -101,16 +100,14 @@ namespace SlideAndStick {
         //public void UpdateVisualsPreMove() {
         //    pipTopY_to = mySpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
         //}
-        //public void UpdateVisualsPostMove() {
-        //    //pipTopY_from = mySpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
-        //}
+        public void UpdateVisualsPostMove() {
+            pipTopY = mySpace.HasOccupant ? pipTopYDown : pipTopYUp;
+            //pipTopY_from = mySpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
+        }
         public void GoToValues(float animLoc) {
             float loc;
             switch (pipAnimType) {
-                case PipAnimTypes.None://TODO: Try to remove this logic once it's working.
-                    pipTopY = mySpace.HasOccupant ? pipTopYDown : pipTopYUp;
-                    break;
-                    //return;
+                case PipAnimTypes.None: return;
                 case PipAnimTypes.ToUp:
                     loc = Mathf.InverseLerp(0.6f,0.9f, animLoc);
                     pipTopY = Mathf.Lerp(pipTopYDown,pipTopYUp, loc);
