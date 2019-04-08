@@ -29,6 +29,7 @@ namespace SlideAndStick {
             // As long as there's no Wall here, we're good!
 			return !HasWall (side);
         }
+        public bool HasOccupant { get { return MyOccupant != null; } }
 		public bool HasWall (int side) {
             return myWalls[side] != null;
         }

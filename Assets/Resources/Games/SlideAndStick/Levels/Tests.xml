@@ -4,6 +4,25 @@
 
 
 
+<LevelPack packName="Tests">
+<Levels>
+	<Level diff="0" noWin="true" layout=" 0.," />
+	<Level diff="0" noWin="true" layout=" 0, ., " />
+	<Level diff="0" noWin="true" layout=" 0., ..," />
+
+
+
+	<Level diff="0" noWin="true" layout=" ....., ....., ..0.., ....., .....," />
+	<Level diff="0" noWin="true" layout=" 0...., ....., ....., ....., .....," />
+	<Level diff="0" noWin="true" layout=" 0...., 1...., 1...., 1...., 1....," />
+
+
+</Levels>
+</LevelPack>
+
+
+
+
 
 <LevelPack packName="Unsorted">
 <Levels>
@@ -41,16 +60,6 @@
 -->
 
 
-
-<LevelPack packName="Tests">
-<Levels>
-	<Level diff="0" noWin="true" layout=" ....., ....., ..0.., ....., .....," />
-	<Level diff="0" noWin="true" layout=" 0...., ....., ....., ....., .....," />
-	<Level diff="0" noWin="true" layout=" 0...., 1...., 1...., 1...., 1....," />
-
-
-</Levels>
-</LevelPack>
 
 
 

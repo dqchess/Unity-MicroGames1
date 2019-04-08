@@ -5,12 +5,25 @@ using UnityEngine.UI;
 
 namespace SlideAndStick {
 	public class BoardSpaceView : MonoBehaviour {
+        public enum PipAnimTypes { Undefined, None, ToUp, ToDown }
 		// Components
         [SerializeField] private RectTransform myRectTransform=null;
-		//[SerializeField] private Image i_fill=null;
-		//[SerializeField] private Image i_shadow=null;
+		[SerializeField] private Image i_pipTop=null;
+		[SerializeField] private Image i_pipShadow=null;
+        // Properties
+        private float pipTopYUp; // set in Initialize
+        private float pipTopYDown; // set in Initialize
+        //private float pipTopY_from, pipTopY_to; // for animating between board poses TODO: Remove these values.
+        private PipAnimTypes pipAnimType;
 		// References
 		private BoardSpace mySpace;
+        
+        // Setters
+        private float pipTopY {
+            get { return i_pipTop.rectTransform.anchoredPosition.y; }
+            set { i_pipTop.rectTransform.anchoredPosition = new Vector2(i_pipTop.rectTransform.anchoredPosition.x, value); }
+        }
+        
 
 		// ----------------------------------------------------------------
 		//  Initialize
@@ -25,10 +38,22 @@ namespace SlideAndStick {
 			this.gameObject.name = "BoardSpace_" + col + "," + row;
 
 			// Size/position me right!
+            float us = _boardView.UnitSize;
+            Vector2 us2 = new Vector2(us,us);
 			this.transform.localPosition = new Vector3 (_boardView.BoardToX(col), _boardView.BoardToY(row), 0);
 			this.transform.localScale = Vector3.one;
 			this.transform.localEulerAngles = Vector3.zero;
-            myRectTransform.sizeDelta = new Vector2(_boardView.UnitSize,_boardView.UnitSize);
+            myRectTransform.sizeDelta = us2;
+            
+            // Size/pos pip images!
+            i_pipTop.rectTransform.sizeDelta = i_pipShadow.rectTransform.sizeDelta = us2 * 0.4f;
+            pipTopYUp = us * 0.1f;
+            pipTopYDown = 0;
+            
+            // Start me in the right spot!
+            pipAnimType = PipAnimTypes.None;
+            SetValues_To(mySpace); // set "to" values to where I already am.
+            GoToValues(0);
 
 			//float diameter = _boardView.UnitSize*0.25f;
             //GameUtils.SizeUIGraphic (i_fill, diameter,diameter);
@@ -58,6 +83,49 @@ namespace SlideAndStick {
             float delay = (mySpace.Col + mySpace.Row) * 0.042f;
             LeanTween.scale(this.gameObject, Vector3.one, 0.9f).setEaseOutBack().setDelay(delay);// + offset
         }
+        
+        
+        // ----------------------------------------------------------------
+        //  Doers
+        // ----------------------------------------------------------------
+        public void SetValues_To(BoardSpace simSpace) {
+            //pipTopY_to = simSpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
+            // Set pipAnimType!
+            bool isOccTo = simSpace.HasOccupant;
+            bool isOccFrom = mySpace.HasOccupant;
+            if (isOccFrom == isOccTo) { pipAnimType = PipAnimTypes.None; } // Same status? Don't animate.
+            else if (isOccFrom) { pipAnimType = PipAnimTypes.ToUp; } // YES Occ to NO Occ? Go up!
+            else { pipAnimType = PipAnimTypes.ToDown; } // NO Occ to YES Occ? Go down!
+        }
+        
+        //public void UpdateVisualsPreMove() {
+        //    pipTopY_to = mySpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
+        //}
+        //public void UpdateVisualsPostMove() {
+        //    //pipTopY_from = mySpace.MyOccupant==null ? pipTopYUp : pipTopYDown;
+        //}
+        public void GoToValues(float animLoc) {
+            float loc;
+            switch (pipAnimType) {
+                case PipAnimTypes.None://TODO: Try to remove this logic once it's working.
+                    pipTopY = mySpace.HasOccupant ? pipTopYDown : pipTopYUp;
+                    break;
+                    //return;
+                case PipAnimTypes.ToUp:
+                    loc = Mathf.InverseLerp(0.6f,0.9f, animLoc);
+                    pipTopY = Mathf.Lerp(pipTopYDown,pipTopYUp, loc);
+                    //pipTopY = animLoc > 0.75f ? pipTopYUp : pipTopYDown;
+                    break;
+                case PipAnimTypes.ToDown:
+                    loc = Mathf.InverseLerp(0.1f,0.4f, animLoc);
+                    pipTopY = Mathf.Lerp(pipTopYUp,pipTopYDown, loc);
+                    //pipTopY = animLoc > 0.25f ? pipTopYDown : pipTopYUp;
+                    break;
+            }
+        }
+        
+        
+        
 	}
     /*
     public class BoardSpaceView : MonoBehaviour {

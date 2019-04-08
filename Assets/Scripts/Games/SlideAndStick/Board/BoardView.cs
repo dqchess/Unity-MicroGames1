@@ -188,6 +188,7 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void UpdateAllViewsMoveStart() {
 			AddViewsForAddedObjects();
+            // Tell Occupants.
 			foreach (BoardOccupantView bo in allOccupantViews) {
 				bo.UpdateVisualsPreMove();
 			}
@@ -203,9 +204,11 @@ namespace SlideAndStick {
 			ApplyObjectsAnimationLoc();
 		}
 		public void UpdateAllViewsMoveEnd() {
+            // Set anim values.
 			areObjectsAnimating = false;
 			animLoc = 0; // reset this back to 0, no matter what the target value is.
             animLocVel = 0;
+            // Tell Occupants.
 			for (int i=allOccupantViews.Count-1; i>=0; --i) { // Go through backwards, as objects can be removed from the list as we go!
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
@@ -308,7 +311,12 @@ namespace SlideAndStick {
             }
             // Now actually simulate the move!
             simMoveResult = simMoveBoard.ExecuteMove(boToMove.BoardPos, simMoveDir);
-            // Now that the simulated Board has finished its move, we can set the "to" values for all my OccupantViews!
+            // Now that the simulated Board has finished its move, we can set the "to" values for all SpaceViews/OccupantViews!
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    spaceViews[i,j].SetValues_To(simMoveBoard.spaces[i,j]);
+                }
+            }
             foreach (BoardOccupantView bov in allOccupantViews) {
                 bov.SetValues_To_ByMySimulatedMoveBoardObject();
 			}
@@ -350,9 +358,17 @@ namespace SlideAndStick {
 			}
 		}
 		private void ApplyObjectsAnimationLoc() {
+            // BoardSpaceViews!
+            for (int i=0; i<numCols; i++) {
+                for (int j=0; j<numRows; j++) {
+                    spaceViews[i,j].GoToValues(animLoc);
+                }
+            }
+            // BoardOccupantViews!
 			foreach (BoardOccupantView bov in allOccupantViews) {
 				bov.GoToValues(animLoc);
 			}
+            // MergeSpotViews!
             mergeSpotViews.GoToValues(animLoc);
 		}
 
