@@ -152,7 +152,7 @@ namespace SlideAndStick {
         //  Animate In/Out
         // ----------------------------------------------------------------
         private const float animInOutDuration = 1.2f;
-        private readonly Vector2 animInOutOffset = new Vector2(400, 1200);
+        public static readonly Vector2 animInOutOffset = new Vector2(400, 1200);
         /** Animates the WHOLE LEVEL, including UI. From up offscreen to onscreen. */
         public void AnimateIn() {
             // I'm animating!
@@ -160,13 +160,15 @@ namespace SlideAndStick {
             Vector3 posDefault = transform.localPosition;
             transform.localPosition += new Vector3(animInOutOffset.x,animInOutOffset.y,0);
             LeanTween.moveLocal(gameObject, posDefault, animInOutDuration).setEaseInOutQuart().setOnComplete(OnCompleteAnimateIn);
-             // Animate-in the Board before I'm fully in for tighter transition.
+            levelUI.OnLevelAnimateIn();
+             // Animate-in the Board elements before I'm fully in for tighter transition.
             LeanTween.delayedCall(animInOutDuration*0.6f, AnimateInBoard);
         }
         /** Animates the WHOLE LEVEL, including UI. From onscreen to down offscreen. */
         public void AnimateOut() {
             IsAnimating = true;
-            LeanTween.moveLocal(gameObject, new Vector3(-animInOutOffset.x,-animInOutOffset.y,0), animInOutDuration).setEaseInOutQuart().setOnComplete(OnCompleteAnimateOut);
+            levelUI.OnLevelAnimateOut();
+            LeanTween.moveLocal(gameObject, new Vector3(-animInOutOffset.x*1.8f,-animInOutOffset.y*1.8f,0), animInOutDuration).setEaseInOutQuart().setOnComplete(OnCompleteAnimateOut);
         }
         
         public void AnimateInBoard() {

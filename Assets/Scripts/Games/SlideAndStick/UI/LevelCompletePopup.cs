@@ -57,6 +57,12 @@ namespace SlideAndStick {
             //LeanTween.moveX(rt_complete.gameObject,   centerXPos-1000, 0.5f).setEaseInQuad().setDelay(0);
             //LeanTween.moveX(rt_nextButton.gameObject, centerXPos+1000, 0.5f).setEaseInQuad().setDelay(0.1f);
         }
+        public void OnLevelAnimateOut() {
+            // Animate me out faster than the Level/BoardView.
+            Vector3 offsetDir = Level.animInOutOffset.normalized;
+            Vector2 posTo = this.gameObject.transform.localPosition - offsetDir*400;
+            LeanTween.moveLocal(this.gameObject, posTo, 1f).setEaseInOutQuart();
+        }
     }
 }
 

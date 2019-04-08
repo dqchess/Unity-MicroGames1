@@ -64,7 +64,7 @@ namespace SlideAndStick {
             // Like go like, umm like, yanno, like much faster.
             LeanTween.cancel(go_driftingTiles);
             LeanTween.value(go_driftingTiles, SetDriftingTilesSpeedScale, 1, 100, 0.6f).setEaseInQuad();
-            LeanTween.value(go_driftingTiles, SetDriftingTilesSpeedScale, 100, 1, 0.9f).setDelay(0.6f).setEaseOutQuart();
+            LeanTween.value(go_driftingTiles, SetDriftingTilesSpeedScale, 100, 1, 0.9f).setDelay(0.8f).setEaseOutQuart();
         }
         private void SetDriftingTilesSpeedScale(float val) {
             for (int i=0; i<pss_driftingTiles.Length; i++) {
@@ -88,8 +88,8 @@ namespace SlideAndStick {
             Color colorB = colors[1].ToColor();
             LeanTween.cancel(i_backFill.gameObject);
             LeanTween.cancel(i_backGradient.gameObject);
-            LeanTween.color(i_backFill.rectTransform, colorA, 1.5f);
-            LeanTween.color(i_backGradient.rectTransform, colorB, 1.5f);
+            LeanTween.color(i_backFill.rectTransform, colorA, 2.5f);
+            LeanTween.color(i_backGradient.rectTransform, colorB, 2.5f);
         }
 
 
