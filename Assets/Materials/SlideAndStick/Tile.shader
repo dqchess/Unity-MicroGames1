@@ -1,6 +1,6 @@
 ﻿// Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "Custom/SlideAndStick_Tile"
+Shader "Custom SlideAndStick/Tile"
 {
     Properties
     {
@@ -16,7 +16,8 @@ Shader "Custom/SlideAndStick_Tile"
         _ColorMask ("Color Mask", Float) = 15
 
 		_OverlayTex ("Overlay Texture", 2D) = "white" {}
-		_TexScale ("Texture Scale", Float) = 0.01
+        _TexDriftX ("Tex Drift X", Float) = 1
+        _TexDriftY ("Tex Drift Y", Float) = 1
 
         [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
     }
@@ -85,7 +86,8 @@ Shader "Custom/SlideAndStick_Tile"
             float4 _ClipRect;
             float4 _MainTex_ST;
 			sampler2D _OverlayTex;
-			float _TexScale;
+            float _TexDriftX;
+            float _TexDriftY;
 
             v2f vert(appdata_t v)
             {
@@ -104,9 +106,10 @@ Shader "Custom/SlideAndStick_Tile"
             fixed4 frag(v2f IN) : SV_Target
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-                float4 texColor = tex2D(_OverlayTex, (IN.worldPosition*0.003f)*_TexScale);//IN.texcoord+
+                float2 offset = float2(_TexDriftX,_TexDriftY)*0.01 * _Time[1]; 
+                float4 texColor = tex2D(_OverlayTex, IN.worldPosition*0.003f+offset);//IN.texcoord+
 
-				color.rgb -= (1-texColor.rgb) * 0.1;
+                color.rgb -= (1-texColor.rgb) * 0.1;
 
 
 

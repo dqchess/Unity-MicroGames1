@@ -57,10 +57,10 @@ namespace SlideAndStick {
             Vector2 posPackName = t_packName.rectTransform.localPosition;
             Vector2 posLevelName = t_levelName.rectTransform.localPosition;
             Vector3 offsetDir = Level.animInOutOffset.normalized;
-            t_packName.transform.localPosition += offsetDir * 600;
-            t_levelName.transform.localPosition += offsetDir * 600;
-            LeanTween.moveLocal(t_packName.gameObject, posPackName, 2.5f).setDelay(0.4f).setEaseOutQuint();
-            LeanTween.moveLocal(t_levelName.gameObject, posLevelName, 2.5f).setDelay(0.6f).setEaseOutQuint();
+            t_packName.transform.localPosition += offsetDir * 300;
+            t_levelName.transform.localPosition += offsetDir * 300;
+            LeanTween.moveLocal(t_packName.gameObject, posPackName, 2.2f).setDelay(0.4f).setEaseOutQuint();
+            LeanTween.moveLocal(t_levelName.gameObject, posLevelName, 2.2f).setDelay(0.6f).setEaseOutQuint();
         }
         public void OnLevelAnimateOut() {
             // Tell LevelCompletePopup.
@@ -69,8 +69,8 @@ namespace SlideAndStick {
             Vector3 offsetDir = Level.animInOutOffset.normalized;
             Vector2 posPackTo = t_packName.rectTransform.localPosition + offsetDir*400;
             Vector2 posLevelTo = t_levelName.rectTransform.localPosition + offsetDir*400;
-            LeanTween.moveLocal(t_packName.gameObject, posPackTo, 0.7f).setEaseInQuart().setDelay(0.16f);
-            LeanTween.moveLocal(t_levelName.gameObject, posLevelTo, 0.7f).setEaseInQuart();
+            LeanTween.moveLocal(t_packName.gameObject, posPackTo, 0.6f).setEaseInQuart().setDelay(0.05f);
+            LeanTween.moveLocal(t_levelName.gameObject, posLevelTo, 0.6f).setEaseInQuart();
         }
 
 

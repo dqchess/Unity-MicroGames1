@@ -93,6 +93,8 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _TexDriftX: 0.6
+    - _TexDriftY: 0.6
     - _TexScale: 1
     - _UVSec: 0
     - _UseUIAlphaClip: 0

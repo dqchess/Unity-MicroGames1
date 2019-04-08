@@ -26,10 +26,11 @@ namespace SlideAndStick {
                     new Color255(255,213,133), new Color255(201,177,255) };
                 case Difficulties.DoubleHard:   return new List<Color255>{
                     new Color255(255,166,193), new Color255(220,174,255) };
-                case Difficulties.Impossible:   return new List<Color255>{
+                case Difficulties.Impossible:
+                case Difficulties.DoubleImpossible:   return new List<Color255>{
                     new Color255( 78, 14, 89), new Color255(138,202,191) };
-                case Difficulties.DoubleImpossible: return new List<Color255>{
-                    new Color255(175,175,175), new Color255(181, 88,156) };
+                //case Difficulties.DoubleImpossible: return new List<Color255>{
+                    //new Color255(175,175,175), new Color255(181, 88,156) };
                 default: return new List<Color255>{ // Hmm.
                     new Color255(255,255,255), new Color255(128,128,128) };
             }

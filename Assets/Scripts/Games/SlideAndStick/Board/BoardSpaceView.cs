@@ -109,14 +109,16 @@ namespace SlideAndStick {
             switch (pipAnimType) {
                 case PipAnimTypes.None: return;
                 case PipAnimTypes.ToUp:
-                    loc = Mathf.InverseLerp(0.6f,0.9f, animLoc);
-                    pipTopY = Mathf.Lerp(pipTopYDown,pipTopYUp, loc);
                     //pipTopY = animLoc > 0.75f ? pipTopYUp : pipTopYDown;
+                    //loc = Mathf.InverseLerp(0.6f,0.9f, animLoc);
+                    loc = Mathf.InverseLerp(0.7f,0.75f, animLoc);
+                    pipTopY = Mathf.Lerp(pipTopYDown,pipTopYUp, loc);
                     break;
                 case PipAnimTypes.ToDown:
-                    loc = Mathf.InverseLerp(0.1f,0.4f, animLoc);
-                    pipTopY = Mathf.Lerp(pipTopYUp,pipTopYDown, loc);
                     //pipTopY = animLoc > 0.25f ? pipTopYDown : pipTopYUp;
+                    //loc = Mathf.InverseLerp(0.1f,0.4f, animLoc);
+                    loc = Mathf.InverseLerp(0.25f,0.3f, animLoc);
+                    pipTopY = Mathf.Lerp(pipTopYUp,pipTopYDown, loc);
                     break;
             }
         }

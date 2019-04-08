@@ -37,7 +37,9 @@ namespace SlideAndStick {
             diameter = TileViewBody.GetDiameter(unitSize);
             myImage.rectTransform.sizeDelta = new Vector2(diameter,diameter);
             myImage.color = myTileViewBody.BodyColor;
-            myImage.material = ResourcesHandler.Instance.SlideAndStickTileBodyMat(myTile.ColorID);
+            if (!myTileViewBody.isShadow) { // If I'm NOT the shadow, texture me!
+                myImage.material = ResourcesHandler.Instance.SlideAndStickTileBodyMat(myTile.ColorID);
+            }
             
             Vector2 pos = boardView.BoardToLocal(myMergeSpot.pos) - myTileView.Pos; // a little weirdly offset back so we're local to my TileView.
             Vector2 dirVec2 = new Vector2(myMergeSpot.dir.x, -myMergeSpot.dir.y); // flip y.
