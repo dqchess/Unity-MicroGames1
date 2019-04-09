@@ -321,7 +321,19 @@ namespace SlideAndStick {
         }
         
         
-        // Debug
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Debug
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#if UNITY_EDITOR
+    [UnityEditor.Callbacks.DidReloadScripts]
+    private static void OnScriptsReloaded() {
+        if (UnityEditor.EditorApplication.isPlaying)  {
+            CoreMenuController.Debug_HideMenuOnStart = true; // Tell CoreMenuController NOT to show the Combi menu when we reload the scene.
+            ReloadScene();
+        }
+    }
+#endif
         private void Debug_RestorePrevBoard() {
             if (debug_prevBoardDatas.Count > 1) {
                 BoardData snapshot = debug_prevBoardDatas[debug_prevBoardDatas.Count-2];

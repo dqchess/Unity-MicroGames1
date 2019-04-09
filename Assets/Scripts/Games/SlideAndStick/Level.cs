@@ -8,44 +8,41 @@ namespace SlideAndStick {
 		public UnityEngine.UI.Image i_test0;// DEBUG! TODO: Remove these.
 		public UnityEngine.UI.Image i_test1;
         [SerializeField] protected RectTransform myRectTransform=null;
-		[SerializeField] private UndoMoveInputController undoMoveInputController=null;
-		private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
-		private BoardView boardView;
+        [SerializeField] private LevelEffectsHandler effectsHandler=null;
+        [SerializeField] private UndoMoveInputController undoMoveInputController=null;
+        public Board Board { get; private set; } // this ONLY changes when we undo a move, as we remake-from-scratch both Board and BoardView.
+        public BoardView BoardView { get; private set; }
         private SimMoveController simMoveController; // this guy handles all the mobile touch stuff.
 		// Properties
         [HideInInspector] public bool IsAnimating; // set this to true if we're animating in OR out.
         private bool IsLevelOver;
         public float TimeSpentThisPlay { get; private set; }
 		private int numMovesMade; // reset to 0 at the start of each level. Undoing a move will decrement this.
-        private LevelAddress myAddress;
-		public Vector2Int MousePosBoard { get; private set; }
+        public LevelAddress MyAddress { get; private set; }
+        public Vector2Int MousePosBoard { get; private set; }
 		public  Vector2Int TileGrabbingClickBoardOffset { get; private set; } // when we set tileGrabbing, this is the boardPos difference between our mouse and the Tile. For retaining tileGrabbing for split tiles.
 		private List<BoardData> boardSnapshots; // for undoing moves! Before each move, we add a snapshot of the board to this list (and remove from list when we undo).
 		// References
         [SerializeField] private LevelUI levelUI=null;
-		private GameController gameController;
-		private Tile tileOver; // the Tile my mouse is over.
+        private Tile tileOver; // the Tile my mouse is over.
 		private Tile tileGrabbing; // the Tile we're holding and simulating a move for.
+        public GameController GameController { get; private set; }
 
 		// Getters (Public)
         //public TileView Temp_TileViewGrabbing { get { return Temp_GetTileView(tileGrabbing); } }
         //public Tile Temp_TileGrabbing { get { return tileGrabbing; } }
         public BoardData Debug_FirstBoardSnapshot { get { return boardSnapshots.Count>0 ? boardSnapshots[0] : null; } }
-		public Board Board { get { return board; } }
-		public BoardView BoardView { get { return boardView; } }
-		public GameController GameController { get { return gameController; } }
-        public LevelAddress MyAddress { get { return myAddress; } }
         public LevelUI LevelUI { get { return levelUI; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
 		public bool CanMakeAnyMove() {
 			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
-			if (!gameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
-			if (board!=null && board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
+			if (!GameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+			if (Board!=null && Board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
 		}
         // Getters (Private)
         private InputController inputController { get { return InputController.Instance; } }
-        private SlideAndStickSfxController sfxController { get { return gameController.SFXController; } }
+        private SlideAndStickSfxController sfxController { get { return GameController.SFXController; } }
         private bool IsPlaying { get { return !IsAnimating && !IsLevelOver; } }
 		private bool CanUndoMove () {
 			if (!IsPlaying) { return false; } // Not playing? No undos. ;)
@@ -69,11 +66,11 @@ namespace SlideAndStick {
 		//  Initialize / Destroy
 		// ----------------------------------------------------------------
 		public void Initialize (GameController _gameController, Transform tf_parent, LevelData _levelData) {
-			gameController = _gameController;
-            myAddress = _levelData.myAddress;
+			GameController = _gameController;
+            MyAddress = _levelData.myAddress;
             IsLevelOver = false;
     
-            gameObject.name = "Level " + myAddress.level;
+            gameObject.name = "Level " + MyAddress.level;
             GameUtils.ParentAndReset(this.gameObject, tf_parent);
             myRectTransform.SetAsFirstSibling(); // put me behind all other UI.
             myRectTransform.anchoredPosition = Vector2.zero;
@@ -87,7 +84,7 @@ namespace SlideAndStick {
 			RemakeModelAndViewFromData(_levelData.boardData);
             simMoveController = new SimMoveController(this);
             // Prep me for my boardView animating in.
-            boardView.PreAnimateInFreshBoard();
+            BoardView.PreAnimateInFreshBoard();
             
             // Dispatch event!
             GameManagers.Instance.EventManager.SlideAndStick_OnStartLevel(this);
@@ -109,21 +106,21 @@ namespace SlideAndStick {
 			// Destroy them first!
 			DestroyBoardModelAndView ();
 			// Make them afresh!
-			board = new Board(bd);
+			Board = new Board(bd);
             AddReasonableRandTilesToBoardIfNone(); // For rando layout generating!
-			boardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
-			boardView.Initialize (this, board);
+			BoardView = Instantiate (ResourcesHandler.Instance.slideAndStick_boardView).GetComponent<BoardView>();
+			BoardView.Initialize (this, Board);
             // Tell ppl!
             levelUI.OnBoardMade();
             undoMoveInputController.OnBoardMade();
 		}
 		private void DestroyBoardModelAndView () {
 			// Nullify the model (there's nothing to destroy).
-			board = null;
+			Board = null;
 			// Destroy view.
-			if (boardView != null) {
-				boardView.DestroySelf ();
-				boardView = null;
+			if (BoardView != null) {
+				BoardView.DestroySelf ();
+				BoardView = null;
 			}
 			// Nullify tileOver and tileGrabbing (the refs don't exist anymore).
 			tileOver = null;
@@ -132,14 +129,14 @@ namespace SlideAndStick {
         
         private void AddReasonableRandTilesToBoardIfNone() {
             // First, remember the basic empty boardData.
-            BoardData bd = board.SerializeAsData();
+            BoardData bd = Board.SerializeAsData();
             int count=0;
             while (true) {
-                board.Debug_AddTilesIfNone(gameController.randGenParams);
+                Board.Debug_AddTilesIfNone(GameController.randGenParams);
                 if (++count >= 99) { break; } // Try 99 times!
                 // Not a good enough layout? Try again.
-                if (board.AreAnyTileColorsSatisfied() || board.NumColors()==1) {
-                    board = new Board(bd);
+                if (Board.AreAnyTileColorsSatisfied() || Board.NumColors()==1) {
+                    Board = new Board(bd);
                 }
                 else {
                     break;
@@ -172,7 +169,7 @@ namespace SlideAndStick {
         }
         
         public void AnimateInBoard() {
-            boardView.AnimateInFreshBoard();
+            BoardView.AnimateInFreshBoard();
         }
         
         public void OnCompleteAnimateIn() {
@@ -189,10 +186,10 @@ namespace SlideAndStick {
 		//  Update
 		// ----------------------------------------------------------------
         public void DependentFixedUpdate() {
-            boardView.DependentFixedUpdate();
+            BoardView.DependentFixedUpdate();
         }
 		public void DependentUpdate() {
-			if (board==null || board.spaces == null) { return; } // To prevent errors when compiling during runtime.
+			if (Board==null || Board.spaces == null) { return; } // To prevent errors when compiling during runtime.
 			if (simMoveController == null) { return; } // Safety check.
 
             simMoveController.Update();
@@ -205,17 +202,17 @@ namespace SlideAndStick {
             UpdateTimeSpentThisPlay();
 
 			if (tileGrabbing != null) {
-            	boardView.UpdateSimMove(tileGrabbing, simMoveController);
+            	BoardView.UpdateSimMove(tileGrabbing, simMoveController);
 			}
 		}
 
 		private void UpdateMousePosBoard() {
 			Vector2 mousePosScaled = InputController.Instance.TouchPosScaled;
-			float canvasHeight = gameController.Canvas.GetComponent<RectTransform>().rect.height;
+			float canvasHeight = GameController.Canvas.GetComponent<RectTransform>().rect.height;
 			mousePosScaled = new Vector2(mousePosScaled.x, canvasHeight-mousePosScaled.y); // convert to top-left space.
-			mousePosScaled += new Vector2(-boardView.Pos.x, boardView.Pos.y); // Note: Idk why negative...
-			int col = Mathf.FloorToInt(mousePosScaled.x / (float)boardView.UnitSize);
-			int row = Mathf.FloorToInt(mousePosScaled.y / (float)boardView.UnitSize);
+			mousePosScaled += new Vector2(-BoardView.Pos.x, BoardView.Pos.y); // Note: Idk why negative...
+			int col = Mathf.FloorToInt(mousePosScaled.x / (float)BoardView.UnitSize);
+			int row = Mathf.FloorToInt(mousePosScaled.y / (float)BoardView.UnitSize);
 			MousePosBoard = new Vector2Int(col,row);
 		}
 
@@ -225,32 +222,32 @@ namespace SlideAndStick {
 			// B) If we're GRABBING a Tile already, FORCE tileOver to be THAT Tile!
 			else if (tileGrabbing != null) { SetTileOver(tileGrabbing); }
 			// C) Otherwise, use the one the mouse is over.
-			else { SetTileOver(board.GetTile(MousePosBoard)); }
+			else { SetTileOver(Board.GetTile(MousePosBoard)); }
         }
         private void SetTileOver(Tile tile) {
             Tile prevTileOver = tileOver;
             tileOver = tile;
 			// It's changed!
 			if (prevTileOver != tileOver) {
-				if (prevTileOver!=null && prevTileOver.IsInPlay) { boardView.Temp_GetTileView(prevTileOver).OnMouseOut(); }
-				if (tileOver != null) { boardView.Temp_GetTileView(tileOver).OnMouseOver(); }
+				if (prevTileOver!=null && prevTileOver.IsInPlay) { BoardView.Temp_GetTileView(prevTileOver).OnMouseOut(); }
+				if (tileOver != null) { BoardView.Temp_GetTileView(tileOver).OnMouseOver(); }
 			}
 		}
 
 		private void RegisterButtonInput() {
 			// DEBUG
-            if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(myAddress); }
-			else if (Input.GetKeyDown(KeyCode.T)) { board.Debug_CopyLayoutToClipboard(true); }
-            else if (Input.GetKeyDown(KeyCode.Y)) { board.Debug_CopyLayoutToClipboard(false); }
-            else if (Input.GetKeyDown(KeyCode.C)) { board.Debug_CopyXMLToClipboard(true); }
-            else if (Input.GetKeyDown(KeyCode.V)) { board.Debug_CopyXMLToClipboard(false); }
-            else if (Input.GetKeyDown(KeyCode.Alpha1)) { board.Debug_CopyXMLToClipboardWithDiff(1); }
-            else if (Input.GetKeyDown(KeyCode.Alpha2)) { board.Debug_CopyXMLToClipboardWithDiff(2); }
-            else if (Input.GetKeyDown(KeyCode.Alpha3)) { board.Debug_CopyXMLToClipboardWithDiff(3); }
-            else if (Input.GetKeyDown(KeyCode.Alpha4)) { board.Debug_CopyXMLToClipboardWithDiff(4); }
-            else if (Input.GetKeyDown(KeyCode.Alpha5)) { board.Debug_CopyXMLToClipboardWithDiff(5); }
-            else if (Input.GetKeyDown(KeyCode.Alpha6)) { board.Debug_CopyXMLToClipboardWithDiff(6); }
-            else if (Input.GetKeyDown(KeyCode.Alpha7)) { board.Debug_CopyXMLToClipboardWithDiff(7); }
+            if (Input.GetKeyDown(KeyCode.O)) { LevelsManager.Instance.Debug_OrderLevelsAndCopyToClipboard(MyAddress); }
+			else if (Input.GetKeyDown(KeyCode.T)) { Board.Debug_CopyLayoutToClipboard(true); }
+            else if (Input.GetKeyDown(KeyCode.Y)) { Board.Debug_CopyLayoutToClipboard(false); }
+            else if (Input.GetKeyDown(KeyCode.C)) { Board.Debug_CopyXMLToClipboard(true); }
+            else if (Input.GetKeyDown(KeyCode.V)) { Board.Debug_CopyXMLToClipboard(false); }
+            else if (Input.GetKeyDown(KeyCode.Alpha1)) { Board.Debug_CopyXMLToClipboardWithDiff(1); }
+            else if (Input.GetKeyDown(KeyCode.Alpha2)) { Board.Debug_CopyXMLToClipboardWithDiff(2); }
+            else if (Input.GetKeyDown(KeyCode.Alpha3)) { Board.Debug_CopyXMLToClipboardWithDiff(3); }
+            else if (Input.GetKeyDown(KeyCode.Alpha4)) { Board.Debug_CopyXMLToClipboardWithDiff(4); }
+            else if (Input.GetKeyDown(KeyCode.Alpha5)) { Board.Debug_CopyXMLToClipboardWithDiff(5); }
+            else if (Input.GetKeyDown(KeyCode.Alpha6)) { Board.Debug_CopyXMLToClipboardWithDiff(6); }
+            else if (Input.GetKeyDown(KeyCode.Alpha7)) { Board.Debug_CopyXMLToClipboardWithDiff(7); }
 		}
 
 		private void RegisterTouchInput() {
@@ -278,7 +275,7 @@ namespace SlideAndStick {
 		}
 		public void OnCancelSimMove() {
 			ReleaseTileGrabbing();
-			boardView.OnCanceledMove();
+			BoardView.OnCanceledMove();
 		}
         
         public void ReleaseTileGrabbing() {
@@ -293,17 +290,17 @@ namespace SlideAndStick {
 				Tile prevTileGrabbing = tileGrabbing;
 				tileGrabbing = _tile;
 				TileGrabbingClickBoardOffset = GetMousePosOffset(tileGrabbing);
-                boardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
+                BoardView.OnSetTileGrabbing(tileGrabbing, prevTileGrabbing); // tell BoardView.
                 // Tell the Tiles!
-                if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { boardView.Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
-                if (tileGrabbing!=null) { boardView.Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
+                if (prevTileGrabbing!=null && prevTileGrabbing.IsInPlay) { BoardView.Temp_GetTileView(prevTileGrabbing).OnStopGrabbing(); }
+                if (tileGrabbing!=null) { BoardView.Temp_GetTileView(tileGrabbing).OnStartGrabbing(); }
 			}
 		}
 		/// Call this after we finish a move: tileGrabbing may now be null (it was destroyed in a merge), so we want to set tileGrabbing to what it LOOKS like we were already grabbing.
 		private void ConfirmTileGrabbing() {
 			if (tileGrabbing != null) {
 				Vector2Int boardPos = tileGrabbing.BoardPos.ToVector2Int() + TileGrabbingClickBoardOffset;
-				SetTileGrabbing(board.GetTile(boardPos));
+				SetTileGrabbing(Board.GetTile(boardPos));
 			}
 		}
         private void UpdateTimeSpentThisPlay() {
@@ -319,23 +316,27 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
+        //QQQ
+        public LevelEffectsHandler eh { get { return effectsHandler; } }
+        
         private void OnBoardMoveComplete() {
             // Tell BoardView!
-			boardView.OnExecutedMove();
+			BoardView.OnExecutedMove();
 			// Trade-off tileGrabbing, in case it's changed (from a merge)!
 			ConfirmTileGrabbing();
 			// Tell people!
-			gameController.FUEController.OnBoardMoveComplete();
-            if (board.DidAnyTilesMergeLastMove) {
+            GameController.FUEController.OnBoardMoveComplete();
+            effectsHandler.OnBoardMoveComplete();
+            if (Board.DidAnyTilesMergeLastMove) {
                 sfxController.OnTilesMerged();
             }
             // If our goals are satisfied, win!!
-            if (board.AreGoalsSatisfied) {
-                gameController.OnBoardGoalsSatisfied();
+            if (Board.AreGoalsSatisfied) {
+                GameController.OnBoardGoalsSatisfied();
             }
             
             // In fail scenario, OR the level's over? Nullify tileOver and tileGrabbing.
-            if (board.IsInKnownFailState || IsLevelOver) {
+            if (Board.IsInKnownFailState || IsLevelOver) {
                 SetTileOver(null);
                 ReleaseTileGrabbing();
             }
@@ -350,14 +351,14 @@ namespace SlideAndStick {
         
         
         private void AddToTimeSpentTotal() {
-            string saveKey = SaveKeys.TimeSpentTotal(gameController.MyGameName(), MyAddress);
+            string saveKey = SaveKeys.TimeSpentTotal(GameController.MyGameName(), MyAddress);
             float timeSpentTotal = SaveStorage.GetFloat(saveKey,0);
             SaveStorage.SetFloat(saveKey, timeSpentTotal+TimeSpentThisPlay);
             //print("Time spent total now: " + (timeSpentTotal+TimeSpentThisPlay));
             ResetTimeSpentThisPlay(); // we just used it! For safety, clear it out.
         }
         private void IncrementNumWins() {
-            string saveKey = SaveKeys.NumWins(gameController.MyGameName(), MyAddress);
+            string saveKey = SaveKeys.NumWins(GameController.MyGameName(), MyAddress);
             int numWins = SaveStorage.GetInt(saveKey,0) + 1;
             SaveStorage.SetInt(saveKey, numWins);
             //print("Num wins now: " + numWins);
@@ -371,16 +372,16 @@ namespace SlideAndStick {
 		public void MoveTileAttempt(Tile tileToMove, Vector2Int dir) {
 			if (!CanMakeAnyMove()) { return; } // Dark Lord says no move? Then no.
 			// If we can't make this specific move, also stop.
-			if (!BoardUtils.CanExecuteMove(board, tileToMove, dir)) {
+			if (!BoardUtils.CanExecuteMove(Board, tileToMove, dir)) {
 				return;
 			}
 			// We CAN make this move!
 			else {
 				// Take a snapshot and add it to our list!
-				BoardData preMoveSnapshot = board.SerializeAsData();
+				BoardData preMoveSnapshot = Board.SerializeAsData();
 				boardSnapshots.Add (preMoveSnapshot);
 				// Move it, move it! :D
-				board.ExecuteMove(tileToMove.BoardPos, dir); // This will always return success, because we already asked if this move was possible.
+				Board.ExecuteMove(tileToMove.BoardPos, dir); // This will always return success, because we already asked if this move was possible.
 				// We make moves.
 				NumMovesMade ++;
 				// Complete this move!
@@ -391,15 +392,15 @@ namespace SlideAndStick {
 		public void UndoMoveAttempt() {
 			if (!CanUndoMove()) { return; }
             // Remember snapshot from BEFORE undo.
-            BoardData snapshotPreUndo = board.SerializeAsData();
+            BoardData snapshotPreUndo = Board.SerializeAsData();
 			// Get the snapshot to restore to, restore, and decrement moves made!
 			BoardData snapshotData = boardSnapshots[boardSnapshots.Count-1];
 			// Remake my model and view from scratch!
 			RemakeModelAndViewFromData(snapshotData);
 			boardSnapshots.Remove(snapshotData);
 			NumMovesMade --; // decrement this here!
-			gameController.FUEController.OnUndoMove();
-            boardView.OnUndoMove(snapshotPreUndo);
+			GameController.FUEController.OnUndoMove();
+            BoardView.OnUndoMove(snapshotPreUndo);
 			// Tie up loose ends by "completing" this move!
 			//OnBoardMoveComplete();//Note: Commented out. We don't neeed to call these as the code is now. (TBH there's really two functions in OnBoardMoveComplete: handling the move just executed, and any post-move-forward-or-backward paperwork.)
 		}

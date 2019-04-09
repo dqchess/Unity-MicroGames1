@@ -238,6 +238,8 @@ MonoBehaviour:
     type: 3}
   slideAndStick_mergeSpotView: {fileID: 1480341240316084, guid: df37362f740a147418f019d0145a4e51,
     type: 3}
+  slideAndStick_tileMergeBurst: {fileID: 2381787090561045534, guid: 33ce695d37d4c43a69518651159aa45c,
+    type: 3}
   slideAndStick_tileView: {fileID: 1647619775195882, guid: 923ab6a1c1c5a4eaa82843318499667c,
     type: 3}
   slideAndStick_wallView: {fileID: 1334356613339156, guid: 659fa689c3d6746dab8933f2c8301783,

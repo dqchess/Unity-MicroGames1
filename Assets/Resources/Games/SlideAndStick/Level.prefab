@@ -5083,7 +5083,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 44.75
+  m_fontSize: 22.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5129,7 +5129,7 @@ MonoBehaviour:
     spaceCount: 4
     wordCount: 5
     linkCount: 0
-    lineCount: 1
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_havePropertiesChanged: 0
@@ -12541,6 +12541,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224753618728664278}
   - component: {fileID: 114442891133599414}
+  - component: {fileID: 9197612931512681587}
   - component: {fileID: 114968136602795876}
   m_Layer: 5
   m_Name: Level
@@ -12585,9 +12586,23 @@ MonoBehaviour:
   i_test0: {fileID: 114930048395945126}
   i_test1: {fileID: 114436232498173816}
   myRectTransform: {fileID: 224753618728664278}
+  effectsHandler: {fileID: 9197612931512681587}
   undoMoveInputController: {fileID: 114968136602795876}
   IsAnimating: 0
   levelUI: {fileID: 114035810902992264}
+--- !u!114 &9197612931512681587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698266709426448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad0edf0d1ff404b0ebc399d0c85b6635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: {fileID: 114442891133599414}
 --- !u!114 &114968136602795876
 MonoBehaviour:
   m_ObjectHideFlags: 0

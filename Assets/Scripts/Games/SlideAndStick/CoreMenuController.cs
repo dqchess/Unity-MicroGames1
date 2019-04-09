@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace SlideAndStick {
     public class CoreMenuController : MonoBehaviour {
+        // Properties
+        public static bool Debug_HideMenuOnStart = false; // for DEBUG. If TRUE, then when we load, we WON'T show any menu.
         // References
         [SerializeField] private GameController gameController=null;
         [SerializeField] private LevSelController levSelController=null;
@@ -23,8 +25,12 @@ namespace SlideAndStick {
         private void Start() {
             bool didBeatTutorial = SaveStorage.GetInt(SaveKeys.SlideAndStick_DidCompleteTutorial) == 1;
             
+            // Debug: Hide menu by default?
+            if (Debug_HideMenuOnStart) {
+                CloseLevSelController(false);
+            }
             // Didn't beat tutorial? Go straight into it!
-            if (!didBeatTutorial) {
+            else if (!didBeatTutorial) {
                 CloseLevSelController(false);
             }
             // We DID beat the tutorial. Open LevSel menu!

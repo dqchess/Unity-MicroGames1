@@ -45,8 +45,8 @@ abstract public class BaseGameController : MonoBehaviour {
 	// ----------------------------------------------------------------
 	//  Doers - Loading Level
 	// ----------------------------------------------------------------
-	public void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
-    protected void OpenScene (string sceneName) { UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName); }
+	static public void ReloadScene () { OpenScene (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name); }
+    static protected void OpenScene (string sceneName) { UnityEngine.SceneManagement.SceneManager.LoadScene (sceneName); }
     protected void OpenLevelSelect() { OpenScene(SceneNames.LevelSelect(MyGameName())); }
     protected void OpenMainMenu() { OpenScene(SceneNames.MainMenu(MyGameName())); }
 

@@ -7,10 +7,13 @@
 <LevelPack packName="Tests">
 <Levels>
 
+
+
+	<Level diff="0" noWin="true" layout=" 0.0," />
+	<Level diff="0" noWin="true" layout=" 0, ., 0, " />
+	<Level diff="0" noWin="true" layout=" ....., ....., .0.0., ..0.., .....," />
+
 	<Level diff="0" noWin="true" layout=" 012345, 123450, 234501, ......, ......," />
-
-
-	<Level diff="0" noWin="true" layout=" ....., ....., ..0.., ....., .....," />
 	<Level diff="0" noWin="true" layout=" 0...., ....., ....., ....., .....," />
 	<Level diff="0" noWin="true" layout=" 0...., 1...., 1...., 1...., 1....," />
 	<Level diff="0" noWin="true" layout=" 0.," />
