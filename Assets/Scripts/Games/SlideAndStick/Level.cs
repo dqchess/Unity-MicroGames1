@@ -32,6 +32,7 @@ namespace SlideAndStick {
         //public TileView Temp_TileViewGrabbing { get { return Temp_GetTileView(tileGrabbing); } }
         //public Tile Temp_TileGrabbing { get { return tileGrabbing; } }
         public BoardData Debug_FirstBoardSnapshot { get { return boardSnapshots.Count>0 ? boardSnapshots[0] : null; } }
+        public LevelEffectsHandler EffectsHandler { get { return effectsHandler; } }
         public LevelUI LevelUI { get { return levelUI; } }
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
 		public bool CanMakeAnyMove() {
@@ -316,9 +317,6 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Events
         // ----------------------------------------------------------------
-        //QQQ
-        public LevelEffectsHandler eh { get { return effectsHandler; } }
-        
         private void OnBoardMoveComplete() {
             // Tell BoardView!
 			BoardView.OnExecutedMove();

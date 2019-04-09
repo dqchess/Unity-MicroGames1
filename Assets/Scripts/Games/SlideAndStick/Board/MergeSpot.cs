@@ -6,8 +6,9 @@ namespace SlideAndStick {
 	[System.Serializable]
 	public class MergeSpot {
 		// Properties
-		public Vector2Int dir { get; private set; }
-		public Vector2 pos { get; private set; }
+        public int colorID { get; private set; }
+        public Vector2Int dir { get; private set; }
+        public Vector2 pos { get; private set; }
         
         // Getters
         public Vector2Int PosPlusDir() {
@@ -16,11 +17,13 @@ namespace SlideAndStick {
         }
         
         
-        public MergeSpot(Vector2 pos, Vector2Int dir) {
+        public MergeSpot(Vector2 pos, Vector2Int dir, int colorID) {
+            this.colorID = colorID;
             this.pos = pos;
             this.dir = dir;
         }
         public MergeSpot(Tile tileA, Vector2Int pos, Vector2Int dir) {
+            this.colorID = tileA.ColorID;
             this.pos = pos.ToVector2();
             this.dir = dir;
             if (tileA.DidJustMove) {

@@ -222,7 +222,7 @@ namespace SlideAndStick {
 				allOccupantViews[i].UpdateVisualsPostMove();
 			}
             mergeSpotViews.UpdateVisualsPostMove();
-            MyLevel.eh.OnUpdateAllViewsMoveEnd();
+            MyLevel.EffectsHandler.OnUpdateAllViewsMoveEnd();
 		}
         private void OnAnimLocReachTarget() {
             UpdateAllViewsMoveEnd();

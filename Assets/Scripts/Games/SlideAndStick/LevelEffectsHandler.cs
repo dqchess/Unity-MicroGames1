@@ -36,17 +36,8 @@ namespace SlideAndStick {
         //  Doers
         // ----------------------------------------------------------------
         private void AddMergeBurst(MergeSpot mergeSpot) {
-            Transform tf_boardView = level.BoardView.transform;
-            GameObject burstGO = Instantiate(ResourcesHandler.Instance.slideAndStick_tileMergeBurst);
-            GameUtils.ParentAndReset(burstGO, tf_boardView);
-            // Position/rotate/scale.
-            burstGO.transform.localScale = Vector3.one * boardView.UnitSize/100f; // Hardcoded.
-            burstGO.transform.localEulerAngles = new Vector3(0, 0, MathUtils.DirToRotation(mergeSpot.dir));
-            Vector2 boardPos = mergeSpot.pos + mergeSpot.dir*0.5f; // the exact center of the merge, flat on the Board.
-            boardPos += new Vector2(0, -0.08f); // push up a bit to align with Tiles' thiccness
-            burstGO.transform.localPosition = boardView.BoardToLocal(boardPos);
-            
-            
+            TileMergeBurst burst = Instantiate(ResourcesHandler.Instance.slideAndStick_tileMergeBurst).GetComponent<TileMergeBurst>();
+            burst.Initialize(level.BoardView, mergeSpot);
         }
     }
 }

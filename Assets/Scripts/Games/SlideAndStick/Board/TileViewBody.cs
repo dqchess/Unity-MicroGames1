@@ -367,7 +367,7 @@ namespace SlideAndStick {
             MergeSpotView msv = GetMergeSpotView((msPos+dir).ToVector2());
             if (msv != null) {
                 MergeSpot otherMergeSpot = msv.MyMergeSpot;
-                MergeSpot newMergeSpot = new MergeSpot(msPos.ToVector2() + dir.ToVector2()*0.5f, otherMergeSpot.dir);
+                MergeSpot newMergeSpot = new MergeSpot(msPos.ToVector2() + dir.ToVector2()*0.5f, otherMergeSpot.dir, MyTile.ColorID);
                 bbSpotsToAdd.Add(newMergeSpot);
             }
         }
