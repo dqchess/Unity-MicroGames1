@@ -251,7 +251,7 @@ namespace SlideAndStick {
 			if (currentSeq == Seq.FUE_1) {
 				if (currentStep == s++) {
 					level.UndoMoveInputController.SetButtonsVisible(false); // No undos/resets.
-					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_1);
+					StartAnimation_FingerMoveTile(FingerMoveBoardPoses_FUE_1, 1f);
 					//t_instructions.text = "Merge the Tiles!";
 				}
 			}

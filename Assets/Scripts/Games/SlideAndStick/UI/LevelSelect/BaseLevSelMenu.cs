@@ -9,7 +9,7 @@ namespace SlideAndStick {
 		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
 		private float openLoc;
-		private float alphaFull;
+		private float alphaFull = 1;
 		private float xOpen,xClosed; // for tweening pos in/out.
     
         // Getters (Protected)
@@ -22,7 +22,6 @@ namespace SlideAndStick {
 		// ----------------------------------------------------------------
 		private void Start() {
 			xOpen = 0;
-			alphaFull = 1;
 			SetOpenLoc(0);
 		}
 

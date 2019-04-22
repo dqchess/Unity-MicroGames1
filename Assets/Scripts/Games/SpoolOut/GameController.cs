@@ -13,7 +13,7 @@ namespace SpoolOut {
 		private Level level;
 		// References
         [SerializeField] private CoreMenuController coreMenuController=null;
-        [SerializeField] private GameObject go_toggleLevSelButton=null;
+        //[SerializeField] private GameObject go_toggleLevSelButton=null;
 
         // Getters (Private)
         private bool IsBlockedByLevSel { get { return coreMenuController.IsGameControllerBlockedByLevSel(); } }

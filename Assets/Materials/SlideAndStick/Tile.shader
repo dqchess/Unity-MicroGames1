@@ -18,6 +18,7 @@ Shader "Custom SlideAndStick/Tile"
 		_OverlayTex ("Overlay Texture", 2D) = "white" {}
         _TexDriftX ("Tex Drift X", Float) = 1
         _TexDriftY ("Tex Drift Y", Float) = 1
+        _TexScale ("Tex Scale", Float) = 1
 
         [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
     }
@@ -88,6 +89,7 @@ Shader "Custom SlideAndStick/Tile"
 			sampler2D _OverlayTex;
             float _TexDriftX;
             float _TexDriftY;
+            float _TexScale;
 
             v2f vert(appdata_t v)
             {
@@ -107,7 +109,7 @@ Shader "Custom SlideAndStick/Tile"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
                 float2 offset = float2(_TexDriftX,_TexDriftY)*0.01 * _Time[1]; 
-                float4 texColor = tex2D(_OverlayTex, IN.worldPosition*0.003f+offset);//IN.texcoord+
+                float4 texColor = tex2D(_OverlayTex, IN.worldPosition*_TexScale*0.003f+offset);//IN.texcoord+
 
                 color.rgb -= (1-texColor.rgb) * 0.1;
 

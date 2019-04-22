@@ -48,7 +48,7 @@ namespace SlideAndStick {
         public void OnBoardMade() {
             // Center levelName texts GO between top of screen and board.
             float x = rt_levelNameTexts.anchoredPosition.x;
-            float y = level.BoardView.MyRectTransform.anchoredPosition.y*0.5f;
+            float y = level.BoardView.MyRectTransform.anchoredPosition.y*0.5f + 40;
             rt_levelNameTexts.anchoredPosition = new Vector2(x,y);
         }
         

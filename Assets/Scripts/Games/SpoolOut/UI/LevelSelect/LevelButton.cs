@@ -15,7 +15,8 @@ namespace SpoolOut {
         // Properties
         private Vector2 posNeutral;
         private int col,row;
-        private int myButtonIndex,myPageIndex;
+        //private int myButtonIndex;
+        private int myPageIndex;
         // References
         [SerializeField] private Sprite s_completed=null;
         [SerializeField] private Sprite s_notCompleted=null;
@@ -43,7 +44,7 @@ namespace SpoolOut {
         // ----------------------------------------------------------------
         public void Initialize(PackSelectMenu _psm, Transform tf_parent, int _buttonIndex,int _pageIndex, int _col,int _row) {
             this.packSelectMenu = _psm;
-            this.myButtonIndex = _buttonIndex;
+            //this.myButtonIndex = _buttonIndex;
             this.myPageIndex = _pageIndex;
             this.col = _col;
             this.row = _row;

@@ -17,7 +17,7 @@
     <Level diff="1" layout=" .001, ...1, 00.1, 11.1," />
     <Level diff="1" layout=" 1..1, ..11, 1.00, 10.0," />
     <Level diff="1" layout=" 1111, 0.0., 110., 000.," />
-    <Level diff="1" layout=" 1..0, .110, .00., 0.00," />
+    <Level diff="1" layout=" 1.10, .110, .00., 0.00," />
     <Level diff="1" layout=" .110, .110, 1.0., 1.00," />
     <Level diff="1" layout=" ..10, ..11, 00.., 10..," desc="clearly handmade" />
     <Level diff="1" layout=" 110., 10.., 10.0, 1..1," />

@@ -245,14 +245,14 @@ MonoBehaviour:
   slideAndStick_wallView: {fileID: 1334356613339156, guid: 659fa689c3d6746dab8933f2c8301783,
     type: 3}
   slideAndStick_tileBodyMats:
-  - {fileID: 2100000, guid: d4ab8e0dd0c6e4e32947dd92ad95bba6, type: 2}
-  - {fileID: 2100000, guid: d22c13b841e0a4a2fae3ea39da7acbb6, type: 2}
-  - {fileID: 2100000, guid: 2a12515390f5a46598f05f0b195cd92f, type: 2}
-  - {fileID: 2100000, guid: e68f641eb63e641d6af347f61d46ee75, type: 2}
-  - {fileID: 2100000, guid: 3848ce9a4be3945bda5c5ae7bec62d41, type: 2}
-  - {fileID: 2100000, guid: 9afe53a59ecd0442494d39629717f453, type: 2}
   - {fileID: 2100000, guid: 91f2945f8e9bf4442950279866c42ada, type: 2}
+  - {fileID: 2100000, guid: d4ab8e0dd0c6e4e32947dd92ad95bba6, type: 2}
+  - {fileID: 2100000, guid: e68f641eb63e641d6af347f61d46ee75, type: 2}
   - {fileID: 2100000, guid: 4e712475a317e4ab9a6c5e51f5079a97, type: 2}
+  - {fileID: 2100000, guid: 9afe53a59ecd0442494d39629717f453, type: 2}
+  - {fileID: 2100000, guid: 2a12515390f5a46598f05f0b195cd92f, type: 2}
+  - {fileID: 2100000, guid: 3848ce9a4be3945bda5c5ae7bec62d41, type: 2}
+  - {fileID: 2100000, guid: d22c13b841e0a4a2fae3ea39da7acbb6, type: 2}
   spoolOut_levSelPackButton: {fileID: 1386133328862126, guid: 99a8b445883654d6c9811f5f7ab2e7f8,
     type: 3}
   spoolOut_levSelLevelButton: {fileID: 1541161270568078, guid: a3d2377386d5743d7ab9b63447eba1d8,

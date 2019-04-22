@@ -10,7 +10,7 @@ namespace SlideAndStick {
         private float minDragOffset; // In screen space. Any drag less than this will be ignored.
         // Properties
         private readonly float uSS; // unitSizeScaled! It's BoardView's UnitSize, but scaled however I want to highten movement sensitivity. If 1, tiles move 1:1 with finger.
-        private readonly float dragAxesSwitchThresh; // If dragAxes goes too far x/y by this amount, we'll switch our SimMove!
+        //private readonly float dragAxesSwitchThresh; // If dragAxes goes too far x/y by this amount, we'll switch our SimMove!
         private int simMoveSide; // just matches simMoveDir. For optimization.
         private Vector2 dragAxes; // screen distance from dragAnchorPos to current touch pos.
         private Vector2 dragAnchorPos; // BASICALLY touchDownPos, EXCEPT set (to mouse pos) on touch down, AND whenever we execute a move.
@@ -62,7 +62,6 @@ namespace SlideAndStick {
 				if (v.y < 0) { return Vector2Int.B; }
 				return Vector2Int.T;
 			}
-			return Vector2Int.undefined; // Hmm.
 		}
 
 
@@ -73,7 +72,7 @@ namespace SlideAndStick {
 			this.level = _level;
 			this.uSS = level.BoardView.UnitSize * 1f;
 			this.minDragOffset = 2;//_unitSize * 0.1f;
-            this.dragAxesSwitchThresh = uSS*0.7f;
+            //this.dragAxesSwitchThresh = uSS*0.7f;
         }
 
 
