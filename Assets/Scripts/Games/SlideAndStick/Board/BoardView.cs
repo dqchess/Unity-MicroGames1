@@ -120,16 +120,22 @@ namespace SlideAndStick {
 		}
 
 		private void UpdatePosAndSize() {
-			// Calculate unitSize.
-			Rect r_availableArea = myRectTransform.rect;
-			UnitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
+            Vector2 parentSize = MyLevel.GetComponent<RectTransform>().rect.size;
+            // Calculate unitSize.
+            Rect r_availableArea = myRectTransform.rect;
+            // Shrink available area for iPad.
+            r_availableArea.size = new Vector2(r_availableArea.width, parentSize.y*0.45f);
+            UnitSize = Mathf.Min(r_availableArea.size.x/(float)(numCols), r_availableArea.size.y/(float)(numRows));
+            //Vector2 availableSize = new Vector2(myRectTransform.rect.width, parentSize.y*0.42f);
+            //UnitSize = Mathf.Min(parentSize.x/(float)numCols, parentSize.y/(float)numRows);
+            
 			// Update my rectTransform size.
 			myRectTransform.sizeDelta = new Vector2(numCols*UnitSize, numRows*UnitSize);
 			// Position me nice and horz centered!
-			Vector2 parentSize = MyLevel.GetComponent<RectTransform>().rect.size;
 			float posX = (parentSize.x-myRectTransform.rect.width)*0.5f;
 			//float posY = -(parentSize.y*0.8f - myRectTransform.rect.height); // bottom-align me!
             float posY = -(parentSize.y-myRectTransform.rect.height) * 0.5f; // center-align me!
+            posY = Mathf.Min(posY, -230); // bump down if iPad resolution.
 			myRectTransform.anchoredPosition = new Vector2(posX,posY);
 		}
 

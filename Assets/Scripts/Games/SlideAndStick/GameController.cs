@@ -298,6 +298,10 @@ namespace SlideAndStick {
                     Debug_RestorePrevBoard();
                     return;
                 }
+                // S = Save screenshot!
+                else if (Input.GetKeyDown(KeyCode.S)) {
+                    ScreenCapture.CaptureScreenshot("screenshot.png");
+                }
             }
             
         }

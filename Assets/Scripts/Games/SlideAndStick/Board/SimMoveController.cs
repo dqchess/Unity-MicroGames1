@@ -24,7 +24,8 @@ namespace SlideAndStick {
         // Getters (Private)
         private bool CanExecuteSimMove { get { return level.BoardView.CanExecuteSimMove; } } // NOTE: This access is sloppy. *I* should be managing the whole sim board and move results!!
         private Vector2 GetTouchPos() {
-            return Input.mousePosition/level.GameController.Canvas.scaleFactor; // ha-cky... InputController.Instance.TouchPosScaled glitches out for 1 frame sometimes. :P
+            return InputController.Instance.TouchPosScaled;
+            //return Input.mousePosition/level.GameController.Canvas.scaleFactor; // ha-cky... InputController.Instance.TouchPosScaled glitches out for 1 frame sometimes. :P
         }
 
 //        private bool IsTouch() { return (Input.touchSupported && Input.touchCount>0) || Input.GetMouseButton(0); }

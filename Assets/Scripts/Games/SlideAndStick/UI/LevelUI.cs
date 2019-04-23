@@ -8,6 +8,7 @@ namespace SlideAndStick {
 	public class LevelUI : MonoBehaviour {
         // Components
         [SerializeField] private RectTransform rt_levelNameTexts=null;
+        [SerializeField] private RectTransform rt_undoMoveButton=null;
         [SerializeField] private TextMeshProUGUI t_levelName=null;
         [SerializeField] private TextMeshProUGUI t_packName=null;
         [SerializeField] private LevelCompletePopup levelCompletePopup=null;
@@ -47,9 +48,19 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void OnBoardMade() {
             // Center levelName texts GO between top of screen and board.
-            float x = rt_levelNameTexts.anchoredPosition.x;
-            float y = level.BoardView.MyRectTransform.anchoredPosition.y*0.5f + 40;
-            rt_levelNameTexts.anchoredPosition = new Vector2(x,y);
+            rt_levelNameTexts.anchoredPosition = new Vector2(
+                rt_levelNameTexts.anchoredPosition.x,
+                level.BoardView.MyRectTransform.anchoredPosition.y*0.5f + 60
+            );
+            // Center UndoMoveButton between screen bottom and board.
+            //float canvasHeight = FindObjectOfType<Canvas>().GetComponent<RectTransform>().rect.height;
+            RectTransform rt_level = level.GetComponent<RectTransform>();
+            RectTransform rt_bv = level.BoardView.MyRectTransform;
+            float boardBottomY = rt_level.rect.height - (rt_bv.rect.height-rt_bv.anchoredPosition.y); // this is the y-pos of the bottommost Tile (relative to bottom of screen).
+            rt_undoMoveButton.anchoredPosition = new Vector2(
+                rt_undoMoveButton.anchoredPosition.x,
+                boardBottomY*0.5f - 34 // offset for the board's chunky backing.
+            );
         }
         
         public void OnLevelAnimateIn() {

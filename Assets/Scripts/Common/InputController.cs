@@ -52,12 +52,12 @@ public class InputController : MonoBehaviour {
 	}
     
     private void UpdateTouchPosScaled() {
-        //if (Input.touchSupported && Input.touchCount>0) {
-        //    TouchPosScaled = Input.touches[0].position/canvas.scaleFactor;
-        //}
-        //else {
+        if (Input.touchSupported && Input.touchCount>0) {
+            TouchPosScaled = Input.touches[0].position/canvas.scaleFactor;
+        }
+        else {
             TouchPosScaled = Input.mousePosition/canvas.scaleFactor;
-        //}
+        }
     }
 
 
