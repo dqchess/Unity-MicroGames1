@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace AlphaTapMost {
 	public class AlphaTapMostUI : MonoBehaviour {
 		// Components
-		[SerializeField] private Text t_timeLeft;
-		[SerializeField] private Text t_numCorrectTaps;
+		[SerializeField] private Text t_timeLeft=null;
+		[SerializeField] private Text t_numCorrectTaps=null;
 
 
 		// ----------------------------------------------------------------

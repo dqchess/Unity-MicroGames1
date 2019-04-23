@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class ImageLine : MonoBehaviour {
     // Components
-    [SerializeField] private Image image; // the actual line
-    [SerializeField] private RectTransform _myRectTransform;
+    [SerializeField] private Image image=null; // the actual line
+    [SerializeField] private RectTransform _myRectTransform=null;
     // Properties
     private float angle; // in DEGREES.
     private float length;

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class FullScrim : MonoBehaviour {
 	// Components
-	[SerializeField] private Image scrimImage;
+	[SerializeField] private Image scrimImage=null;
 	// Properties
 	private bool useUnscaledTime; // if this is true, I'll fade IRRELEVANT of Time.timeScale
 	private Color startColor;

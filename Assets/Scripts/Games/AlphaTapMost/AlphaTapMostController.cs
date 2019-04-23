@@ -18,8 +18,8 @@ namespace AlphaTapMost {
 		private float timeLeft; // in SECONDS.
 		private int numCorrectTaps;
 		// References
-		[SerializeField] private AlphaTapMostUI ui;
-		[SerializeField] private SpriteRenderer sr_incorrectIcon;
+		[SerializeField] private AlphaTapMostUI ui=null;
+		[SerializeField] private SpriteRenderer sr_incorrectIcon=null;
 		private Ray ray;
 		private RaycastHit2D hit;
 
@@ -98,7 +98,7 @@ namespace AlphaTapMost {
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			hit = Physics2D.Raycast (ray.origin, ray.direction, Mathf.Infinity);
 
-			if (hit!=null && hit.collider!=null) {
+			if (hit.collider!=null) {//hit!=null &&
 				TapSpace tapSpace = hit.collider.gameObject.GetComponent<TapSpace>();
 				if (tapSpace != null) {
 					OnClickTapSpace(tapSpace);

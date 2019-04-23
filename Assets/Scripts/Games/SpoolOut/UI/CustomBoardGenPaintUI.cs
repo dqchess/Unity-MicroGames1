@@ -6,12 +6,12 @@ using UnityEngine.UI;
 namespace SpoolOut {
     public class CustomBoardGenPaintUI : MonoBehaviour {
         // Components
-        [SerializeField] private Button b_eraser;
-        [SerializeField] private Button[] b_colorIDs;
+        [SerializeField] private Button b_eraser=null;
+        [SerializeField] private Button[] b_colorIDs=null;
         // Properties
         private int paintColorID=-1; // -1 is eraser.
         // References
-        [SerializeField] private Level level;
+        [SerializeField] private Level level=null;
         private Button prevSelectedButton; // for applying highlight.
         
         // Getters (Private)

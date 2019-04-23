@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DebugToggleControlMode : MonoBehaviour {
 	// Components
-	[SerializeField] private Text myText;
+	[SerializeField] private Text myText=null;
 
 
 	// ----------------------------------------------------------------

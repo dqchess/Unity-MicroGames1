@@ -17,8 +17,8 @@ namespace AlphaTapOrder {
 		private int currentLevelIndex;
 		private int nextSpaceNumber;
 		// References
-		[SerializeField] private GameUI ui;
-		[SerializeField] private RectTransform rt_spaces;
+		[SerializeField] private GameUI ui=null;
+		[SerializeField] private RectTransform rt_spaces=null;
 
 
 

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace ExtrudeMatch {
 	public class TileView : BoardOccupantView {
         // Components
-        [SerializeField] private Text t_value;
+        [SerializeField] private Text t_value=null;
 
 		// Getters
 		public static Color GetBodyColor(int _colorID) {

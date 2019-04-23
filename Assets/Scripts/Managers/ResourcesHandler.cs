@@ -47,7 +47,7 @@ public class ResourcesHandler : MonoBehaviour {
     [SerializeField] public GameObject slideAndStick_tileMergeBurst;
     [SerializeField] public GameObject slideAndStick_tileView;
     [SerializeField] public GameObject slideAndStick_wallView;
-    [SerializeField] private Material[] slideAndStick_tileBodyMats;
+    [SerializeField] private Material[] slideAndStick_tileBodyMats=null;
 
     [SerializeField] public GameObject spoolOut_levSelPackButton;
     [SerializeField] public GameObject spoolOut_levSelLevelButton;

@@ -21,10 +21,8 @@ public class AdManager : MonoBehaviour {
             //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
             Destroy(gameObject);
 
-        //Sets this to not be destroyed when reloading scene
-        DontDestroyOnLoad(gameObject);
-
-
+        ////Sets this to not be destroyed when reloading scene
+        //DontDestroyOnLoad(gameObject); Note: #brettadded Don't need this; AdManager GameObject is in PersistentHouse.
     }
     public void showBanner() {}
     public void showInterstitial() {}

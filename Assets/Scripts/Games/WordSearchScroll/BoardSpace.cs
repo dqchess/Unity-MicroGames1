@@ -7,9 +7,9 @@ using TMPro;
 namespace WordSearchScroll {
 	public class BoardSpace : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_backing;
-		[SerializeField] private RectTransform myRectTransform;
-		[SerializeField] private TextMeshProUGUI t_letter;
+		[SerializeField] private Image i_backing=null;
+		[SerializeField] private RectTransform myRectTransform=null;
+		[SerializeField] private TextMeshProUGUI t_letter=null;
 		// Properties
 		private Color fillColor;
 		private char myLetter;

@@ -9,7 +9,6 @@
 
 
 
-	<Level diff="0" noWin="true" layout=" 0.0," />
 	<Level diff="0" noWin="true" layout=" 0, ., 0, " />
 	<Level diff="0" noWin="true" layout=" ....., ....., .0.0., ..0.., .....," />
 

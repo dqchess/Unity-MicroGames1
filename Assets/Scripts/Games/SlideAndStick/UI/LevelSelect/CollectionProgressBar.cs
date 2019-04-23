@@ -33,7 +33,7 @@ namespace SlideAndStick {
 //			i_fill.color = color;
 
 			PackCollectionData pcd = LevelsManager.Instance.GetPackCollectionData(address);
-			if (pcd != null) { // Safety check.
+			if (pcd != null || pcd.NumLevels()==0) { // Safety check.
 				float percent = pcd.NumLevelsCompleted() / (float)pcd.NumLevels();
 				SetFillPercent(percent);
 			}

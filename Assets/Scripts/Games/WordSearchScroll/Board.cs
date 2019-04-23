@@ -23,8 +23,8 @@ namespace WordSearchScroll {
 		private Vector2 size;
 		private HashSet<string> wordsFound;
 		// References
-		[SerializeField] private Level level;
-		[SerializeField] private LevelUI ui;
+		[SerializeField] private Level level=null;
+		[SerializeField] private LevelUI ui=null;
 
 		// Getters (Public)
 		public float UnitSize { get { return unitSize; } }

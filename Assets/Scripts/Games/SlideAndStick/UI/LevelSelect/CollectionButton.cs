@@ -10,13 +10,13 @@ namespace SlideAndStick {
         [SerializeField] private Image i_bottom=null;
 		[SerializeField] private Image i_top=null;
 		[SerializeField] private TextMeshProUGUI t_name=null;
-		[SerializeField] private CollectionProgressBar progressBar=null;
+		//[SerializeField] private CollectionProgressBar progressBar=null;
         // Properties
-        [SerializeField] private int collectionIndex;
+        [SerializeField] private int collectionIndex=0;
 		private Color collectionColor;
 		private LevelAddress myAddress;
         // References
-        [SerializeField] private LevSelController levSelController;
+        [SerializeField] private LevSelController levSelController=null;
 
 
         // ----------------------------------------------------------------
@@ -30,12 +30,12 @@ namespace SlideAndStick {
             t_name.text = pcd.CollectionName;
             i_top.color = collectionColor;
             i_bottom.color = Color.Lerp(collectionColor, Color.black, 0.3f);
-			UpdateBarVisuals();
+			//UpdateBarVisuals();
 		}
 
-		private void UpdateBarVisuals() {
-			progressBar.UpdateVisuals(myAddress, collectionColor);
-        }
+		//private void UpdateBarVisuals() {
+			//progressBar.UpdateVisuals(myAddress, collectionColor);
+        //}
 
 
         // ----------------------------------------------------------------
@@ -44,8 +44,8 @@ namespace SlideAndStick {
         public void OnClick() {
             levSelController.OnCollectionButtonClick(collectionIndex);
         }
-		private void OnEnable() {
-			UpdateBarVisuals();
-		}
+		//private void OnEnable() {
+		//	UpdateBarVisuals();
+		//}
     }
 }

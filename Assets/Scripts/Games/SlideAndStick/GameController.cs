@@ -16,6 +16,7 @@ namespace SlideAndStick {
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
         // References
+        [SerializeField] private GameObject go_levelContainer=null;
         [SerializeField] private GameBackground background=null;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private FUEController fueController=null;
@@ -272,7 +273,7 @@ namespace SlideAndStick {
             bool isKey_ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
             bool isKey_shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
             if (isKey_shift) {
-                if (Input.GetKeyDown(KeyCode.S)) { levelsManager.Debug_SaveReplaceXMLLayout(level); }
+                //if (Input.GetKeyDown(KeyCode.S)) { levelsManager.Debug_SaveReplaceXMLLayout(level); }
             }
             else if (isKey_ctrl) {
                 if (Input.GetKeyDown(KeyCode.LeftBracket))  { ChangeCollection(-1); return; }
@@ -302,7 +303,6 @@ namespace SlideAndStick {
         }
         
         
-        [SerializeField] private GameObject go_levelContainer;
         public void RecedeIntoBackground() {
             LeanTween.cancel(go_levelContainer);
             float duration = 0.7f;

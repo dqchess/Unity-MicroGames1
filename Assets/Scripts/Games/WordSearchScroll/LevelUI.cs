@@ -6,8 +6,8 @@ using UnityEngine;
 namespace WordSearchScroll {
 	public class LevelUI : MonoBehaviour {
 		// Components
-		[SerializeField] private TextMeshProUGUI t_wordsVisible0; // left column
-		[SerializeField] private TextMeshProUGUI t_wordsVisible1; // right column
+		[SerializeField] private TextMeshProUGUI t_wordsVisible0=null; // left column
+		[SerializeField] private TextMeshProUGUI t_wordsVisible1=null; // right column
 
 		public void OnSetWordsVisible(List<BoardWord> wordsVisible) {
 			const int numWordsPerCol = 16;

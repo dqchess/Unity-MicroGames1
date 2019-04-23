@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CirclePop {
     public class WallCircle : Wall {
         // Components
-        [SerializeField] private CircleCollider2D myCollider;
+        [SerializeField] private CircleCollider2D myCollider=null;
 
 
 		// ----------------------------------------------------------------

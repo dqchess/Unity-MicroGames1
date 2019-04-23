@@ -123,21 +123,6 @@ namespace SlideAndStick {
     
     
         // ----------------------------------------------------------------
-        //  Setters
-        // ----------------------------------------------------------------
-        //public void SetPlayerCoins(int _numCoins) {
-            //playerCoins = _numCoins;
-            //SaveStorage.SetInt(SaveKeys.PlayerCoins, PlayerCoins);
-            //if (!GameManagers.IsInitializing) {
-            //    GameManagers.Instance.EventManager.OnSetPlayerCoins(PlayerCoins);
-            //}
-        //}
-        //public void ChangePlayerCoins(int _change) {
-        //    SetPlayerCoins(playerCoins + _change);
-        //}
-    
-    
-        // ----------------------------------------------------------------
         //  Initialize
         // ----------------------------------------------------------------
         public LevelsManager() {
@@ -145,11 +130,12 @@ namespace SlideAndStick {
         }
         public void Reset () {
             ReloadModeDatas ();
-            //playerCoins = SaveStorage.GetInt(SaveKeys.PlayerCoins, GameProperties.NumStartingCoins);
-            //Debug_PrintTotalNumLevels();
-            //Debug_PrintNumLevelsInEachPack();
-            Debug_PrintDuplicateLevelLayouts();
-            //Debug_PrintAlreadySatisfiedTileLayouts();
+            if (Application.isEditor) {
+                //Debug_PrintTotalNumLevels();
+                //Debug_PrintNumLevelsInEachPack();
+                Debug_PrintDuplicateLevelLayouts();
+                //Debug_PrintAlreadySatisfiedTileLayouts();
+            }
         }
     
     
@@ -180,11 +166,11 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Debug
         // ----------------------------------------------------------------
-        /** Dangerous function! Powerful. This overwrites our Board layout in the XML file. */
-        public void Debug_SaveReplaceXMLLayout(Level level) {
-            // First, find the file.
+        ///** Dangerous function! Powerful. This overwrites our Board layout in the XML file. */
+        //public void Debug_SaveReplaceXMLLayout(Level level) {
+        //    // First, find the file.
             
-        }
+        //}
         private void Debug_PrintTotalNumLevels() {
             int total=0;
             foreach (ModeCollectionData modeCollectionData in modeDatas) {

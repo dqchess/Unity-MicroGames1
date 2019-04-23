@@ -320,8 +320,8 @@ namespace SlideAndStick {
 //					GameUtils.ParentAndReset(i_arrow.gameObject, rt_levSelButton);
 					GameUtils.ParentAndReset(i_arrow.gameObject, this.transform);
 					Vector2 canvasSize = level.GameController.Canvas.GetComponent<RectTransform>().rect.size;
-					Vector2 arrowPos = new Vector2(canvasSize.x-76, canvasSize.y-40);
-					StartAnimation_BounceArrow(arrowPos, 90);
+					Vector2 arrowPos = new Vector2(canvasSize.x-40, canvasSize.y-88);
+					StartAnimation_BounceArrow(arrowPos, 180);
 					CanTouchBoard = false;
 				}
 				// Wait for input.

@@ -6,10 +6,10 @@ using UnityEngine.UI;
 namespace SlideAndStick {
 	public class ToggleSfxButton : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_body;
+		[SerializeField] private Image i_body=null;
 		// References
-		[SerializeField] private Sprite s_bodyOn;
-		[SerializeField] private Sprite s_bodyOff;
+		[SerializeField] private Sprite s_bodyOn=null;
+		[SerializeField] private Sprite s_bodyOff=null;
 
 		// Getters (Private)
 		private SoundManager sm { get { return GameManagers.Instance.SoundManager; } }

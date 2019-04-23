@@ -11,9 +11,9 @@ namespace SpoolOut {
         [SerializeField] private Image i_top=null;
         [SerializeField] private TextMeshProUGUI t_name=null;
         // Properties
-        [SerializeField] private int collectionIndex;
+        [SerializeField] private int collectionIndex=0;
         // References
-        [SerializeField] private LevSelController levSelController;
+        [SerializeField] private LevSelController levSelController=null;
 
 
         // ----------------------------------------------------------------

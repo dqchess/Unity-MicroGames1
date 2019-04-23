@@ -13,12 +13,12 @@ namespace WallPaint {
         private int currentLevelIndex;
         //private int numCols,numRows;
         // Components
-        [SerializeField] private GameObject go_board;
-		[SerializeField] private Player player;
+        //[SerializeField] private GameObject go_board=null;
+		//[SerializeField] private Player player=null;
         //[SerializeField] private WallSpace[] wallSpaces;
         //private BoardSpace[,] boardSpaces;
         // References
-        [SerializeField] private GameUI ui;
+        [SerializeField] private GameUI ui=null;
 
 
 

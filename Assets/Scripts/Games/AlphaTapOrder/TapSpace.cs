@@ -6,9 +6,9 @@ using UnityEngine.UI;
 namespace AlphaTapOrder {
 	public class TapSpace : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_body;
-		[SerializeField] private Text t_myNumber;
-		[SerializeField] private RectTransform myRectTransform;
+		[SerializeField] private Image i_body=null;
+		[SerializeField] private Text t_myNumber=null;
+		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
 		private bool wasTapped;
 		private int myNumber;

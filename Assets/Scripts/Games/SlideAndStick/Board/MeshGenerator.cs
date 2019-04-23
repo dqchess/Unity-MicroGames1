@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MeshGenerator : MonoBehaviour {
     // Components
-    [SerializeField] private MeshRenderer meshRenderer;
-    [SerializeField] private MeshFilter meshFilter;
+    [SerializeField] private MeshRenderer meshRenderer=null;
+    [SerializeField] private MeshFilter meshFilter=null;
     // References
-    [SerializeField] private Material mat;
+    [SerializeField] private Material mat=null;
     
     
     

@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace WordSearchScroll {
 	public class WordHighlight : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_fill;
-		[SerializeField] private Image i_stroke;
+		[SerializeField] private Image i_fill=null;
+		[SerializeField] private Image i_stroke=null;
 		// Properties
 		private string wordSpelling=""; // updated when we change mySpaces.
 		// References

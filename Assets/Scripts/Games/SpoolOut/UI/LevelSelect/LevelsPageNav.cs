@@ -12,7 +12,7 @@ namespace SpoolOut {
 		[SerializeField] private Image i_selectedDot=null;
 		private List<LevelsPageDotButton> b_dots=new List<LevelsPageDotButton>();
 		// References
-		[SerializeField] private PackSelectMenu psm;
+		[SerializeField] private PackSelectMenu psm=null;
 
 
 		// Getters (Private)

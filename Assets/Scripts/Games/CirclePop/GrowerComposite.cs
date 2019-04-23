@@ -8,8 +8,8 @@ namespace CirclePop {
 		// Components
 //		private Collider2D myCollider=null;
 		// References
-		[SerializeField] private Sprite s_circle;
-		[SerializeField] private Sprite s_square;
+		[SerializeField] private Sprite s_circle=null;
+		[SerializeField] private Sprite s_square=null;
 		// Properties
 //		private Vector2[] pointsNeutral; // the points that define my shape in its smallest, ungrown form.
 

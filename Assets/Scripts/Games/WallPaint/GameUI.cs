@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace WallPaint {
 	public class GameUI : MonoBehaviour {
 		// Components
-		[SerializeField] private Text t_levelName;
+		[SerializeField] private Text t_levelName=null;
 
 
 		// ----------------------------------------------------------------

@@ -24,12 +24,12 @@ namespace AlphaTapMatch {
 		private int currentLevelIndex;
 		private int currentColorLocDir=1;//TEST for linearness
 		// References
-		[SerializeField] private GameUI ui;
-//		[SerializeField] private Image i_currentColor;
-		[SerializeField] private TextMeshProUGUI t_levelNumber; // note: THIS is what we color!
-		[SerializeField] private Image i_targetColor;
-		[SerializeField] private Image i_correctIcon;
-		[SerializeField] private Image i_incorrectIcon;
+		//[SerializeField] private GameUI ui=null;
+//		[SerializeField] private Image i_currentColor=null;
+		[SerializeField] private TextMeshProUGUI t_levelNumber=null; // note: THIS is what we color!
+		[SerializeField] private Image i_targetColor=null;
+		[SerializeField] private Image i_correctIcon=null;
+		[SerializeField] private Image i_incorrectIcon=null;
 
 		// Getters
 		private Color CurrentColor() {

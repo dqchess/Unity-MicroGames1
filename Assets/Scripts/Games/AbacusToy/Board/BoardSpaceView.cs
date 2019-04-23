@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace AbacusToy {
 	public class BoardSpaceView : MonoBehaviour {
 		// Components
-		[SerializeField] private Image i_backing;
-		[SerializeField] private Image i_border;
+		[SerializeField] private Image i_backing=null;
+		[SerializeField] private Image i_border=null;
 		// Properties
 		private Color fillColor;
 		// References

@@ -5,8 +5,8 @@ using UnityEngine;
 namespace WordSearchScroll {
 	public class Level : MonoBehaviour {
 		// Components
-		[SerializeField] private Board board; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
-		[SerializeField] private RectTransform myRectTransform;
+		[SerializeField] private Board board=null; // this reference ONLY changes when we undo a move, where we remake-from-scratch both board and boardView.
+		[SerializeField] private RectTransform myRectTransform=null;
 		// Properties
 		private RectTransform rt_canvas;
 		private Vector2 mousePosRelative;

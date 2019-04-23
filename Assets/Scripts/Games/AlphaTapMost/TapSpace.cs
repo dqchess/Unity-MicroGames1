@@ -5,7 +5,7 @@ using UnityEngine;
 namespace AlphaTapMost {
 	public class TapSpace : MonoBehaviour {
 		// Components
-		[SerializeField] private SpriteRenderer bodySprite;
+		[SerializeField] private SpriteRenderer bodySprite=null;
 		// Properties
 		private bool wasRecentCorrectTap; // sets me to green. Set to false when my alpha is about 0.
 		private Color bodyColor;
