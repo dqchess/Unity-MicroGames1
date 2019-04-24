@@ -244,6 +244,9 @@ namespace SlideAndStick {
         //  Update
         // ----------------------------------------------------------------
         override protected void Update () {
+            // DEBUG! S = Save screenshot.
+            if (Input.GetKeyDown(KeyCode.S)) { ScreenCapture.CaptureScreenshot("screenshot.png"); }
+            
             if (!IsBlockedByLevSel) { return; }
             base.Update();
             // Update my dependencies!
@@ -297,10 +300,6 @@ namespace SlideAndStick {
                 if (Input.GetKeyDown(KeyCode.E)) {
                     Debug_RestorePrevBoard();
                     return;
-                }
-                // S = Save screenshot!
-                else if (Input.GetKeyDown(KeyCode.S)) {
-                    ScreenCapture.CaptureScreenshot("screenshot.png");
                 }
             }
             
