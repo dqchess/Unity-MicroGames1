@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
+
 //using Facebook.Unity;QQQ Commented out everything for analytics!
 
 public class FBAnalyticsController : MonoBehaviour {
@@ -60,14 +62,23 @@ public class FBAnalyticsController : MonoBehaviour {
     }
 	
 
+    void reportCustomEvent(string title, Dictionary<string, object> myParams)
+    {
+        Analytics.CustomEvent(title, myParams);
+    }
+
     // ----------------------------------------------------------------
     //  Gameplay Events!
 	// ----------------------------------------------------------------
 	public void OnLoseLevel(string gameName, int levelIndex, float timeSpentThisPlay) {
-		//var parameters = new Dictionary<string, object>();
-		//parameters["Game"] = gameName;
-		//parameters[AppEventParameterName.Level] = levelIndex;
-		//parameters["timeSpentThisPlay"] = timeSpentThisPlay;
+        Debug.Log("reporting lose level...");
+        var parameters = new Dictionary<string, object>();
+		parameters["Game"] = gameName;
+		parameters["Level"] = levelIndex;
+		parameters["timeSpentThisPlay"] = timeSpentThisPlay;
+
+        reportCustomEvent(AppEventName_LevelLose, parameters);
+
 		//FB.LogAppEvent(
 		//	AppEventName_LevelLose,
 		//	null,
@@ -75,18 +86,23 @@ public class FBAnalyticsController : MonoBehaviour {
 		//);
 	}
     public void OnWinLevel(string gameName, int levelIndex) {
-        //// If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
-        //int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelIndex));
-        //if (numWins > 1) { return; }
+        Debug.Log("reporting win level...");
+        // If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
+        int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelIndex));
+        if (numWins > 1) { return; }
 
-        //int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
-        //float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelIndex), 0);
+        int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0);
+        float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelIndex), 0);
 
-        //var parameters = new Dictionary<string, object>();
-        //parameters["Game"] = gameName;
-        //parameters[AppEventParameterName.Level] = levelIndex;
-        //parameters["numLosses"] = numLosses;
-        //parameters["timeSpentTotal"] = timeSpentTotal;
+        var parameters = new Dictionary<string, object>();
+        parameters["Game"] = gameName;
+        parameters["Level"] = levelIndex;
+        parameters["numLosses"] = numLosses;
+        parameters["timeSpentTotal"] = timeSpentTotal;
+
+        reportCustomEvent("WinLevel", parameters);
+
+
         //FB.LogAppEvent(
         //    AppEventName.AchievedLevel,
         //    null,
@@ -94,19 +110,23 @@ public class FBAnalyticsController : MonoBehaviour {
         //);
     }
     public void OnWinLevel(string gameName, LevelAddress levelAddress) {
+        Debug.Log("reporting win level...");
         //// If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
-        //int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelAddress));
-        //if (numWins > 1) { return; }
+        int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelAddress));
+        if (numWins > 1) { return; }
 
-        ////int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelAddress), 0);
-        //float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelAddress), 0);
+        int numLosses = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelAddress), 0);
+        float timeSpentTotal = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelAddress), 0);
 
-        //var parameters = new Dictionary<string, object>();
-        //parameters["Game"] = gameName;
-        //parameters[AppEventParameterName.Level] = levelAddress.level;
-        //parameters["Collection"] = levelAddress.collection;
-        ////parameters["numLosses"] = numLosses;
-        //parameters["timeSpentTotal"] = timeSpentTotal;
+        var parameters = new Dictionary<string, object>();
+        parameters["Game"] = gameName;
+        parameters["Level"] = levelAddress.level;
+        parameters["Collection"] = levelAddress.collection;
+        parameters["numLosses"] = numLosses;
+        parameters["timeSpentTotal"] = timeSpentTotal;
+
+        reportCustomEvent("WinLevel", parameters);
+
         //FB.LogAppEvent(
         //    AppEventName.AchievedLevel,
         //    null,
