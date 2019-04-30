@@ -161,6 +161,8 @@ namespace SlideAndStick {
             levelUI.OnLevelAnimateIn();
              // Animate-in the Board elements before I'm fully in for tighter transition.
             LeanTween.delayedCall(animInOutDuration*0.6f, AnimateInBoard);
+            // Play sound!
+            sfxController.OnLevelAnimateIn();
         }
         /** Animates the WHOLE LEVEL, including UI. From onscreen to down offscreen. */
         public void AnimateOut() {
@@ -399,6 +401,8 @@ namespace SlideAndStick {
 			NumMovesMade --; // decrement this here!
 			GameController.FUEController.OnUndoMove();
             BoardView.OnUndoMove(snapshotPreUndo);
+            // Play sound!
+            sfxController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!
 			//OnBoardMoveComplete();//Note: Commented out. We don't neeed to call these as the code is now. (TBH there's really two functions in OnBoardMoveComplete: handling the move just executed, and any post-move-forward-or-backward paperwork.)
 		}

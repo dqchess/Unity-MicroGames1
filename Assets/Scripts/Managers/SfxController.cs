@@ -10,6 +10,8 @@ public class SfxController : MonoBehaviour {
     private const int NUM_AUDIO_SOURCES = 16;
     // Components
     AudioSource[] allAudioSources; // a list of 16 possible AudioSources. When we want to play a sound, we pick the first one in the list that ISN'T currently playing a sound.
+    // References
+    [SerializeField] private AudioClip ac_buttonClick=null;
 
     // Getters
     private SoundManager soundManager { get { return GameManagers.Instance.SoundManager; } }
@@ -28,7 +30,6 @@ public class SfxController : MonoBehaviour {
     //  Initialize
     // ----------------------------------------------------------------
     private void Awake () {
-
         // Make my AudioSources!
         allAudioSources = new AudioSource[NUM_AUDIO_SOURCES];
         for (int i=0; i<NUM_AUDIO_SOURCES; i++) {
@@ -36,11 +37,21 @@ public class SfxController : MonoBehaviour {
         }
 
         // Add event listeners!
-//      GameManagers.Instance.SoundManager.SetSfxVolumeEvent += OnSetVolumeEvent;
+        GameManagers.Instance.EventManager.AnyButtonClickEvent += OnAnyButtonClick;
+        //GameManagers.Instance.SoundManager.SetSfxVolumeEvent += OnSetVolumeEvent;
     }
     private void OnDestroy () {
         // Remove event listeners!
-//      GameManagers.Instance.SoundManager.SetSfxVolumeEvent -= OnSetVolumeEvent;
+        GameManagers.Instance.EventManager.AnyButtonClickEvent -= OnAnyButtonClick;
+        //GameManagers.Instance.SoundManager.SetSfxVolumeEvent -= OnSetVolumeEvent;
+    }
+    
+    
+    // ----------------------------------------------------------------
+    //  Events
+    // ----------------------------------------------------------------
+    private void OnAnyButtonClick() {
+        PlaySound(ac_buttonClick);
     }
 
 
