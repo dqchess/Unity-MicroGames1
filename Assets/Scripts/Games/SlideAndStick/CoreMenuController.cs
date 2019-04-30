@@ -49,10 +49,12 @@ namespace SlideAndStick {
         public void OpenLevSelController(bool doAnimate) {
             levSelController.Open(doAnimate);
             gameController.RecedeIntoBackground();
+            GameManagers.Instance.EventManager.OnAnyButtonClick();
         }
         public void CloseLevSelController(bool doAnimate) {
             levSelController.Close(doAnimate);
             gameController.ReturnToForeground();
+            GameManagers.Instance.EventManager.OnAnyButtonClick();
         }
         
         public void OpenLevel(LevelAddress address) {

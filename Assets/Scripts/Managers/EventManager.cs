@@ -10,6 +10,7 @@ public class EventManager {
 	public delegate void IntAction (int _int);
 	public delegate void AudioClipAction (AudioClip _clip);
 
+    public event NoParamAction AnyButtonClickEvent; // NOTE: Kinda weird this is in EventManager, not a sound class. :P
 	public event NoParamAction ScreenSizeChangedEvent;
 	public event NoParamAction RetryButtonClickEvent;
 	public event NoParamAction QuitGameplayButtonClickEvent;
@@ -21,6 +22,7 @@ public class EventManager {
 	// Events
 	public void OnScreenSizeChanged () { if (ScreenSizeChangedEvent!=null) { ScreenSizeChangedEvent (); } }
 
+    public void OnAnyButtonClick() { AnyButtonClickEvent?.Invoke(); }
 	public void OnLevelJumpButtonClick(int levelIndexChange) { if (LevelJumpButtonClickEvent!=null) { LevelJumpButtonClickEvent (levelIndexChange); } }
 	public void OnRetryButtonClick() { if (RetryButtonClickEvent!=null) { RetryButtonClickEvent(); } }
 	public void OnSetDebugUIVisible(bool isVisible) { if (SetDebugUIVisibleEvent!=null) { SetDebugUIVisibleEvent(isVisible); } }

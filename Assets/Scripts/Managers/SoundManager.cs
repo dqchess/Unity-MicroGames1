@@ -26,28 +26,35 @@ public class SoundManager {
     public void SetVolume_Music (float _volume) {
         volume_music = _volume;
         SaveStorage.SetFloat (SaveKeys.VOLUME_MUSIC, volume_music); // Save that volume, Bill!
-        if (SetMusicVolumeEvent != null) { SetMusicVolumeEvent (volume_music); } // Dispatch an event for all who'll listen!
+        SetMusicVolumeEvent?.Invoke(Volume_Music);
     }
     public void SetVolume_Sfx (float _volume) {
         volume_sfx = _volume;
         SaveStorage.SetFloat (SaveKeys.VOLUME_SFX, volume_sfx); // Save that volume, Tiffany!
-        if (SetSfxVolumeEvent != null) { SetSfxVolumeEvent (volume_sfx); } // Dispatch an event for all who'll listen!
+        SetSfxVolumeEvent?.Invoke(Volume_Sfx);
     }
-
-	public void ToggleIsSfx() {
-		SetIsSfx(!IsSfx);
+    
+    public void ToggleIsSound() {
+        bool isSound = !IsSfx;
+        SetIsMusic(isSound);
+        SetIsSfx(isSound);
+    }
+ //   public void ToggleIsMusic() {
+ //       SetIsMusic(!IsMusic);
+ //   }
+	//public void ToggleIsSfx() {
+	//	SetIsSfx(!IsSfx);
+	//}
+    private void SetIsMusic(bool _bool) {
+        IsMusic = _bool;
+        SaveStorage.SetInt(SaveKeys.IsMusic, IsMusic?1:0);
+        SetMusicVolumeEvent?.Invoke(Volume_Music);
 	}
-	public void ToggleIsMusic() {
-		SetIsMusic(!IsMusic);
-	}
-	private void SetIsSfx(bool _bool) {
-		IsSfx = _bool;
-		SaveStorage.SetInt(SaveKeys.IsSfx, IsSfx?1:0);
-	}
-	private void SetIsMusic(bool _bool) {
-		IsMusic = _bool;
-		SaveStorage.SetInt(SaveKeys.IsMusic, IsMusic?1:0);
-	}
+    private void SetIsSfx(bool _bool) {
+        IsSfx = _bool;
+        SaveStorage.SetInt(SaveKeys.IsSfx, IsSfx?1:0);
+        SetSfxVolumeEvent?.Invoke(Volume_Sfx);
+    }
 
 
 

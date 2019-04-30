@@ -43,6 +43,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         public void OnClick() {
             levSelController.OnCollectionButtonClick(collectionIndex);
+            GameManagers.Instance.EventManager.OnAnyButtonClick();
         }
 		//private void OnEnable() {
 		//	UpdateBarVisuals();
