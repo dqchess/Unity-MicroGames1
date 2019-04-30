@@ -8466,7 +8466,7 @@ MonoBehaviour:
   ac_releaseTile: {fileID: 0}
   ac_tilesMerge: {fileID: 8300000, guid: b4713e56a8a4641e19349a78bf6accd0, type: 3}
   ac_undoMove: {fileID: 8300000, guid: 0a9e902e0b8c64efb872bb07544340da, type: 3}
-  ac_completeLevel: {fileID: 8300000, guid: 405a5a7d7252243aeb610a8df1c7541c, type: 3}
+  ac_completeLevel: {fileID: 8300000, guid: 727cb22415c484f2cb18ea2f1843db84, type: 3}
   ac_levelAnimateIn: {fileID: 8300000, guid: 8a5cdb7396ab44c8faf305c841eb3c33, type: 3}
 --- !u!4 &937311815
 Transform:
@@ -9826,7 +9826,7 @@ Transform:
   - {fileID: 1977493966}
   - {fileID: 1593382894}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1424397067
 GameObject:
