@@ -223,6 +223,11 @@ namespace SlideAndStick {
             fueController.OnCompleteLevel();
             sfxController.OnCompleteLevel();
             FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
+            
+            // #forchristian Here's where WinLevel is called! Put what you need here.
+            // Note: currAddress has mode (not used), collection (difficulty), pack (board size), and level.
+            //ChristianFunAnalyticsHandler.DispatchOneGroovyEvent(currAddress.collection, currAddress.pack, currAddress.level);
+            
             if (levelsManager.IsLastLevelInPack(currAddress)) {
                 OnCompleteLastLevelInPack();
             }
