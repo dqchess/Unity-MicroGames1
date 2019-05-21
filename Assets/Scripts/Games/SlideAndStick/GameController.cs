@@ -191,7 +191,13 @@ namespace SlideAndStick {
             //SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelLocal(currAddress), currAddress.ToString());
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.ToString());
             
-            // Maybe show ad!
+            // Maybe show ad/popup!
+            MaybeShowAd();
+            MaybeShowRateGamePopup();
+        }
+        
+        private void MaybeShowAd() {
+            if (IsRateGamePopupLevel()) { return; } // Don't show an ad if we're asking 'em to rate the game.
             int playsUntilAd = SaveStorage.GetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
             playsUntilAd --;
             SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, playsUntilAd);
@@ -199,14 +205,22 @@ namespace SlideAndStick {
                 ShowAd();
             }
         }
-        
         private void ShowAd() {
             // Show an ad!
             AdManager.instance.showInterstitial();
             // Reset PlaysUntilAd.
             SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
         }
-    
+        private void MaybeShowRateGamePopup() {
+            if (IsRateGamePopupLevel()) {
+                //TODO: Kurt.
+            }
+        }
+        private bool IsRateGamePopupLevel() {
+            //TODO: Kurt.
+            // Note: currAddress.mode should be 0, but I forget what the collection value for difficulties is. Make sure to add a breakpoint and make sure the collection value is right!
+	// e.g. if (currAddress.mode==0 && currAddress.collection==4 && currAddress.pack==0 && currAddress.level==10) { return true; }
+        }
         
         
 
