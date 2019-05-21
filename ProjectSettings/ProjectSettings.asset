@@ -152,7 +152,8 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.simplemachine.circlepop
     iOS: com.simplemachine.combi
-  buildNumber: {}
+  buildNumber:
+    iOS: 2
   AndroidBundleVersionCode: 0
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
