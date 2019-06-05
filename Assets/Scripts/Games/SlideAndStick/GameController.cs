@@ -6,8 +6,6 @@ using System.Collections.Generic;
 namespace SlideAndStick {
     /** Note that this GameController /manually/ trickles down Update calls. To ensure no accidental Update calls when we shouldn't have any (i.e. when blocked by LevSel). */
 	public class GameController : BaseGameController {
-        // Constants
-        private const int NumPlaysBetweenAds = 5;
 		// Overrideables
 		override public string MyGameName() { return GameNames.SlideAndStick; }
 		// Components
@@ -33,7 +31,36 @@ namespace SlideAndStick {
         private LevelsManager levelsManager { get { return LevelsManager.Instance; } }
 
 
+        // ----------------------------------------------------------------
+        //  Ads
+        // ----------------------------------------------------------------
+        // Constants
+        private const int NumPlaysBetweenAds = 3;
+        private const int MinSecondsBetweenAds = 45; // we WON'T show ads more frequently than this.
+        // Properties
+        private static int PlaysUntilAd = NumPlaysBetweenAds;
+        private static float timeWhenMayShowAd = 0; // in Time.unscaledTime. When we show ad, this is Time.unscaledTime+MinSecondsBetweenAds
+        // Doers
+        private void MaybeShowAd() {
+            if (IsRateGamePopupLevel()) { return; } // Don't show an ad if we're asking 'em to rate the game.
+            // Decrement PlaysUntilAd.
+            PlaysUntilAd --;
+            // Ok to show one??
+            //print(Time.frameCount + " MaybeShowAd. " + PlaysUntilAd + "     timeWhenMayShowAd, Time.unscaledTime: " + timeWhenMayShowAd + ", " + Time.unscaledTime);
+            if (PlaysUntilAd <= 0 && Time.unscaledTime>timeWhenMayShowAd) {
+                ShowAd();
+            }
+        }
+        private void ShowAd() {
+            // Show an ad!
+            AdManager.instance.showInterstitial();
+            //print(Time.frameCount + " ShowAd!");
+            // Reset PlaysUntilAd.
+            PlaysUntilAd = NumPlaysBetweenAds;
+            timeWhenMayShowAd = Time.unscaledTime + MinSecondsBetweenAds;
+        }
         
+
 
         // ----------------------------------------------------------------
         //  Start
@@ -196,21 +223,7 @@ namespace SlideAndStick {
             MaybeShowRateGamePopup();
         }
         
-        private void MaybeShowAd() {
-            if (IsRateGamePopupLevel()) { return; } // Don't show an ad if we're asking 'em to rate the game.
-            int playsUntilAd = SaveStorage.GetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
-            playsUntilAd --;
-            SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, playsUntilAd);
-            if (playsUntilAd <= 0) {
-                ShowAd();
-            }
-        }
-        private void ShowAd() {
-            // Show an ad!
-            AdManager.instance.showInterstitial();
-            // Reset PlaysUntilAd.
-            SaveStorage.SetInt(SaveKeys.SlideAndStick_PlaysUntilAd, NumPlaysBetweenAds);
-        }
+        
         private void MaybeShowRateGamePopup() {
             if (IsRateGamePopupLevel()) {
                 //TODO: Kurt.
@@ -218,6 +231,7 @@ namespace SlideAndStick {
         }
         private bool IsRateGamePopupLevel() {
             //TODO: Kurt.
+            return false;
             // Note: currAddress.mode should be 0, but I forget what the collection value for difficulties is. Make sure to add a breakpoint and make sure the collection value is right!
 	// e.g. if (currAddress.mode==0 && currAddress.collection==4 && currAddress.pack==0 && currAddress.level==10) { return true; }
         }
@@ -311,6 +325,10 @@ namespace SlideAndStick {
                 if (Input.GetKeyDown(KeyCode.RightBracket)) { ChangeLevel(  1); return; } // ] = Ahead 1 level.
                 if (Input.GetKeyDown(KeyCode.Backslash))    { ChangeLevel( 10); return; } // \ = Ahead 10 levels.
                 
+                // A = Maybe show an ad!
+                if (Input.GetKeyDown(KeyCode.A)) {
+                    MaybeShowAd();
+                }
                 // W = Win!
                 if (Input.GetKeyDown(KeyCode.W)) {
                     WinLevel();
