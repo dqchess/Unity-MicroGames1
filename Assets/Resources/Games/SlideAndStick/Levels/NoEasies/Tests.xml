@@ -1,0 +1,435 @@
+<LevelsCollection collectionName="Tests" gameMode="SlideAndStick">
+<Packs>
+
+
+
+
+<LevelPack packName="Tests">
+<Levels>
+
+
+
+	<Level diff="0" noWin="true" layout=" 0, ., 0, " />
+	<Level diff="0" noWin="true" layout=" ....., ....., .0.0., ..0.., .....," />
+
+	<Level diff="0" noWin="true" layout=" 012345, 123450, 234501, ......, ......," />
+	<Level diff="0" noWin="true" layout=" 0...., ....., ....., ....., .....," />
+	<Level diff="0" noWin="true" layout=" 0...., 1...., 1...., 1...., 1....," />
+	<Level diff="0" noWin="true" layout=" 0.," />
+	<Level diff="0" noWin="true" layout=" 0, ., " />
+	<Level diff="0" noWin="true" layout=" 0., ..," />
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+<LevelPack packName="Unsorted">
+<Levels>
+
+
+
+
+
+
+</Levels>
+</LevelPack>
+
+
+
+    <!--
+    	
+
+    Maybes?
+    <Level diff="3" layout=" 010., .121, ..2., .222," />
+    <Level diff="5" layout=" .200, 200., .01., ..12," />
+    <Level diff="2" layout=" .000., .1100, .0100, .1111, .0..1," />
+    Misc. Stragglers
+    <Level diff="0" layout=" .01., 1010, 0..1, .0.0," />
+    <Level diff="4" layout=" .0000, 1.000, 0.001, 01.0., 0101.," />
+    <Level diff="0" layout=" 010., .010, 1..., 001.," />
+    <Level diff="1" layout=" 01.0, 11.., 1110, ...0," />
+    <Level diff="2" layout=" 1.111, 10..1, 001.., 0.1.., .11.1," />
+    <Level diff="2" layout=" 11001., 1.0111, 1...11, .1...., .1..1., ....1.," />
+    <Level diff="0" layout=" 112..., 1121.., .01033, 3.133., 23.223, .3..23," desc="Possible??"/>
+
+    -->
+
+ <!-- Already-satisfied layouts.
+
+-->
+
+
+
+
+
+<LevelPack packName="Misfits for now">
+<Levels>
+
+    <Level diff="3" layout=" 0.0, 11., 001," />
+    <Level diff="2" layout="
+        220,
+        .02,
+        2.0,
+    " />
+    <Level diff="3" fueID="failHelp2" layout="
+        2..,
+        121,
+        211,
+    " />
+    <Level diff="5" fueID="failHelp3" layout="
+        232,
+        ..3,
+        322,
+    " />
+    <Level diff="1" fueID="TEST" layout="
+        2.2,
+        1.1,
+        2.2,
+    " />
+    <Level diff="3" layout=" 002, .21, 1.0," />
+    <Level diff="3" layout=" 0.100, 0.000, ..0.., ..010, ..0.0, ....0," />
+    <Level diff="6" layout=" 212, 0.0, 12.," />
+
+
+</Levels>
+</LevelPack>
+
+
+
+
+
+
+<!--
+    ================================================================
+    Tests
+    ================================================================
+-->
+<LevelPack packName="Tests">
+<Levels>
+
+
+    <!-- TESTS -->
+    <Level diff="0" noWin="true" layout="
+        0..,
+        ...,
+        ...,
+    " />
+    <Level diff="0" noWin="true" layout="
+        0.1,
+        ...,
+        ...,
+    " />
+
+
+	
+
+
+    <!-- Wall "Puzzles" -->
+    <Level diff="0" layout="
+        00#,
+        #.#,
+        ...,
+        00|,
+    " />
+    <Level diff="0" layout="
+        000..,
+        010..,
+        001..,
+        ...|.,
+        .....,
+    " />
+
+    <Level diff="1" layout=" 0010, .0.0, 0..0, 0.00, , ...., ._.., ...., ....," />
+    <Level diff="2" layout=" 0101, 0.01, .01., .01., , ...., ...., _..., ....," />
+    <Level diff="3" layout=" ..11, 110., 1001, 1..1, , ...., ...., _..., ....," />
+    <Level diff="5" desc="excellent" layout=" 11.0, 0011, 0.01, 0..., , ...., ._.., ...., ....," />
+    <Level diff="6" layout=" 0.0., 1011, ..00, 00.0, , ...., ._.., ...., ....," />
+    <Level diff="4" layout=" .0.11, .1.10, 1.001, 1.10., .0000, , ..._., ....., ....., ....., ....|," />
+    <Level diff="6" layout=" ....0, 33101, 3310., 110.0, 1.00., , ....., ...._, .._.., ....., .....," />
+	
+	
+
+    <!-- TESTS -->
+    <Level diff="0" layout="
+        ....,
+        ._..,
+        ....,
+        ....,
+    " />
+    <Level diff="0" layout="
+        ....,
+        ....,
+        _...,
+        ....,
+    " />
+    <Level diff="0" layout="
+        .|..,
+        ....,
+        ....,
+        ..|.,
+    " />
+    <Level diff="0" desc="test" layout="
+        00.,
+        00.,
+        ...,
+        .00,
+        ,
+        ...,
+        .|.,
+        ...,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+        00.,
+        00.,
+        ...,
+        ..0,
+        ,
+        ...,
+        ...,
+        .|.,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+        .00,
+        ...,
+        ...,
+        ,
+        ...,
+        .|.,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+        00.,
+        ...,
+        ...,
+        ..0,
+        ,
+        ...,
+        .|.,
+        ...,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+        00.,
+        ..0,
+        ...,
+        ..0,
+    " />
+    <Level diff="0" desc="test" layout="
+        000,
+        ...,
+        ...,
+        ..0,
+        ,
+        ...,
+        .|.,
+        ...,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+        0..,
+        0..,
+        ..0,
+        ,
+        ._.,
+        ...,
+        ...,
+    " />
+
+
+
+
+
+    <Level diff="0" desc="test" layout="
+        00.,
+        00.,
+        ..0,
+        ,
+        ...,
+        .|.,
+        ...,
+    " />
+
+
+    <Level diff="0" layout="
+        .....,
+        .001.,
+        .1#1.,
+        .100.,
+        .....,
+    " />
+
+    
+    <Level diff="0" desc="test" layout="
+        1...,
+        ....,
+        ....,
+        ...1,
+    " />
+    <Level diff="0" desc="test" layout="
+    	1.10,
+    	..0.,
+    	1...,
+    	0.0.,
+    " />
+    <Level diff="0" desc="test" layout="
+    	1.10,
+    	....,
+    	....,
+    	....,
+    " />
+    <Level diff="0" desc="test" layout="
+    	0.0,
+        0.0,
+        ...,
+    " />
+    <Level diff="0" desc="test" layout="
+    	0.0,
+        0..,
+        ..0,
+    " />
+    <Level diff="0" desc="test" layout="
+    	...,
+        0|.,
+        ..0,
+    " />
+    <Level diff="0" desc="test" layout="
+    	00.,
+        .|.,
+        ..0,
+    " />
+    <Level diff="0" desc="test" layout="
+        ........,
+        .0.0_...,
+        .._....0,
+        ..0..0..,
+        ..|..|..,
+        ..0..0..,
+        .......0,
+        0..0..|.,
+        .__...|.,
+        0.0...0.,
+    " />
+
+    <Level diff="0" desc="test" layout="
+    	0..,
+        ...,
+        1.2,
+    " />
+    <Level diff="0" desc="test" layout="
+    	.0,
+        0.,
+        00,
+    " />
+    <Level diff="0" desc="test" layout="
+        0.0,
+        .00,
+    " />
+    <Level diff="0" desc="test" layout="
+        .00,
+        0.0,
+    " />
+    <Level diff="0" desc="test" layout="
+        .0,
+        00,
+    " />
+    <Level diff="0" desc="test" layout="
+        0.,
+        00,
+    " />
+    <Level diff="0" desc="test" layout="
+        00,
+        0.,
+    " />
+    <Level diff="0" desc="test" layout="
+        00,
+        .0,
+    " />
+    <Level diff="0" desc="test" layout="
+        0.0,
+    " />
+    <Level diff="0" desc="test" layout="
+        ........,
+        .0.0....,
+        .......0,
+        ..0..0..,
+        ........,
+        ..0..0..,
+        .......0,
+        0..0....,
+        ........,
+        0.0...0.,
+    " />
+    <Level diff="0" desc="test" layout="
+        .....,
+        .0.0.,
+        .....,
+        .....,
+        .....,
+    " />
+    <Level diff="0" desc="test" layout="
+        ..0..,
+        .0.0.,
+        .....,
+        .....,
+        .....,
+    " />
+    <Level diff="0" desc="test" layout="
+        .....,
+        .00..,
+        .....,
+        .00..,
+        .....,
+    " />
+    <Level diff="0" desc="test" layout="
+        .....,
+        .000.,
+        .0.0.,
+        ..0..,
+        .....,
+    " />
+    <Level diff="0" desc="test" layout="
+        .....,
+        ..0..,
+        .0.0.,
+        ..0..,
+        1....,
+    " />
+    <Level diff="0" desc="test" layout="
+        .....,
+        ..00.,
+        .0...,
+        .....,
+        0....,
+    " />
+	
+	
+	
+    <Level diff="0" layout=" " />
+	
+    <Level diff="0" layout="
+		.....,
+		.....,
+		.....,
+		.....,
+		.....,
+    " />
+
+	
+	
+</Levels>
+</LevelPack>
+
+
+</Packs>
+</LevelsCollection>
+
+
+
+
+

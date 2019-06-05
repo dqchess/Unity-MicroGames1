@@ -6,11 +6,11 @@ using UnityEngine;
 namespace SlideAndStick {
     public class LevelsManager {
         // Constants
-        private static readonly LevelAddress TutorialPackAddress = new LevelAddress(GameModes.StandardIndex, 2, 0, 0);
-        private static readonly LevelAddress FallbackLevelAddress = new LevelAddress(GameModes.StandardIndex, 3, 0, 0);
+        //private static readonly LevelAddress TutorialPackAddress = new LevelAddress(GameModes.StandardIndex, 2, 0, 0);
+        //private static readonly LevelAddress FallbackLevelAddress = new LevelAddress(GameModes.StandardIndex, 3, 0, 0);
         // Properties
         public LevelAddress selectedAddress = LevelAddress.undefined; // used for navigating menus! :)
-        private ModeCollectionData[] modeDatas; // Currently only one mode.
+        public AllLevelsData AllLevelsData { get; private set; } // Contains all collections, packs, and levels.
     
         // Instance
         static private LevelsManager instance;
@@ -25,38 +25,40 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         //  Getters
         // ----------------------------------------------------------------
-        public ModeCollectionData GetModeCollectionData (int modeIndex) {
-            if (modeIndex<0 || modeIndex>=modeDatas.Length) { return null; }
-            return modeDatas [modeIndex];
+        private LevelAddress FallbackLevelAddress() { // Note: Currently these are the same, but they could differ.
+            if (ABTestsManager.Instance.IsEasies) { return new LevelAddress(0, 3, 0, 0); }
+            return new LevelAddress(0, 3, 0, 0);
         }
-        public PackCollectionData GetPackCollectionData (int modeIndex, int collectionIndex) {
-            ModeCollectionData modeData = GetModeCollectionData (modeIndex);
-            if (modeData == null) { return null; } // Safety check.
-            return modeData.GetPackCollectionData (collectionIndex);
+        private LevelAddress TutorialPackAddress() { // Note: Currently these are the same, but they could differ.
+            if (ABTestsManager.Instance.IsEasies) { return new LevelAddress(0, 2, 0, 0); }
+            return new LevelAddress(0, 2, 0, 0);
         }
-        public PackData GetPackData (int modeIndex, int collectionIndex, int packIndex) {
-            PackCollectionData collectionData = GetPackCollectionData (modeIndex, collectionIndex);
+        public PackCollectionData GetPackCollectionData (int collectionIndex) {
+            return AllLevelsData.GetPackCollectionData (collectionIndex);
+        }
+        public PackData GetPackData (int collectionIndex, int packIndex) {
+            PackCollectionData collectionData = GetPackCollectionData (collectionIndex);
             if (collectionData == null) { return null; } // Safety check.
             return collectionData.GetPackData (packIndex);
         }
-        public LevelData GetLevelData (int modeIndex, int collectionIndex, int packIndex, int levelIndex) {
-            PackData packData = GetPackData (modeIndex, collectionIndex, packIndex);
+        public LevelData GetLevelData (int collectionIndex, int packIndex, int levelIndex) {
+            PackData packData = GetPackData (collectionIndex, packIndex);
             if (packData == null) { return null; } // Safety check.
             return packData.GetLevelData (levelIndex);
         }
-        public bool DidCompleteLevel (int modeIndex, int collectionIndex, int packIndex, int levelIndex) {
-            LevelData levelData = GetLevelData (modeIndex, collectionIndex, packIndex, levelIndex);
+        public bool DidCompleteLevel (int collectionIndex, int packIndex, int levelIndex) {
+            LevelData levelData = GetLevelData (collectionIndex, packIndex, levelIndex);
             if (levelData == null) { return false; } // Safety check.
             return levelData.DidCompleteLevel;
         }
         public PackCollectionData GetPackCollectionData (LevelAddress address) {
-            return GetPackCollectionData (address.mode, address.collection);
+            return GetPackCollectionData (address.collection);
         }
         public PackData GetPackData (LevelAddress address) {
-            return GetPackData (address.mode, address.collection, address.pack);
+            return GetPackData (address.collection, address.pack);
         }
         public LevelData GetLevelData (LevelAddress address) {
-            return GetLevelData (address.mode, address.collection, address.pack, address.level);
+            return GetLevelData (address.collection, address.pack, address.level);
         }
     
         private LevelAddress GetLastPlayedLevelAddress() {
@@ -68,11 +70,11 @@ namespace SlideAndStick {
             }
             // No save data. Default to the tutorial!
             else {
-                return TutorialPackAddress;
+                return TutorialPackAddress();
             }
         }
         
-        /** Rolls over to the first lvl in the next pack, collection, or mode. */
+        /** Rolls over to the first lvl in the next pack, or collection. */
         public LevelData GetRolloverPackNextLevelData(LevelAddress src) {
             LevelAddress nextPackAdr = new LevelAddress(src.mode, src.collection, src.pack+1, 0);
             // There's a pack after this! Roll into it.
@@ -86,22 +88,21 @@ namespace SlideAndStick {
                     return GetLevelData(nextCollAdr);
                 }
             }
-            // We were handed the final pack of the final collection in this mode? Return null: No level comes next.
+            // We were handed the final pack of the final collection? Return null: No level comes next.
             return null;
         }
         
         private bool DoesLevelExist(LevelAddress address) {
-            if (address.mode >= modeDatas.Length) { return false; } // Outta bounds? Return false!
-            return modeDatas[address.mode].DoesLevelExist(address); // Ok, ask the next guy.
+            return AllLevelsData.DoesLevelExist(address);
         }
         public bool IsLastLevelInPack(LevelAddress address) {
             // Return TRUE if the next level is outta bounds!
             return !DoesLevelExist(address.NextLevel);
         }
         public bool IsTutorial(LevelAddress address) {
-            return address.mode == TutorialPackAddress.mode
-                && address.collection == TutorialPackAddress.collection
-                && address.pack == TutorialPackAddress.pack;
+            LevelAddress tutAddr = TutorialPackAddress();
+            return address.collection == tutAddr.collection
+                && address.pack == tutAddr.pack;
         }
         
         public LevelData GetFallbackEmptyLevelData() {
@@ -115,7 +116,7 @@ namespace SlideAndStick {
             LevelAddress lastPlayedAdd = GetLastPlayedLevelAddress();
             LevelData ld = GetLevelData(lastPlayedAdd);
             if (ld == null) { // Oh, this level doesn't exist. Return the first Beginner level, I guess.
-                ld = GetLevelData(FallbackLevelAddress);
+                ld = GetLevelData(FallbackLevelAddress());
             }
             return ld;
         }
@@ -129,21 +130,13 @@ namespace SlideAndStick {
             Reset ();
         }
         public void Reset () {
-            ReloadModeDatas ();
+            AllLevelsData = new AllLevelsData();
             if (Application.isEditor) {
                 //Debug_PrintTotalNumLevels();
                 //Debug_PrintNumLevelsInEachPack();
                 Debug_PrintDuplicateLevelLayouts();
                 //Debug_PrintAlreadySatisfiedTileLayouts();
             }
-        }
-    
-    
-        private void ReloadModeDatas () {
-            modeDatas = new ModeCollectionData[GameModes.NumModes];
-    
-            //modeDatas[GameModes.TutorialIndex] = new ModeCollectionData(GameModes.TutorialIndex, GameModes.Tutorial, "Tutorial");
-            modeDatas[GameModes.StandardIndex] = new ModeCollectionData(GameModes.StandardIndex, GameModes.Standard, "Standard");
         }
     
     
@@ -172,19 +165,13 @@ namespace SlideAndStick {
             
         //}
         private void Debug_PrintTotalNumLevels() {
-            int total=0;
-            foreach (ModeCollectionData modeCollectionData in modeDatas) {
-                total += modeCollectionData.NumLevels();
-            }
-            Debug.Log("Total SlideAndStick levels: " + total);
+            Debug.Log("Total SlideAndStick levels: " + AllLevelsData.NumLevels());
         }
         private void Debug_PrintNumLevelsInEachPack() {
             string str = "TOTALS:\n";
-            foreach (ModeCollectionData mcData in modeDatas) {
-                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
-                    foreach (PackData pData in pcData.PackDatas) {
-                        str += pcData.CollectionName + ", " + pData.PackName + " total: " + pData.NumLevels + "\n";
-                    }
+            foreach (PackCollectionData pcData in AllLevelsData.CollectionDatas) {
+                foreach (PackData pData in pcData.PackDatas) {
+                    str += pcData.CollectionName + ", " + pData.PackName + " total: " + pData.NumLevels + "\n";
                 }
             }
             Debug.Log(str);
@@ -203,42 +190,38 @@ namespace SlideAndStick {
         }
         private void Debug_PrintDuplicateLevelLayouts() {
             Dictionary<string,LevelData> layoutDict = new Dictionary<string, LevelData>();
-            foreach (ModeCollectionData mcData in modeDatas) {
-                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
-                    foreach (PackData pData in pcData.PackDatas) {
-                        foreach (LevelData levelData in pData.LevelDatas) {
-                            // You know, skip empty layouts, ok?
-                            if (levelData.boardData.tileDatas.Count == 0) { continue; }
-                            // This layout's not empty! ;)
-                            string xmlLayout = levelData.boardData.Debug_GetLayout(true);
-                            if (!layoutDict.ContainsKey(xmlLayout)) {
-                                layoutDict.Add(xmlLayout, levelData);
-                            }
-                            else {
-                                //string addA = layoutDict[xmlLayout].myAddress.ToString();
-                                //string addB = layoutDict[xmlLayout].myAddress.ToString();
-                                Debug.LogWarning("Duplicate level layout! Layout: " + xmlLayout);//Addresses: " + addA + ", " + addB);
-                            }
+            foreach (PackCollectionData pcData in AllLevelsData.CollectionDatas) {
+                foreach (PackData pData in pcData.PackDatas) {
+                    foreach (LevelData levelData in pData.LevelDatas) {
+                        // You know, skip empty layouts, ok?
+                        if (levelData.boardData.tileDatas.Count == 0) { continue; }
+                        // This layout's not empty! ;)
+                        string xmlLayout = levelData.boardData.Debug_GetLayout(true);
+                        if (!layoutDict.ContainsKey(xmlLayout)) {
+                            layoutDict.Add(xmlLayout, levelData);
+                        }
+                        else {
+                            //string addA = layoutDict[xmlLayout].myAddress.ToString();
+                            //string addB = layoutDict[xmlLayout].myAddress.ToString();
+                            Debug.LogWarning("Duplicate level layout! Layout: " + xmlLayout);//Addresses: " + addA + ", " + addB);
                         }
                     }
                 }
             }
         }
         private void Debug_PrintAlreadySatisfiedTileLayouts() {
-            foreach (ModeCollectionData mcData in modeDatas) {
-                foreach (PackCollectionData pcData in mcData.CollectionDatas) {
-                    // HARDCODED skip rand/test/tutorial lvls.
-                    if (pcData.MyAddress.collection < 2) { continue; }
-                    foreach (PackData pData in pcData.PackDatas) {
-                        foreach (LevelData levelData in pData.LevelDatas) {
-                            // You know, skip empty layouts, ok?
-                            if (levelData.boardData.tileDatas.Count == 0) { continue; }
-                            // This layout's not empty! ;)
-                            Board board = new Board(levelData.boardData);
-                            if (board.AreAnyTileColorsSatisfied()) {
-                                string xmlLayout = levelData.boardData.Debug_GetLayout(true);
-                                Debug.LogWarning("Already-satisfied-tile-color layout! Layout: " + xmlLayout);
-                            }
+            foreach (PackCollectionData pcData in AllLevelsData.CollectionDatas) {
+                // HARDCODED skip rand/test/tutorial lvls.
+                if (pcData.MyAddress.collection < 2) { continue; }
+                foreach (PackData pData in pcData.PackDatas) {
+                    foreach (LevelData levelData in pData.LevelDatas) {
+                        // You know, skip empty layouts, ok?
+                        if (levelData.boardData.tileDatas.Count == 0) { continue; }
+                        // This layout's not empty! ;)
+                        Board board = new Board(levelData.boardData);
+                        if (board.AreAnyTileColorsSatisfied()) {
+                            string xmlLayout = levelData.boardData.Debug_GetLayout(true);
+                            Debug.LogWarning("Already-satisfied-tile-color layout! Layout: " + xmlLayout);
                         }
                     }
                 }

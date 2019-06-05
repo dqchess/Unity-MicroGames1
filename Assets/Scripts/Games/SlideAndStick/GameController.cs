@@ -250,7 +250,11 @@ namespace SlideAndStick {
             level.OnWinLevel();
             fueController.OnCompleteLevel();
             sfxController.OnCompleteLevel();
-            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
+            // Analytics!
+            Dictionary<string, object> custAnalyParams = new Dictionary<string, object> {
+                { "AB_IsEasies", ABTestsManager.Instance.IsEasies }
+            };
+            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress, custAnalyParams);
             
             // #forchristian Here's where WinLevel is called! Put what you need here.
             // Note: currAddress has mode (not used), collection (difficulty), pack (board size), and level.
@@ -267,7 +271,7 @@ namespace SlideAndStick {
         private void OnCompleteLastLevelInPack() {
             // We just completed the tutorial?? Save that!!
             if (levelsManager.IsTutorial(currAddress)) {
-                SaveStorage.SetInt(SaveKeys.SlideAndStick_DidCompleteTutorial, 1);
+                SaveStorage.SetBool(SaveKeys.SlideAndStick_DidCompleteTutorial, true);
             }
         }
 

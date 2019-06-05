@@ -54,6 +54,7 @@ public static class SaveKeys {
     }
     
     // SlideAndStick
+    public const string SlideAndStick_ABTest_IsEasies = "SlideAndStick_ABTest_IsEasies";
     public const string SlideAndStick_Debug_CustomLayouts = "SlideAndStick_Debug_CustomLayouts";
     public const string SlideAndStick_DidCompleteTutorial = "SlideAndStick_DidCompleteTutorial";
     public const string SlideAndStick_RandGenPercentTiles = "SlideAndStick_RandGenPercentTiles";

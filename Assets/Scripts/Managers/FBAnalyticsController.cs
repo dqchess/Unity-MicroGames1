@@ -154,7 +154,7 @@ public class FBAnalyticsController : MonoBehaviour {
         //    parameters
         //);
     }
-    public void OnWinLevel(string gameName, LevelAddress levelAddress) {
+    public void OnWinLevel(string gameName, LevelAddress levelAddress, Dictionary<string,object> customParams=null) {
         Debug.Log("reporting win level...");
         //// If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
         int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelAddress));
@@ -169,6 +169,10 @@ public class FBAnalyticsController : MonoBehaviour {
         parameters["Collection"] = levelAddress.collection;
         parameters["numLosses"] = numLosses;
         parameters["timeSpentTotal"] = timeSpentTotal;
+        // We have custom params? Add 'em to parameters!
+        if (customParams != null) {
+            parameters.AddAllKVPFrom(customParams);
+        }
 
         reportCustomEvent("WinLevel", parameters);
 

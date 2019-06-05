@@ -23,7 +23,7 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
         private void Start() {
-			myAddress = new LevelAddress(GameModes.StandardIndex, collectionIndex, 0,0);
+			myAddress = new LevelAddress(0, collectionIndex, 0,0);
 			PackCollectionData pcd = LevelsManager.Instance.GetPackCollectionData(myAddress);
 			collectionColor = LevSelController.GetCollectionColor(collectionIndex);
 

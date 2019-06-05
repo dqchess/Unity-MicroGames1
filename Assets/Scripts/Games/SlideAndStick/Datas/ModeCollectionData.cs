@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SlideAndStick {
-    /** Currently unused! There's only one Mode. */
-    public class ModeCollectionData {
+    public class AllLevelsData {
     	// Properties
-    	private int modeIndex;
-//    	private string modeName; // for code
-        public  string ModeDisplayName { get; private set; } // for user's eyes
         private string[] collectionsOrder; // the NAMES of the world xml files in order. Loaded from its own file.
     	private List<PackCollectionData> collectionDatas;
     
@@ -39,11 +35,7 @@ namespace SlideAndStick {
     	// ----------------------------------------------------------------
     	//  Initialize
     	// ----------------------------------------------------------------
-    	public ModeCollectionData (int modeIndex, string modeName, string modeDisplayName) {
-    		this.modeIndex = modeIndex;
-//    		this.modeName = modeName;
-    		this.ModeDisplayName = modeDisplayName;
-    
+    	public AllLevelsData () {
     		LoadAllCollectionDatas ();
     	}
     
@@ -53,13 +45,15 @@ namespace SlideAndStick {
     	// ----------------------------------------------------------------
     	private void LoadAllCollectionDatas () {
     		// Collections Order!
-    		string pathSuffix = "Games/" + GameNames.SlideAndStick + "/Levels/";//TODO: Clarify this! TEST all modes are the same! + modeName + "/";
+    		string pathSuffix = "Games/" + GameNames.SlideAndStick + "/Levels/";
+            // A/B test paths differ!
+            pathSuffix += ABTestsManager.Instance.IsEasies ? "Easies/" : "NoEasies/";
+            
     		collectionsOrder = TextUtils.GetStringArrayFromResourcesTextFile(pathSuffix + "_CollectionOrder");
-    
     		collectionDatas = new List<PackCollectionData>();
     		for (int i=0; i<collectionsOrder.Length; i++) {
     			string collectionPath = pathSuffix + collectionsOrder[i];// + ".xml";//Application.streamingAssetsPath + "/" + 
-    			LevelAddress collectionAddress = new LevelAddress(modeIndex, i, -1, -1);
+    			LevelAddress collectionAddress = new LevelAddress(0, i, -1, -1);
     			PackCollectionData newData = new PackCollectionData(collectionAddress, collectionPath);
     			collectionDatas.Add (newData);
     		}

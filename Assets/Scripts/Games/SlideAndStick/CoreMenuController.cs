@@ -23,7 +23,7 @@ namespace SlideAndStick {
         //  Start
         // ----------------------------------------------------------------
         private void Start() {
-            bool didBeatTutorial = SaveStorage.GetInt(SaveKeys.SlideAndStick_DidCompleteTutorial) == 1;
+            bool didBeatTutorial = SaveStorage.GetBool(SaveKeys.SlideAndStick_DidCompleteTutorial);
             
             // Debug: Hide menu by default?
             if (Debug_HideMenuOnStart) {

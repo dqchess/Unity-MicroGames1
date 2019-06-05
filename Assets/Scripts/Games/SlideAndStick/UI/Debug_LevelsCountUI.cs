@@ -24,8 +24,8 @@ namespace SlideAndStick {
         }
         /** Very fragile and hardcoded. Nbd, 'cause it's just for dev lvl-making purposes. */
         private LevelAddress GetPackAddress(int diff, int numCols) {
-            int mode = GameModes.StandardIndex;
-            ModeCollectionData mcd = lm.GetModeCollectionData(mode);
+            //int mode = GameModes.StandardIndex;
+            AllLevelsData mcd = lm.AllLevelsData;
             PackCollectionData pcd = mcd.GetPackCollectionData(diff + (Index_Collection_D1-1)); // we know there're X collections before D1.
             if (pcd != null) { // Safety check.
                 foreach (PackData pd in pcd.PackDatas) {
@@ -98,7 +98,7 @@ namespace SlideAndStick {
         // ----------------------------------------------------------------
         private void UpdateUnsortedLvlCounts() {
             unsortedLvlCounts = new Dictionary<LevelAddress,int>();
-            PackData unsortedPackData = lm.GetPackData(GameModes.StandardIndex, Index_Collection_Tests, 0);
+            PackData unsortedPackData = lm.GetPackData(Index_Collection_Tests, 0);
             foreach (LevelData ld in unsortedPackData.LevelDatas) {
                 // Size and difficulty?
                 int diff = ld.boardData.difficulty;

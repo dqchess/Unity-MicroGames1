@@ -22,7 +22,8 @@ public class PersistentHouse : MonoBehaviour {
     #if UNITY_EDITOR
     [UnityEditor.Callbacks.DidReloadScripts]
     private static void OnScriptsReloaded() {
-        GameManagers.Reinitialize(); 
+        GameManagers.Reinitialize();
+        SlideAndStick.ABTestsManager.Reinitialize();
     }
     #endif
 }
