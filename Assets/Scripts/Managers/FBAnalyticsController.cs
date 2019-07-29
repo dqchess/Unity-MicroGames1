@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
@@ -165,8 +165,10 @@ public class FBAnalyticsController : MonoBehaviour {
 
         var parameters = new Dictionary<string, object>();
         parameters["Game"] = gameName;
-        parameters["Level"] = levelAddress.level;
+        parameters["Mode"] = levelAddress.mode;
         parameters["Collection"] = levelAddress.collection;
+        parameters["Pack"] = levelAddress.pack;
+        parameters["Level"] = levelAddress.level;
         parameters["numLosses"] = numLosses;
         parameters["timeSpentTotal"] = timeSpentTotal;
         // We have custom params? Add 'em to parameters!
