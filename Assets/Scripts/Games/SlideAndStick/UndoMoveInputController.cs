@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace SlideAndStick {
 	/** For cleanliness. Handles what happens when we hold down the Undo button.
@@ -11,11 +12,13 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 		private bool isUndoButtonEmphasized; // TRUE when we're in a known, hardcoded fail state! When TRUE, an arrow bounce-points at undo button.
 		private float undoLoc; // when this hits past 1, we say to undo a move (and reset its value)!
 		private float undoVel;
+        private int numUndosSingleLeft; // saved/loaded!
         private Vector2 calloutArrowPosNeutral;
 		// References
 		[SerializeField] private Level level=null;
 		[SerializeField] private Button restartLevelButton=null;
         [SerializeField] private Image i_calloutArrow=null;
+        [SerializeField] private TextMeshProUGUI t_numUndosLeft=null;
         [SerializeField] private UndoMoveButton undoButton=null;
 
 		// Getters (Public)
@@ -83,13 +86,18 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			//}
             i_calloutArrow.enabled = isUndoButtonEmphasized;
 		}
-
-
+        private void UpdateNumUndosLeftText() {
+            t_numUndosLeft.text = level.GameController.NumUndosLeft.ToString();
+        }
+        
+        
+        
 		// ----------------------------------------------------------------
 		//  Game Events
 		// ----------------------------------------------------------------
         public void OnBoardMade() {
             SetButtonsVisible(true);
+            UpdateNumUndosLeftText();
         }
         public void OnWinLevel() {
             SetButtonsVisible(false);
@@ -98,7 +106,11 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			undoButton.SetInteractable(numMovesMade > 0);
 			restartLevelButton.interactable = numMovesMade > 0;
 			UpdateCalloutArrowEnabledByFailState();
-		}
+        }
+        public void OnUndoMove() {
+            UpdateNumUndosLeftText();
+        }
+        
 
 
 		// ----------------------------------------------------------------

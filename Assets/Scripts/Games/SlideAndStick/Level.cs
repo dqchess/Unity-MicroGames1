@@ -37,7 +37,7 @@ namespace SlideAndStick {
 		public UndoMoveInputController UndoMoveInputController { get { return undoMoveInputController; } }
 		public bool CanMakeAnyMove() {
 			if (!IsPlaying) { return false; } // Not playing? Don't allow further movement. :)
-			if (!GameController.FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (!GameController.CanTouchBoard()) { return false; }
 			if (Board!=null && Board.IsInKnownFailState) { return false; } // In a known fail state? Force us to undo.
 			return true;
 		}
@@ -390,17 +390,21 @@ namespace SlideAndStick {
 		}
 
 		public void UndoMoveAttempt() {
-			if (!CanUndoMove()) { return; }
+            if (!CanUndoMove()) { return; }
+            if (!GameController.CanAffordUndo()) { GameController.OpenGetUndosPopup(); return; }
             // Remember snapshot from BEFORE undo.
             BoardData snapshotPreUndo = Board.SerializeAsData();
 			// Get the snapshot to restore to, restore, and decrement moves made!
 			BoardData snapshotData = boardSnapshots[boardSnapshots.Count-1];
+            // Spend the undo!
+            GameController.DecrementNumUndosLeft();
 			// Remake my model and view from scratch!
 			RemakeModelAndViewFromData(snapshotData);
 			boardSnapshots.Remove(snapshotData);
 			NumMovesMade --; // decrement this here!
 			GameController.FUEController.OnUndoMove();
             BoardView.OnUndoMove(snapshotPreUndo);
+            undoMoveInputController.OnUndoMove();
             // Play sound!
             sfxController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!

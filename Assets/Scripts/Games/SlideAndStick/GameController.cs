@@ -8,22 +8,33 @@ namespace SlideAndStick {
 	public class GameController : BaseGameController {
 		// Overrideables
 		override public string MyGameName() { return GameNames.SlideAndStick; }
+        // Constants
+        private const int NumStartingUndos = 30;//TODO: Balance this.
+        public const int NumUndosFromRewardVideo = 30; // TODO: Balance this.
 		// Components
 		[SerializeField] public RandGenParams randGenParams=null;
 		private Level level;
         // Properties
         private List<BoardData> debug_prevBoardDatas=new List<BoardData>(); // for making rand lvls. Press E to restore the last level, in case we pressed R accidentally and lost it.
+        public int NumUndosLeft { get; private set; }
         // References
         [SerializeField] private GameObject go_levelContainer=null;
         [SerializeField] private GameBackground background=null;
         [SerializeField] private CoreMenuController coreMenuController=null;
         [SerializeField] private FUEController fueController=null;
         [SerializeField] private GameObject go_toggleLevSelButton=null;
+        [SerializeField] private GetUndosPopup getUndosPopup=null;
         [SerializeField] private SlideAndStickSfxController sfxController=null;
 
 		// Getters (Public)
         public FUEController FUEController { get { return fueController; } }
         public SlideAndStickSfxController SFXController { get { return sfxController; } }
+        public bool CanAffordUndo() { return NumUndosLeft > 0; }
+        public bool CanTouchBoard() {
+            if (!FUEController.CanTouchBoard) { return false; } // FUE's locked us out? No movin'.
+            if (getUndosPopup.IsOpen) { return false; } // Popup in the way? No movin'.
+            return true; // Sure, sounds ok.
+        }
         // Getters (Private)
         private bool IsBlockedByLevSel { get { return coreMenuController.IsGameControllerBlockedByLevSel(); } }
         private LevelAddress currAddress { get { return level==null?LevelAddress.zero : level.MyAddress; } }
@@ -35,8 +46,8 @@ namespace SlideAndStick {
         //  Ads
         // ----------------------------------------------------------------
         // Constants
-        private const int NumPlaysBetweenAds = 3;
-        private const int MinSecondsBetweenAds = 45; // we WON'T show ads more frequently than this.
+        private const int NumPlaysBetweenAds = 12;//3
+        private const int MinSecondsBetweenAds = 5 * 60;//45 // we WON'T show ads more frequently than this.
         // Properties
         private static int PlaysUntilAd = NumPlaysBetweenAds;
         private static float timeWhenMayShowAd = 0; // in Time.unscaledTime. When we show ad, this is Time.unscaledTime+MinSecondsBetweenAds
@@ -74,6 +85,9 @@ namespace SlideAndStick {
     //      AssetDatabase.ImportAsset(LevelLoader.LevelsFilePath(MyGameName(), true));
             #endif
             
+            // Load saved values.
+            NumUndosLeft = SaveStorage.GetInt(SaveKeys.SlideAndStick_NumUndosLeft, NumStartingUndos);
+            
             // Start at the level we've most recently played!
             bool debug_supressAnimation = Input.GetKey(KeyCode.A); // DEBUG for TESTING!
             LevelData ld = levelsManager.GetLastPlayedLevelData();
@@ -82,6 +96,7 @@ namespace SlideAndStick {
             // Add event listeners!
             GameManagers.Instance.EventManager.LevelJumpButtonClickEvent += OnLevelJumpButtonClick;
             GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent += OnQuitGameplayButtonClick;
+            IronSourceEvents.onRewardedVideoAdRewardedEvent += RewardedVideoAdRewardedEvent;
         }
         override protected void OnDestroy() {
             base.OnDestroy();
@@ -89,6 +104,7 @@ namespace SlideAndStick {
             // Remove event listeners!
             GameManagers.Instance.EventManager.LevelJumpButtonClickEvent -= OnLevelJumpButtonClick;
             GameManagers.Instance.EventManager.QuitGameplayButtonClickEvent -= OnQuitGameplayButtonClick;
+            IronSourceEvents.onRewardedVideoAdRewardedEvent -= RewardedVideoAdRewardedEvent;
         }
         
         private void OnQuitGameplayButtonClick() {
@@ -96,6 +112,48 @@ namespace SlideAndStick {
         }
         private void OnLevelJumpButtonClick(int levelIndexChange) {
             ChangeLevel(levelIndexChange);
+        }
+        
+        
+        
+
+        // ----------------------------------------------------------------
+        //  Undo Management
+        // ----------------------------------------------------------------
+        public void DecrementNumUndosLeft() {
+            SetNumUndosLeft(NumUndosLeft - 1);
+        }
+        private void SetNumUndosLeft(int val) {
+            NumUndosLeft = val;
+            SaveStorage.SetInt(SaveKeys.SlideAndStick_NumUndosLeft, NumUndosLeft);
+        }
+        public void OpenGetUndosPopup() {
+            getUndosPopup.Open();
+        }
+        
+        private void RewardedVideoAdRewardedEvent(IronSourcePlacement placement) {
+            Debug.Log("Reward video complete! Name: " + placement.getRewardName() + ", amount: " + placement.getRewardAmount());
+            // Give player undos!
+            SetNumUndosLeft(NumUndosLeft + NumUndosFromRewardVideo);
+            // Close the popup automatically.
+            getUndosPopup.Close();
+        }
+        
+        
+        
+        // ----------------------------------------------------------------
+        //  Rate-Game Popup
+        // ----------------------------------------------------------------
+        private void MaybeShowRateGamePopup() {
+            if (IsRateGamePopupLevel()) {
+                //TODO: Kurt.
+            }
+        }
+        private bool IsRateGamePopupLevel() {
+            //TODO: Kurt.
+            return false;
+            // Note: currAddress.mode should be 0, but I forget what the collection value for difficulties is. Make sure to add a breakpoint and make sure the collection value is right!
+            // e.g. if (currAddress.mode==0 && currAddress.collection==4 && currAddress.pack==0 && currAddress.level==10) { return true; }
         }
         
         
@@ -214,6 +272,7 @@ namespace SlideAndStick {
             levelsManager.selectedAddress = currAddress; // for consistency.
             bool isTutorial = levelsManager.IsTutorial(currAddress);
             go_toggleLevSelButton.SetActive(!isTutorial); // hide menu button in tutorial!
+            getUndosPopup.Close();
             // Save values!
             //SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelLocal(currAddress), currAddress.ToString());
             SaveStorage.SetString(SaveKeys.SlideAndStick_LastPlayedLevelGlobal, currAddress.ToString());
@@ -221,19 +280,6 @@ namespace SlideAndStick {
             // Maybe show ad/popup!
             MaybeShowAd();
             MaybeShowRateGamePopup();
-        }
-        
-        
-        private void MaybeShowRateGamePopup() {
-            if (IsRateGamePopupLevel()) {
-                //TODO: Kurt.
-            }
-        }
-        private bool IsRateGamePopupLevel() {
-            //TODO: Kurt.
-            return false;
-            // Note: currAddress.mode should be 0, but I forget what the collection value for difficulties is. Make sure to add a breakpoint and make sure the collection value is right!
-	// e.g. if (currAddress.mode==0 && currAddress.collection==4 && currAddress.pack==0 && currAddress.level==10) { return true; }
         }
         
         
@@ -363,6 +409,8 @@ namespace SlideAndStick {
             LeanTween.scale(go_levelContainer, Vector3.one, duration).setEaseOutQuart();
             LeanTween.moveLocal(go_levelContainer, posTo, duration).setEaseOutQuart();
         }
+        
+        
         
         
 
