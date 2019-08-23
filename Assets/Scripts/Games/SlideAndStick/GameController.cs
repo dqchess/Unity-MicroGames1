@@ -126,11 +126,17 @@ namespace SlideAndStick {
         private void SetNumUndosLeft(int val) {
             NumUndosLeft = val;
             SaveStorage.SetInt(SaveKeys.SlideAndStick_NumUndosLeft, NumUndosLeft);
+            level.UndoMoveInputController.OnNumUndosLeftChanged();
         }
         public void OpenGetUndosPopup() {
             getUndosPopup.Open();
         }
         
+        public void ShowRewardVideoForUndos() {
+            // In editor? PRETEND we showed the video. Otherwise, show it!
+            if (Application.isEditor) { RewardedVideoAdRewardedEvent(new IronSourcePlacement("test","test",1)); }
+            else { AdManager.instance.showRewardVideo(); }
+        }
         private void RewardedVideoAdRewardedEvent(IronSourcePlacement placement) {
             Debug.Log("Reward video complete! Name: " + placement.getRewardName() + ", amount: " + placement.getRewardAmount());
             // Give player undos!

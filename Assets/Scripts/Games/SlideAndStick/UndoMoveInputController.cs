@@ -107,7 +107,7 @@ Key presses are handled internally; UI Undo-Button presses I'm told about by But
 			restartLevelButton.interactable = numMovesMade > 0;
 			UpdateCalloutArrowEnabledByFailState();
         }
-        public void OnUndoMove() {
+        public void OnNumUndosLeftChanged() {
             UpdateNumUndosLeftText();
         }
         

@@ -404,7 +404,6 @@ namespace SlideAndStick {
 			NumMovesMade --; // decrement this here!
 			GameController.FUEController.OnUndoMove();
             BoardView.OnUndoMove(snapshotPreUndo);
-            undoMoveInputController.OnUndoMove();
             // Play sound!
             sfxController.OnUndoMove();
 			// Tie up loose ends by "completing" this move!

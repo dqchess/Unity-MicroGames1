@@ -11,6 +11,8 @@ namespace SlideAndStick {
         [SerializeField] private TextMeshProUGUI t_numUndosToGet=null;
         // Properties
         public bool IsOpen { get; private set; }
+        // References
+        [SerializeField] private GameController gameController=null;
 
 
         //// ----------------------------------------------------------------
@@ -30,10 +32,12 @@ namespace SlideAndStick {
         //  Open / Close!
         // ----------------------------------------------------------------
         public void Close() {
+            if (!IsOpen) { return; }
             IsOpen = false;
             myAnimator.Play("GetUndosPopupClose");
         }
         public void Open() {
+            if (IsOpen) { return; }
             IsOpen = true;
             t_numUndosToGet.text = GameController.NumUndosFromRewardVideo.ToString();
             myAnimator.Play("GetUndosPopupOpen");
@@ -51,7 +55,7 @@ namespace SlideAndStick {
         //  Events
         // ----------------------------------------------------------------
         public void OnClick_WatchAd() {
-            AdManager.instance.showRewardVideo();
+            gameController.ShowRewardVideoForUndos();
         }
         public void OnClick_Close() {
             if (IsOpen) { // Don't register close clicks if I'm not open.
