@@ -254,7 +254,7 @@ namespace SlideAndStick {
             Dictionary<string, object> custAnalyParams = new Dictionary<string, object> {
                 { "AB_IsEasies", ABTestsManager.Instance.IsEasies }
             };
-            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress, custAnalyParams);
+            AnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress, custAnalyParams);
             
             // #forchristian Here's where WinLevel is called! Put what you need here.
             // Note: currAddress has mode (not used), collection (difficulty), pack (board size), and level.

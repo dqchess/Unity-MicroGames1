@@ -172,7 +172,7 @@ namespace SpoolOut {
             // Tell people!
             levelsManager.OnCompleteLevel(currAddress);
             level.OnWinLevel();
-            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
+            AnalyticsController.Instance.OnWinLevel(MyGameName(), currAddress);
             if (levelsManager.IsLastLevelInPack(currAddress)) {
                 OnCompleteLastLevelInPack();
             }

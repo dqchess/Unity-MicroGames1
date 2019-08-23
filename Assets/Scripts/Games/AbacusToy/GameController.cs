@@ -186,7 +186,7 @@ namespace AbacusToy {
             levelsManager.OnCompleteLevel(currentAddress);
             level.OnWinLevel();
             //fueController.OnCompleteLevel();
-            FBAnalyticsController.Instance.OnWinLevel(MyGameName(), currentAddress);
+            AnalyticsController.Instance.OnWinLevel(MyGameName(), currentAddress);
             StartCoroutine(Coroutine_JustWonLevel());
         }
 

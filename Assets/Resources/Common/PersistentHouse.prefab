@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 4358835788028612}
   - component: {fileID: 114489998669463288}
   m_Layer: 0
-  m_Name: FBAnalyticsController
+  m_Name: AnalyticsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +401,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1712509804058572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e1e257c74de49cdb44581ea410fd38, type: 3}
+  m_Script: {fileID: 11500000, guid: 017f4737beee144cc92989d570acf2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1742042021377422

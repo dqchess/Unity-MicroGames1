@@ -5,11 +5,108 @@ using UnityEngine.Analytics;
 using Facebook.Unity;
 
 
-//using Facebook.Unity;QQQ Commented out everything for analytics!
+public class AnalyticsController : MonoBehaviour {
+	// Constants
+    private const string AppEventName_LevelLose = "LevelLose";
+    private const string AppEventName_LevelWin = "WinLevel";
+
+    // Instance
+    static private AnalyticsController instance=null;
+
+    // Getters
+    static public AnalyticsController Instance {
+        get {
+            // Safety check for runtime compile.
+            if (instance == null) { instance = FindObjectOfType<AnalyticsController>(); }
+            return instance;
+        }
+    }
+
+
+
+    // ----------------------------------------------------------------
+    //  Awake
+    // ----------------------------------------------------------------
+    private void Awake () {
+        // There can only be one (instance)!!
+        if (instance != null) {
+            Destroy (this.gameObject);
+            return;
+        }
+        instance = this;
+    }
+	
+
+    private void ReportCustomEvent(string title, Dictionary<string, object> myParams) {
+        Analytics.CustomEvent(title, myParams);
+    }
+    private int NumTimesWonLevel(string gameName, int levelIndex) {
+        return SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelIndex));
+    }
+    
+    // ----------------------------------------------------------------
+    //  Gameplay Events!
+	// ----------------------------------------------------------------
+	public void OnLoseLevel(string gameName, int levelIndex, float timeSpentThisPlay) {
+        var parameters = new Dictionary<string, object> {
+            ["Game"] = gameName,
+            ["Level"] = levelIndex,
+            ["timeSpentThisPlay"] = timeSpentThisPlay
+        };
+
+        ReportCustomEvent(AppEventName_LevelLose, parameters);
+	}
+    public void OnWinLevel(string gameName, int levelIndex) {
+        if (NumTimesWonLevel(gameName, levelIndex) > 1) { return; } // Already won? Do nothing; only send win analytics on FIRST win.
+
+        var parameters = new Dictionary<string, object> {
+            ["Game"] = gameName,
+            ["Level"] = levelIndex,
+            ["numLosses"] = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelIndex), 0),
+            ["timeSpentTotal"] = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelIndex), 0)
+        };
+        ReportCustomEvent(AppEventName_LevelWin, parameters);
+    }
+    public void OnWinLevel(string gameName, LevelAddress levelAddress, Dictionary<string,object> customParams=null) {
+        //// If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
+        int numWins = SaveStorage.GetInt(SaveKeys.NumWins(gameName,levelAddress));
+        if (numWins > 1) { return; }
+
+        var parameters = new Dictionary<string, object> {
+            ["Game"] = gameName,
+            ["Mode"] = levelAddress.mode,
+            ["Collection"] = levelAddress.collection,
+            ["Pack"] = levelAddress.pack,
+            ["Level"] = levelAddress.level,
+            ["numLosses"] = SaveStorage.GetInt(SaveKeys.NumLosses(gameName,levelAddress), 0),
+            ["timeSpentTotal"] = SaveStorage.GetFloat(SaveKeys.TimeSpentTotal(gameName,levelAddress), 0)
+        };
+        // We have custom params? Add 'em to parameters!
+        if (customParams != null) {
+            parameters.AddAllKVPFrom(customParams);
+        }
+
+        ReportCustomEvent("WinLevel", parameters);
+    }
+
+
+}
+//*/
+
+
+/*
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Analytics;
+using Facebook.Unity;
+
+
+//using Facebook.Unity;NOTE Commented out everything for analytics!
 
 public class FBAnalyticsController : MonoBehaviour {
-	// Constants
-	private const string AppEventName_LevelLose = "LevelLose";
+    // Constants
+    private const string AppEventName_LevelLose = "LevelLose";
     public string fbAppID;
 
     // Instance
@@ -82,13 +179,13 @@ public class FBAnalyticsController : MonoBehaviour {
   //      if (FB.IsInitialized) {
   //          FB.ActivateApp();
   //      }
-		//else {
+        //else {
         //    //Handle FB.Init
         //    FB.Init( () => {
         //        FB.ActivateApp();
         //    });
         //}
-	}
+    }
     // Unity will call OnApplicationPause(false) when an app is resumed from the background
     void OnApplicationPause (bool pauseStatus) {
         //// Check the pauseStatus to see if we are in the foreground or background
@@ -105,7 +202,7 @@ public class FBAnalyticsController : MonoBehaviour {
         //    }
         //}
     }
-	
+    
 
     void reportCustomEvent(string title, Dictionary<string, object> myParams)
     {
@@ -114,22 +211,22 @@ public class FBAnalyticsController : MonoBehaviour {
 
     // ----------------------------------------------------------------
     //  Gameplay Events!
-	// ----------------------------------------------------------------
-	public void OnLoseLevel(string gameName, int levelIndex, float timeSpentThisPlay) {
+    // ----------------------------------------------------------------
+    public void OnLoseLevel(string gameName, int levelIndex, float timeSpentThisPlay) {
         Debug.Log("reporting lose level...");
         var parameters = new Dictionary<string, object>();
-		parameters["Game"] = gameName;
-		parameters["Level"] = levelIndex;
-		parameters["timeSpentThisPlay"] = timeSpentThisPlay;
+        parameters["Game"] = gameName;
+        parameters["Level"] = levelIndex;
+        parameters["timeSpentThisPlay"] = timeSpentThisPlay;
 
         reportCustomEvent(AppEventName_LevelLose, parameters);
 
-		//FB.LogAppEvent(
-		//	AppEventName_LevelLose,
-		//	null,
-		//	parameters
-		//);
-	}
+        //FB.LogAppEvent(
+        //  AppEventName_LevelLose,
+        //  null,
+        //  parameters
+        //);
+    }
     public void OnWinLevel(string gameName, int levelIndex) {
         Debug.Log("reporting win level...");
         // If we've already won before, do NOTHING: Only send win analytic on the FIRST win.
@@ -187,3 +284,5 @@ public class FBAnalyticsController : MonoBehaviour {
 
 
 }
+
+//*/

@@ -140,7 +140,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 		IncrementTimeSpentTotal();
 		IncrementNumLosses();
 		// Tell people!
-		FBAnalyticsController.Instance.OnLoseLevel(MyGameName(), LevelIndex, GetTimeSpentThisPlay());
+		AnalyticsController.Instance.OnLoseLevel(MyGameName(), LevelIndex, GetTimeSpentThisPlay());
 		levelGameUI.OnGameOver();
 	}
 	virtual protected void WinLevel() {
@@ -150,7 +150,7 @@ abstract public class BaseLevelGameController : BaseGameController {
 		IncrementNumWins();
 		UpdateHighestLevelUnlocked(LevelIndex);
 		// Tell people!
-		FBAnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex);
+		AnalyticsController.Instance.OnWinLevel(MyGameName(), LevelIndex);
 	}
 	private void IncrementNumLosses() {
 		string saveKey = SaveKeys.NumLosses(MyGameName(), LevelIndex);
